@@ -1,0 +1,32 @@
+//----RESPONSIVE BREAKPOINTS--
+$bp-largest: 75em; // 1200px
+$bp-large: 62.5em; // 1000px
+$bp-medium: 50em; // 800px;
+$bp-small: 37.5em; // 600px;
+$bp-smallest: 31.25em; // 500px;
+$bp-phone: 25em; // 400px;
+
+//---------COLORS-------------
+
+//PRIMARY
+$color-primary: rgb(80, 59, 188);
+$color-primary-light: rgb(101, 77, 219);
+$color-primary-lightest: rgb(180, 166, 235);
+$color-primary-gradient: rgb(163, 75, 245);
+
+$color-full-width-btn: rgb(180, 166, 235);
+
+//---------FORM----------------
+//PLACEHOLDER TEXT COLOR
+$placeholder-color: rgb(133, 133, 133);
+// ELEMENT SHADOW COLOR
+$element-shadow: 1px 1px 1px 1px rgba(78, 59, 188, 0.1);
+// ELEMENT BORDER COLOR
+$element-border: 1px solid rgb(209, 209, 209);
+
+//-----------FONT SIZE----------
+$font-size-default: 1.4rem;
+$font-size-small: 1.2rem;
+$font-size-smallest: 1rem;
+$font-size-big: 1.6rem;
+$fonr-size-biggest: 1.8rem;
