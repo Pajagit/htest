@@ -1,10 +1,19 @@
 import React from "react";
-function FullBtn({ label, icon }) {
+import FormElementTitle from "../components/FormElementTitle";
+
+function FullBtn({ label, placeholder }) {
   return (
-    <div className="full-width-btn">
-      <div className="full-width-btn--label">{label}</div>
-      <div className="full-width-btn--icon">
-        <i className="fas fa-clone"></i>
+    <div className="form-element">
+      <div className="form-element-item">
+        <FormElementTitle label={label} />
+      </div>
+      <div className="form-element-item">
+        <div className="full-width-btn">
+          <div className="full-width-btn--label">{placeholder}</div>
+          <div className="full-width-btn--icon">
+            <i className="fas fa-clone"></i>
+          </div>
+        </div>
       </div>
     </div>
   );

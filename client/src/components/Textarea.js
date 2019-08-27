@@ -1,10 +1,18 @@
 import React from "react";
+import FormElementTitle from "../components/FormElementTitle";
+
 function Textarea({ className, placeholder, label, validationMsg }) {
   return (
     <div className="form-element">
-      <label className="form-element--label">{label}</label>
-      <textarea placeholder={placeholder} className="form-element--textarea" />
-      <label className="form-element--validation">{validationMsg}</label>
+      <div className="form-element-item">
+        <FormElementTitle label={label} validationMsg={validationMsg} />
+      </div>
+      <div className="form-element-item">
+        <textarea placeholder={placeholder} className="form-element--textarea" />
+      </div>
+      {/* <div className="form-element-item">
+        <label className="form-element--validation">{validationMsg}</label>
+      </div> */}
     </div>
   );
 }

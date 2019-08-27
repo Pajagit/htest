@@ -1,0 +1,58 @@
+.select-dropdown {
+  margin-bottom: 1rem;
+  position: relative;
+  &--icon {
+    position: absolute;
+    top: 25%;
+    left: 15px;
+    width: 5rem;
+    height: 100%;
+    font-size: $font-size-default;
+    color: $placeholder-color !important;
+  }
+}
+
+.css-w3djcp-OptionComponent {
+  background: $color-primary !important;
+  font-size: $font-size-default;
+}
+.css-1j547uo-InputComponent {
+  font-size: $font-size-default !important;
+}
+
+.css-3rj0br-ReactDropdownSelect {
+  height: 3.8rem !important;
+  padding-right: 10px !important;
+  border-radius: 4px !important;
+  border: $element-border !important;
+  font-size: $font-size-default;
+  -webkit-box-shadow: $element-shadow !important;
+  -moz-box-shadow: $element-shadow !important;
+  box-shadow: $element-shadow !important;
+  &::placeholder {
+    color: $placeholder-color;
+  }
+  &:active,
+  &:focus {
+    border: 1px solid $color-primary;
+  }
+}
+
+.css-46gck8-DropdownHandleComponent svg {
+  height: 20px !important;
+  width: 20px !important;
+}
+
+.css-1jmeyq5-DropdownHandleComponent svg {
+  height: 20px !important;
+  width: 20px !important;
+}
+
+.css-x3l5ce-ClearComponent {
+  font-size: 2rem;
+}
+
+.css-jznujr-ContentComponent {
+  font-size: $font-size-big !important;
+  margin-left: 3.5rem;
+}

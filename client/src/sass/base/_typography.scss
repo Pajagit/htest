@@ -1,8 +1,8 @@
 body {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   line-height: 1.7;
 }
-
+a,
 h1,
 h2,
 h3,
@@ -13,17 +13,27 @@ button,
 input,
 select,
 textarea {
- font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 ::-webkit-input-placeholder {
- font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 :-moz-placeholder {
- font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 ::-moz-placeholder {
- font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 :-ms-input-placeholder {
- font-family: 'IBM Plex Sans', sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+a {
+  height: 19px;
+  width: 152px;
+  color: #000000;
+  font-family: "IBM Plex Sans";
+  font-size: 14px;
+  letter-spacing: 0.17px;
+  line-height: 18px;
 }

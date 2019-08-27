@@ -24,6 +24,12 @@ $element-shadow: 1px 1px 1px 1px rgba(78, 59, 188, 0.1);
 // ELEMENT BORDER COLOR
 $element-border: 1px solid rgb(209, 209, 209);
 
+//ELEMENT GRADIENT PRIMARY
+$element-gradient-primary: linear-gradient(to right, $color-primary-gradient, $color-primary);
+
+//INACTIVE ELEMENT BACKGROUND
+$inactive-element: rgb(213, 222, 229);
+
 //-----------FONT SIZE----------
 $font-size-default: 1.4rem;
 $font-size-small: 1.2rem;
