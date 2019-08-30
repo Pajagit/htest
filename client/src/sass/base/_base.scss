@@ -16,3 +16,10 @@ body {
   box-sizing: border-box;
   //   background-color: rgb(243, 247, 250);
 }
+
+input::placeholder{
+  font-size: 1.4rem;
+}
+textarea::placeholder{
+  font-size: 1.4rem;
+}
