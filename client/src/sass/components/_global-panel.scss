@@ -1,0 +1,26 @@
+.global-panel {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  padding-top: 16px;
+
+  top: 0;
+  left: 0;
+  width: 8rem;
+  height: 100vh;
+  background-color: #4d3cb5;
+  &--logo img {
+    width: 40px;
+    height: 40px;
+  }
+  &-items {
+    font-size: 2rem;
+    text-align: center;
+    color: $color-primary-lightest;
+    &--item {
+      &:not(:last-child) {
+        margin-bottom: 1.4rem;
+      }
+    }
+  }
+}

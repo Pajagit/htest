@@ -11,10 +11,24 @@ export default class Test extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      options: ""
+      options: "",
+      // values: ""
+      value: null,
+      arrayValue: []
     };
 
     this.onChange = this.onChange.bind(this);
+    this.selectOption = this.selectOption.bind(this);
+    this.selectMultipleOption = this.selectMultipleOption.bind(this);
+  }
+  selectOption(value) {
+    console.log("Vals", value);
+    this.setState({ value });
+  }
+  selectMultipleOption(value) {
+    console.count("onChange");
+    console.log("Val", value);
+    this.setState({ arrayValue: value });
   }
   componentDidMount() {
     var optionsObj = [
@@ -59,6 +73,17 @@ export default class Test extends Component {
     this.setState({ options: optionsObj });
   }
   render() {
+    var bigList = [];
+    bigList.push(
+      { id: 1, name: "test" },
+      { id: 2, name: "test2" },
+      { id: 3, name: "test" },
+      { id: 4, name: "test2" },
+      { id: 5, name: "test" },
+      { id: 6, name: "test2" },
+      { id: 7, name: "test" },
+      { id: 8, name: "test2" }
+    );
     return (
       <div>
         <h1>Primary button</h1>
@@ -97,10 +122,11 @@ export default class Test extends Component {
         <br />
 
         <SearchDropdown
+          value={this.state.arrayValue}
+          options={bigList}
+          onChange={this.selectMultipleOption}
           placeholder={"Test Group"}
-          options={this.state.options}
-          onChange={values => this.onChange(values)}
-          label={"Add to group"}
+          label={"Add to group*"}
         />
         <br />
         <hr />

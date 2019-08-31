@@ -9,50 +9,53 @@
     height: 100%;
     font-size: $font-size-default;
     color: $placeholder-color !important;
+    z-index: 100;
   }
+  overflow: none;
 }
 
-.css-w3djcp-OptionComponent {
-  background: $color-primary !important;
-  font-size: $font-size-default;
-}
-.css-1j547uo-InputComponent {
-  font-size: $font-size-default !important;
-}
-
-.css-3rj0br-ReactDropdownSelect {
+.picky {
   min-height: 3.8rem !important;
-  padding-right: 10px !important;
   border-radius: 4px !important;
   border: $element-border !important;
   font-size: $font-size-default;
   -webkit-box-shadow: $element-shadow !important;
   -moz-box-shadow: $element-shadow !important;
   box-shadow: $element-shadow !important;
+
   &::placeholder {
-    color: $placeholder-color;
+    // color: $placeholder-color;
+    margin-left: 60px;
   }
-  &:active,
-  &:focus {
-    border: 1px solid $color-primary;
+  &__placeholder {
+    color: $placeholder-color !important;
+    margin-left: 35px;
+  }
+  &__filter {
+    padding: 1rem !important;
+  }
+  &__input {
+    height: 3.8rem !important;
+    padding: 0 !important;
+    border-radius: 4px !important;
+    border: none !important;
+    cursor: pointer;
+    &:active,
+    &:focus {
+      outline: none !important;
+    }
+  }
+  .picky__filter__input {
+    &:focus {
+      outline: none !important;
+    }
   }
 }
-
-.css-46gck8-DropdownHandleComponent svg {
-  height: 20px !important;
-  width: 20px !important;
+#undefined-list {
+  border: 1px solid $color-primary-lightest;
+  overflow-y: none;
 }
-
-.css-1jmeyq5-DropdownHandleComponent svg {
-  height: 20px !important;
-  width: 20px !important;
-}
-
-.css-x3l5ce-ClearComponent {
-  font-size: 2rem;
-}
-
-.css-jznujr-ContentComponent {
-  font-size: $font-size-big !important;
-  margin-left: 3.5rem;
+.picky__dropdown .option:hover,
+.picky__dropdown li:hover {
+  background-color: $color-primary-lightest !important;
 }

@@ -1,0 +1,24 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 80px 190px 1fr;
+}
+
+.global-panel-grid {
+  grid-row: 1/2;
+  justify-content: center;
+  justify-items: center;
+  justify-self: center;
+}
+
+.project-panel-grid {
+  grid-row: 2/3;
+}
+.main-content-grid {
+  grid-column: 3/-1;
+}
+.full-content-grid {
+  grid-column: 2/-1;
+}
+.full-width-grid {
+  grid-column: 1/-1;
+}
