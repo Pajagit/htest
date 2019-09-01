@@ -27,9 +27,7 @@
     -webkit-box-shadow: $element-shadow;
     -moz-box-shadow: $element-shadow;
     box-shadow: $element-shadow;
-    // &::placeholder {
-    // color: $placeholder-color;
-    // }
+
     &:active,
     &:focus {
       outline: none !important;
@@ -63,16 +61,3 @@
     color: red;
   }
 }
-
-// ::-moz-placeholder {
-//   /* Mozilla Firefox 19+ */
-//   line-height: 4rem;
-// }
-// ::-webkit-input-placeholder {
-//   /* Webkit */
-//   line-height: 4rem;
-// }
-// :-ms-input-placeholder {
-//   /* IE */
-//   line-height: 3.5rem;
-// }

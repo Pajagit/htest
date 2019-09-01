@@ -16,8 +16,20 @@
   &-items {
     font-size: 2rem;
     text-align: center;
-    color: $color-primary-lightest;
+    color: #a592ff;
     &--item {
+      transition: all 0.4s;
+
+      &-active {
+        color: white;
+        width: 40px;
+        padding: 5px 10px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, #c86dd7 0%, #8c4497 100%);
+      }
+      &:hover {
+        color: white;
+      }
       &:not(:last-child) {
         margin-bottom: 1.4rem;
       }

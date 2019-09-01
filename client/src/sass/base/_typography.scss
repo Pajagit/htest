@@ -28,12 +28,10 @@ textarea {
   font-family: "IBM Plex Sans", sans-serif;
 }
 
-a {
-  height: 19px;
-  width: 152px;
-  color: #000000;
-  font-family: "IBM Plex Sans";
-  font-size: 14px;
-  letter-spacing: 0.17px;
-  line-height: 18px;
+a,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: inherit;
 }

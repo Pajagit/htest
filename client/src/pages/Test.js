@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import Btn from "../components/Btn";
-import FullBtn from "../components/FullBtn";
-import Input from "../components/Input";
-import Textarea from "../components/Textarea";
-import Switch from "../components/Switch";
-import Checkbox from "../components/Checkbox";
-import SearchDropdown from "../components/SearchDropdown";
+import Btn from "../components/common/Btn";
+import FullBtn from "../components/common/FullBtn";
+import Input from "../components/common/Input";
+import Textarea from "../components/common/Textarea";
+import Switch from "../components/common/Switch";
+import Checkbox from "../components/common/Checkbox";
+import SearchDropdown from "../components/common/SearchDropdown";
 
 export default class Test extends Component {
   constructor(props) {

@@ -1,5 +1,5 @@
 import React from "react";
-import FormElementTitle from "../components/FormElementTitle";
+import FormElementTitle from "../form/FormElementTitle";
 import "react-picky/dist/picky.css";
 import Picky from "react-picky";
 

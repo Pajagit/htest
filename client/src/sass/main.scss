@@ -8,8 +8,11 @@
 @import "abstracts/flex-column";
 @import "abstracts/group-grid";
 @import "abstracts/utility";
+@import "abstracts/colors";
+@import "abstracts/testcase-grid";
 
 @import "components/btn";
+@import "components/btn-anchor";
 @import "components/form-element";
 @import "components/full-btn";
 @import "components/switch";
@@ -19,3 +22,7 @@
 @import "components/global-panel";
 @import "components/project-panel";
 @import "components/main-content";
+@import "components/form-cancel";
+@import "components/portrait-testcase";
+@import "components/add-report-btn";
+@import "components/tag";

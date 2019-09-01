@@ -1,5 +1,5 @@
 import React from "react";
-import FormElementTitle from "../components/FormElementTitle";
+import FormElementTitle from "../form/FormElementTitle";
 
 function Textarea({ className, placeholder, label, validationMsg }) {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
-import FormElementTitle from "../components/FormElementTitle";
-import FullBtn from "../components/FullBtn";
+import FormElementTitle from "../form/FormElementTitle";
+import FullBtn from "./FullBtn";
 
 function Input({ className, type, placeholder, label, validationMsg, addColumnPlaceholder }) {
   var addColumnElement = "";

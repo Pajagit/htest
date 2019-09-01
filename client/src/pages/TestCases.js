@@ -1,66 +1,36 @@
 import React, { Component } from "react";
-import Btn from "../components/common/Btn";
-import FullBtn from "../components/common/FullBtn";
-import Input from "../components/common/Input";
-import Textarea from "../components/common/Textarea";
-import Switch from "../components/common/Switch";
-import Checkbox from "../components/common/Checkbox";
 import GlobalPanel from "../components/global-panel/GlobalPanel";
 import ProjectPanel from "../components/project-panel/ProjectPanel";
+import BtnAnchor from "../components/common/BtnAnchor";
+import FilterBtn from "../components/common/FilterBtn";
 import Header from "../components/common/Header";
-import FormCancel from "../components/common/FormCancel";
+import SearchBtn from "../components/common/SearchBtn";
+import FilterContainer from "../components/filters/FilterContainer";
+import TestCaseContainer from "../components/test-cases/TestCaseContainer";
 
-import SearchDropdown from "../components/common/SearchDropdown";
-const bigList = [];
-
-for (var i = 1; i <= 1000; i++) {
-  bigList.push({ id: i, name: `Item ${i}` });
-}
-export default class Test extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      options: "",
-      value: null,
-      arrayValue: []
-    };
-    this.selectOption = this.selectOption.bind(this);
-    this.selectMultipleOption = this.selectMultipleOption.bind(this);
-  }
-
-  selectOption(value) {
-    console.log("Vals", value);
-    this.setState({ value });
-  }
-  selectMultipleOption(value) {
-    console.count("onChange");
-    console.log("Val", value);
-    this.setState({ arrayValue: value });
-  }
-
+export default class TestCases extends Component {
   render() {
-    var bigList = [];
-    bigList.push(
-      { id: 1, name: "Health Check" },
-      { id: 2, name: "Automation" },
-      { id: 3, name: "Regression" },
-      { id: 4, name: "API" },
-      { id: 5, name: "UI" }
-    );
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
         <div className="main-content main-content-grid">
           <Header
-            icon={<i className="fas fa-arrow-left"></i>}
-            title={"Back to All Test Cases"}
-            history={this.props}
-            canGoBack={true}
+            icon={<i className="fas fa-file-alt"></i>}
+            title={"Test Cases"}
+            link={"CreateTestCase"}
+            canGoBack={false}
+            addBtn={
+              <BtnAnchor type={"text"} label="Add New" className={"a-btn a-btn-primary"} link={`CreateTestCase`} />
+            }
+            filterBtn={<FilterBtn />}
+            searchBtn={<SearchBtn />}
           />
-          <div className="main-content--content">
-            <div className="main-content--content-header">New Test Case</div>
-            <div>
+          <FilterContainer />
+          <TestCaseContainer />
+          {/* <div className="main-content--content"> */}
+          {/* <div className="main-content--content-header">New Test Case</div> */}
+          {/* <div>
               <Input
                 type="text"
                 placeholder="Enter Test Case Name"
@@ -85,13 +55,7 @@ export default class Test extends Component {
                 label="Expected Result*"
                 validationMsg="Expected result is a required field"
               />
-              <SearchDropdown
-                value={this.state.arrayValue}
-                options={bigList}
-                onChange={this.selectMultipleOption}
-                placeholder={"Test Group"}
-                label={"Add to group*"}
-              />
+
               <div className="group-grid">
                 <Switch label="Health Check" />
                 <Switch label="Automated" />
@@ -113,8 +77,8 @@ export default class Test extends Component {
                 <FormCancel link={"https://google.com"} value={"Cancel"} />
               </div>
               <Checkbox label="Add new Test case" />
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
         </div>
       </div>
     );
