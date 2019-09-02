@@ -12,6 +12,8 @@
   box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
 
   &-items {
+    width: 100%;
+    padding: 0 10px;
     font-size: 2rem;
     text-align: center;
     color: $color-primary-lightest;
@@ -48,7 +50,7 @@
       align-items: center;
 
       color: $color-primary;
-      padding: 5px 20px;
+      padding: 5px 8px;
       border-radius: 4px;
       transition: all 0.4s;
       &-active {

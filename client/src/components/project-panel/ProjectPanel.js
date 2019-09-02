@@ -40,9 +40,9 @@ class ProjectPanel extends Component {
           />
           <ProjectPanelItem
             icon={<i className="far fa-chart-bar"></i>}
-            title={"STATISTICS"}
+            title={"STATISTIC"}
             active={false}
-            link={`/${this.state.projectId}/Statistics`}
+            link={`/${this.state.projectId}/Statistic`}
           />
           <ProjectPanelItem
             icon={<i className="fas fa-cog"></i>}

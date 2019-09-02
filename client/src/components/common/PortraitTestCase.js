@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 
 function PortraitTestCase({ title, tags, author, date, description }) {
   return (
-    <Link to="test">
       <div className="portrait-testcase">
         <div className="portrait-testcase-top">
+        <Link to="test">
           <div className="portrait-testcase-top--title">{title}</div>
+          </Link>
           <div className="portrait-testcase-top--tags">{tags}</div>
 
           <div className="portrait-testcase-top--author">{author}</div>
@@ -20,7 +21,7 @@ function PortraitTestCase({ title, tags, author, date, description }) {
           </div>
         </div>
       </div>
-    </Link>
+   
   );
 }
 

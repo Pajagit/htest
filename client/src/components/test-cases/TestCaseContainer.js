@@ -6,7 +6,9 @@ class TestCaseContainer extends Component {
   render() {
     var tags = [];
     tags.push(
+      <Tag title={"Regression"} color={"purple"} isRemovable={false} />,
       <Tag title={"Health Check"} color={"blue"} isRemovable={false} />,
+      <Tag title={"Aleksandar Pavlovic"} color={"dark-pink"} isRemovable={false} />,
       <Tag title={"Login"} color={"dark-blue"} isRemovable={false} />,
       <Tag title={"Registration"} color={"dark-golden"} isRemovable={false} />,
       <Tag title={"Position List"} color={"dark-orchid"} isRemovable={false} />,
@@ -14,17 +16,18 @@ class TestCaseContainer extends Component {
       <Tag title={"Distance Calculator"} color={"dark-red"} isRemovable={false} />
     );
 
-    // var tags1 = [];
-    // tags1.push(<Tag title={"Health Check"} color={"blue"} isRemovable={false} />);
-
     var tags2 = [];
     tags2.push(
+      <Tag title={"Regression"} color={"purple"} isRemovable={false} />,
+      <Tag title={"Aleksandar Pavlovic"} color={"dark-pink"} isRemovable={false} />,
       <Tag title={"Health Check"} color={"blue"} isRemovable={false} />,
       <Tag title={"Login"} color={"dark-blue"} isRemovable={false} />
     );
 
     var tags3 = [];
     tags3.push(
+      <Tag title={"Regression"} color={"purple"} isRemovable={false} />,
+      <Tag title={"Aleksandar Pavlovic"} color={"dark-pink"} isRemovable={false} />,
       <Tag title={"Health Check"} color={"blue"} isRemovable={false} />,
       <Tag title={"Login"} color={"dark-blue"} isRemovable={false} />,
       <Tag title={"Registration"} color={"dark-golden"} isRemovable={false} />
@@ -32,7 +35,9 @@ class TestCaseContainer extends Component {
 
     var tags4 = [];
     tags4.push(
-      <Tag title={"Health Check"} color={"blue"} isRemovable={false} />,
+      <Tag title={"Regression"} color={"purple"} isRemovable={false} />,
+      <Tag title={"Aleksandar Pavlovic"} color={"dark-pink"} isRemovable={false} />,
+      <Tag title={"Health Check"} color={"blue"} isRemovable={true} />,
       <Tag title={"Login"} color={"dark-blue"} isRemovable={false} />,
       <Tag title={"Registration"} color={"dark-golden"} isRemovable={false} />,
       <Tag title={"Position List"} color={"dark-orchid"} isRemovable={false} />
@@ -40,6 +45,8 @@ class TestCaseContainer extends Component {
 
     var tags5 = [];
     tags5.push(
+      <Tag title={"Regression"} color={"purple"} isRemovable={false} />,
+      <Tag title={"Aleksandar Pavlovic"} color={"dark-pink"} isRemovable={false} />,
       <Tag title={"Health Check"} color={"blue"} isRemovable={false} />,
       <Tag title={"Login"} color={"dark-blue"} isRemovable={false} />,
       <Tag title={"Registration"} color={"dark-golden"} isRemovable={false} />,
@@ -49,6 +56,8 @@ class TestCaseContainer extends Component {
 
     var tags6 = [];
     tags6.push(
+      <Tag title={"Regression"} color={"purple"} isRemovable={false} />,
+      <Tag title={"Aleksandar Pavlovic"} color={"dark-pink"} isRemovable={false} />,
       <Tag title={"Health Check"} color={"blue"} isRemovable={false} />,
       <Tag title={"Login"} color={"dark-blue"} isRemovable={false} />,
       <Tag title={"Registration"} color={"dark-golden"} isRemovable={false} />,

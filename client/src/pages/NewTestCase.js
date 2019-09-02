@@ -110,7 +110,7 @@ export default class Test extends Component {
               <div className="flex-column-left mt-4">
                 <Btn className="btn btn-primary mr-2" label="Save Test Case" type="text" />
                 <Btn className="btn btn-primary mr-2" label="Add To Report" type="text" />
-                <FormCancel link={"https://google.com"} value={"Cancel"} />
+                <FormCancel link={"TestCases"} value={"Cancel"} />
               </div>
               <Checkbox label="Add new Test case" />
             </div>

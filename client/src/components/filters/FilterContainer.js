@@ -61,6 +61,13 @@ class FilterContainer extends Component {
           label={"Select User"}
           placeholder={"Users"}
         />
+         <SearchDropdown
+          value={this.state.arrayValue}
+          options={bigList}
+          onChange={this.selectMultipleOption}
+          label={"Select User"}
+          placeholder={"Users"}
+        />
       </div>
     );
   }
