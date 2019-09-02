@@ -1,7 +1,9 @@
 @import "pages/test";
+@import "pages/landing";
 
 @import "base/base";
 @import "base/typography";
+
 @import "base/main-grid";
 
 @import "abstracts/variables";
@@ -26,3 +28,5 @@
 @import "components/portrait-testcase";
 @import "components/add-report-btn";
 @import "components/tag";
+@import "components/project";
+@import "components/google-btn";

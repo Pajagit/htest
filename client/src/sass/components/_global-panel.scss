@@ -18,6 +18,7 @@
     text-align: center;
     color: #a592ff;
     &--item {
+      position: relative;
       transition: all 0.4s;
 
       &-active {
@@ -32,6 +33,31 @@
       }
       &:not(:last-child) {
         margin-bottom: 1.4rem;
+      }
+      &-profile-image > img {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+      }
+      &-notification {
+        border-radius: 50%;
+        border: 0.5px solid rgb(143, 143, 143);
+        position: absolute;
+        top: 0;
+        right: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.38);
+        background-color: #ff1834;
+        min-width: 16px;
+        min-height: 18px;
+        font-size: 10px;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: bold;
+        letter-spacing: 0.13px;
+        // line-height: 13px;
       }
     }
   }
