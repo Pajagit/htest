@@ -10,23 +10,40 @@
   grid-template-columns: repeat(auto-fit, 80px);
 
   width: 100%;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 .testcase-container {
   padding-bottom: 3rem;
 }
-.project-container {
-  justify-content: center;
-  justify-items: center;
-  justify-self: center;
+.project-card-container {
   padding: 2.4rem 3.8rem;
+
   &-title {
     color: #000000;
     font-size: 16px;
     font-weight: 500;
     letter-spacing: 0.2px;
     line-height: 20px;
+    margin-bottom: 2rem;
   }
+  &-items {
+    clear: both;
+    &-item {
+      &:not(:last-child) {
+        margin-right: 2.4rem;
+      }
+    }
+    height: 100%;
+  }
+}
+
+.project-list-container {
+  clear: both;
+
+  padding: 2.4rem 3.8rem;
+  height: 100%;
+  margin-bottom: 5rem;
+
   &-list {
     &-table {
       border-radius: 3px;
@@ -50,6 +67,28 @@
         line-height: 20px;
         padding: 8px 15px;
         border-bottom: 1px solid rgb(241, 241, 241);
+
+        &-title {
+          display: flex;
+          align-content: center;
+          align-items: center;
+          &:hover {
+            background-color: #eceef9;
+          }
+          &-img {
+            height: 3px;
+          }
+          &--img > img {
+            height: 45px;
+            width: 45px;
+            border-radius: 50%;
+            border: 1px solid rgb(224, 224, 224);
+            padding: 2px;
+          }
+          &--name {
+            margin-left: 10px;
+          }
+        }
       }
     }
   }

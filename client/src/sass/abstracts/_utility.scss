@@ -29,3 +29,17 @@
 .mt-5 {
   margin-top: 5rem;
 }
+
+.truncate {
+  width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.disabled {
+  opacity: 0.35;
+  cursor: default !important;
+  pointer-events: none;
+  box-shadow: 0 0 0 0 !important;
+}

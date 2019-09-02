@@ -1,22 +1,32 @@
 .project {
-  display: flex;
-  min-height: 270px;
-  width: 100%;
+  min-height: 250px;
+  width: 330px;
+  float: left;
   flex-direction: column;
   background-color: #ffffff;
   border-radius: 3px;
   overflow: hidden;
   box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
   float: left;
-  margin-right: 2.4rem;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
   padding-bottom: 18px;
+  &:hover {
+    background-color: #eceef9;
+  }
   &--image {
     width: 100%;
-    height: 190px;
+    height: 170px;
+    // overflow: hidden;
   }
   &--image > img {
-    width: 100%;
-    background-size: cover;
+    // margin-left: auto;
+    // margin-right: auto;
+    // display: block;
+    // object-fit: fill;
+    margin: auto; /* Magic! */
+    max-width: 100%;
+    max-height: 100%;
   }
   &--bottom {
     padding: 5px 18px;
@@ -35,7 +45,7 @@
       line-height: 18px;
       margin-bottom: 7px;
     }
-    &--url {
+    &--qa {
       color: #000000;
       font-size: 14px;
       letter-spacing: 0.17px;

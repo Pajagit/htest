@@ -8,7 +8,7 @@ import Checkbox from "../components/common/Checkbox";
 import GlobalPanel from "../components/global-panel/GlobalPanel";
 import ProjectPanel from "../components/project-panel/ProjectPanel";
 import Header from "../components/common/Header";
-import FormCancel from "../components/common/FormCancel";
+import UnderlineAnchor from "../components/common/UnderlineAnchor";
 
 import SearchDropdown from "../components/common/SearchDropdown";
 const bigList = [];
@@ -105,30 +105,12 @@ export default class Test extends Component {
                 placeholder="Enter Condition"
                 label="Precondition"
               />
-              <FullBtn
-                className="full-width-btn"
-                placeholder="Add Links"
-                label="Links"
-                icon="text"
-              />
-              <FullBtn
-                className="full-width-btn"
-                placeholder="Add Files"
-                label="Upload Files"
-                icon="text"
-              />
+              <FullBtn className="full-width-btn" placeholder="Add Links" label="Links" icon="text" />
+              <FullBtn className="full-width-btn" placeholder="Add Files" label="Upload Files" icon="text" />
               <div className="flex-column-left mt-4">
-                <Btn
-                  className="btn btn-primary mr-2"
-                  label="Save Test Case"
-                  type="text"
-                />
-                <Btn
-                  className="btn btn-primary mr-2"
-                  label="Add To Report"
-                  type="text"
-                />
-                <FormCancel link={"TestCases"} value={"Cancel"} />
+                <Btn className="btn btn-primary mr-2" label="Save Test Case" type="text" />
+                <Btn className="btn btn-primary mr-2" label="Add To Report" type="text" />
+                <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
               </div>
               <Checkbox label="Add new Test case" />
             </div>
