@@ -35,6 +35,12 @@
       font-size: 2rem;
 
       &-item {
+        &-search > .search-input {
+          display: none;
+        }
+        &-search > .search-input:focus {
+          display: contents;
+        }
         text-align: center;
         padding: 10px;
         border-radius: 50%;
@@ -42,6 +48,7 @@
         background-color: #ffffff;
         color: $color-primary;
         transition: all 0.4s;
+        cursor: pointer;
         &:hover {
           background-color: #e7ebef;
         }

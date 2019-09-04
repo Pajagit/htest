@@ -8,8 +8,35 @@ import SearchBtn from "../components/common/SearchBtn";
 import FilterContainer from "../components/filters/FilterContainer";
 import TestCaseContainer from "../components/test-cases/TestCaseContainer";
 
-export default class TestCases extends Component {
+class TestCases extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      options: "",
+      values: "",
+      showFilters: true,
+      value: null,
+      arrayValue: []
+    };
+
+    //   this.onChange = this.onChange.bind(this);
+    //   this.selectOption = this.selectOption.bind(this);
+    this.filterBtn = this.filterBtn.bind(this);
+  }
+  filterBtn() {
+    var showFilters;
+    if (this.state.showFilters) {
+      showFilters = false;
+    } else {
+      showFilters = true;
+    }
+    this.setState({ showFilters });
+  }
   render() {
+    var filters = "";
+    if (this.state.showFilters) {
+      filters = <FilterContainer />;
+    }
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -28,13 +55,14 @@ export default class TestCases extends Component {
                 link={`CreateTestCase`}
               />
             }
-            filterBtn={<FilterBtn />}
+            filterBtn={<FilterBtn onClick={this.filterBtn} />}
             searchBtn={<SearchBtn />}
           />
-          <FilterContainer />
+          {filters}
           <TestCaseContainer />
         </div>
       </div>
     );
   }
 }
+export default TestCases;

@@ -7,6 +7,7 @@ import NewTestCase from "./pages/NewTestCase";
 import TestCases from "./pages/TestCases";
 import Landing from "./pages/Landing";
 import Projects from "./pages/Projects";
+import TestCase from "./pages/TestCase";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route exact path="/test" component={Test} />
         <Route exact path="/" component={Landing} />
         <Route exact path="/Projects" component={Projects} />
+        <Route exact path="/TestCase/:testcaseId" component={TestCase} />
         <Route
           exact
           path="/:projectId/CreateTestCase"

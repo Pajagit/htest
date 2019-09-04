@@ -1,0 +1,68 @@
+.testcase-details {
+  margin: 3rem;
+  max-width: 120.8rem;
+
+  background-color: #ffffff;
+  box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
+  &-container-top {
+    padding: 1.8rem 3.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+  }
+  &-container-bottom {
+    padding-left: 3.8rem;
+    padding-right: 3.8rem;
+    padding-top: 1.8rem;
+    padding-bottom: 5rem;
+  }
+  &--header {
+    box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
+  }
+  &-item {
+    margin-bottom: 2.4rem;
+    &--title {
+      margin-bottom: 1rem;
+      color: #9b9b9b;
+      font-size: 14px;
+      letter-spacing: 0.17px;
+      line-height: 18px;
+    }
+    &--value {
+      color: #000000;
+      font-size: 14px;
+      line-height: 23px;
+    }
+  }
+  &-header {
+    &--title {
+      margin-bottom: 1rem;
+      color: #9b9b9b;
+      font-size: 14px;
+      letter-spacing: 0.17px;
+      line-height: 18px;
+    }
+    &--value {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      line-height: 20px;
+    }
+  }
+  &-button {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    &-title {
+      margin-right: 1.5rem;
+      color: #9b9b9b;
+
+      letter-spacing: 0.17px;
+      line-height: 18px;
+    }
+    &-icon {
+      color: $color-primary;
+    }
+  }
+}

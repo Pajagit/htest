@@ -12,7 +12,8 @@ function GlobalPanel(props) {
   if (
     props.props.match.path === "/:projectId/CreateTestCase" ||
     props.props.match.path === "/:projectId/TestCases" ||
-    props.props.match.path === "/Projects"
+    props.props.match.path === "/Projects" ||
+    props.props.match.path === "/TestCase/:testcaseId"
   ) {
     projectsActive = true;
     notificationsActive = false;
@@ -23,15 +24,27 @@ function GlobalPanel(props) {
     <div className="global-panel global-panel-grid">
       <div className="global-panel-items">
         <GlobalPanelHeader />
-        <GlobalPanelItem icon={<i className="fas fa-th"></i>} link={"/Projects"} active={projectsActive} />
+        <GlobalPanelItem
+          icon={<i className="fas fa-th"></i>}
+          link={"/Projects"}
+          active={projectsActive}
+        />
         <GlobalPanelItem
           icon={<i className="fas fa-bell"></i>}
           link={"/Notifications"}
           active={notificationsActive}
           notification={14}
         />
-        <GlobalPanelItem icon={<i className="fas fa-chart-pie"></i>} link={"/Statistics"} active={statisticsActive} />
-        <GlobalPanelItem icon={<i className="fas fa-user-cog"></i>} link={"/Settings"} active={settingsActive} />
+        <GlobalPanelItem
+          icon={<i className="fas fa-chart-pie"></i>}
+          link={"/Statistics"}
+          active={statisticsActive}
+        />
+        <GlobalPanelItem
+          icon={<i className="fas fa-user-cog"></i>}
+          link={"/Settings"}
+          active={settingsActive}
+        />
         <GlobalPanelProfileImage img={profileImage} />
       </div>
     </div>
