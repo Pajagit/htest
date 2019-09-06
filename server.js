@@ -1,8 +1,12 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+
+const testcases = require("./routes/api/testcases");
 
 const app = express();
+app.use(bodyParser.json());
 
-app.get("/", (req, res) => res.send("Hello"));
+app.use("/api/testcases", testcases);
 
 const port = process.env.PORT || 5000;
 

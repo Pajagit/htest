@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function AddReportBtn({ title }) {
+function AddReportBtn({ title, id }) {
   return (
-    <Link to="#">
+    <Link to={`/Testcase/${id}`}>
       <div className="addReportBtn">
         <div className="addReportBtn--title">{title}</div>
         <div className="addReportBtn--icon">

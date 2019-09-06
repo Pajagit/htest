@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
 import GlobalPanel from "../components/global-panel/GlobalPanel";
 import ProjectPanel from "../components/project-panel/ProjectPanel";
 import BtnAnchor from "../components/common/BtnAnchor";
@@ -7,6 +11,8 @@ import Header from "../components/common/Header";
 import SearchBtn from "../components/common/SearchBtn";
 import FilterContainer from "../components/filters/FilterContainer";
 import TestCaseContainer from "../components/test-cases/TestCaseContainer";
+
+import { getTestcases } from "../actions/testcaseActions";
 
 class TestCases extends Component {
   constructor(props) {
@@ -23,6 +29,9 @@ class TestCases extends Component {
     //   this.selectOption = this.selectOption.bind(this);
     this.filterBtn = this.filterBtn.bind(this);
   }
+  componentDidMount() {
+    this.props.getTestcases();
+  }
   filterBtn() {
     var showFilters;
     if (this.state.showFilters) {
@@ -37,6 +46,7 @@ class TestCases extends Component {
     if (this.state.showFilters) {
       filters = <FilterContainer />;
     }
+
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -48,12 +58,7 @@ class TestCases extends Component {
             link={"CreateTestCase"}
             canGoBack={false}
             addBtn={
-              <BtnAnchor
-                type={"text"}
-                label="Add New"
-                className={"a-btn a-btn-primary"}
-                link={`CreateTestCase`}
-              />
+              <BtnAnchor type={"text"} label="Add New" className={"a-btn a-btn-primary"} link={`CreateTestCase`} />
             }
             filterBtn={<FilterBtn onClick={this.filterBtn} />}
             searchBtn={<SearchBtn />}
@@ -65,4 +70,17 @@ class TestCases extends Component {
     );
   }
 }
-export default TestCases;
+
+TestCases.propTypes = {
+  testcases: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  testcases: state.testcases
+  // auth: state.auth,
+});
+
+export default connect(
+  mapStateToProps,
+  { getTestcases }
+)(withRouter(TestCases));
