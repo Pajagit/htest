@@ -1,22 +1,22 @@
 import React, { Component } from "react";
-import Btn from "../components/common/Btn";
-import FullBtn from "../components/common/FullBtn";
-import Input from "../components/common/Input";
-import Textarea from "../components/common/Textarea";
-import Switch from "../components/common/Switch";
-import Checkbox from "../components/common/Checkbox";
-import GlobalPanel from "../components/global-panel/GlobalPanel";
-import ProjectPanel from "../components/project-panel/ProjectPanel";
-import Header from "../components/common/Header";
-import UnderlineAnchor from "../components/common/UnderlineAnchor";
+import Btn from "../common/Btn";
+import FullBtn from "../common/FullBtn";
+import Input from "../common/Input";
+import Textarea from "../common/Textarea";
+import Switch from "../common/Switch";
+import Checkbox from "../common/Checkbox";
+import GlobalPanel from "../global-panel/GlobalPanel";
+import ProjectPanel from "../project-panel/ProjectPanel";
+import Header from "../common/Header";
+import UnderlineAnchor from "../common/UnderlineAnchor";
 
-import SearchDropdown from "../components/common/SearchDropdown";
+import SearchDropdown from "../common/SearchDropdown";
 const bigList = [];
 
 for (var i = 1; i <= 1000; i++) {
   bigList.push({ id: i, name: `Item ${i}` });
 }
-class NewTestCase extends Component {
+class EditTestCase extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,36 +54,40 @@ class NewTestCase extends Component {
         <div className="main-content main-content-grid">
           <Header
             icon={<i className="fas fa-arrow-left"></i>}
-            title={"Back to All Test Cases"}
+            title={"Back to Test Case"}
             history={this.props}
             canGoBack={true}
           />
           <div className="main-content--content">
-            {/* <div className="main-content--content-header">New Test Case</div> */}
+            {/* <div className="main-content--content-header">Edit Test Case</div> */}
             <div>
               <Input
                 type="text"
                 placeholder="Enter Test Case Name"
                 label="Test case name*"
-                validationMsg="Test case name is a required field"
+                // validationMsg="Test case name is a required field"
+                value="Check all the optional fields when do not fill data"
               />
               <Textarea
                 placeholder="Enter Test Case Description"
                 label="Description*"
-                validationMsg="Description is a required field"
+                // validationMsg="Description is a required field"
+                value="It taught me how to let go of any creative ego, which has little space to breath when your work is put through its paces in real world scenarios — it keeps everyone honest and ensures our ideas are being validated throughout the process."
               />
               <Input
                 type="text"
                 addColumnPlaceholder="Add test steps"
                 placeholder="Enter Test Steps Here"
                 label="Test steps*"
-                validationMsg="At least one test step is required"
+                // validationMsg="At least one test step is required"
+                value="Enter valid data in required fields"
               />
               <Input
                 type="text"
                 placeholder="Enter Result"
                 label="Expected Result*"
-                validationMsg="Expected result is a required field"
+                // validationMsg="Expected result is a required field"
+                value="Successfully logged in"
               />
               <SearchDropdown
                 value={this.state.arrayValue}
@@ -93,10 +97,10 @@ class NewTestCase extends Component {
                 label={"Add to group*"}
               />
               <div className="group-grid">
-                <Switch label="Health Check" />
-                <Switch label="Automated" />
-                <Switch label="API" />
-                <Switch label="UI" />
+                <Switch label="Health Check" checked={true} />
+                <Switch label="Automated" checked={true} />
+                <Switch label="API" checked={false} />
+                <Switch label="UI" checked={true} />
               </div>
 
               <Input
@@ -104,6 +108,7 @@ class NewTestCase extends Component {
                 addColumnPlaceholder="Add test steps"
                 placeholder="Enter Condition"
                 label="Precondition"
+                value="User has internet connection"
               />
               <FullBtn
                 className="full-width-btn"
@@ -120,17 +125,13 @@ class NewTestCase extends Component {
               <div className="flex-column-left mt-4">
                 <Btn
                   className="btn btn-primary mr-2"
-                  label="Save Test Case"
+                  label="Save Changes"
                   type="text"
                 />
-                <Btn
-                  className="btn btn-primary mr-2"
-                  label="Add To Report"
-                  type="text"
-                />
+
                 <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
               </div>
-              <Checkbox label="Add new Test case" />
+              <Checkbox label="Set old test case as deprecated" />
             </div>
           </div>
         </div>
@@ -138,4 +139,4 @@ class NewTestCase extends Component {
     );
   }
 }
-export default NewTestCase;
+export default EditTestCase;

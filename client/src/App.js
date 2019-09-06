@@ -13,6 +13,7 @@ import TestCases from "./pages/TestCases";
 import Landing from "./pages/Landing";
 import Projects from "./pages/Projects";
 import TestCase from "./pages/TestCase";
+import EditTestCase from "./components/test-cases/EditTestCase";
 
 function App() {
   return (
@@ -23,7 +24,11 @@ function App() {
           <Route exact path="/" component={Landing} />
           <Route exact path="/Projects" component={Projects} />
           <Route exact path="/TestCase/:testcaseId" component={TestCase} />
-          <Route exact path="/:projectId/CreateTestCase" component={NewTestCase} />
+          <Route
+            exact
+            path="/:projectId/CreateTestCase"
+            component={NewTestCase}
+          />
           <Route exact path="/:projectId/TestCases" component={TestCases} />
         </div>
       </Router>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import GlobalPanel from "../components/global-panel/GlobalPanel";
 import ProjectPanel from "../components/project-panel/ProjectPanel";
 import UnderlineAnchor from "../components/common/UnderlineAnchor";
@@ -31,12 +32,14 @@ class TestCase extends Component {
                     Check all the optional fields when do not fill data
                   </div>
                 </div>
-                <div className="testcase-details-button">
-                  <div className="testcase-details-button-title">Edit</div>
-                  <div className="testcase-details-button-icon">
-                    <i className="fas fa-pen"></i>
+                <Link to={"/EditTestCase/1"}>
+                  <div className="testcase-details-button">
+                    <div className="testcase-details-button-title">Edit</div>
+                    <div className="testcase-details-button-icon">
+                      <i className="fas fa-pen"></i>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
             <div className="testcase-details--body">

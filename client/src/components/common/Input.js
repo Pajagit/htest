@@ -2,7 +2,15 @@ import React from "react";
 import FormElementTitle from "../form/FormElementTitle";
 import FullBtn from "./FullBtn";
 
-function Input({ className, type, placeholder, label, validationMsg, addColumnPlaceholder }) {
+function Input({
+  className,
+  type,
+  placeholder,
+  label,
+  validationMsg,
+  addColumnPlaceholder,
+  value
+}) {
   var addColumnElement = "";
   if (addColumnPlaceholder !== undefined) {
     addColumnElement = (
@@ -17,7 +25,12 @@ function Input({ className, type, placeholder, label, validationMsg, addColumnPl
         <FormElementTitle label={label} validationMsg={validationMsg} />
       </div>
       <div className="form-element-item">
-        <input type={type} placeholder={placeholder} className="form-element--input" />
+        <input
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          className="form-element--input"
+        />
       </div>
 
       {addColumnElement}
