@@ -29,6 +29,7 @@ function App() {
             path="/:projectId/CreateTestCase"
             component={NewTestCase}
           />
+          <Route exact path="/EditTestCase/1" component={EditTestCase} />
           <Route exact path="/:projectId/TestCases" component={TestCases} />
         </div>
       </Router>

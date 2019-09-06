@@ -9,7 +9,9 @@ function Input({
   label,
   validationMsg,
   addColumnPlaceholder,
-  value
+  value,
+  onChange,
+  name
 }) {
   var addColumnElement = "";
   if (addColumnPlaceholder !== undefined) {
@@ -30,6 +32,8 @@ function Input({
           placeholder={placeholder}
           value={value}
           className="form-element--input"
+          onChange={onChange}
+          name={name}
         />
       </div>
 

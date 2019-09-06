@@ -22,10 +22,18 @@ class EditTestCase extends Component {
     this.state = {
       options: "",
       value: null,
-      arrayValue: []
+      arrayValue: [],
+      title: "Check all the optional fields when do not fill data",
+      description:
+        "It taught me how to let go of any creative ego, which has little space to breath when your work is put through its paces in real world scenarios — it keeps everyone honest and ensures our ideas are being validated throughout the process.",
+      expected_result: "Successfully logged in",
+      groups: []
     };
     this.selectOption = this.selectOption.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.onChange = this.onChange.bind(this);
+    // this.onChangeTextarea = this.onChangeTextarea.bind(this);
+    // this.onChange = this.onChange.bind(this);
   }
 
   selectOption(value) {
@@ -38,6 +46,22 @@ class EditTestCase extends Component {
     this.setState({ arrayValue: value });
   }
 
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      console.log(this.state);
+    });
+  }
+  onChangeSwitch(e, value) {
+    this.setState({ [e.target.name]: value }, () => {
+      console.log(this.state);
+    });
+  }
+  //   onChange(e) {
+  //     console.log(e);
+  //   }
+  //   onChangeTextarea(e) {
+  //     console.log(e.target.value);
+  //   }
   render() {
     var bigList = [];
     bigList.push(
@@ -66,13 +90,17 @@ class EditTestCase extends Component {
                 placeholder="Enter Test Case Name"
                 label="Test case name*"
                 // validationMsg="Test case name is a required field"
-                value="Check all the optional fields when do not fill data"
+                value={this.state.title}
+                onChange={e => this.onChange(e)}
+                name={"title"}
               />
               <Textarea
                 placeholder="Enter Test Case Description"
                 label="Description*"
                 // validationMsg="Description is a required field"
-                value="It taught me how to let go of any creative ego, which has little space to breath when your work is put through its paces in real world scenarios — it keeps everyone honest and ensures our ideas are being validated throughout the process."
+                value={this.state.description}
+                onChange={e => this.onChange(e)}
+                name={"description"}
               />
               <Input
                 type="text"
@@ -81,13 +109,16 @@ class EditTestCase extends Component {
                 label="Test steps*"
                 // validationMsg="At least one test step is required"
                 value="Enter valid data in required fields"
+                onChange={e => this.onChange(e)}
               />
               <Input
                 type="text"
                 placeholder="Enter Result"
                 label="Expected Result*"
                 // validationMsg="Expected result is a required field"
-                value="Successfully logged in"
+                value={this.state.expected_result}
+                onChange={e => this.onChange(e)}
+                name={"expected_result"}
               />
               <SearchDropdown
                 value={this.state.arrayValue}
@@ -97,10 +128,32 @@ class EditTestCase extends Component {
                 label={"Add to group*"}
               />
               <div className="group-grid">
-                <Switch label="Health Check" checked={true} />
-                <Switch label="Automated" checked={true} />
-                <Switch label="API" checked={false} />
-                <Switch label="UI" checked={true} />
+                <Switch
+                  label="Health Check"
+                  value={this.state.healthCheck}
+                  onChange={e =>
+                    this.onChangeSwitch(e, !this.state.healthCheck)
+                  }
+                  name={"healthCheck"}
+                />
+                <Switch
+                  label="Automated"
+                  checked={true}
+                  onChange={e => this.onChangeSwitch(e)}
+                  name={"automated"}
+                />
+                <Switch
+                  label="API"
+                  checked={false}
+                  onChange={e => this.onChangeSwitch(e)}
+                  name={"api"}
+                />
+                <Switch
+                  label="UI"
+                  checked={true}
+                  onChange={e => this.onChangeSwitch(e)}
+                  name={"ui"}
+                />
               </div>
 
               <Input
@@ -109,6 +162,7 @@ class EditTestCase extends Component {
                 placeholder="Enter Condition"
                 label="Precondition"
                 value="User has internet connection"
+                onChange={e => this.onChange(e)}
               />
               <FullBtn
                 className="full-width-btn"
