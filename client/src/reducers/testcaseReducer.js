@@ -1,4 +1,4 @@
-import { GET_TESTCASES, TESTCASE_LOADING } from "../actions/types";
+import { GET_TESTCASE, GET_TESTCASES, TESTCASE_LOADING } from "../actions/types";
 
 const initialState = {
   testcase: null,
@@ -17,6 +17,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         testcases: action.payload,
+        loading: false
+      };
+    case GET_TESTCASE:
+      return {
+        ...state,
+        testcase: action.payload,
         loading: false
       };
 

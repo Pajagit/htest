@@ -6,6 +6,7 @@
   flex-direction: column;
   margin-bottom: 1.8rem;
   &-item {
+    position: relative;
     display: flex;
     flex-direction: column;
     margin-bottom: 0.5rem;
@@ -32,6 +33,20 @@
     &:focus {
       outline: none !important;
       border: 1px solid $color-primary;
+    }
+  }
+  &--remove {
+    cursor: pointer;
+    position: absolute;
+    padding: 2px 5px;
+    // border-radius: 3px;
+    // background-color: $color-primary-lightest;
+    right: 10px;
+    top: 9px;
+    font-size: 1.2rem;
+    color: white;
+    &-img {
+      width: 25px;
     }
   }
   &--textarea {

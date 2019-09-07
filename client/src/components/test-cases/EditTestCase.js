@@ -1,7 +1,12 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
 import Btn from "../common/Btn";
 import FullBtn from "../common/FullBtn";
 import Input from "../common/Input";
+import InputGroup from "../common/InputGroup";
 import Textarea from "../common/Textarea";
 import Switch from "../common/Switch";
 import Checkbox from "../common/Checkbox";
@@ -9,8 +14,10 @@ import GlobalPanel from "../global-panel/GlobalPanel";
 import ProjectPanel from "../project-panel/ProjectPanel";
 import Header from "../common/Header";
 import UnderlineAnchor from "../common/UnderlineAnchor";
-
 import SearchDropdown from "../common/SearchDropdown";
+
+import { getTestcase } from "../../actions/testcaseActions";
+
 const bigList = [];
 
 for (var i = 1; i <= 1000; i++) {
@@ -23,17 +30,44 @@ class EditTestCase extends Component {
       options: "",
       value: null,
       arrayValue: [],
-      title: "Check all the optional fields when do not fill data",
-      description:
-        "It taught me how to let go of any creative ego, which has little space to breath when your work is put through its paces in real world scenarios — it keeps everyone honest and ensures our ideas are being validated throughout the process.",
-      expected_result: "Successfully logged in",
+      title: "",
+      description: "",
+      expected_result: "",
+      precondition: "",
+      test_steps: [],
+      links: [],
       groups: []
     };
     this.selectOption = this.selectOption.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
     this.onChange = this.onChange.bind(this);
-    // this.onChangeTextarea = this.onChangeTextarea.bind(this);
-    // this.onChange = this.onChange.bind(this);
+    this.onChangeStep = this.onChangeStep.bind(this);
+    this.addColumnStep = this.addColumnStep.bind(this);
+    this.removeColumnStep = this.removeColumnStep.bind(this);
+    this.addColumnLink = this.addColumnLink.bind(this);
+    this.removeColumnLink = this.removeColumnLink.bind(this);
+    this.onChangeLink = this.onChangeLink.bind(this);
+  }
+  componentDidMount() {
+    this.props.getTestcase();
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.testcases && nextProps.testcases.testcase) {
+      var { testcase } = nextProps.testcases;
+
+      if (nextProps.testcases !== prevState.testcases) {
+        return {
+          title: testcase.title,
+          description: testcase.description,
+          expected_result: testcase.expected_result,
+          precondition: testcase.preconditions,
+          test_steps: testcase.test_steps,
+          links: testcase.links
+        };
+      }
+    }
+    return null;
   }
 
   selectOption(value) {
@@ -51,17 +85,48 @@ class EditTestCase extends Component {
       console.log(this.state);
     });
   }
+  onChangeStep = e => {
+    var testSteps = this.state.test_steps;
+    testSteps[e.target.name.substring(5)].value = e.target.value;
+    this.setState({ test_steps: testSteps }, () => {
+      console.log(this.state);
+    });
+  };
   onChangeSwitch(e, value) {
     this.setState({ [e.target.name]: value }, () => {
       console.log(this.state);
     });
   }
-  //   onChange(e) {
-  //     console.log(e);
-  //   }
-  //   onChangeTextarea(e) {
-  //     console.log(e.target.value);
-  //   }
+  addColumnStep(e) {
+    var test_steps = this.state.test_steps;
+    test_steps.push({ id: test_steps.length, value: "" });
+    this.setState({ test_steps });
+  }
+  removeColumnStep(e) {
+    var indexToRemove = e.target.id.substring(5);
+    var test_steps = this.state.test_steps;
+    test_steps.splice(indexToRemove, 1);
+    this.setState({ test_steps });
+  }
+  addColumnLink(e) {
+    var links = this.state.links;
+    links.push({ id: links.length, value: "" });
+    this.setState({ links });
+  }
+  removeColumnLink(e) {
+    var indexToRemove = e.target.id.substring(5);
+    var links = this.state.links;
+    links.splice(indexToRemove, 1);
+    this.setState({ links });
+  }
+  onChangeLink = e => {
+    var links = this.state.links;
+    links[e.target.name.substring(5)].value = e.target.value;
+    this.setState({ links: links }, () => {
+      console.log(this.state);
+    });
+  };
+
   render() {
     var bigList = [];
     bigList.push(
@@ -102,15 +167,19 @@ class EditTestCase extends Component {
                 onChange={e => this.onChange(e)}
                 name={"description"}
               />
-              <Input
+              <InputGroup
                 type="text"
-                addColumnPlaceholder="Add test steps"
                 placeholder="Enter Test Steps Here"
                 label="Test steps*"
                 // validationMsg="At least one test step is required"
-                value="Enter valid data in required fields"
-                onChange={e => this.onChange(e)}
+                values={this.state.test_steps}
+                onChange={e => this.onChangeStep(e)}
+                id={"step"}
+                addColumn={<FullBtn placeholder="Add test steps" onClick={e => this.addColumnStep(e)} />}
+                removeColumn={e => this.removeColumnStep(e)}
+                required={true}
               />
+
               <Input
                 type="text"
                 placeholder="Enter Result"
@@ -120,6 +189,7 @@ class EditTestCase extends Component {
                 onChange={e => this.onChange(e)}
                 name={"expected_result"}
               />
+
               <SearchDropdown
                 value={this.state.arrayValue}
                 options={bigList}
@@ -131,29 +201,12 @@ class EditTestCase extends Component {
                 <Switch
                   label="Health Check"
                   value={this.state.healthCheck}
-                  onChange={e =>
-                    this.onChangeSwitch(e, !this.state.healthCheck)
-                  }
+                  onChange={e => this.onChangeSwitch(e, !this.state.healthCheck)}
                   name={"healthCheck"}
                 />
-                <Switch
-                  label="Automated"
-                  checked={true}
-                  onChange={e => this.onChangeSwitch(e)}
-                  name={"automated"}
-                />
-                <Switch
-                  label="API"
-                  checked={false}
-                  onChange={e => this.onChangeSwitch(e)}
-                  name={"api"}
-                />
-                <Switch
-                  label="UI"
-                  checked={true}
-                  onChange={e => this.onChangeSwitch(e)}
-                  name={"ui"}
-                />
+                <Switch label="Automated" checked={true} onChange={e => this.onChangeSwitch(e)} name={"automated"} />
+                <Switch label="API" checked={false} onChange={e => this.onChangeSwitch(e)} name={"api"} />
+                <Switch label="UI" checked={true} onChange={e => this.onChangeSwitch(e)} name={"ui"} />
               </div>
 
               <Input
@@ -161,27 +214,23 @@ class EditTestCase extends Component {
                 addColumnPlaceholder="Add test steps"
                 placeholder="Enter Condition"
                 label="Precondition"
-                value="User has internet connection"
+                value={this.state.precondition}
                 onChange={e => this.onChange(e)}
               />
-              <FullBtn
-                className="full-width-btn"
-                placeholder="Add Links"
+              <InputGroup
+                type="text"
+                placeholder="Add Link here"
                 label="Links"
-                icon="text"
+                values={this.state.links}
+                onChange={e => this.onChangeLink(e)}
+                id={"link"}
+                addColumn={<FullBtn placeholder="Add links" onClick={e => this.addColumnLink(e)} />}
+                removeColumn={e => this.removeColumnLink(e)}
+                required={false}
               />
-              <FullBtn
-                className="full-width-btn"
-                placeholder="Add Files"
-                label="Upload Files"
-                icon="text"
-              />
+              <FullBtn className="full-width-btn" placeholder="Upload File" label="Upload Files" icon="text" />
               <div className="flex-column-left mt-4">
-                <Btn
-                  className="btn btn-primary mr-2"
-                  label="Save Changes"
-                  type="text"
-                />
+                <Btn className="btn btn-primary mr-2" label="Save Changes" type="text" />
 
                 <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
               </div>
@@ -193,4 +242,17 @@ class EditTestCase extends Component {
     );
   }
 }
-export default EditTestCase;
+
+EditTestCase.propTypes = {
+  testcases: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  testcases: state.testcases
+  // auth: state.auth,
+});
+
+export default connect(
+  mapStateToProps,
+  { getTestcase }
+)(withRouter(EditTestCase));

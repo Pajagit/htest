@@ -1,2 +1,3 @@
+export const GET_TESTCASE = "GET_TESTCASE";
 export const GET_TESTCASES = "GET_TESTCASES";
 export const TESTCASE_LOADING = "TESTCASE_LOADING";

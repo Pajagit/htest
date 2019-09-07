@@ -12,8 +12,6 @@ import SearchBtn from "../components/common/SearchBtn";
 import FilterContainer from "../components/filters/FilterContainer";
 import TestCaseContainer from "../components/test-cases/TestCaseContainer";
 
-import { getTestcases } from "../actions/testcaseActions";
-
 class TestCases extends Component {
   constructor(props) {
     super(props);
@@ -28,9 +26,6 @@ class TestCases extends Component {
     //   this.onChange = this.onChange.bind(this);
     //   this.selectOption = this.selectOption.bind(this);
     this.filterBtn = this.filterBtn.bind(this);
-  }
-  componentDidMount() {
-    this.props.getTestcases();
   }
   filterBtn() {
     var showFilters;
@@ -82,5 +77,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getTestcases }
+  {}
 )(withRouter(TestCases));

@@ -1,26 +1,7 @@
 import React from "react";
 import FormElementTitle from "../form/FormElementTitle";
-import FullBtn from "./FullBtn";
 
-function Input({
-  className,
-  type,
-  placeholder,
-  label,
-  validationMsg,
-  addColumnPlaceholder,
-  value,
-  onChange,
-  name
-}) {
-  var addColumnElement = "";
-  if (addColumnPlaceholder !== undefined) {
-    addColumnElement = (
-      <div>
-        <FullBtn placeholder={addColumnPlaceholder} />
-      </div>
-    );
-  }
+function Input({ className, type, placeholder, label, validationMsg, value, onChange, name }) {
   return (
     <div className="form-element">
       <div className="form-element-item">
@@ -36,11 +17,6 @@ function Input({
           name={name}
         />
       </div>
-
-      {addColumnElement}
-      {/* <div className="form-element-item">
-        <label className="form-element--validation">{validationMsg}</label>
-      </div> */}
     </div>
   );
 }
