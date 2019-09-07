@@ -16,10 +16,14 @@ function InputGroup({
   removeColumn,
   required
 }) {
+  var validation = "";
+  if (required) {
+    validation = validationMsg;
+  }
   return (
     <div className="form-element">
       <div className="form-element-item">
-        <FormElementTitle label={label} validationMsg={validationMsg} />
+        <FormElementTitle label={label} validationMsg={validation} />
       </div>
       {values.map((value, index) => (
         <div className="form-element-item" key={index}>

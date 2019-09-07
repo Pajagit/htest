@@ -8,6 +8,7 @@ import FullBtn from "../common/FullBtn";
 import Input from "../common/Input";
 import InputGroup from "../common/InputGroup";
 import Textarea from "../common/Textarea";
+import Spinner from "../common/Spinner";
 import Switch from "../common/Switch";
 import Checkbox from "../common/Checkbox";
 import GlobalPanel from "../global-panel/GlobalPanel";
@@ -17,6 +18,8 @@ import UnderlineAnchor from "../common/UnderlineAnchor";
 import SearchDropdown from "../common/SearchDropdown";
 
 import { getTestcase } from "../../actions/testcaseActions";
+import { getGroups } from "../../actions/groupsActions";
+import isEmpty from "../../validation/isEmpty";
 
 const bigList = [];
 
@@ -27,16 +30,19 @@ class EditTestCase extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      initialRender: true,
       options: "",
       value: null,
       arrayValue: [],
       title: "",
       description: "",
       expected_result: "",
-      precondition: "",
+      preconditions: "",
       test_steps: [],
       links: [],
-      groups: []
+      groups: [],
+      pinnedGroups: [],
+      selectedGroups: []
     };
     this.selectOption = this.selectOption.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
@@ -48,26 +54,45 @@ class EditTestCase extends Component {
     this.removeColumnLink = this.removeColumnLink.bind(this);
     this.onChangeLink = this.onChangeLink.bind(this);
   }
+
   componentDidMount() {
     this.props.getTestcase();
+    this.props.getGroups();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
     if (nextProps.testcases && nextProps.testcases.testcase) {
-      var { testcase } = nextProps.testcases;
-
       if (nextProps.testcases !== prevState.testcases) {
-        return {
-          title: testcase.title,
-          description: testcase.description,
-          expected_result: testcase.expected_result,
-          precondition: testcase.preconditions,
-          test_steps: testcase.test_steps,
-          links: testcase.links
-        };
+        var { testcase } = nextProps.testcases;
+        if (prevState.initialRender) {
+          var selectedGroupIds = testcase.groups.map(function(item) {
+            return item["id"];
+          });
+          update.initialRender = false;
+          update.selectedGroups = selectedGroupIds;
+          update.description = testcase.description;
+          update.expected_result = testcase.expected_result;
+          update.preconditions = testcase.preconditions;
+          update.title = testcase.title;
+        }
+
+        update.test_steps = testcase.test_steps;
+        update.links = testcase.links;
       }
     }
-    return null;
+
+    if (nextProps.groups && nextProps.groups.groups) {
+      var { groups } = nextProps.groups;
+
+      var filteredPinnedGroups = groups.filter(function(group) {
+        return group.isPinned === true;
+      });
+
+      update.pinnedGroups = filteredPinnedGroups;
+    }
+
+    return Object.keys(update).length ? update : null;
   }
 
   selectOption(value) {
@@ -88,14 +113,26 @@ class EditTestCase extends Component {
   onChangeStep = e => {
     var testSteps = this.state.test_steps;
     testSteps[e.target.name.substring(5)].value = e.target.value;
-    this.setState({ test_steps: testSteps }, () => {
-      console.log(this.state);
-    });
+    this.setState({ test_steps: testSteps }, () => {});
   };
-  onChangeSwitch(e, value) {
-    this.setState({ [e.target.name]: value }, () => {
-      console.log(this.state);
-    });
+  onChangeSwitch(e) {
+    var newSelectedGroup = this.state.selectedGroups;
+
+    var elementValue = parseInt(e.target.id);
+
+    if (newSelectedGroup.includes(elementValue)) {
+      newSelectedGroup = newSelectedGroup.filter(item => item !== elementValue);
+      // newSelectedGroup = [343];
+      // console.log(newSelectedGroup);
+      this.setState({ selectedGroups: newSelectedGroup }, () => {
+        console.log(this.state.selectedGroups);
+      });
+    } else {
+      newSelectedGroup.push(elementValue);
+      this.setState({ selectedGroups: newSelectedGroup }, () => {
+        console.log(this.state.selectedGroups);
+      });
+    }
   }
   addColumnStep(e) {
     var test_steps = this.state.test_steps;
@@ -136,6 +173,103 @@ class EditTestCase extends Component {
       { id: 4, name: "API" },
       { id: 5, name: "UI" }
     );
+    // console.log(this.state.selectedGroups);
+    var content;
+    if (isEmpty(this.state.selectedGroups)) {
+      content = <Spinner />;
+    } else {
+      content = (
+        <div>
+          <Input
+            type="text"
+            placeholder="Enter Test Case Name"
+            label="Test case name*"
+            // validationMsg="Test case name is a required field"
+            value={this.state.title}
+            onChange={e => this.onChange(e)}
+            name={"title"}
+          />
+          <Textarea
+            placeholder="Enter Test Case Description"
+            label="Description*"
+            // validationMsg="Description is a required field"
+            value={this.state.description}
+            onChange={e => this.onChange(e)}
+            name={"description"}
+          />
+          <InputGroup
+            type="text"
+            placeholder="Enter Test Steps Here"
+            label="Test steps*"
+            // validationMsg="At least one test step is required"
+            values={this.state.test_steps}
+            onChange={e => this.onChangeStep(e)}
+            id={"step"}
+            addColumn={<FullBtn placeholder="Add test steps" onClick={e => this.addColumnStep(e)} />}
+            removeColumn={e => this.removeColumnStep(e)}
+            required={true}
+          />
+
+          <Input
+            type="text"
+            placeholder="Enter Result"
+            label="Expected Result*"
+            // validationMsg="Expected result is a required field"
+            value={this.state.expected_result}
+            onChange={e => this.onChange(e)}
+            name={"expected_result"}
+          />
+
+          <SearchDropdown
+            value={this.state.arrayValue}
+            options={bigList}
+            onChange={this.selectMultipleOption}
+            placeholder={"Test Group"}
+            label={"Add to group*"}
+          />
+          <div className="group-grid">
+            {this.state.pinnedGroups.map((group, index) => (
+              <Switch
+                key={index}
+                label={group.value}
+                value={this.state.selectedGroups.includes(group.id)}
+                id={group.id}
+                onClick={e => this.onChangeSwitch(e)}
+                name={group.name}
+              />
+            ))}
+          </div>
+
+          <Input
+            type="text"
+            addColumnPlaceholder="Add test steps"
+            placeholder="Enter Condition"
+            label="Precondition"
+            name={"preconditions"}
+            value={this.state.preconditions}
+            onChange={e => this.onChange(e)}
+          />
+          <InputGroup
+            type="text"
+            placeholder="Add Link here"
+            label="Links"
+            values={this.state.links}
+            onChange={e => this.onChangeLink(e)}
+            id={"link"}
+            addColumn={<FullBtn placeholder="Add links" onClick={e => this.addColumnLink(e)} />}
+            removeColumn={e => this.removeColumnLink(e)}
+            required={false}
+          />
+          <FullBtn className="full-width-btn" placeholder="Upload File" label="Upload Files" icon="text" />
+          <div className="flex-column-left mt-4">
+            <Btn className="btn btn-primary mr-2" label="Save Changes" type="text" />
+
+            <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
+          </div>
+          <Checkbox label="Set old test case as deprecated" />
+        </div>
+      );
+    }
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -147,96 +281,7 @@ class EditTestCase extends Component {
             history={this.props}
             canGoBack={true}
           />
-          <div className="main-content--content">
-            {/* <div className="main-content--content-header">Edit Test Case</div> */}
-            <div>
-              <Input
-                type="text"
-                placeholder="Enter Test Case Name"
-                label="Test case name*"
-                // validationMsg="Test case name is a required field"
-                value={this.state.title}
-                onChange={e => this.onChange(e)}
-                name={"title"}
-              />
-              <Textarea
-                placeholder="Enter Test Case Description"
-                label="Description*"
-                // validationMsg="Description is a required field"
-                value={this.state.description}
-                onChange={e => this.onChange(e)}
-                name={"description"}
-              />
-              <InputGroup
-                type="text"
-                placeholder="Enter Test Steps Here"
-                label="Test steps*"
-                // validationMsg="At least one test step is required"
-                values={this.state.test_steps}
-                onChange={e => this.onChangeStep(e)}
-                id={"step"}
-                addColumn={<FullBtn placeholder="Add test steps" onClick={e => this.addColumnStep(e)} />}
-                removeColumn={e => this.removeColumnStep(e)}
-                required={true}
-              />
-
-              <Input
-                type="text"
-                placeholder="Enter Result"
-                label="Expected Result*"
-                // validationMsg="Expected result is a required field"
-                value={this.state.expected_result}
-                onChange={e => this.onChange(e)}
-                name={"expected_result"}
-              />
-
-              <SearchDropdown
-                value={this.state.arrayValue}
-                options={bigList}
-                onChange={this.selectMultipleOption}
-                placeholder={"Test Group"}
-                label={"Add to group*"}
-              />
-              <div className="group-grid">
-                <Switch
-                  label="Health Check"
-                  value={this.state.healthCheck}
-                  onChange={e => this.onChangeSwitch(e, !this.state.healthCheck)}
-                  name={"healthCheck"}
-                />
-                <Switch label="Automated" checked={true} onChange={e => this.onChangeSwitch(e)} name={"automated"} />
-                <Switch label="API" checked={false} onChange={e => this.onChangeSwitch(e)} name={"api"} />
-                <Switch label="UI" checked={true} onChange={e => this.onChangeSwitch(e)} name={"ui"} />
-              </div>
-
-              <Input
-                type="text"
-                addColumnPlaceholder="Add test steps"
-                placeholder="Enter Condition"
-                label="Precondition"
-                value={this.state.precondition}
-                onChange={e => this.onChange(e)}
-              />
-              <InputGroup
-                type="text"
-                placeholder="Add Link here"
-                label="Links"
-                values={this.state.links}
-                onChange={e => this.onChangeLink(e)}
-                id={"link"}
-                addColumn={<FullBtn placeholder="Add links" onClick={e => this.addColumnLink(e)} />}
-                removeColumn={e => this.removeColumnLink(e)}
-                required={false}
-              />
-              <FullBtn className="full-width-btn" placeholder="Upload File" label="Upload Files" icon="text" />
-              <div className="flex-column-left mt-4">
-                <Btn className="btn btn-primary mr-2" label="Save Changes" type="text" />
-
-                <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
-              </div>
-              <Checkbox label="Set old test case as deprecated" />
-            </div>
-          </div>
+          <div className="main-content--content">{content}</div>
         </div>
       </div>
     );
@@ -244,15 +289,17 @@ class EditTestCase extends Component {
 }
 
 EditTestCase.propTypes = {
-  testcases: PropTypes.object.isRequired
+  testcases: PropTypes.object.isRequired,
+  groups: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  testcases: state.testcases
+  testcases: state.testcases,
+  groups: state.groups
   // auth: state.auth,
 });
 
 export default connect(
   mapStateToProps,
-  { getTestcase }
+  { getTestcase, getGroups }
 )(withRouter(EditTestCase));
