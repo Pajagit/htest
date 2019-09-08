@@ -4,9 +4,7 @@ const keys = require('../../config/keys');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const pgURI = require('../../config/keys').postgresURI;
-const sequelize = new Sequelize(pgURI, {
-  operatorsAliases: false
-});
+const sequelize = new Sequelize(pgURI);
 
 const TestCase = require('../../models/testcase');
 const Link = require('../../models/link');

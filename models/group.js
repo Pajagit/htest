@@ -2,9 +2,7 @@
 const { Pool } = require('pg');
 const Sequelize = require('sequelize');
 const pgURI = require('../config/keys').postgresURI;
-const sequelize = new Sequelize(pgURI, {
-  operatorsAliases: false
-});
+const sequelize = new Sequelize(pgURI);
 const Group = sequelize.define(
   'groups',
   {

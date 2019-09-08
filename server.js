@@ -3,9 +3,7 @@ const bodyParser = require('body-parser');
 const { Pool } = require('pg');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const sequelize = new Sequelize(pgURI, {
-  operatorsAliases: false
-});
+const sequelize = new Sequelize(pgURI);
 
 const express = require('express');
 
