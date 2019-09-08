@@ -3,11 +3,11 @@ import FormElementTitle from "../form/FormElementTitle";
 import "react-picky/dist/picky.css";
 import Picky from "react-picky";
 
-function SearchDropdown({ className, onChange, placeholder, options, label, value }) {
+function SearchDropdown({ className, onChange, placeholder, options, label, value, validationMsg }) {
   return (
     <div className="form-element">
       <div className="form-element-item">
-        <FormElementTitle label={label} />
+        <FormElementTitle label={label} validationMsg={validationMsg} />
       </div>
 
       <div className="form-element-item">

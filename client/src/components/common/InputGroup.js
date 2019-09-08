@@ -17,14 +17,10 @@ function InputGroup({
   required,
   disabled
 }) {
-  var validation = "";
-  if (required) {
-    validation = validationMsg;
-  }
   return (
     <div className="form-element">
       <div className="form-element-item">
-        <FormElementTitle label={label} validationMsg={validation} />
+        <FormElementTitle label={label} validationMsg={validationMsg} />
       </div>
       {values.map((value, index) => (
         <div className="form-element-item" key={index}>
