@@ -23,7 +23,7 @@ export const getTestcases = () => dispatch => {
 // Get Test Case by Test Case id
 export const getTestcase = testcaseId => dispatch => {
   axios
-    .get(`http://www.json-generator.com/api/json/get/ceOEAkkfxe?indent=2`)
+    .get(`/api/testcases/testcase/${testcaseId}`)
     .then(res =>
       dispatch({
         type: GET_TESTCASE,

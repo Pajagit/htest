@@ -43,3 +43,7 @@
   pointer-events: none;
   box-shadow: 0 0 0 0 !important;
 }
+
+input[type="file"] {
+  display: none;
+}

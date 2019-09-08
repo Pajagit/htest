@@ -7,6 +7,7 @@ import Btn from "../common/Btn";
 import FullBtn from "../common/FullBtn";
 import Input from "../common/Input";
 import InputGroup from "../common/InputGroup";
+import InputGroupFile from "../common/InputGroupFile";
 import Textarea from "../common/Textarea";
 import Spinner from "../common/Spinner";
 import Switch from "../common/Switch";
@@ -31,6 +32,7 @@ class EditTestCase extends Component {
     super(props);
     this.state = {
       initialRender: true,
+      testcaseId: null,
       options: "",
       value: null,
       arrayValue: [],
@@ -42,7 +44,8 @@ class EditTestCase extends Component {
       links: [],
       groups: [],
       pinnedGroups: [],
-      selectedGroups: []
+      selectedGroups: [],
+      uploaded_files: []
     };
     this.selectOption = this.selectOption.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
@@ -56,7 +59,8 @@ class EditTestCase extends Component {
   }
 
   componentDidMount() {
-    this.props.getTestcase();
+    var testcaseId = this.props.match.params.testcaseId;
+    this.props.getTestcase(testcaseId);
     this.props.getGroups();
   }
 
@@ -71,14 +75,16 @@ class EditTestCase extends Component {
           });
           update.initialRender = false;
           update.selectedGroups = selectedGroupIds;
-          update.description = testcase.description;
-          update.expected_result = testcase.expected_result;
-          update.preconditions = testcase.preconditions;
-          update.title = testcase.title;
+          update.description = !isEmpty(testcase.description) ? testcase.description : "";
+          update.expected_result = !isEmpty(testcase.expected_result) ? testcase.expected_result : "";
+          update.preconditions = !isEmpty(testcase.preconditions) ? testcase.preconditions : "";
+          update.title = !isEmpty(testcase.title) ? testcase.title : "";
+          update.testcaseId = nextProps.match.params.testcaseId;
         }
 
         update.test_steps = testcase.test_steps;
         update.links = testcase.links;
+        update.uploaded_files = testcase.uploaded_files;
       }
     }
 
@@ -175,7 +181,7 @@ class EditTestCase extends Component {
     );
     // console.log(this.state.selectedGroups);
     var content;
-    if (isEmpty(this.state.selectedGroups)) {
+    if (isEmpty(this.state.title)) {
       content = <Spinner />;
     } else {
       content = (
@@ -209,7 +215,6 @@ class EditTestCase extends Component {
             removeColumn={e => this.removeColumnStep(e)}
             required={true}
           />
-
           <Input
             type="text"
             placeholder="Enter Result"
@@ -219,7 +224,6 @@ class EditTestCase extends Component {
             onChange={e => this.onChange(e)}
             name={"expected_result"}
           />
-
           <SearchDropdown
             value={this.state.arrayValue}
             options={bigList}
@@ -239,7 +243,6 @@ class EditTestCase extends Component {
               />
             ))}
           </div>
-
           <Input
             type="text"
             addColumnPlaceholder="Add test steps"
@@ -259,12 +262,23 @@ class EditTestCase extends Component {
             addColumn={<FullBtn placeholder="Add links" onClick={e => this.addColumnLink(e)} />}
             removeColumn={e => this.removeColumnLink(e)}
             required={false}
+            disabled={false}
           />
-          <FullBtn className="full-width-btn" placeholder="Upload File" label="Upload Files" icon="text" />
+          <InputGroupFile
+            placeholder="Upload file"
+            label="Upload files"
+            values={this.state.uploaded_files}
+            onChange={e => this.onChangeLink(e)}
+            id={"file"}
+            addColumn={<FullBtn placeholder="Add File" onClick={e => this.addColumnLink(e)} />}
+            removeColumn={e => this.removeColumnLink(e)}
+            required={false}
+            disabled={true}
+          />
           <div className="flex-column-left mt-4">
             <Btn className="btn btn-primary mr-2" label="Save Changes" type="text" />
 
-            <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
+            <UnderlineAnchor link={`/Testcase/${this.state.testcaseId}`} value={"Cancel"} />
           </div>
           <Checkbox label="Set old test case as deprecated" />
         </div>

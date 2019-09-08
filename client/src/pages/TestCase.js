@@ -16,7 +16,8 @@ import { getTestcase } from "../actions/testcaseActions";
 
 class TestCase extends Component {
   componentDidMount() {
-    this.props.getTestcase();
+    var testcaseId = this.props.match.params.testcaseId;
+    this.props.getTestcase(testcaseId);
   }
   render() {
     var { testcase } = this.props.testcases;
@@ -70,7 +71,7 @@ class TestCase extends Component {
                 <div className="testcase-details-item--value">
                   {testcase.groups.map((group, index) => (
                     <span key={index}>
-                      {group.title}
+                      {group.value}
                       {testcase.groups.length - 1 > index ? `, ` : ``}
                     </span>
                   ))}
