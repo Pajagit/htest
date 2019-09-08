@@ -6,7 +6,7 @@ module.exports = {
       'grouptestcases',
       [
         {
-          group_id: 2,
+          group_id: 1,
           test_case_id: 1
         }
       ],
@@ -15,12 +15,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkDelete('People', null, {});
-    */
+    return queryInterface.bulkDelete('grouptestcases', null, {});
   }
 };
