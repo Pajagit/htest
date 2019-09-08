@@ -14,7 +14,8 @@ function InputGroup({
   addColumn,
   id,
   removeColumn,
-  required
+  required,
+  disabled
 }) {
   var validation = "";
   if (required) {
@@ -33,6 +34,7 @@ function InputGroup({
             value={value.value}
             className="form-element--input"
             onChange={onChange}
+            disabled={disabled}
             name={`${id}-${index}`}
           />
           {required === false ? <RemoveColumnBtn index={`${id}-${index}`} onClick={removeColumn} /> : ""}
