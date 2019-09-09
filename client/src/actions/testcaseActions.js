@@ -37,3 +37,16 @@ export const getTestcase = testcaseId => dispatch => {
       })
     );
 };
+
+// Edit Test Case by Test Case id
+export const editTestcase = (testcaseId, testCaseData, history) => dispatch => {
+  axios
+    .put(`/api/testcases/testcase/${testcaseId}`, testCaseData)
+    .then(res => history.push(`/TestCase/${testcaseId}`))
+    .catch(err =>
+      dispatch({
+        type: GET_TESTCASE,
+        payload: {}
+      })
+    );
+};

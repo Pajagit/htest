@@ -19,6 +19,7 @@ import UnderlineAnchor from "../common/UnderlineAnchor";
 import SearchDropdown from "../common/SearchDropdown";
 
 import { getTestcase } from "../../actions/testcaseActions";
+import { editTestcase } from "../../actions/testcaseActions";
 import { getGroups } from "../../actions/groupsActions";
 import isEmpty from "../../validation/isEmpty";
 
@@ -138,7 +139,7 @@ class EditTestCase extends Component {
       formData.preconditions = this.state.preconditions;
       formData.isDeprecated = this.state.isDeprecated;
       formData.links = links;
-      console.log(formData);
+      this.props.editTestcase(this.state.testcaseId, formData, this.props.history);
     }
   }
   selectOption(value) {
@@ -494,5 +495,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getTestcase, getGroups }
+  { getTestcase, editTestcase, getGroups }
 )(withRouter(EditTestCase));
