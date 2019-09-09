@@ -102,10 +102,10 @@ router.put('/testcase/:id', (req, res) => {
     const testCaseFields = {};
     if (req.body.title) testCaseFields.title = req.body.title;
     testCaseFields.description = req.body.description ? req.body.description : null;
-    testCaseFields.preconditions = req.body.preconditions ? testCaseFields.preconditions : null;
+    testCaseFields.preconditions = req.body.preconditions ? req.body.preconditions : null;
     if (req.body.expected_result) testCaseFields.expected_result = req.body.expected_result;
 
-    // check if project already exists
+    // check if testcase already exists
     async function checkIfTestCaseExist() {
       return new Promise((resolve, reject) => {
         TestCase.findOne({
