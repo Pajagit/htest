@@ -104,8 +104,10 @@ router.put('/testcase/:id', (req, res) => {
     testCaseFields.description = req.body.description ? req.body.description : null;
     testCaseFields.preconditions = req.body.preconditions ? req.body.preconditions : null;
     if (req.body.expected_result) testCaseFields.expected_result = req.body.expected_result;
+    var test_steps = req.body.test_steps.filter(Boolean);
+    var links = req.body.links.filter(Boolean);
 
-    // check if testcase already exists
+    // check if testcase exists
     async function checkIfTestCaseExist() {
       return new Promise((resolve, reject) => {
         TestCase.findOne({
@@ -188,10 +190,10 @@ router.put('/testcase/:id', (req, res) => {
       return new Promise((resolve, reject) => {
         if (hasTestSteps && removedTestSteps) {
           var arrayTestSteps = new Array();
-          for (var i = 0; i < req.body.test_steps.length; i++) {
+          for (var i = 0; i < test_steps.length; i++) {
             arrayTestSteps.push({
               test_case_id: req.params.id,
-              title: req.body.test_steps[i]
+              title: test_steps[i]
             });
           }
           TestStep.bulkCreate(arrayTestSteps).then(steps => {
@@ -207,10 +209,10 @@ router.put('/testcase/:id', (req, res) => {
       return new Promise((resolve, reject) => {
         if (hasLinks && removedLinks) {
           var arrayLinks = new Array();
-          for (var i = 0; i < req.body.links.length; i++) {
+          for (var i = 0; i < links.length; i++) {
             arrayLinks.push({
               test_case_id: req.params.id,
-              value: req.body.links[i]
+              value: links[i]
             });
           }
           Link.bulkCreate(arrayLinks).then(links => {
@@ -294,7 +296,7 @@ router.put('/testcase/:id', (req, res) => {
         //update steps
         let removedTestSteps = await removeTestSteps(updatedTestCase);
         var hasTestSteps = false;
-        if (req.body.test_steps) {
+        if (test_steps) {
           hasTestSteps = true;
         }
         let addedTestSteps = await addTestSteps(hasTestSteps, removedTestSteps);
@@ -302,7 +304,7 @@ router.put('/testcase/:id', (req, res) => {
         //update links
         let removedLinks = await removeLinks(updatedTestCase);
         var hasLinks = false;
-        if (req.body.links) {
+        if (links) {
           hasLinks = true;
         }
         let addedLinks = await addLinks(hasLinks, removedLinks);
