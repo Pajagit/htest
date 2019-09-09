@@ -21,7 +21,9 @@ import SearchDropdown from "../common/SearchDropdown";
 import { getTestcase } from "../../actions/testcaseActions";
 import { editTestcase } from "../../actions/testcaseActions";
 import { getGroups } from "../../actions/groupsActions";
+import filterStringArray from "../../utility/filterStringArray";
 import isEmpty from "../../validation/isEmpty";
+import TestCaseValidation from "../../validation/TestCaseValidation";
 
 const bigList = [];
 
@@ -55,7 +57,8 @@ class EditTestCase extends Component {
       preconditionValidation: "",
       linksValidation: "",
       isDeprecated: false,
-      submitBtnDisabledClass: ""
+      submitBtnDisabledClass: "",
+      errors: {}
     };
     this.selectOption = this.selectOption.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
@@ -116,35 +119,26 @@ class EditTestCase extends Component {
       this.submitForm(e);
     }
   };
+
   submitForm(e) {
     e.preventDefault();
     var formData = {};
-    if (
-      this.state.titleValidation === "" &&
-      this.state.descriptionValidation === "" &&
-      this.state.teststepsValidation === "" &&
-      this.state.expectedResultValidation === "" &&
-      this.state.groupsValidation === "" &&
-      this.state.preconditionValidation === "" &&
-      this.state.linksValidation === ""
-    ) {
-      this.setState({ submitBtnDisabledClass: "" });
-      var testSteps = this.state.test_steps.map(function(test_step) {
-        return test_step["value"];
-      });
-      var links = this.state.links.map(function(link) {
-        return link["value"];
-      });
 
-      formData.title = this.state.title;
-      formData.description = this.state.description;
-      formData.test_steps = testSteps;
-      formData.expected_result = this.state.expected_result;
-      formData.groups = this.state.selectedGroups;
-      formData.preconditions = this.state.preconditions;
-      formData.isDeprecated = this.state.isDeprecated;
-      formData.links = links;
+    var testSteps = filterStringArray(this.state.test_steps);
+    var links = filterStringArray(this.state.links);
+    formData.title = this.state.title;
+    formData.description = this.state.description;
+    formData.test_steps = testSteps;
+    formData.expected_result = this.state.expected_result;
+    formData.groups = this.state.selectedGroups;
+    formData.preconditions = this.state.preconditions;
+    formData.isDeprecated = this.state.isDeprecated;
+    formData.links = links;
+    const { errors, isValid } = TestCaseValidation(formData);
+    if (isValid) {
       this.props.editTestcase(this.state.testcaseId, formData, this.props.history);
+    } else {
+      this.setState({ errors });
     }
   }
   selectOption(value) {
@@ -161,121 +155,18 @@ class EditTestCase extends Component {
   }
 
   onChange(e) {
-    if (e.target.name.substring(0, 4) === "link") {
-      var linkLimit = 150;
-
-      var links = this.state.links;
-      links[e.target.name.substring(5)].value = e.target.value;
-
-      this.setState({ links: links }, () => {
-        var filteredLinksLimit = this.state.links.filter(function(link) {
-          return link.value !== "" && link.value.length > linkLimit;
-        });
-
-        if (filteredLinksLimit.length > 0) {
-          var longLinkValue = `"${filteredLinksLimit[0].value.substring(0, 20)}" ...`;
-          this.setState({
-            linksValidation: `${longLinkValue} link is too long and can have more than ${linkLimit} characters (${filteredLinksLimit[0].value.length})`
-          });
-        } else {
-          this.setState({
-            linksValidation: ``
-          });
-        }
-      });
-    }
-    if (e.target.name.substring(0, 4) === "step") {
-      var testStepLimit = 150;
-
-      var testSteps = this.state.test_steps;
-      testSteps[e.target.name.substring(5)].value = e.target.value;
-      this.setState({ test_steps: testSteps }, () => {
-        var filteredTestSteps = this.state.test_steps.filter(function(test_step) {
-          return test_step.value !== "";
-        });
-
-        var filteredTestStepsLimit = this.state.test_steps.filter(function(test_step) {
-          return test_step.value !== "" && test_step.value.length > testStepLimit;
-        });
-        if (filteredTestSteps.length === 0) {
-          this.setState({
-            teststepsValidation: `There must be at least one test step`
-          });
-        } else if (filteredTestStepsLimit.length > 0) {
-          var longStepValue = `"${filteredTestStepsLimit[0].value.substring(0, 20)}" ...`;
-          this.setState({
-            teststepsValidation: `${longStepValue} test step is too long and can have more than ${testStepLimit} characters (${filteredTestStepsLimit[0].value.length})`
-          });
-        } else {
-          this.setState({
-            teststepsValidation: ``
-          });
-        }
-      });
+    if (e.target.id === "link") {
+      var enteredLinks = this.state.links;
+      enteredLinks[e.target.name.substring(5)].value = e.target.value;
+      this.setState({ links: enteredLinks });
     }
 
-    var titleLimit = 150;
-    var descriptionLimit = 255;
-    var expectedResultLimit = 150;
-    var preconditionLimit = 150;
-
-    if (e.target.name === "title" && e.target.value === "") {
-      this.setState({ titleValidation: "Title is a required field" });
-    } else if (e.target.name === "title" && e.target.value.length > titleLimit) {
-      this.setState({
-        titleValidation: `Title must have ${titleLimit} characters or less (${e.target.value.length})`
-      });
-    } else if (e.target.name === "title" && e.target.value !== "" && e.target.value.length <= descriptionLimit) {
-      this.setState({ titleValidation: "" });
+    if (e.target.id === "step") {
+      var enteredTestSteps = this.state.test_steps;
+      enteredTestSteps[e.target.name.substring(5)].value = e.target.value;
+      this.setState({ test_steps: enteredTestSteps });
     }
-
-    if (e.target.name === "description" && e.target.value === "") {
-      this.setState({
-        descriptionValidation: "Description is a required field"
-      });
-    } else if (e.target.name === "description" && e.target.value.length > descriptionLimit) {
-      this.setState({
-        descriptionValidation: `Description must have ${descriptionLimit} characters or less (${e.target.value.length})`
-      });
-    } else if (e.target.name === "description" && e.target.value !== "" && e.target.value.length <= descriptionLimit) {
-      this.setState({ descriptionValidation: "" });
-    }
-
-    if (e.target.name === "expected_result" && e.target.value === "") {
-      this.setState({
-        expectedResultValidation: "Expected result is a required field"
-      });
-    } else if (e.target.name === "expected_result" && e.target.value.length > expectedResultLimit) {
-      this.setState({
-        expectedResultValidation: `Expected result must have ${expectedResultLimit} characters or less (${e.target.value.length})`
-      });
-    } else if (e.target.name === "expected_result" && e.target.value !== "") {
-      this.setState({ expectedResultValidation: "" });
-    }
-
-    if (e.target.name === "preconditions" && e.target.value.length > preconditionLimit) {
-      this.setState({
-        preconditionValidation: `Preconditions must have ${preconditionLimit} characters or less (${e.target.value.length})`
-      });
-    } else if (e.target.name === "preconditions" && e.target.value !== "") {
-      this.setState({ preconditionValidation: "" });
-    }
-
-    this.setState({ [e.target.name]: e.target.value }, () => {
-      if (
-        this.state.titleValidation === "" &&
-        this.state.descriptionValidation === "" &&
-        this.state.teststepsValidation === "" &&
-        this.state.expectedResultValidation === "" &&
-        this.state.groupsValidation === "" &&
-        this.state.preconditionValidation === "" &&
-        this.state.linksValidation === ""
-      ) {
-        this.setState({ submitBtnDisabledClass: "" });
-      } else {
-        this.setState({ submitBtnDisabledClass: "disabled" });
-      }
-    });
+    this.setState({ [e.target.name]: e.target.value });
   }
   onChangeSwitch(e) {
     var newSelectedGroup = this.state.selectedGroups;
@@ -362,7 +253,7 @@ class EditTestCase extends Component {
             type="text"
             placeholder="Enter Test Case Name"
             label="Test case name*"
-            validationMsg={this.state.titleValidation}
+            validationMsg={this.state.errors.title}
             value={this.state.title}
             onChange={e => this.onChange(e)}
             name={"title"}
@@ -371,7 +262,7 @@ class EditTestCase extends Component {
           <Textarea
             placeholder="Enter Test Case Description"
             label="Description*"
-            validationMsg={this.state.descriptionValidation}
+            validationMsg={this.state.errors.description}
             value={this.state.description}
             onChange={e => this.onChange(e)}
             name={"description"}
@@ -381,7 +272,7 @@ class EditTestCase extends Component {
             type="text"
             placeholder="Enter Test Steps Here"
             label="Test steps*"
-            validationMsg={this.state.teststepsValidation}
+            validationMsg={this.state.errors.test_steps}
             values={this.state.test_steps}
             onChange={e => this.onChange(e)}
             id={"step"}
@@ -394,7 +285,7 @@ class EditTestCase extends Component {
             type="text"
             placeholder="Enter Result"
             label="Expected Result*"
-            validationMsg={this.state.expectedResultValidation}
+            validationMsg={this.state.errors.expected_result}
             value={this.state.expected_result}
             onChange={e => this.onChange(e)}
             name={"expected_result"}
@@ -406,7 +297,7 @@ class EditTestCase extends Component {
             onChange={this.selectMultipleOption}
             placeholder={"Test Group"}
             label={"Add to group*"}
-            validationMsg={this.state.groupsValidation}
+            validationMsg={this.state.errors.groups}
           />
           <div className="group-grid">
             {this.state.pinnedGroups.map((group, index) => (
@@ -427,7 +318,7 @@ class EditTestCase extends Component {
             label="Precondition"
             name={"preconditions"}
             value={this.state.preconditions}
-            validationMsg={this.state.preconditionValidation}
+            validationMsg={this.state.errors.preconditions}
             onChange={e => this.onChange(e)}
             onKeyDown={this.submitFormOnEnterKey}
           />
@@ -438,7 +329,7 @@ class EditTestCase extends Component {
             values={this.state.links}
             onChange={e => this.onChange(e)}
             id={"link"}
-            validationMsg={this.state.linksValidation}
+            validationMsg={this.state.errors.links}
             addColumn={<FullBtn placeholder="Add links" onClick={e => this.addColumnLink(e)} />}
             removeColumn={e => this.removeColumnLink(e)}
             required={false}

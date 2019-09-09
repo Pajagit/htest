@@ -34,6 +34,7 @@ function InputGroup({
             disabled={disabled}
             name={`${id}-${index}`}
             onKeyDown={onKeyDown}
+            id={id}
           />
           {required === false ? <RemoveColumnBtn index={`${id}-${index}`} onClick={removeColumn} /> : ""}
           {values.length > 1 ? <RemoveColumnBtn index={`${id}-${index}`} onClick={removeColumn} /> : ""}
