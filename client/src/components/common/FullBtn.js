@@ -1,5 +1,6 @@
 import React from "react";
 import FormElementTitle from "../form/FormElementTitle";
+import addNewBtn from "../../img/addNewBtn.png";
 
 function FullBtn({ label, placeholder, onClick }) {
   return (
@@ -11,7 +12,7 @@ function FullBtn({ label, placeholder, onClick }) {
         <div className="full-width-btn">
           <div className="full-width-btn--label">{placeholder}</div>
           <div className="full-width-btn--icon">
-            <i className="fas fa-clone"></i>
+            <img src={addNewBtn} alt="Add new" />
           </div>
         </div>
       </div>

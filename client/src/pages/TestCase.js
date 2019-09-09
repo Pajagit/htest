@@ -11,6 +11,7 @@ import BtnAnchor from "../components/common/BtnAnchor";
 import Checkbox from "../components/common/Checkbox";
 import Header from "../components/common/Header";
 import Spinner from "../components/common/Spinner";
+import openExternalBtn from "../img/openExternalBtn.png";
 
 import { getTestcase } from "../actions/testcaseActions";
 
@@ -87,7 +88,8 @@ class TestCase extends Component {
                   <span key={index}>
                     <div className="testcase-details-item--value">
                       <a href={link.value} target="_blank" rel="noopener noreferrer">
-                        <span className="mr-1">{link.value}</span> <i className="fas fa-external-link-alt"></i>
+                        <span className="mr-1">{link.value}</span>{" "}
+                        <img className="testcase-details-item--value-img" src={openExternalBtn} alt="External link" />
                       </a>
                     </div>
                   </span>

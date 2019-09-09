@@ -21,4 +21,11 @@
     background: $color-primary-lightest;
     cursor: pointer;
   }
+  &--icon {
+    padding-top: 7px;
+  }
+  &--icon > img {
+    width: 20px;
+    height: 20px;
+  }
 }
