@@ -15,7 +15,8 @@ function InputGroup({
   id,
   removeColumn,
   required,
-  disabled
+  disabled,
+  onKeyDown
 }) {
   return (
     <div className="form-element">
@@ -32,6 +33,7 @@ function InputGroup({
             onChange={onChange}
             disabled={disabled}
             name={`${id}-${index}`}
+            onKeyDown={onKeyDown}
           />
           {required === false ? <RemoveColumnBtn index={`${id}-${index}`} onClick={removeColumn} /> : ""}
           {values.length > 1 ? <RemoveColumnBtn index={`${id}-${index}`} onClick={removeColumn} /> : ""}

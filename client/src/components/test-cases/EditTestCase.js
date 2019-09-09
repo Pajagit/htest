@@ -111,6 +111,11 @@ class EditTestCase extends Component {
 
     return Object.keys(update).length ? update : null;
   }
+  submitFormOnEnterKey = e => {
+    if (e.keyCode === 13) {
+      this.submitForm(e);
+    }
+  };
   submitForm(e) {
     e.preventDefault();
     var formData = {};
@@ -361,6 +366,7 @@ class EditTestCase extends Component {
             value={this.state.title}
             onChange={e => this.onChange(e)}
             name={"title"}
+            onKeyDown={this.submitFormOnEnterKey}
           />
           <Textarea
             placeholder="Enter Test Case Description"
@@ -369,6 +375,7 @@ class EditTestCase extends Component {
             value={this.state.description}
             onChange={e => this.onChange(e)}
             name={"description"}
+            onKeyDown={this.submitFormOnEnterKey}
           />
           <InputGroup
             type="text"
@@ -381,6 +388,7 @@ class EditTestCase extends Component {
             addColumn={<FullBtn placeholder="Add test steps" onClick={e => this.addColumnStep(e)} />}
             removeColumn={e => this.removeColumnStep(e)}
             required={true}
+            onKeyDown={this.submitFormOnEnterKey}
           />
           <Input
             type="text"
@@ -390,6 +398,7 @@ class EditTestCase extends Component {
             value={this.state.expected_result}
             onChange={e => this.onChange(e)}
             name={"expected_result"}
+            onKeyDown={this.submitFormOnEnterKey}
           />
           <SearchDropdown
             value={this.state.arrayValue}
@@ -420,6 +429,7 @@ class EditTestCase extends Component {
             value={this.state.preconditions}
             validationMsg={this.state.preconditionValidation}
             onChange={e => this.onChange(e)}
+            onKeyDown={this.submitFormOnEnterKey}
           />
           <InputGroup
             type="text"
@@ -433,6 +443,7 @@ class EditTestCase extends Component {
             removeColumn={e => this.removeColumnLink(e)}
             required={false}
             disabled={false}
+            onKeyDown={this.submitFormOnEnterKey}
           />
           {/* <InputGroupFile
             placeholder="Upload file"
