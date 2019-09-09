@@ -53,7 +53,7 @@ const TestCase = sequelize.define(
       }
     }
   },
-  {}
+  { timestamps: false }
 );
 
 TestCase.belongsToMany(Group, {
