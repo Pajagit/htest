@@ -1,5 +1,5 @@
 import React from "react";
-function Switch({ label, checked, onClick, name, value, id }) {
+function Switch({ label, onClick, name, value, id }) {
   var isChecked = false;
   if (value) {
     isChecked = true;

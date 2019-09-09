@@ -5,7 +5,7 @@ import { GET_GROUPS } from "./types";
 // Get All Groups
 export const getGroups = () => dispatch => {
   axios
-    .get(`http://www.json-generator.com/api/json/get/cpnIMJhnIi?indent=2`)
+    .get(`http://www.json-generator.com/api/json/get/cfseplVjpK?indent=2`)
     .then(res =>
       dispatch({
         type: GET_GROUPS,

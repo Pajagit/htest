@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function UnderlineAnchor({ link, value }) {
+function UnderlineAnchor({ link, value, name }) {
   return (
     <div className="underline-anchor">
-      <Link to={link}>{value}</Link>
+      <Link to={link} name={name}>
+        {value}
+      </Link>
     </div>
   );
 }

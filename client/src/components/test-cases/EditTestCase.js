@@ -53,6 +53,7 @@ class EditTestCase extends Component {
       groupsValidation: "",
       preconditionValidation: "",
       linksValidation: "",
+      isDeprecated: false,
       submitBtnDisabledClass: ""
     };
     this.selectOption = this.selectOption.bind(this);
@@ -62,6 +63,7 @@ class EditTestCase extends Component {
     this.removeColumnStep = this.removeColumnStep.bind(this);
     this.addColumnLink = this.addColumnLink.bind(this);
     this.removeColumnLink = this.removeColumnLink.bind(this);
+    this.toggleDeprecated = this.toggleDeprecated.bind(this);
     this.submitForm = this.submitForm.bind(this);
   }
 
@@ -134,6 +136,7 @@ class EditTestCase extends Component {
       formData.expected_result = this.state.expected_result;
       formData.groups = this.state.selectedGroups;
       formData.preconditions = this.state.preconditions;
+      formData.isDeprecated = this.state.isDeprecated;
       formData.links = links;
       console.log(formData);
     }
@@ -146,6 +149,9 @@ class EditTestCase extends Component {
     console.count("onChange");
     console.log("Val", value);
     this.setState({ arrayValue: value });
+  }
+  toggleDeprecated() {
+    this.setState({ isDeprecated: !this.state.isDeprecated });
   }
 
   onChange(e) {
@@ -218,7 +224,9 @@ class EditTestCase extends Component {
     }
 
     if (e.target.name === "description" && e.target.value === "") {
-      this.setState({ descriptionValidation: "Description is a required field" });
+      this.setState({
+        descriptionValidation: "Description is a required field"
+      });
     } else if (e.target.name === "description" && e.target.value.length > descriptionLimit) {
       this.setState({
         descriptionValidation: `Description must have ${descriptionLimit} characters or less (${e.target.value.length})`
@@ -228,7 +236,9 @@ class EditTestCase extends Component {
     }
 
     if (e.target.name === "expected_result" && e.target.value === "") {
-      this.setState({ expectedResultValidation: "Expected result is a required field" });
+      this.setState({
+        expectedResultValidation: "Expected result is a required field"
+      });
     } else if (e.target.name === "expected_result" && e.target.value.length > expectedResultLimit) {
       this.setState({
         expectedResultValidation: `Expected result must have ${expectedResultLimit} characters or less (${e.target.value.length})`
@@ -270,7 +280,9 @@ class EditTestCase extends Component {
       newSelectedGroup = newSelectedGroup.filter(item => item !== elementValue);
       this.setState({ selectedGroups: newSelectedGroup }, () => {
         if (this.state.selectedGroups.length === 0) {
-          this.setState({ groupsValidation: "Test case must be assigned to at least one group" });
+          this.setState({
+            groupsValidation: "Test case must be assigned to at least one group"
+          });
         } else {
           this.setState({ groupsValidation: "" });
         }
@@ -279,7 +291,9 @@ class EditTestCase extends Component {
       newSelectedGroup.push(elementValue);
       this.setState({ selectedGroups: newSelectedGroup }, () => {
         if (this.state.selectedGroups.length === 0) {
-          this.setState({ groupsValidation: "Test case must be assigned to at least one group" });
+          this.setState({
+            groupsValidation: "Test case must be assigned to at least one group"
+          });
         } else {
           this.setState({ groupsValidation: "" });
         }
@@ -440,7 +454,12 @@ class EditTestCase extends Component {
 
             <UnderlineAnchor link={`/Testcase/${this.state.testcaseId}`} value={"Cancel"} />
           </div>
-          <Checkbox label="Set old test case as deprecated" />
+          <Checkbox
+            label="Set old test case as deprecated"
+            onClick={e => this.toggleDeprecated(e)}
+            name="isDeprecated"
+            value={this.state.isDeprecated}
+          />
         </div>
       );
     }
