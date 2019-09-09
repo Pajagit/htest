@@ -30,7 +30,7 @@ const UploadedFile = sequelize.define(
       }
     }
   },
-  {}
+  { timestamps: false }
 );
 UploadedFile.associate = function(models) {
   // associations can be defined here

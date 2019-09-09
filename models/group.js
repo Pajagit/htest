@@ -49,9 +49,9 @@ const Group = sequelize.define(
     updated_at: {
       type: Sequelize.DATE,
       required: false
-    },
+    }
   },
-  {}
+  { timestamps: false }
 );
 Group.associate = function(models) {
   // associations can be defined here

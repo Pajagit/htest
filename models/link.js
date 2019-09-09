@@ -26,7 +26,7 @@ const Link = sequelize.define(
       }
     }
   },
-  {}
+  {timestamps: false}
 );
 Link.associate = function(models) {
   // associations can be defined here

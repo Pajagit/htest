@@ -30,7 +30,7 @@ const TestStep = sequelize.define(
       }
     }
   },
-  {}
+  { timestamps: false }
 );
 TestStep.associate = function(models) {
   // associations can be defined here
