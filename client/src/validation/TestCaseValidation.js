@@ -70,19 +70,31 @@ const TestCaseValidation = testCase => {
     return link !== "" && link.length > linkLimit;
   });
 
+  if (filteredLinksLimit.length > 0) {
+    var longLinkValue = `"${filteredLinksLimit[0].substring(0, 20)}"`;
+
+    errors.links = `${longLinkValue}... test step is too long and can have more than ${linkLimit} characters (${filteredLinksLimit[0].length})`;
+  }
+  var options = {
+    protocols: ["http", "https", "ftp"],
+    require_tld: true,
+    require_protocol: true,
+    require_host: true,
+    require_valid_protocol: true,
+    allow_underscores: false,
+    host_whitelist: false,
+    host_blacklist: false,
+    allow_trailing_dot: false,
+    allow_protocol_relative_urls: false,
+    disallow_auth: false
+  };
   var filteredLinkUrl = testCase.links.filter(function(link) {
-    return validator.isURL(link) === false;
+    return validator.isURL(link, options) === false;
   });
   if (filteredLinkUrl.length > 0) {
     var invalidLinkValue = `"${filteredLinkUrl[0].substring(0, 20)}"`;
 
     errors.links = `${invalidLinkValue}... link is invalid`;
-  }
-
-  if (filteredLinksLimit.length > 0) {
-    var longLinkValue = `"${filteredLinksLimit[0].substring(0, 20)}"`;
-
-    errors.links = `${longLinkValue}... test step is too long and can have more than ${linkLimit} characters (${filteredLinksLimit[0].length})`;
   }
 
   return {
