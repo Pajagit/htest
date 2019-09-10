@@ -247,11 +247,11 @@ class EditTestCase extends Component {
       { id: 5, name: "UI" }
     );
     var content;
-    if (isEmpty(this.props.testcases.testcase)) {
+    if (isEmpty(this.props.testcases.testcase) || this.props.testcases.loading) {
       content = <Spinner />;
     } else {
       content = (
-        <div>
+        <div className="main-content--content">
           <Input
             type="text"
             placeholder="Enter Test Case Name"
@@ -381,7 +381,7 @@ class EditTestCase extends Component {
             link={`/${this.state.projectId}/TestCase/${this.state.testcaseId}`}
             canGoBack={true}
           />
-          <div className="main-content--content">{content}</div>
+          {content}
         </div>
       </div>
     );

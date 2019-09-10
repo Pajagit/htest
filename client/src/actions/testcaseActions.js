@@ -1,9 +1,11 @@
 import axios from "axios";
 
-import { GET_TESTCASE, GET_TESTCASES } from "./types";
+import { GET_TESTCASE, GET_TESTCASES, TESTCASE_LOADING } from "./types";
 
 // Get All Test Cases
 export const getTestcases = () => dispatch => {
+  dispatch(setTestCaseLoading());
+
   axios
     .get(`http://www.json-generator.com/api/json/get/cetTolnlwy?indent=2`)
     .then(res =>
@@ -22,6 +24,8 @@ export const getTestcases = () => dispatch => {
 
 // Get Test Case by Test Case id
 export const getTestcase = testcaseId => dispatch => {
+  dispatch(setTestCaseLoading());
+
   axios
     .get(`/api/testcases/testcase/${testcaseId}`)
     .then(res =>
@@ -40,6 +44,8 @@ export const getTestcase = testcaseId => dispatch => {
 
 // Edit Test Case by Test Case id
 export const editTestcase = (testcaseId, projectId, testCaseData, history) => dispatch => {
+  dispatch(setTestCaseLoading());
+
   axios
     .put(`/api/testcases/testcase/${testcaseId}`, testCaseData)
     .then(res => history.push(`/${projectId}/TestCase/${testcaseId}`))
@@ -53,6 +59,8 @@ export const editTestcase = (testcaseId, projectId, testCaseData, history) => di
 
 // Create Test Case
 export const createTestCase = (testCaseData, history) => dispatch => {
+  dispatch(setTestCaseLoading());
+
   axios
     .post(`/api/testcases/testcase`, testCaseData)
     .then(res => history.push(`/${testCaseData.project_id}/TestCase/${res.data.id}`))
@@ -62,4 +70,11 @@ export const createTestCase = (testCaseData, history) => dispatch => {
         payload: {}
       })
     );
+};
+
+// Test Case loading
+export const setTestCaseLoading = () => {
+  return {
+    type: TESTCASE_LOADING
+  };
 };
