@@ -1,11 +1,10 @@
 .portrait-testcase {
+  position: relative;
   &:hover {
     background-color: #eceef9;
   }
   display: flex;
   min-height: 300px;
-  //   min-width: 200px;
-  //   max-width: 350px;
   flex-direction: column;
   background-color: #ffffff;
   box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
@@ -51,11 +50,20 @@
     padding: 15px 20px;
     &-container {
       &--description {
+        max-height: 130px;
+        overflow: hidden;
         color: #000000;
         font-size: 14px;
         letter-spacing: 0.17px;
         line-height: 18px;
         padding-bottom: 20px;
+        margin-bottom: 40px;
+      }
+      &--button {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        margin-top: 20px;
       }
     }
   }

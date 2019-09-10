@@ -358,7 +358,7 @@ class EditTestCase extends Component {
               onClick={e => this.submitForm(e)}
             />
 
-            <UnderlineAnchor link={`/Testcase/${this.state.testcaseId}`} value={"Cancel"} />
+            <UnderlineAnchor link={`/${this.state.projectId}/Testcase/${this.state.testcaseId}`} value={"Cancel"} />
           </div>
           <Checkbox
             label="Set old test case as deprecated"

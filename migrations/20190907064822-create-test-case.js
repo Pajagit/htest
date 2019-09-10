@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('testcases', {
+    return queryInterface.createTable("testcases", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: null
       },
-      depricated: {
+      deprecated: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false
@@ -34,17 +34,17 @@ module.exports = {
       user_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' }
+        references: { model: "users", key: "id" }
       },
       project_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'projects', key: 'id' }
+        references: { model: "projects", key: "id" }
       },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn("NOW")
       },
       updated_at: {
         allowNull: true,
@@ -54,6 +54,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('testcases');
+    return queryInterface.dropTable("testcases");
   }
 };

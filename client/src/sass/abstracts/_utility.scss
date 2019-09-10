@@ -30,13 +30,6 @@
   margin-top: 5rem;
 }
 
-.truncate {
-  width: 260px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .disabled {
   opacity: 0.35;
   cursor: default !important;
@@ -46,4 +39,22 @@
 
 input[type="file"] {
   display: none;
+}
+
+// $font-size: 26px;
+$line-height: 1.4;
+$lines-to-show: 6;
+
+.truncate {
+  display: block; /* Fallback for non-webkit */
+  display: -webkit-box;
+  max-width: 400px;
+  height: $line-height * $lines-to-show; /* Fallback for non-webkit */
+  margin: 0 auto;
+  // font-size: $font-size;
+  line-height: $line-height;
+  -webkit-line-clamp: $lines-to-show;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

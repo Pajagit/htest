@@ -8,10 +8,10 @@ import GlobalPanel from "../global-panel/GlobalPanel";
 import ProjectPanel from "../project-panel/ProjectPanel";
 import UnderlineAnchor from "../common/UnderlineAnchor";
 import BtnAnchor from "../common/BtnAnchor";
-import Checkbox from "../common/Checkbox";
 import Header from "../common/Header";
 import Spinner from "../common/Spinner";
 import openExternalBtn from "../../img/openExternalBtn.png";
+import Tag from "../common/Tag";
 
 import { getTestcase } from "../../actions/testcaseActions";
 
@@ -81,10 +81,10 @@ class TestCase extends Component {
                 <div className="testcase-details-item--value">
                   {testcase.groups.map((group, index) => (
                     <span key={index}>
-                      {group.value}
-                      {testcase.groups.length - 1 > index ? `, ` : ``}
+                      <Tag title={group.value} color={group.color} isRemovable={false} />
                     </span>
                   ))}
+                  <br />
                 </div>
               </div>
               <div className="testcase-details-item">
@@ -118,11 +118,10 @@ class TestCase extends Component {
                 <BtnAnchor
                   className="a-btn a-btn-primary mr-2"
                   label="Add To Report"
-                  link={`/${testcase.id}/TestCases`}
+                  link={`/${projectId}/TestCases`}
                 />
-                <UnderlineAnchor link={`/${testcase.id}/TestCases`} value={"Cancel"} />
+                <UnderlineAnchor link={`/${projectId}/TestCases`} value={"Cancel"} />
               </div>
-              <Checkbox label="Set old test case as deprecated" />
             </div>
           </div>
         </div>

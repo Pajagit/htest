@@ -35,7 +35,7 @@ const TestCase = sequelize.define(
       type: Sequelize.STRING,
       required: false
     },
-    depricated: {
+    deprecated: {
       type: Sequelize.BOOLEAN,
       required: true
     },

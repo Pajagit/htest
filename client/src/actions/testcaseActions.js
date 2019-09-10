@@ -3,11 +3,11 @@ import axios from "axios";
 import { GET_TESTCASE, GET_TESTCASES, TESTCASE_LOADING } from "./types";
 
 // Get All Test Cases
-export const getTestcases = () => dispatch => {
+export const getTestcases = project_id => dispatch => {
   dispatch(setTestCaseLoading());
 
   axios
-    .get(`http://www.json-generator.com/api/json/get/cetTolnlwy?indent=2`)
+    .get(`/api/testcases/all?project_id=${project_id}`)
     .then(res =>
       dispatch({
         type: GET_TESTCASES,
