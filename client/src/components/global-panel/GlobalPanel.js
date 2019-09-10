@@ -9,13 +9,7 @@ function GlobalPanel(props) {
   var notificationsActive = false;
   var statisticsActive = false;
   var settingsActive = false;
-  if (
-    props.props.match.path === "/:projectId/CreateTestCase" ||
-    props.props.match.path === "/:projectId/TestCases" ||
-    props.props.match.path === "/Projects" ||
-    props.props.match.path === "/TestCase/:testcaseId" ||
-    props.props.match.path === "/EditTestCase/:testcaseId"
-  ) {
+  if (props.props.match.path.substring(0, 12) === "/:projectId/" || props.props.match.path === "/Projects") {
     projectsActive = true;
     notificationsActive = false;
     statisticsActive = false;

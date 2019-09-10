@@ -2,12 +2,12 @@ import React from "react";
 import AddReportBtn from "../common/AddReportBtn";
 import { Link } from "react-router-dom";
 
-function PortraitTestCase({ title, tags, author, date, description, id }) {
+function PortraitTestCase({ title, tags, author, date, description, id, projectId }) {
   return (
     <div className="portrait-testcase">
       <div className="portrait-testcase-top">
         <div className="portrait-testcase-top-container">
-          <Link to={`/TestCase/${id}`}>
+          <Link to={`/${projectId}/TestCase/${id}`}>
             <div className="portrait-testcase-top-container--title">{title}</div>
           </Link>
           <div className="portrait-testcase-top-container--tags">{tags}</div>

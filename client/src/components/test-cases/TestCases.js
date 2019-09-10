@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import GlobalPanel from "../components/global-panel/GlobalPanel";
-import ProjectPanel from "../components/project-panel/ProjectPanel";
-import BtnAnchor from "../components/common/BtnAnchor";
-import FilterBtn from "../components/common/FilterBtn";
-import Header from "../components/common/Header";
-import SearchBtn from "../components/common/SearchBtn";
-import FilterContainer from "../components/filters/FilterContainer";
-import TestCaseContainer from "../components/test-cases/TestCaseContainer";
+import GlobalPanel from "../global-panel/GlobalPanel";
+import ProjectPanel from "../project-panel/ProjectPanel";
+import BtnAnchor from "../common/BtnAnchor";
+import FilterBtn from "../common/FilterBtn";
+import Header from "../common/Header";
+import SearchBtn from "../common/SearchBtn";
+import FilterContainer from "../filters/FilterContainer";
+import TestCaseContainer from "../test-cases/TestCaseContainer";
 
 class TestCases extends Component {
   constructor(props) {
@@ -22,9 +22,6 @@ class TestCases extends Component {
       value: null,
       arrayValue: []
     };
-
-    //   this.onChange = this.onChange.bind(this);
-    //   this.selectOption = this.selectOption.bind(this);
     this.filterBtn = this.filterBtn.bind(this);
   }
   filterBtn() {

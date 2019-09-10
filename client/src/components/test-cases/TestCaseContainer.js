@@ -14,6 +14,7 @@ class TestCaseContainer extends Component {
     this.props.getTestcases();
   }
   render() {
+    var projectId = this.props.match.params.projectId;
     var testcases = this.props.testcases;
     var { loading } = this.props.testcases;
 
@@ -38,6 +39,7 @@ class TestCaseContainer extends Component {
               date={testcase.date}
               description={testcase.description}
               id={testcase.id}
+              projectId={projectId}
             ></PortraitTestCase>
           </React.Fragment>
         ));
