@@ -33,7 +33,7 @@ router.get('/testcase/:id', (req, res) => {
     TestCase.findOne({
       where: {
         id: req.params.id,
-        depricated: false
+        deprecated: false
       },
       attributes: ['id', 'title', 'description', 'expected_result', 'preconditions', ['created_at', 'date']],
       include: [
@@ -500,6 +500,67 @@ router.post('/testcase', (req, res) => {
       res.status(500).json({ error: 'An error occured while creating test case' });
     }
   })();
+});
+
+// @route GET api/testcases/all
+// @desc Get all testcases
+// @access Private
+router.get('/all', (req, res) => {
+  if (isNaN(req.query.project_id)) {
+    res.status(400).json({ error: 'Project id is not valid number' });
+  } else {
+    async function returnAllTestCases() {
+      return new Promise((resolve, reject) => {
+        TestCase.findAll({
+          attributes: ['id', 'title', 'description', 'expected_result', 'preconditions', ['created_at', 'date']],
+          where: {
+            project_id: req.query.project_id,
+            deprecated: false
+          },
+          include: [
+            {
+              model: Link,
+              attributes: ['id', 'value'],
+              required: false
+            },
+            {
+              model: UploadedFile,
+              attributes: ['id', ['title', 'value'], 'path'],
+              required: false,
+              as: 'uploaded_files'
+            },
+            {
+              model: TestStep,
+              attributes: ['id', ['title', 'value'], 'expected_result'],
+              required: false,
+              as: 'test_steps'
+            },
+            {
+              model: Group,
+              attributes: ['id', ['title', 'value'], 'color'],
+              through: {
+                attributes: []
+              },
+              as: 'groups',
+              required: false
+            }
+          ],
+          order: [['created_at', 'DESC']]
+        }).then(testcases => {
+          resolve(testcases);
+        });
+      });
+    }
+
+    (async () => {
+      let testcases = await returnAllTestCases();
+      if (testcases) {
+        res.json(testcases);
+      } else {
+        res.status(200);
+      }
+    })();
+  }
 });
 
 module.exports = router;
