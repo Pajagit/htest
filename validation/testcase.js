@@ -3,7 +3,7 @@ const isEmpty = require('./is-empty');
 
 module.exports = function validateTestCaseInput(data) {
   var titleLimit = 150;
-  var descriptionLimit = 255;
+  var descriptionLimit = 1000;
   var testStepLimit = 150;
   var expectedResultLimit = 150;
   var preconditionLimit = 150;
