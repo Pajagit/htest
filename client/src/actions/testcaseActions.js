@@ -55,7 +55,7 @@ export const editTestcase = (testcaseId, projectId, testCaseData, history) => di
 export const createTestCase = (testCaseData, history) => dispatch => {
   axios
     .post(`/api/testcases/testcase`, testCaseData)
-    .then(res => history.push(`/${testCaseData.projectId}/TestCase/${res.data.id}`))
+    .then(res => history.push(`/${testCaseData.project_id}/TestCase/${res.data.id}`))
     .catch(err =>
       dispatch({
         type: GET_TESTCASE,
