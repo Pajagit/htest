@@ -4,26 +4,35 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import GlobalPanel from "../components/global-panel/GlobalPanel";
-import ProjectPanel from "../components/project-panel/ProjectPanel";
-import UnderlineAnchor from "../components/common/UnderlineAnchor";
-import BtnAnchor from "../components/common/BtnAnchor";
-import Checkbox from "../components/common/Checkbox";
-import Header from "../components/common/Header";
-import Spinner from "../components/common/Spinner";
-import openExternalBtn from "../img/openExternalBtn.png";
+import GlobalPanel from "../global-panel/GlobalPanel";
+import ProjectPanel from "../project-panel/ProjectPanel";
+import UnderlineAnchor from "../common/UnderlineAnchor";
+import BtnAnchor from "../common/BtnAnchor";
+import Checkbox from "../common/Checkbox";
+import Header from "../common/Header";
+import Spinner from "../common/Spinner";
+import openExternalBtn from "../../img/openExternalBtn.png";
 
-import { getTestcase } from "../actions/testcaseActions";
+import { getTestcase } from "../../actions/testcaseActions";
 
 class TestCase extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      testcaseId: null
+    };
+  }
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
+    this.setState({ testcaseId });
     this.props.getTestcase(testcaseId);
   }
   render() {
     var { testcase } = this.props.testcases;
     var { loading } = this.props.testcases;
+    var projectId = this.props.match.params.projectId;
     let content;
+
     if (testcase === null || loading) {
       content = <Spinner />;
     } else {
@@ -35,7 +44,7 @@ class TestCase extends Component {
                 <div className="testcase-details-header--title">Test case name*</div>
                 <div className="testcase-details-header--value">{testcase.title}</div>
               </div>
-              <Link to={`/EditTestCase/${testcase.id}`}>
+              <Link to={`/${projectId}/EditTestCase/${testcase.id}`}>
                 <div className="testcase-details-button">
                   <div className="testcase-details-button-title">Edit</div>
                   <div className="testcase-details-button-icon">
@@ -127,8 +136,8 @@ class TestCase extends Component {
           <Header
             icon={<i className="fas fa-arrow-left"></i>}
             title={"Back to All Test Cases"}
-            history={this.props}
             canGoBack={true}
+            link={`/${projectId}/TestCases`}
           />
           {content}
         </div>

@@ -36,6 +36,7 @@ class EditTestCase extends Component {
     this.state = {
       initialRender: true,
       testcaseId: null,
+      projectId: null,
       options: "",
       value: null,
       arrayValue: [],
@@ -94,6 +95,7 @@ class EditTestCase extends Component {
           update.title = !isEmpty(testcase.title) ? testcase.title : "";
           update.testcaseId = nextProps.match.params.testcaseId;
           update.links = testcase.links;
+          update.projectId = nextProps.match.params.projectId;
         }
 
         update.test_steps = testcase.test_steps;
@@ -119,7 +121,23 @@ class EditTestCase extends Component {
       this.submitForm(e);
     }
   };
+  checkValidation() {
+    var formData = {};
+    var testSteps = filterStringArray(this.state.test_steps);
+    var links = filterStringArray(this.state.links);
+    formData.title = this.state.title;
+    formData.description = this.state.description;
+    formData.test_steps = testSteps;
+    formData.expected_result = this.state.expected_result;
+    formData.groups = this.state.selectedGroups;
+    formData.preconditions = this.state.preconditions;
+    formData.isDeprecated = this.state.isDeprecated;
+    formData.links = links;
 
+    const { errors } = TestCaseValidation(formData);
+
+    this.setState({ errors });
+  }
   submitForm(e) {
     e.preventDefault();
     var formData = {};
@@ -134,9 +152,10 @@ class EditTestCase extends Component {
     formData.preconditions = this.state.preconditions;
     formData.isDeprecated = this.state.isDeprecated;
     formData.links = links;
+
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
-      this.props.editTestcase(this.state.testcaseId, formData, this.props.history);
+      this.props.editTestcase(this.state.testcaseId, this.state.projectId, formData, this.props.history);
     } else {
       this.setState({ errors });
     }
@@ -158,15 +177,21 @@ class EditTestCase extends Component {
     if (e.target.id === "link") {
       var enteredLinks = this.state.links;
       enteredLinks[e.target.name.substring(5)].value = e.target.value;
-      this.setState({ links: enteredLinks });
+      this.setState({ links: enteredLinks }, () => {
+        this.checkValidation();
+      });
     }
 
     if (e.target.id === "step") {
       var enteredTestSteps = this.state.test_steps;
       enteredTestSteps[e.target.name.substring(5)].value = e.target.value;
-      this.setState({ test_steps: enteredTestSteps });
+      this.setState({ test_steps: enteredTestSteps }, () => {
+        this.checkValidation();
+      });
     }
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      this.checkValidation();
+    });
   }
   onChangeSwitch(e) {
     var newSelectedGroup = this.state.selectedGroups;
@@ -176,24 +201,12 @@ class EditTestCase extends Component {
     if (newSelectedGroup.includes(elementValue)) {
       newSelectedGroup = newSelectedGroup.filter(item => item !== elementValue);
       this.setState({ selectedGroups: newSelectedGroup }, () => {
-        if (this.state.selectedGroups.length === 0) {
-          this.setState({
-            groupsValidation: "Test case must be assigned to at least one group"
-          });
-        } else {
-          this.setState({ groupsValidation: "" });
-        }
+        this.checkValidation();
       });
     } else {
       newSelectedGroup.push(elementValue);
       this.setState({ selectedGroups: newSelectedGroup }, () => {
-        if (this.state.selectedGroups.length === 0) {
-          this.setState({
-            groupsValidation: "Test case must be assigned to at least one group"
-          });
-        } else {
-          this.setState({ groupsValidation: "" });
-        }
+        this.checkValidation();
       });
     }
   }
@@ -207,19 +220,7 @@ class EditTestCase extends Component {
     var test_steps = this.state.test_steps;
     test_steps.splice(indexToRemove, 1);
     this.setState({ test_steps }, () => {
-      var filteredTestSteps = this.state.test_steps.filter(function(test_step) {
-        return test_step.value !== "";
-      });
-
-      if (filteredTestSteps.length === 0) {
-        this.setState({
-          teststepsValidation: `There must be at least one test step`
-        });
-      } else {
-        this.setState({
-          teststepsValidation: ``
-        });
-      }
+      this.checkValidation();
     });
   }
   addColumnLink(e) {
@@ -231,7 +232,9 @@ class EditTestCase extends Component {
     var indexToRemove = e.target.id.substring(5);
     var links = this.state.links;
     links.splice(indexToRemove, 1);
-    this.setState({ links });
+    this.setState({ links }, () => {
+      this.checkValidation();
+    });
   }
 
   render() {
@@ -375,6 +378,7 @@ class EditTestCase extends Component {
             icon={<i className="fas fa-arrow-left"></i>}
             title={"Back to Test Case"}
             history={this.props}
+            link={`/${this.state.projectId}/TestCase/${this.state.testcaseId}`}
             canGoBack={true}
           />
           <div className="main-content--content">{content}</div>
