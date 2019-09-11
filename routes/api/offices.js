@@ -18,26 +18,14 @@ router.get("/test", (req, res) => {
 // @route GET api/offices/
 // @desc all offices route
 // @access public
-router.get("/", (req, res) => {
-  async function returnAllOffices() {
-    return new Promise((resolve, reject) => {
-      Office.findAll({
-        attributes: ["id", "city"],
-        order: [["id", "DESC"]]
-      }).then(offices => {
-        resolve(offices);
-      });
-    });
-  }
 
-  (async () => {
-    let offices = await returnAllOffices();
-    if (offices) {
-      res.json(offices);
-    } else {
-      res.status(200);
-    }
-  })();
+router.get("/", (req, res) => {
+  Office.findAll({
+    attributes: ["id", "city"],
+    order: [["id", "ASC"]]
+  }).then(offices => {
+    res.json(offices);
+  });
 });
 
 module.exports = router;
