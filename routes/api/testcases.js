@@ -1,33 +1,33 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const keys = require("../../config/keys");
-const Sequelize = require("sequelize");
+const keys = require('../../config/keys');
+const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const pgURI = require("../../config/keys").postgresURI;
+const pgURI = require('../../config/keys').postgresURI;
 const sequelize = new Sequelize(pgURI);
 
-const TestCase = require("../../models/testcase");
-const Link = require("../../models/link");
-const UploadedFile = require("../../models/uploadedfile");
-const TestStep = require("../../models/teststep");
-const Group = require("../../models/group");
-const GroupTestCase = require("../../models/grouptestcase");
+const TestCase = require('../../models/testcase');
+const Link = require('../../models/link');
+const UploadedFile = require('../../models/uploadedfile');
+const TestStep = require('../../models/teststep');
+const Group = require('../../models/group');
+const GroupTestCase = require('../../models/grouptestcase');
 
-const validateTestCaseInput = require("../../validation/testcase");
+const validateTestCaseInput = require('../../validation/testcase');
 
 // @route GET api/testcases/test
 // @desc test testcases route
 // @access public
-router.get("/test", (req, res) => {
-  res.json({ message: "testcases are working" });
+router.get('/test', (req, res) => {
+  res.json({ message: 'testcases are working' });
 });
 
 // @route GET api/testcases/:id
 // @desc Get one test case by id
 // @access private
-router.get("/testcase/:id", (req, res) => {
+router.get('/testcase/:id', (req, res) => {
   if (isNaN(req.params.id)) {
-    res.status(400).json({ error: "Test case id is not valid number" });
+    res.status(400).json({ error: 'Test case id is not valid number' });
   } else {
     const errors = {};
     TestCase.findOne({
@@ -35,32 +35,32 @@ router.get("/testcase/:id", (req, res) => {
         id: req.params.id,
         deprecated: false
       },
-      attributes: ["id", "title", "description", "expected_result", "preconditions", ["created_at", "date"]],
+      attributes: ['id', 'title', 'description', 'expected_result', 'preconditions', ['created_at', 'date']],
       include: [
         {
           model: Link,
-          attributes: ["id", "value"],
+          attributes: ['id', 'value'],
           required: false
         },
         {
           model: UploadedFile,
-          attributes: ["id", ["title", "value"], "path"],
+          attributes: ['id', ['title', 'value'], 'path'],
           required: false,
-          as: "uploaded_files"
+          as: 'uploaded_files'
         },
         {
           model: TestStep,
-          attributes: ["id", ["title", "value"], "expected_result"],
+          attributes: ['id', ['title', 'value'], 'expected_result'],
           required: false,
-          as: "test_steps"
+          as: 'test_steps'
         },
         {
           model: Group,
-          attributes: ["id", ["title", "value"], "color"],
+          attributes: ['id', ['title', 'value'], 'color'],
           through: {
             attributes: []
           },
-          as: "groups",
+          as: 'groups',
           required: false
         }
       ],
@@ -81,16 +81,16 @@ router.get("/testcase/:id", (req, res) => {
 // @route GET api/testcases/test
 // @desc test testcases route
 // @access public
-router.get("/test", (req, res) => {
-  res.json({ message: "testcases are working" });
+router.get('/test', (req, res) => {
+  res.json({ message: 'testcases are working' });
 });
 
 // @route PUT api/testcases/:id
 // @desc Update test case by id
 // @access private
-router.put("/testcase/:id", (req, res) => {
+router.put('/testcase/:id', (req, res) => {
   if (isNaN(req.params.id)) {
-    res.status(400).json({ error: "Test case id is not valid number" });
+    res.status(400).json({ error: 'Test case id is not valid number' });
   } else {
     const { errors, isValid } = validateTestCaseInput(req.body);
     // Check Validation
@@ -249,35 +249,35 @@ router.put("/testcase/:id", (req, res) => {
       return new Promise((resolve, reject) => {
         if (addTestSteps && addedLinks && addedGroups) {
           TestCase.findOne({
-            attributes: ["id", "title", "description", "expected_result", "preconditions", ["created_at", "date"]],
+            attributes: ['id', 'title', 'description', 'expected_result', 'preconditions', ['created_at', 'date']],
             where: {
               id: req.params.id
             },
             include: [
               {
                 model: Link,
-                attributes: ["id", "value"],
+                attributes: ['id', 'value'],
                 required: false
               },
               {
                 model: UploadedFile,
-                attributes: ["id", ["title", "value"], "path"],
+                attributes: ['id', ['title', 'value'], 'path'],
                 required: false,
-                as: "uploaded_files"
+                as: 'uploaded_files'
               },
               {
                 model: TestStep,
-                attributes: ["id", ["title", "value"], "expected_result"],
+                attributes: ['id', ['title', 'value'], 'expected_result'],
                 required: false,
-                as: "test_steps"
+                as: 'test_steps'
               },
               {
                 model: Group,
-                attributes: ["id", ["title", "value"], "color"],
+                attributes: ['id', ['title', 'value'], 'color'],
                 through: {
                   attributes: []
                 },
-                as: "groups",
+                as: 'groups',
                 required: false
               }
             ]
@@ -330,7 +330,7 @@ router.put("/testcase/:id", (req, res) => {
 // @route POST api/testcases/testcase
 // @desc Create new testcase
 // @access Private
-router.post("/testcase", (req, res) => {
+router.post('/testcase', (req, res) => {
   const { errors, isValid } = validateTestCaseInput(req.body);
 
   // Check Validation
@@ -432,35 +432,35 @@ router.post("/testcase", (req, res) => {
     return new Promise((resolve, reject) => {
       if (addTestSteps && addGroups && addLinks) {
         TestCase.findOne({
-          attributes: ["id", "title", "description", "expected_result", "preconditions", ["created_at", "date"]],
+          attributes: ['id', 'title', 'description', 'expected_result', 'preconditions', ['created_at', 'date']],
           where: {
             id: addedTestCase.id
           },
           include: [
             {
               model: Link,
-              attributes: ["id", "value"],
+              attributes: ['id', 'value'],
               required: false
             },
             {
               model: UploadedFile,
-              attributes: ["id", ["title", "value"], "path"],
+              attributes: ['id', ['title', 'value'], 'path'],
               required: false,
-              as: "uploaded_files"
+              as: 'uploaded_files'
             },
             {
               model: TestStep,
-              attributes: ["id", ["title", "value"], "expected_result"],
+              attributes: ['id', ['title', 'value'], 'expected_result'],
               required: false,
-              as: "test_steps"
+              as: 'test_steps'
             },
             {
               model: Group,
-              attributes: ["id", ["title", "value"], "color"],
+              attributes: ['id', ['title', 'value'], 'color'],
               through: {
                 attributes: []
               },
-              as: "groups",
+              as: 'groups',
               required: false
             }
           ]
@@ -497,69 +497,60 @@ router.post("/testcase", (req, res) => {
 
       res.json(createdTestCaseObj);
     } else {
-      res.status(500).json({ error: "An error occured while creating test case" });
+      res.status(500).json({ error: 'An error occured while creating test case' });
     }
   })();
 });
 
-// @route GET api/testcases/all
+// @route GET api/testcases
 // @desc Get all testcases
 // @access Private
-router.get("/all", (req, res) => {
+router.get('', (req, res) => {
   if (isNaN(req.query.project_id)) {
-    res.status(400).json({ error: "Project id is not valid number" });
+    res.status(400).json({ error: 'Project id is not valid number' });
   } else {
-    async function returnAllTestCases() {
-      return new Promise((resolve, reject) => {
-        TestCase.findAll({
-          attributes: ["id", "title", "description", "expected_result", "preconditions", ["created_at", "date"]],
-          where: {
-            project_id: req.query.project_id,
-            deprecated: false
+    TestCase.findAll({
+      attributes: ['id', 'title', 'description', 'expected_result', 'preconditions', ['created_at', 'date']],
+      where: {
+        project_id: req.query.project_id,
+        deprecated: false
+      },
+      include: [
+        {
+          model: Link,
+          attributes: ['id', 'value'],
+          required: false
+        },
+        {
+          model: UploadedFile,
+          attributes: ['id', ['title', 'value'], 'path'],
+          required: false,
+          as: 'uploaded_files'
+        },
+        {
+          model: TestStep,
+          attributes: ['id', ['title', 'value'], 'expected_result'],
+          required: false,
+          as: 'test_steps'
+        },
+        {
+          model: Group,
+          attributes: ['id', ['title', 'value'], 'color'],
+          through: {
+            attributes: []
           },
-          include: [
-            {
-              model: Link,
-              attributes: ["id", "value"],
-              required: false
-            },
-            {
-              model: UploadedFile,
-              attributes: ["id", ["title", "value"], "path"],
-              required: false,
-              as: "uploaded_files"
-            },
-            {
-              model: TestStep,
-              attributes: ["id", ["title", "value"], "expected_result"],
-              required: false,
-              as: "test_steps"
-            },
-            {
-              model: Group,
-              attributes: ["id", ["title", "value"], "color"],
-              through: {
-                attributes: []
-              },
-              as: "groups",
-              required: false
-            }
-          ],
-          order: [["created_at", "DESC"]]
-        }).then(testcases => {
-          resolve(testcases);
-        });
-      });
-    }
-
-    (async () => {
-      let testcases = await returnAllTestCases();
+          as: 'groups',
+          required: false
+        }
+      ],
+      order: [['created_at', 'DESC']]
+    }).then(testcases => {
       if (testcases) {
         res.json(testcases);
       } else {
         res.status(200);
       }
-    })();
+    });
   }
 });
 
