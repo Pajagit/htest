@@ -1,27 +1,24 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('offices', [
+    return queryInterface.bulkInsert("offices", [
       {
-        city: 'Nis'
+        city: "Nis"
       },
       {
-        city: 'Belgrade'
+        city: "Belgrade"
       },
       {
-        city: 'Novi Sad'
+        city: "Novi Sad"
       },
       {
-        city: 'Banja Luka'
+        city: "Banja Luka"
       }
-    ])
-
+    ]);
   },
 
   down: (queryInterface, Sequelize) => {
-
-    return queryInterface.bulkDelete('offices', null, {});
-
+    return queryInterface.bulkDelete("offices", null, {});
   }
 };
