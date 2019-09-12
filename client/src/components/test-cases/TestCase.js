@@ -25,7 +25,7 @@ class TestCase extends Component {
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
     this.setState({ testcaseId });
-    this.props.getTestcase(testcaseId);
+    this.props.getTestcase(testcaseId, () => {});
   }
   render() {
     var { testcase } = this.props.testcases;

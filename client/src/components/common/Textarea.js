@@ -17,9 +17,6 @@ function Textarea({ className, placeholder, label, validationMsg, value, onChang
           onKeyDown={onKeyDown}
         />
       </div>
-      {/* <div className="form-element-item">
-        <label className="form-element--validation">{validationMsg}</label>
-      </div> */}
     </div>
   );
 }

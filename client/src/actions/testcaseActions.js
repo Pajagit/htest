@@ -23,7 +23,7 @@ export const getTestcases = project_id => dispatch => {
 };
 
 // Get Test Case by Test Case id
-export const getTestcase = testcaseId => dispatch => {
+export const getTestcase = (testcaseId, callback) => dispatch => {
   dispatch(setTestCaseLoading());
 
   axios
@@ -34,6 +34,9 @@ export const getTestcase = testcaseId => dispatch => {
         payload: res.data
       })
     )
+    .then(res => {
+      callback(res);
+    })
     .catch(err =>
       dispatch({
         type: GET_TESTCASE,

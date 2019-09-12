@@ -55,6 +55,7 @@ const TestCaseValidation = testCase => {
   if (testCase.expected_result.length > expectedResultLimit) {
     errors.expected_result = `Expected result can not be more than ${expectedResultLimit} long (${testCase.expected_result.length})`;
   }
+  // console.log("aaaaaaaaaaaaaaaa");
   // Groups validation
   if (isEmpty(testCase.groups)) {
     errors.groups = "Test case must be assigned to at least one group";

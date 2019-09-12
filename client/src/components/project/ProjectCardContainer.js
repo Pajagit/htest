@@ -5,7 +5,7 @@ import hrmImg from "../../img/hrm-logo.png";
 import quinyx from "../../img/quinyx.jpg";
 import gardenizeImg from "../../img/gardenize-logo.png";
 
-export default function ProjectContainer() {
+function ProjectContainer() {
   return (
     <div className="project-card-container">
       <div className="project-card-container-title">Recently Viewed</div>
@@ -33,3 +33,4 @@ export default function ProjectContainer() {
     </div>
   );
 }
+export default ProjectContainer;

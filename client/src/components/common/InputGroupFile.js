@@ -9,13 +9,7 @@ function FullBtnFile({ label, placeholder }) {
       </div>
       <div className="form-element-item">
         <label className="full-width-btn">
-          <input
-            className="centered-image rounded-circle"
-            type="file"
-            name="image"
-            // onChange={this.onChangePhoto}
-            // value={""}
-          />
+          <input className="centered-image rounded-circle" type="file" name="image" />
           <div className="full-width-btn--label">{placeholder}</div>
           <div className="full-width-btn--icon">
             <i className="fas fa-upload"></i>
