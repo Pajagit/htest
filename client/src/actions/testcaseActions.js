@@ -45,10 +45,15 @@ export const getTestcase = testcaseId => dispatch => {
 // Edit Test Case by Test Case id
 export const editTestcase = (testcaseId, projectId, testCaseData, history) => dispatch => {
   dispatch(setTestCaseLoading());
-
+  var route;
+  if (!testCaseData.isDeprecated) {
+    route = `TestCase/${testcaseId}`;
+  } else {
+    route = "TestCases";
+  }
   axios
     .put(`/api/testcases/testcase/${testcaseId}`, testCaseData)
-    .then(res => history.push(`/${projectId}/TestCase/${testcaseId}`))
+    .then(res => history.push(`/${projectId}/${route}`))
     .catch(err =>
       dispatch({
         type: GET_TESTCASE,

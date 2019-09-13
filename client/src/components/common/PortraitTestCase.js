@@ -1,5 +1,6 @@
 import React from "react";
 import AddReportBtn from "../common/AddReportBtn";
+import moment from "moment";
 import { Link } from "react-router-dom";
 
 function PortraitTestCase({ title, tags, author, date, description, id, projectId }) {
@@ -13,7 +14,7 @@ function PortraitTestCase({ title, tags, author, date, description, id, projectI
           <div className="portrait-testcase-top-container--tags">{tags}</div>
 
           <div className="portrait-testcase-top-container--author">{author}</div>
-          <div className="portrait-testcase-top-container--date">{date}</div>
+          <div className="portrait-testcase-top-container--date">{moment(date).format("DD MMMM  YYYY, HH:mm:ss")}</div>
         </div>
       </div>
       <div className="portrait-testcase-bottom">
