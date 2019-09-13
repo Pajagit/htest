@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('groups', {
+    return queryInterface.createTable("groups", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -20,21 +20,22 @@ module.exports = {
       user_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' }
+        references: { model: "users", key: "id" }
       },
-      color: {
+      color_id: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        references: { model: "colors", key: "id" }
       },
       project_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'projects', key: 'id' }
+        references: { model: "projects", key: "id" }
       },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn("NOW")
       },
       updated_at: {
         allowNull: true,
@@ -44,6 +45,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('groups');
+    return queryInterface.dropTable("groups");
   }
 };

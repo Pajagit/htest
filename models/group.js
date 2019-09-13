@@ -1,10 +1,11 @@
-'use strict';
-const { Pool } = require('pg');
-const Sequelize = require('sequelize');
-const pgURI = require('../config/keys').postgresURI;
+"use strict";
+const Sequelize = require("sequelize");
+const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
+const Color = require("./color");
+
 const Group = sequelize.define(
-  'groups',
+  "groups",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -25,21 +26,26 @@ const Group = sequelize.define(
       required: true,
       foreignKey: true,
       references: {
-        model: 'users',
-        key: 'id'
+        model: "users",
+        key: "id"
       }
     },
-    color: {
-      type: Sequelize.STRING,
-      required: true
+    color_id: {
+      type: Sequelize.INTEGER,
+      required: true,
+      foreignKey: true,
+      references: {
+        model: "colors",
+        key: "id"
+      }
     },
     project_id: {
       type: Sequelize.INTEGER,
       required: true,
       foreignKey: true,
       references: {
-        model: 'projects',
-        key: 'id'
+        model: "projects",
+        key: "id"
       }
     },
     created_at: {
@@ -53,7 +59,11 @@ const Group = sequelize.define(
   },
   { timestamps: false }
 );
-Group.associate = function(models) {
-  // associations can be defined here
-};
+
+Group.belongsTo(Color, {
+  foreignKey: "color_id",
+  targetKey: "id",
+  as: "color"
+});
+
 module.exports = Group;

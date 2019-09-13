@@ -43,6 +43,10 @@ const TestCase = sequelize.define(
       type: Sequelize.INTEGER,
       required: true
     },
+    created_at: {
+      type: Sequelize.DATE,
+      required: true
+    },
     user_id: {
       type: Sequelize.INTEGER,
       required: true,
