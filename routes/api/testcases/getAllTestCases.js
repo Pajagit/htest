@@ -56,7 +56,7 @@ module.exports = Router({ mergeParams: true }).get("/testcases", (req, res) => {
           ]
         }
       ],
-      order: [["created_at", "DESC"]]
+      order: [["created_at", "DESC"], [Group, "id", "ASC"]]
     }).then(testcases => {
       if (testcases) {
         var testcasesObjArray = Array();
