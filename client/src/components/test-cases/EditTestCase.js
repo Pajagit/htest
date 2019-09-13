@@ -75,7 +75,7 @@ class EditTestCase extends Component {
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
     this.props.getTestcase(testcaseId);
-    this.props.getGroups();
+    this.props.getGroups(1);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -306,7 +306,7 @@ class EditTestCase extends Component {
             {this.state.pinnedGroups.map((group, index) => (
               <Switch
                 key={index}
-                label={group.value}
+                label={group.name}
                 value={this.state.selectedGroups.includes(group.id)}
                 id={group.id}
                 onClick={e => this.onChangeSwitch(e)}

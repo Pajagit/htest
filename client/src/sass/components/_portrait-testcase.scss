@@ -10,6 +10,9 @@
   box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
 
   &-top {
+    &:hover {
+      background-color: #eaebf3;
+    }
     &-container {
       padding: 15px 20px;
       box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
@@ -50,14 +53,14 @@
     padding: 15px 20px;
     &-container {
       &--description {
-        max-height: 130px;
+        max-height: 140px;
         overflow: hidden;
         color: #000000;
         font-size: 14px;
         letter-spacing: 0.17px;
         line-height: 18px;
-        padding-bottom: 20px;
-        margin-bottom: 40px;
+        // padding-bottom: 20px;
+        margin-bottom: 50px;
       }
       &--button {
         position: absolute;

@@ -3,9 +3,9 @@ import axios from "axios";
 import { GET_GROUPS } from "./types";
 
 // Get All Groups
-export const getGroups = () => dispatch => {
+export const getGroups = project_id => dispatch => {
   axios
-    .get(`http://www.json-generator.com/api/json/get/cekggErVbC?indent=2`)
+    .get(`/api/groups?project_id=${project_id}`)
     .then(res =>
       dispatch({
         type: GET_GROUPS,
