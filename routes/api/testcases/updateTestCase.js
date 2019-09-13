@@ -27,6 +27,7 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
     const testCaseFields = {};
     if (req.body.title) testCaseFields.title = req.body.title;
     testCaseFields.description = req.body.description ? req.body.description : null;
+    testCaseFields.deprecated = req.body.deprecated ? req.body.deprecated : false;
     testCaseFields.preconditions = req.body.preconditions ? req.body.preconditions : null;
     if (req.body.expected_result) testCaseFields.expected_result = req.body.expected_result;
     var test_steps = req.body.test_steps.filter(Boolean);
@@ -39,7 +40,8 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
       return new Promise((resolve, reject) => {
         TestCase.findOne({
           where: {
-            id: req.params.id
+            id: req.params.id,
+            deprecated: false
           }
         }).then(testcase => {
           if (testcase) {
@@ -213,7 +215,8 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
                   }
                 ]
               }
-            ]
+            ],
+            order: [[Group, "id", "ASC"]]
           }).then(testcase => {
             if (testcase) {
               if (testcase.groups) {

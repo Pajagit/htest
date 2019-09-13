@@ -154,7 +154,8 @@ module.exports = Router({ mergeParams: true }).post("/testcases/testcase", (req,
                 }
               ]
             }
-          ]
+          ],
+          order: [[Group, "id", "ASC"]]
         }).then(testcase => {
           if (testcase) {
             if (testcase.groups) {
