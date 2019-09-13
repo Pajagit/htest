@@ -13,7 +13,7 @@ module.exports = Router({ mergeParams: true }).get("/groups", (req, res) => {
     Group.findAll({
       attributes: ["id", "pinned", "title"],
       where: {
-        project_id: req.query.project_id
+        project_id: 1
       },
       include: [
         {
