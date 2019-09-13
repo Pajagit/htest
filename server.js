@@ -1,31 +1,28 @@
-const pgURI = require('./config/keys').postgresURI;
-const bodyParser = require('body-parser');
-const { Pool } = require('pg');
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
+const pgURI = require("./config/keys").postgresURI;
+const bodyParser = require("body-parser");
+const Sequelize = require("sequelize");
 const sequelize = new Sequelize(pgURI);
 
-const express = require('express');
+const express = require("express");
 
-const testcases = require('./routes/api/testcases');
+const router = require("./routes/createRouter.js")();
 
 const app = express();
-// // Body parser middleware
+// Body parser middleware
 app.use(bodyParser.json());
 
 // Check connection to postgresDB
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err);
+    console.error("Unable to connect to the database:", err);
   });
 
-app.use('/api/testcases', testcases);
+app.use("/api", router);
 
-// app.get('/', (req, res) => res.send('Hello'));
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
