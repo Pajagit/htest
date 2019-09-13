@@ -6,6 +6,7 @@ const UploadedFile = require("../../../models/uploadedfile");
 const TestStep = require("../../../models/teststep");
 const Group = require("../../../models/group");
 const GroupTestCase = require("../../../models/grouptestcase");
+const Color = require("../../../models/color");
 
 const validateTestCaseInput = require("../../../validation/testcase");
 
@@ -173,7 +174,7 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
       return new Promise((resolve, reject) => {
         if (addTestSteps && addedLinks && addedGroups) {
           TestCase.findOne({
-            attributes: ["id", "title", "description", "expected_result", "preconditions", ["created_at", "date"]],
+            attributes: ["id", "title", "description", "expected_result", "preconditions", "created_at"],
             where: {
               id: req.params.id
             },
@@ -197,16 +198,52 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
               },
               {
                 model: Group,
-                attributes: ["id", ["title", "value"], "color"],
+                attributes: ["id", "title", "pinned"],
                 through: {
                   attributes: []
                 },
                 as: "groups",
-                required: false
+                required: false,
+                include: [
+                  {
+                    model: Color,
+                    as: "color",
+                    attributes: ["title"],
+                    required: true
+                  }
+                ]
               }
             ]
           }).then(testcase => {
-            resolve(testcase);
+            if (testcase) {
+              if (testcase.groups) {
+                var groupsObj = Array();
+                testcase.groups.forEach(group => {
+                  var groupObject = {
+                    id: group.id,
+                    isPinned: group.pinned,
+                    name: group.title,
+                    color: group.color.title
+                  };
+                  groupsObj.push(groupObject);
+                });
+              }
+              var testcasesObj = {
+                id: testcase.id,
+                title: testcase.title,
+                description: testcase.description,
+                expected_result: testcase.expected_result,
+                preconditions: testcase.preconditions,
+                date: testcase.created_at,
+                links: testcase.links,
+                uploaded_files: testcase.uploaded_files,
+                test_steps: testcase.test_steps,
+                groups: groupsObj
+              };
+              resolve(testcasesObj);
+            } else {
+              resolve(false);
+            }
           });
         }
       });
