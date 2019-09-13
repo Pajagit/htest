@@ -5,6 +5,7 @@ const Link = require("../../../models/link");
 const UploadedFile = require("../../../models/uploadedfile");
 const TestStep = require("../../../models/teststep");
 const Group = require("../../../models/group");
+const Color = require("../../../models/color");
 
 // @route GET api/testcases/:id
 // @desc Get one test case by id
@@ -19,7 +20,7 @@ module.exports = Router({ mergeParams: true }).get("/testcases/testcase/:id", (r
         id: req.params.id,
         deprecated: false
       },
-      attributes: ["id", "title", "description", "expected_result", "preconditions", ["created_at", "date"]],
+      attributes: ["id", "title", "description", "expected_result", "preconditions", "created_at"],
       include: [
         {
           model: Link,
@@ -40,12 +41,20 @@ module.exports = Router({ mergeParams: true }).get("/testcases/testcase/:id", (r
         },
         {
           model: Group,
-          attributes: ["id", ["title", "value"], "color"],
+          attributes: ["id", "title", "pinned"],
           through: {
             attributes: []
           },
           as: "groups",
-          required: false
+          required: false,
+          include: [
+            {
+              model: Color,
+              as: "color",
+              attributes: ["title"],
+              required: true
+            }
+          ]
         }
       ],
       plain: true
@@ -55,7 +64,31 @@ module.exports = Router({ mergeParams: true }).get("/testcases/testcase/:id", (r
           errors.notestcase = "Test case doesn't exist";
           res.status(404).json(errors);
         } else {
-          res.json(testcase);
+          if (testcase.groups) {
+            var groupsObj = Array();
+            testcase.groups.forEach(group => {
+              var groupObject = {
+                id: group.id,
+                isPinned: group.pinned,
+                name: group.title,
+                color: group.color.title
+              };
+              groupsObj.push(groupObject);
+            });
+          }
+          var testcasesObj = {
+            id: testcase.id,
+            title: testcase.title,
+            description: testcase.description,
+            expected_result: testcase.expected_result,
+            preconditions: testcase.preconditions,
+            date: testcase.created_at,
+            links: testcase.links,
+            uploaded_files: testcase.uploaded_files,
+            test_steps: testcase.test_steps,
+            groups: groupsObj
+          };
+          res.json(testcasesObj);
         }
       })
       .catch(err => res.status(404).json(err));
