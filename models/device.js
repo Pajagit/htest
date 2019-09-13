@@ -1,9 +1,10 @@
-'use strict';
-const Sequelize = require('sequelize');
-const pgURI = require('../config/keys').postgresURI;
+"use strict";
+const Sequelize = require("sequelize");
+const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 const Device = sequelize.define(
-  'devices', {
+  "devices",
+  {
     id: {
       require: true,
       autoIncrement: true,
@@ -38,8 +39,8 @@ const Device = sequelize.define(
       type: Sequelize.INTEGER,
       foreignKey: true,
       references: {
-        model: 'offices',
-        key: 'id'
+        model: "offices",
+        key: "id"
       },
       require: false
     },
@@ -49,7 +50,7 @@ const Device = sequelize.define(
     },
     deleted: {
       type: Sequelize.BOOLEAN,
-      require: true,
+      require: true
     },
     created_at: {
       require: true,
@@ -64,7 +65,6 @@ const Device = sequelize.define(
   {
     timestamps: false
   }
-
 );
 
 module.exports = Device;
