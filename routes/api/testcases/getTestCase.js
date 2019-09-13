@@ -57,7 +57,7 @@ module.exports = Router({ mergeParams: true }).get("/testcases/testcase/:id", (r
           ]
         }
       ],
-      order: [[Group, "id", "ASC"]],
+      order: [[Group, "id", "ASC"]][[TestStep, "id", "DESC"]],
       plain: true
     })
       .then(testcase => {

@@ -2,7 +2,6 @@ import React from "react";
 import AddReportBtn from "../common/AddReportBtn";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import moment from "moment";
 
 function PortraitTestCase({ title, tags, author, date, description, id, projectId }) {
   return (
