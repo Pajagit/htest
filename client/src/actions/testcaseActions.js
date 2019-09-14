@@ -45,16 +45,9 @@ export const getTestcase = testcaseId => dispatch => {
 // Edit Test Case by Test Case id
 export const editTestcase = (testcaseId, projectId, testCaseData, history, callback) => dispatch => {
   dispatch(setTestCaseLoading());
-  var route;
-  if (!testCaseData.isDeprecated) {
-    route = `TestCase/${testcaseId}`;
-  } else {
-    route = "TestCases";
-  }
   axios
     .put(`/api/testcases/testcase/${testcaseId}`, testCaseData)
     .then(res => callback(res))
-    .then(() => history.push(`/${projectId}/${route}`))
     .catch(err => callback(err));
 };
 

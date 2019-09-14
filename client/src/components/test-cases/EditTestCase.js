@@ -159,6 +159,7 @@ class EditTestCase extends Component {
       this.props.editTestcase(this.state.testcaseId, this.state.projectId, formData, this.props.history, res => {
         if (res.status === 200) {
           successToast("Test case edited successfully");
+          this.props.history.push(`/${this.state.projectId}/TestCase/${res.data.id}`);
         } else {
           failToast("Test case edit failed");
           this.props.history.push(`/${this.state.projectId}/TestCase/${this.state.testcaseId}`);
