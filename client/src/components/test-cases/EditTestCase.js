@@ -7,7 +7,6 @@ import Btn from "../common/Btn";
 import FullBtn from "../common/FullBtn";
 import Input from "../common/Input";
 import InputGroup from "../common/InputGroup";
-// import InputGroupFile from "../common/InputGroupFile";
 import Textarea from "../common/Textarea";
 import Spinner from "../common/Spinner";
 import Switch from "../common/Switch";
@@ -17,6 +16,8 @@ import ProjectPanel from "../project-panel/ProjectPanel";
 import Header from "../common/Header";
 import UnderlineAnchor from "../common/UnderlineAnchor";
 import SearchDropdown from "../common/SearchDropdown";
+import successToast from "../../toast/successToast";
+import failToast from "../../toast/failToast";
 
 import { getTestcase } from "../../actions/testcaseActions";
 import { editTestcase } from "../../actions/testcaseActions";
@@ -155,7 +156,14 @@ class EditTestCase extends Component {
 
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
-      this.props.editTestcase(this.state.testcaseId, this.state.projectId, formData, this.props.history);
+      this.props.editTestcase(this.state.testcaseId, this.state.projectId, formData, this.props.history, res => {
+        if (res.status === 200) {
+          successToast("Test case edited successfully");
+        } else {
+          failToast("Test case edit failed");
+          this.props.history.push(`/${this.state.projectId}/TestCase/${this.state.testcaseId}`);
+        }
+      });
     } else {
       this.setState({ errors });
     }

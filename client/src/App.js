@@ -1,9 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import "./sass/main.scss";
-
 import { Provider } from "react-redux";
 import store from "./store";
+
+import { ToastContainer, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
+import "./sass/main.scss";
 
 // import PrivateRoute from "./components/common/PrivateRoute";
 
@@ -20,6 +23,9 @@ function App() {
     <Provider store={store}>
       <Router>
         <div className="App">
+          <div>
+            <ToastContainer transition={Flip} position="bottom-right" />
+          </div>
           <Route exact path="/test" component={Test} />
           <Route exact path="/" component={Landing} />
           <Route exact path="/Projects" component={Projects} />
