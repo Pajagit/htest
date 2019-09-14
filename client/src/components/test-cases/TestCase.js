@@ -13,6 +13,7 @@ import Spinner from "../common/Spinner";
 import openExternalBtn from "../../img/openExternalBtn.png";
 import Tag from "../common/Tag";
 
+import isEmpty from "../../validation/isEmpty";
 import { getTestcase } from "../../actions/testcaseActions";
 
 class TestCase extends Component {
@@ -35,7 +36,7 @@ class TestCase extends Component {
 
     if (testcase === null || loading) {
       content = <Spinner />;
-    } else {
+    } else if (!isEmpty(testcase)) {
       content = (
         <div className="testcase-details">
           <div className="testcase-details--header">
@@ -121,6 +122,19 @@ class TestCase extends Component {
                   link={`/${projectId}/TestCases`}
                 />
                 <UnderlineAnchor link={`/${projectId}/TestCases`} value={"Cancel"} />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      content = (
+        <div className="testcase-details">
+          <div className="testcase-details--header">
+            <div className="testcase-details-container-top">
+              <div className="testcase-details-header">
+                <div className="testcase-details-header--title">Page not found</div>
+                <div className="testcase-details-header--value">404</div>
               </div>
             </div>
           </div>
