@@ -25,7 +25,14 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
 
     // Get fields
     const testCaseFields = {};
+    const updateOldCaseField = {};
+
     if (req.body.title) testCaseFields.title = req.body.title;
+    if (req.body.isDeprecated) {
+      updateOldCaseField.deprecated = true;
+      testCaseFields.user_id = req.body.user_id ? req.body.user_id : 2;
+      testCaseFields.project_id = req.body.project_id ? req.body.project_id : 2;
+    }
     testCaseFields.description = req.body.description ? req.body.description : null;
     testCaseFields.deprecated = req.body.isDeprecated ? req.body.isDeprecated : false;
     testCaseFields.preconditions = req.body.preconditions ? req.body.preconditions : null;
@@ -53,17 +60,42 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
       });
     }
 
-    async function updateTestCase() {
+    async function updateOrCreateTestCase() {
       return new Promise((resolve, reject) => {
-        TestCase.update(testCaseFields, {
-          where: { id: req.params.id },
-          returning: true,
-          plain: true
-        })
-          .then(UpdatedTestCase => {
-            resolve(true);
+        console.log(testCaseFields.deprecated);
+        if (!testCaseFields.deprecated) {
+          TestCase.update(testCaseFields, {
+            where: { id: req.params.id },
+            returning: true,
+            plain: true
           })
-          .catch(err => console.log(err));
+            .then(UpdatedTestCase => {
+              resolve(req.params.id);
+            })
+            .catch(err => console.log(err));
+        } else {
+          TestCase.update(updateOldCaseField, {
+            where: { id: req.params.id },
+            returning: true,
+            plain: true
+          }).then(UpdatedTestCase => {
+            TestCase.create({
+              title: testCaseFields.title,
+              description: testCaseFields.description,
+              preconditions: testCaseFields.preconditions,
+              expected_result: testCaseFields.expected_result,
+              project_id: testCaseFields.project_id,
+              user_id: testCaseFields.user_id
+            }).then(testcase => {
+              if (testcase) {
+                console.log(testcase.id);
+                resolve(testcase.id);
+              } else {
+                resolve(false);
+              }
+            });
+          });
+        }
       });
     }
 
@@ -72,7 +104,7 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
         if (updatedTestCase) {
           TestStep.destroy({
             where: {
-              test_case_id: req.params.id
+              test_case_id: updatedTestCase
             }
           }).then(afectedRows => {
             resolve(true);
@@ -88,7 +120,7 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
         if (updatedTestCase) {
           Link.destroy({
             where: {
-              test_case_id: req.params.id
+              test_case_id: updatedTestCase
             }
           }).then(afectedRows => {
             resolve(true);
@@ -104,7 +136,7 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
         if (updatedTestCase) {
           GroupTestCase.destroy({
             where: {
-              test_case_id: req.params.id
+              test_case_id: updatedTestCase
             }
           }).then(afectedRows => {
             resolve(true);
@@ -115,13 +147,13 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
       });
     }
 
-    async function addTestSteps(hasTestSteps, removedTestSteps) {
+    async function addTestSteps(hasTestSteps, removedTestSteps, updatedTestCase) {
       return new Promise((resolve, reject) => {
         if (hasTestSteps && removedTestSteps) {
           var arrayTestSteps = new Array();
           for (var i = 0; i < test_steps.length; i++) {
             arrayTestSteps.push({
-              test_case_id: req.params.id,
+              test_case_id: updatedTestCase,
               title: test_steps[i]
             });
           }
@@ -134,13 +166,13 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
       });
     }
 
-    async function addLinks(hasLinks, removedLinks) {
+    async function addLinks(hasLinks, removedLinks, updatedTestCase) {
       return new Promise((resolve, reject) => {
         if (hasLinks && removedLinks) {
           var arrayLinks = new Array();
           for (var i = 0; i < links.length; i++) {
             arrayLinks.push({
-              test_case_id: req.params.id,
+              test_case_id: updatedTestCase,
               value: links[i]
             });
           }
@@ -153,13 +185,13 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
       });
     }
 
-    async function addGroups(hasGroups, removedGroups) {
+    async function addGroups(hasGroups, removedGroups, updatedTestCase) {
       return new Promise((resolve, reject) => {
         if (hasGroups && removedGroups) {
           var arrayGroups = new Array();
           for (var i = 0; i < req.body.groups.length; i++) {
             arrayGroups.push({
-              test_case_id: req.params.id,
+              test_case_id: updatedTestCase,
               group_id: req.body.groups[i]
             });
           }
@@ -172,13 +204,13 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
       });
     }
 
-    async function returnUpdatedTestCase(addTestSteps, addedLinks, addedGroups) {
+    async function returnUpdatedTestCase(addTestSteps, addedLinks, addedGroups, updatedTestCase) {
       return new Promise((resolve, reject) => {
         if (addTestSteps && addedLinks && addedGroups) {
           TestCase.findOne({
             attributes: ["id", "title", "description", "expected_result", "preconditions", "created_at"],
             where: {
-              id: req.params.id
+              id: updatedTestCase
             },
             include: [
               {
@@ -257,7 +289,7 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
       if (!checkEntityExistance) {
         res.status(404).json({ error: "Test case doesn't exist" });
       } else {
-        let updatedTestCase = await updateTestCase();
+        let updatedTestCase = await updateOrCreateTestCase();
 
         //update steps
         let removedTestSteps = await removeTestSteps(updatedTestCase);
@@ -265,7 +297,7 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
         if (test_steps) {
           hasTestSteps = true;
         }
-        let addedTestSteps = await addTestSteps(hasTestSteps, removedTestSteps);
+        let addedTestSteps = await addTestSteps(hasTestSteps, removedTestSteps, updatedTestCase);
 
         //update links
         let removedLinks = await removeLinks(updatedTestCase);
@@ -273,7 +305,7 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
         if (links) {
           hasLinks = true;
         }
-        let addedLinks = await addLinks(hasLinks, removedLinks);
+        let addedLinks = await addLinks(hasLinks, removedLinks, updatedTestCase);
 
         //update groups
         let removedGroups = await removeGroups(updatedTestCase);
@@ -281,9 +313,9 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
         if (req.body.groups) {
           hasGroups = true;
         }
-        let addedGroups = await addGroups(hasGroups, removedGroups);
+        let addedGroups = await addGroups(hasGroups, removedGroups, updatedTestCase);
 
-        let testcase = await returnUpdatedTestCase(addedTestSteps, addedLinks, addedGroups);
+        let testcase = await returnUpdatedTestCase(addedTestSteps, addedLinks, addedGroups, updatedTestCase);
 
         res.json(testcase);
       }
