@@ -156,9 +156,12 @@ class EditTestCase extends Component {
 
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
-      this.props.editTestcase(this.state.testcaseId, this.state.projectId, formData, this.props.history, res => {
-        if (res.status === 200) {
+      this.props.editTestcase(this.state.testcaseId, formData, res => {
+        if (res.status === 200 && !formData.isDeprecated) {
           successToast("Test case edited successfully");
+          this.props.history.push(`/${this.state.projectId}/TestCase/${res.data.id}`);
+        } else if (res.status === 200 && formData.isDeprecated) {
+          successToast("New Test Case version created");
           this.props.history.push(`/${this.state.projectId}/TestCase/${res.data.id}`);
         } else {
           failToast("Test case edit failed");

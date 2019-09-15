@@ -6,6 +6,7 @@
     "axios": "^0.19.0",
     "moment": "^2.24.0",
     "react": "^16.9.0",
+    "react-confirm-alert": "^2.4.1",
     "react-dom": "^16.9.0",
     "react-dropdown-select": "^3.3.4",
     "react-picky": "^4.5.2",

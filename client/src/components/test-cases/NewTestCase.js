@@ -15,6 +15,8 @@ import ProjectPanel from "../project-panel/ProjectPanel";
 import Header from "../common/Header";
 import UnderlineAnchor from "../common/UnderlineAnchor";
 import SearchDropdown from "../common/SearchDropdown";
+import successToast from "../../toast/successToast";
+import failToast from "../../toast/failToast";
 
 import TestCaseValidation from "../../validation/TestCaseValidation";
 import filterStringArray from "../../utility/filterStringArray";
@@ -32,6 +34,7 @@ class NewTestCase extends Component {
     this.state = {
       projectId: null,
       submitPressed: false,
+      addNew: false,
       options: "",
       value: null,
       title: "",
@@ -104,7 +107,34 @@ class NewTestCase extends Component {
     formData.project_id = this.state.projectId;
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
-      this.props.createTestCase(formData, this.props.history);
+      if (this.state.addNew) {
+        this.props.createTestCase(formData, res => {
+          if (res.status === 200) {
+            this.props.history.push(`/${this.state.projectId}/CreateTestCase`);
+            successToast("Test case added and you can add new one");
+            this.setState({
+              title: "",
+              description: "",
+              test_steps: [{ id: 1, value: "" }],
+              expected_result: "",
+              selectedGroups: [],
+              preconditions: "",
+              links: []
+            });
+          } else {
+            failToast("Test case adding failed");
+          }
+        });
+      } else {
+        this.props.createTestCase(formData, res => {
+          if (res.status === 200) {
+            this.props.history.push(`/${this.state.projectId}/TestCase/${res.data.id}`);
+            successToast("Test case added successfully");
+          } else {
+            failToast("Test case adding failed");
+          }
+        });
+      }
     } else {
       this.setState({ errors });
     }
@@ -156,6 +186,9 @@ class NewTestCase extends Component {
         }
       });
     }
+  }
+  toggleNew() {
+    this.setState({ addNew: !this.state.addNew });
   }
 
   addColumnStep(e) {
@@ -319,7 +352,12 @@ class NewTestCase extends Component {
                 <Btn className="btn btn-primary mr-2" label="Add To Report" type="text" />
                 <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
               </div>
-              <Checkbox label="Add new Test case" />
+              <Checkbox
+                label="Add New Test Case"
+                onClick={e => this.toggleNew(e)}
+                name="addNew"
+                value={this.state.addNew}
+              />
             </div>
           </div>
         </div>
