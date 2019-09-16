@@ -43,7 +43,7 @@ export const getTestcase = testcaseId => dispatch => {
 };
 
 // Edit Test Case by Test Case id
-export const editTestcase = (testcaseId, projectId, testCaseData, history, callback) => dispatch => {
+export const editTestcase = (testcaseId, testCaseData, callback) => dispatch => {
   dispatch(setTestCaseLoading());
   axios
     .put(`/api/testcases/testcase/${testcaseId}`, testCaseData)
@@ -52,18 +52,26 @@ export const editTestcase = (testcaseId, projectId, testCaseData, history, callb
 };
 
 // Create Test Case
-export const createTestCase = (testCaseData, history) => dispatch => {
+export const createTestCase = (testCaseData, callback) => dispatch => {
   dispatch(setTestCaseLoading());
-
   axios
     .post(`/api/testcases/testcase`, testCaseData)
-    .then(res => history.push(`/${testCaseData.project_id}/TestCase/${res.data.id}`))
+    .then(res => callback(res))
     .catch(err =>
       dispatch({
         type: GET_TESTCASE,
         payload: {}
       })
     );
+};
+
+// Create Test Case
+export const setTestcaseDeprecated = (testcaseId, callback) => dispatch => {
+  dispatch(setTestCaseLoading());
+  axios
+    .put(`/api/testcases/testcase/${testcaseId}/deprecated`)
+    .then(res => callback(res))
+    .catch(err => callback(err));
 };
 
 // Test Case loading

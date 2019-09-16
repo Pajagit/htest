@@ -12,22 +12,51 @@ import Header from "../common/Header";
 import Spinner from "../common/Spinner";
 import openExternalBtn from "../../img/openExternalBtn.png";
 import Tag from "../common/Tag";
+import Btn from "../common/Btn";
+import successToast from "../../toast/successToast";
+import failToast from "../../toast/failToast";
+import Confirm from "../common/Confirm";
 
 import isEmpty from "../../validation/isEmpty";
 import { getTestcase } from "../../actions/testcaseActions";
+import { setTestcaseDeprecated } from "../../actions/testcaseActions";
 
 class TestCase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      testcaseId: null
+      testcaseId: null,
+      projectId: null
     };
   }
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
-    this.setState({ testcaseId });
+    var projectId = this.props.match.params.projectId;
+    this.setState({ testcaseId, projectId });
     this.props.getTestcase(testcaseId);
   }
+
+  confirmDeprecate = () => {
+    this.props.setTestcaseDeprecated(this.state.testcaseId, res => {
+      if (res.status === 200) {
+        this.props.history.push(`/${this.state.projectId}/TestCases`);
+        successToast("Test case set as deprecated successfully");
+      } else {
+        this.props.getTestcase(this.state.testcaseId);
+        failToast(`Can not find Test Case with ${this.state.testcaseId} id`);
+      }
+    });
+  };
+  confirmModal = () => {
+    Confirm(
+      "Set this Test Case as deprecated?",
+      "You will not be able to see or edit this Test Case anymore",
+      "No",
+      "Delete",
+      this.confirmDeprecate
+    );
+  };
+
   render() {
     var { testcase } = this.props.testcases;
     var { loading } = this.props.testcases;
@@ -121,6 +150,7 @@ class TestCase extends Component {
                   label="Add To Report"
                   link={`/${projectId}/TestCases`}
                 />
+                <Btn className="a-btn a-btn-secondary mr-2" label="Remove" onClick={this.confirmModal}></Btn>
                 <UnderlineAnchor link={`/${projectId}/TestCases`} value={"Cancel"} />
               </div>
             </div>
@@ -170,5 +200,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getTestcase }
+  { getTestcase, setTestcaseDeprecated }
 )(withRouter(TestCase));
