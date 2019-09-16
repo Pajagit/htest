@@ -14,7 +14,7 @@ const Device = sequelize.define(
     },
     title: {
       type: Sequelize.STRING,
-      require: false
+      require: true
     },
     resolution: {
       type: Sequelize.STRING,
