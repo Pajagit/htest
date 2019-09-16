@@ -2,6 +2,7 @@
 const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
+const Office = require("./office");
 const Device = sequelize.define(
   "devices",
   {
@@ -66,5 +67,10 @@ const Device = sequelize.define(
     timestamps: false
   }
 );
+
+Device.belongsTo(Office, {
+  foreignKey: "office_id",
+  targetKey: "id"
+});
 
 module.exports = Device;
