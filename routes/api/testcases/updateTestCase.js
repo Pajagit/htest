@@ -30,8 +30,8 @@ module.exports = Router({ mergeParams: true }).put("/testcases/testcase/:id", (r
     if (req.body.title) testCaseFields.title = req.body.title;
     if (req.body.isDeprecated) {
       updateOldCaseField.deprecated = true;
-      testCaseFields.user_id = req.body.user_id ? req.body.user_id : 2;
-      testCaseFields.project_id = req.body.project_id ? req.body.project_id : 2;
+      testCaseFields.user_id = req.body.user_id ? req.body.user_id : 1;
+      testCaseFields.project_id = req.body.project_id ? req.body.project_id : 1;
     }
     testCaseFields.description = req.body.description ? req.body.description : null;
     testCaseFields.deprecated = req.body.isDeprecated ? req.body.isDeprecated : false;
