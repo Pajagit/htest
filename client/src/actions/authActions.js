@@ -7,7 +7,7 @@ import { GET_ERRORS, SET_CURRENT_USER } from "./types";
 // import store from "../store";
 
 // Login - Get User Token
-export const loginUser = (userData, callback) => dispatch => {
+export const loginUser = userData => dispatch => {
   axios
     .post("/api/users/login", userData)
     .then(res => {
@@ -24,7 +24,6 @@ export const loginUser = (userData, callback) => dispatch => {
       // Set current user
       dispatch(setCurrentUser(decoded));
     })
-    .then(() => callback())
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -39,4 +38,16 @@ export const setCurrentUser = decoded => {
     type: SET_CURRENT_USER,
     payload: decoded
   };
+};
+
+// Log user out
+export const logoutUser = () => dispatch => {
+  // Remove token from localStorage
+  localStorage.removeItem("jwtHtestToken");
+  localStorage.removeItem("jwtHtestRefreshToken");
+
+  // Remove auth header for future requests
+  setAuthToken(false);
+  // Set current user to {} which will also set isAuthenticated to false
+  dispatch(setCurrentUser({}));
 };
