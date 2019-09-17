@@ -62,7 +62,7 @@ class Landing extends Component {
             cookiePolicy={"single_host_origin"}
           />
         </div>
-        <span className="">{errors.email}</span>
+        <span className="text-danger">{errors.email}</span>
       </div>
     );
   }
