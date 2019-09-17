@@ -2,7 +2,7 @@
 const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
-const Device = sequelize.define(
+const Browser = sequelize.define(
   "browsers",
   {
     id: {
@@ -42,4 +42,4 @@ const Device = sequelize.define(
   }
 );
 
-module.exports = Device;
+module.exports = Browser;
