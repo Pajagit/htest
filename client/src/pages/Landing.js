@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import htestLogo from "../img/htest-logo.png";
 import isEmpty from "../validation/isEmpty";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { loginUser } from "../actions/authActions";
 
 class Landing extends Component {
   constructor(props) {
@@ -21,7 +24,8 @@ class Landing extends Component {
     console.log("TokenId: " + response.tokenId);
     var id_token = response.getAuthResponse().id_token;
     console.log(id_token);
-    this.props.history.push("/Projects");
+    // this.props.history.push("/Projects");
+    this.props.loginUser(response);
   };
   logout = () => {
     this.setState({ user: {} });
@@ -62,4 +66,17 @@ class Landing extends Component {
     );
   }
 }
-export default Landing;
+
+Landing.propTypes = {
+  // testcases: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  // testcases: state.testcases
+  // auth: state.auth,
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(withRouter(Landing));

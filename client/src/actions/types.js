@@ -4,3 +4,6 @@ export const TESTCASE_LOADING = "TESTCASE_LOADING";
 
 export const GET_GROUPS = "GET_GROUPS";
 export const GROUP_LOADING = "GROUP_LOADING";
+
+export const GET_ERRORS = "GET_ERRORS";
+export const SET_CURRENT_USER = "SET_CURRENT_USER";
