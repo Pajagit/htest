@@ -4,31 +4,27 @@ import jwt_decode from "jwt-decode";
 // import { clearCurrentProfile } from "./profileActions";
 
 import { GET_ERRORS, SET_CURRENT_USER } from "./types";
-import store from "../store";
+// import store from "../store";
 
 // Login - Get User Token
-export const loginUser = userData => dispatch => {
+export const loginUser = (userData, callback) => dispatch => {
   axios
     .post("/api/users/login", userData)
     .then(res => {
       // Save to localStorage
       const { token, refreshToken } = res.data;
       // Set token to ls
-      //   localStorage.setItem("jwtToken", token);
-      //   localStorage.setItem("jwtRefreshToken", refreshToken);
+      localStorage.setItem("jwtHtestToken", token);
+      localStorage.setItem("jwtHtestRefreshToken", refreshToken);
       // Set token to Auth header
-      //   setAuthToken(token);
+
+      setAuthToken(token);
       // Decode token to get user data
       const decoded = jwt_decode(token);
-      console.log(decoded);
-      var user = {};
-      user.id = 1;
-      user.firstName = decoded.given_name;
-      user.lastName = decoded.family_name;
-      user.email = decoded.email;
       // Set current user
-      dispatch(setCurrentUser(user));
+      dispatch(setCurrentUser(decoded));
     })
+    .then(() => callback())
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

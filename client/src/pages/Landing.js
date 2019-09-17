@@ -10,22 +10,30 @@ class Landing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {}
+      user: {},
+      errors: ""
     };
   }
   responseGoogle = response => {
     console.log(response);
-    var profile = response.getBasicProfile();
-    this.setState({ user: response });
-    console.log("ID: " + profile.getId());
-    console.log("Name: " + profile.getName());
-    console.log("Image URL: " + profile.getImageUrl());
-    console.log("Email: " + profile.getEmail());
-    console.log("TokenId: " + response.tokenId);
-    var id_token = response.getAuthResponse().id_token;
-    console.log(id_token);
-    // this.props.history.push("/Projects");
-    this.props.loginUser(response);
+    if (response.type !== "tokenFailed") {
+      // console.log(response);
+      // var profile = response.getBasicProfile();
+      this.setState({ user: response });
+      // console.log("ID: " + profile.getId());
+      // console.log("Name: " + profile.getName());
+      // console.log("Image URL: " + profile.getImageUrl());
+      // console.log("Email: " + profile.getEmail());
+      // console.log("TokenId: " + response.tokenId);
+      // var id_token = response.getAuthResponse().id_token;
+      // console.log(id_token);
+
+      this.props.loginUser(response, () => {
+        this.props.history.push("/Projects");
+      });
+    } else {
+      this.setState({ errors: response.type });
+    }
   };
   logout = () => {
     this.setState({ user: {} });
@@ -42,7 +50,7 @@ class Landing extends Component {
           onSuccess={this.responseGoogle}
           onFailure={this.responseGoogle}
           redirectUri={"/Projects"}
-          hostedDomain={"htecgroup.com"}
+          // hostedDomain={"htecgroup.com"}
           ux_mode="redirect"
           cookiePolicy={"single_host_origin"}
         />
@@ -62,6 +70,7 @@ class Landing extends Component {
           <img src={htestLogo} alt="htest logo" />
         </div>
         <div className="landing-btn">{googleBtn}</div>
+        {this.state.errors}
       </div>
     );
   }

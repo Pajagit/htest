@@ -2,6 +2,7 @@ const pgURI = require("./config/keys").postgresURI;
 const bodyParser = require("body-parser");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(pgURI);
+const passport = require("passport");
 
 const express = require("express");
 
@@ -10,6 +11,12 @@ const router = require("./routes/createRouter.js")();
 const app = express();
 // Body parser middleware
 app.use(bodyParser.json());
+
+// Passport middleware
+app.use(passport.initialize());
+
+// Passport Config
+require("./config/passport")(passport);
 
 // Check connection to postgresDB
 sequelize
