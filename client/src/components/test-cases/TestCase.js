@@ -150,7 +150,11 @@ class TestCase extends Component {
                   label="Add To Report"
                   link={`/${projectId}/TestCases`}
                 />
-                <Btn className="a-btn a-btn-secondary mr-2" label="Remove" onClick={this.confirmModal}></Btn>
+                <Btn
+                  className="a-btn-outline a-btn-outline-primary mr-2"
+                  label="Remove"
+                  onClick={this.confirmModal}
+                ></Btn>
                 <UnderlineAnchor link={`/${projectId}/TestCases`} value={"Cancel"} />
               </div>
             </div>
