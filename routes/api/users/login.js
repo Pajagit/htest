@@ -6,7 +6,6 @@ var crypto = require("crypto"),
   algorithm = "aes-256-ctr",
   passwordcrypto = "d6F3Efeq";
 
-const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 // const keys = require("../../config/keys");
@@ -26,7 +25,8 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
   } else {
     User.findOne({
       where: {
-        email: req.body.profileObj.email
+        email: req.body.profileObj.email,
+        active: true
       }
     }).then(user => {
       if (!user) {
@@ -34,13 +34,25 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
         return res.status(404).json(errors);
       } else {
         var newUserValues = {};
-        newUserValues.id = user.id;
-        newUserValues.first_name = req.body.profileObj.givenName;
-        newUserValues.last_name = req.body.profileObj.familyName;
-        newUserValues.active = user.active;
-        newUserValues.email = user.email;
-        newUserValues.image_url = req.body.profileObj.imageUrl;
-        newUserValues.updated_at = updateDate;
+        if (req.body.profileObj.givenName != user.first_name) {
+          newUserValues.first_name = req.body.profileObj.givenName;
+        }
+        if (req.body.profileObj.familyName != user.last_name) {
+          newUserValues.last_name = req.body.profileObj.familyName;
+        }
+        if (req.body.profileObj.imageUrl != user.image_url) {
+          newUserValues.image_url = req.body.profileObj.imageUrl;
+        }
+
+        if (Object.keys(newUserValues) == 0) {
+          newUserValues.updated_at = updateDate;
+          User.update(newUserValues, {
+            where: { id: user.id }
+          });
+        }
+        // newUserValues.id = user.id;
+        // newUserValues.active = user.active;
+        // newUserValues.email = user.email;
 
         // Create jwt payload
         const payload = {
@@ -53,10 +65,6 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
           created_at: user.created_at,
           updated_at: user.updated_at
         };
-
-        User.update(newUserValues, {
-          where: { id: user.id }
-        });
 
         function encrypt(text) {
           var cipher = crypto.createCipher(algorithm, passwordcrypto);

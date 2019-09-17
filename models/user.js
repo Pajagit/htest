@@ -12,33 +12,39 @@ const User = sequelize.define(
       autoIncrement: true
     },
     first_name: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      required: false
     },
     email: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      required: true
     },
     last_name: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      required: false
     },
     position: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      required: false
     },
     active: {
-      type: Sequelize.BOOLEAN
+      type: Sequelize.BOOLEAN,
+      required: true
     },
     image_url: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      required: false
     },
     created_at: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      required: true
     },
     updated_at: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      required: false
     }
   },
   { timestamps: false }
 );
-User.associate = function(models) {
-  // associations can be defined here
-};
+
 module.exports = User;
