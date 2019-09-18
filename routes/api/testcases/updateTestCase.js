@@ -33,7 +33,7 @@ module.exports = Router({ mergeParams: true }).put(
       if (req.body.title) testCaseFields.title = req.body.title;
       if (req.body.isDeprecated) {
         updateOldCaseField.deprecated = true;
-        testCaseFields.user_id = req.body.user_id ? req.body.user_id : 1;
+        testCaseFields.user_id = req.user.id;
         testCaseFields.project_id = req.body.project_id ? req.body.project_id : 1;
       }
       testCaseFields.description = req.body.description ? req.body.description : null;
@@ -44,6 +44,7 @@ module.exports = Router({ mergeParams: true }).put(
       if (req.body.links) {
         var links = req.body.links.filter(Boolean);
       }
+      testCaseFields.updated_at = new Date();
 
       // check if testcase exists
       async function checkIfTestCaseExist() {
