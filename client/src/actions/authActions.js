@@ -54,7 +54,7 @@ export const logoutUser = () => dispatch => {
 
 // Intercepting all requests and cheking if token is expired. If it is it will be refreshed
 axios.interceptors.request.use(async request => {
-  if (request.url !== "/api/users/login" && request.url !== "/api/users/token") {
+  if (request.url !== "/api/users/login" && request.url !== "/api/token") {
     var token = localStorage.getItem("jwtHtestToken");
     const currentTime = Date.now() / 1000;
     const decoded = jwt_decode(token);
@@ -64,9 +64,7 @@ axios.interceptors.request.use(async request => {
     let refreshTokenObj = {
       refreshToken: cryptedRefreshToken
     };
-
     if (decoded.exp - currentTime < 1) {
-      console.log("test");
       await axios
         .post("/api/token", refreshTokenObj)
         .then(res => {
