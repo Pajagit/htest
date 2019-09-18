@@ -27,7 +27,7 @@ module.exports = Router({ mergeParams: true }).post(
     // Get fields
     const testCaseFields = {};
     if (req.body.title) testCaseFields.title = req.body.title;
-    testCaseFields.user_id = req.body.user_id ? req.body.user_id : 1;
+    testCaseFields.user_id = req.user.id;
     if (req.body.project_id) testCaseFields.project_id = req.body.project_id;
 
     testCaseFields.description = req.body.description ? req.body.description : null;

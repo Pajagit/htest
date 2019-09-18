@@ -8,7 +8,6 @@ var crypto = require("crypto"),
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// const keys = require("../../config/keys");
 
 const User = require("../../../models/user");
 
@@ -30,8 +29,8 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
       }
     }).then(user => {
       if (!user) {
-        errors.email = "User not found";
-        return res.status(404).json(errors);
+        errors.email = req.body.profileObj.email + " is not authorized";
+        return res.status(401).json(errors);
       } else {
         var newUserValues = {};
         if (req.body.profileObj.givenName != user.first_name) {
@@ -44,26 +43,19 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
           newUserValues.image_url = req.body.profileObj.imageUrl;
         }
 
-        if (Object.keys(newUserValues) == 0) {
+        if (Object.keys(newUserValues) > 0) {
           newUserValues.updated_at = updateDate;
           User.update(newUserValues, {
             where: { id: user.id }
           });
         }
-        // newUserValues.id = user.id;
-        // newUserValues.active = user.active;
-        // newUserValues.email = user.email;
 
         // Create jwt payload
         const payload = {
           id: user.id,
           first_name: newUserValues.first_name,
           last_name: newUserValues.last_name,
-          active: user.active,
-          email: user.email,
-          image_url: newUserValues.image_url,
-          created_at: user.created_at,
-          updated_at: user.updated_at
+          email: user.email
         };
 
         function encrypt(text) {
