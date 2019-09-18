@@ -43,7 +43,7 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
 
     //check if refresh token expired
     if (expDate < currentDate) {
-      errors.email = profileObj.email + " is not authorized";
+      errors.email = "Token expired";
       return res.status(401).json(errors);
     }
 
