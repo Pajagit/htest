@@ -1,15 +1,12 @@
 import React from "react";
-import { setCurrentUser, logoutUser } from "./actions/authActions";
-
+import axios from "axios";
 import jwt_decode from "jwt-decode";
-
-import setAuthToken from "./actions/setAuthToken";
-
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import PrivateRoute from "./components/common/PrivateRoute";
-
 import { Provider } from "react-redux";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
+import { setCurrentUser, logoutUser } from "./actions/authActions";
+import PrivateRoute from "./components/common/PrivateRoute";
+import setAuthToken from "./actions/setAuthToken";
 import store from "./store";
 import Test from "./pages/Test";
 import NewTestCase from "./components/test-cases/NewTestCase";
@@ -25,22 +22,36 @@ import "./sass/main.scss";
 
 // Check for token
 if (localStorage.jwtHtestToken) {
+  const currentTime = Date.now() / 1000;
   // Set auth token header auth
   setAuthToken(localStorage.jwtHtestToken);
+  var refreshTokenCrypted = localStorage.getItem("jwtHtestRefreshToken");
+  let refreshTokenObj = {
+    refreshToken: refreshTokenCrypted
+  };
   // Decode token and get user info and exp
   const decoded = jwt_decode(localStorage.jwtHtestToken);
-  // Set user and isAuthenticated
-  store.dispatch(setCurrentUser(decoded));
-
-  // Check for expired token
-  const currentTime = Date.now() / 1000;
-  if (decoded.exp < currentTime) {
-    // Logout user
-    store.dispatch(logoutUser());
-    // Clear current profile
-    // store.dispatch(clearCurrentProfile());
-    // Redirect to login
-    // window.location.href = "/";
+  if (decoded.exp < currentTime - 10) {
+    axios
+      .post("/api/token", refreshTokenObj)
+      .then(res => {
+        // Save to localStorage
+        const { token, refreshToken } = res.data;
+        // Set token to ls
+        localStorage.setItem("jwtHtestToken", token);
+        localStorage.setItem("jwtHtestRefreshToken", refreshToken);
+        // Set token to Auth header
+        setAuthToken(token);
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // Set current user
+        store.dispatch(setCurrentUser(decoded));
+      })
+      .catch(err => {
+        store.dispatch(logoutUser());
+      });
+  } else {
+    store.dispatch(setCurrentUser(decoded));
   }
 }
 
