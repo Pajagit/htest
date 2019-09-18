@@ -14,6 +14,7 @@ class GlobalPanel extends Component {
     this.props.logoutUser();
   }
   render() {
+    var userImg = this.props.auth.user.image_url;
     var projectsActive = false;
     var notificationsActive = false;
     var statisticsActive = false;
@@ -23,6 +24,11 @@ class GlobalPanel extends Component {
       notificationsActive = false;
       statisticsActive = false;
       settingsActive = false;
+    } else if (this.props.match.path.substring(0, 12) === "/:projectId/" || this.props.match.path === "/Settings") {
+      projectsActive = false;
+      notificationsActive = false;
+      statisticsActive = false;
+      settingsActive = true;
     }
     return (
       <div className="global-panel global-panel-grid">
@@ -37,7 +43,7 @@ class GlobalPanel extends Component {
           />
           <GlobalPanelItem icon={<i className="fas fa-chart-pie"></i>} link={"/Statistics"} active={statisticsActive} />
           <GlobalPanelItem icon={<i className="fas fa-user-cog"></i>} link={"/Settings"} active={settingsActive} />
-          <GlobalPanelProfileImage img={profileImage} onClick={this.onLogoutClick.bind(this)} />
+          <GlobalPanelProfileImage img={userImg} onClick={this.onLogoutClick.bind(this)} />
         </div>
       </div>
     );

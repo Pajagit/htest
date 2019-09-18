@@ -20,11 +20,13 @@
     &--item {
       position: relative;
       transition: all 0.4s;
-
+      padding: 5px 10px;
+      margin-left: auto;
+      margin-right: auto;
       &-active {
         color: white;
         width: 40px;
-        padding: 5px 10px;
+
         border-radius: 50%;
         background: linear-gradient(180deg, #c86dd7 0%, #8c4497 100%);
       }
@@ -32,7 +34,7 @@
         color: white;
       }
       &:not(:last-child) {
-        margin-bottom: 1.4rem;
+        margin-bottom: 0.5rem;
       }
       &-profile-image > img {
         position: absolute;
