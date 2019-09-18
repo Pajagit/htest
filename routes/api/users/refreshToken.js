@@ -35,9 +35,17 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
       dec += decipher.final("utf8");
       return dec;
     }
-
     decryptedRefresh = decrypt(req.body.refreshToken);
     var profileObj = jwtDecode(decryptedRefresh);
+
+    var currentDate = new Date();
+    expDate = new Date(profileObj.exp * 1000);
+
+    //check if refresh token expired
+    if (expDate < currentDate) {
+      errors.email = profileObj.email + " is not authorized";
+      return res.status(401).json(errors);
+    }
 
     User.findOne({
       where: {
