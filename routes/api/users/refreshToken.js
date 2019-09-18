@@ -41,7 +41,7 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
     var currentDate = new Date();
     expDate = new Date(profileObj.exp * 1000);
 
-    //check if refresh token expired
+    //check if refresh token expired and return propper message
     if (expDate < currentDate) {
       errors.email = "Refresh token expired";
       return res.status(401).json(errors);
