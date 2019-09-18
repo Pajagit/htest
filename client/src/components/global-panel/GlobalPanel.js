@@ -8,37 +8,6 @@ import { withRouter } from "react-router-dom";
 import { logoutUser } from "../../actions/authActions";
 import profileImage from "../../img/profile.jpg";
 
-// function GlobalPanel(props) {
-//   var projectsActive = false;
-//   var notificationsActive = false;
-//   var statisticsActive = false;
-//   var settingsActive = false;
-//   if (props.props.match.path.substring(0, 12) === "/:projectId/" || props.props.match.path === "/Projects") {
-//     projectsActive = true;
-//     notificationsActive = false;
-//     statisticsActive = false;
-//     settingsActive = false;
-//   }
-//   return (
-//     <div className="global-panel global-panel-grid">
-//       <div className="global-panel-items">
-//         <GlobalPanelHeader />
-//         <GlobalPanelItem icon={<i className="fas fa-th"></i>} link={"/Projects"} active={projectsActive} />
-//         <GlobalPanelItem
-//           icon={<i className="fas fa-bell"></i>}
-//           link={"/Notifications"}
-//           active={notificationsActive}
-//           notification={14}
-//         />
-//         <GlobalPanelItem icon={<i className="fas fa-chart-pie"></i>} link={"/Statistics"} active={statisticsActive} />
-//         <GlobalPanelItem icon={<i className="fas fa-user-cog"></i>} link={"/Settings"} active={settingsActive} />
-//         <GlobalPanelProfileImage img={profileImage} />
-//       </div>
-//     </div>
-//   );
-// }
-// export default GlobalPanel;
-
 class GlobalPanel extends Component {
   onLogoutClick(e) {
     e.preventDefault();

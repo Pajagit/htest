@@ -48,21 +48,23 @@ class Landing extends Component {
 
     return (
       <div className="landing">
-        <div className="landing-logo">
-          <img src={htestLogo} alt="htest logo" />
+        <div className="landing-content">
+          <div className="landing-content-logo">
+            <img src={htestLogo} alt="htest logo" />
+          </div>
+          <div className="landing-content-btn">
+            <GoogleLogin
+              clientId="19117053252-nqhee0c2nmovdumnub6tee623hdgkfoo.apps.googleusercontent.com"
+              buttonText="Sign in with Google"
+              onSuccess={this.responseGoogle}
+              onFailure={this.responseGoogle}
+              redirectUri={"/Projects"}
+              ux_mode="redirect"
+              cookiePolicy={"single_host_origin"}
+            />
+          </div>
+          <span className="text-danger">{errors.email}</span>
         </div>
-        <div className="landing-btn">
-          <GoogleLogin
-            clientId="19117053252-nqhee0c2nmovdumnub6tee623hdgkfoo.apps.googleusercontent.com"
-            buttonText="Sign in with Google"
-            onSuccess={this.responseGoogle}
-            onFailure={this.responseGoogle}
-            redirectUri={"/Projects"}
-            ux_mode="redirect"
-            cookiePolicy={"single_host_origin"}
-          />
-        </div>
-        <span className="text-danger">{errors.email}</span>
       </div>
     );
   }
