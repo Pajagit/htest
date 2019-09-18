@@ -6,6 +6,7 @@ const UploadedFile = require("../../../models/uploadedfile");
 const TestStep = require("../../../models/teststep");
 const Group = require("../../../models/group");
 const Color = require("../../../models/color");
+const User = require("../../../models/user");
 
 // @route GET api/testcases/:id
 // @desc Get one test case by id
@@ -41,6 +42,12 @@ module.exports = Router({ mergeParams: true }).get(
             attributes: ["id", ["title", "value"], "expected_result"],
             required: false,
             as: "test_steps"
+          },
+          {
+            model: User,
+            attributes: ["id", "first_name", "last_name", "position"],
+            required: true,
+            as: "user"
           },
           {
             model: Group,
@@ -90,7 +97,8 @@ module.exports = Router({ mergeParams: true }).get(
               links: testcase.links,
               uploaded_files: testcase.uploaded_files,
               test_steps: testcase.test_steps,
-              groups: groupsObj
+              groups: groupsObj,
+              author: testcase.user
             };
             res.json(testcasesObj);
           }

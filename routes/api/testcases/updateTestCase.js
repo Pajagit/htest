@@ -7,6 +7,7 @@ const TestStep = require("../../../models/teststep");
 const Group = require("../../../models/group");
 const GroupTestCase = require("../../../models/grouptestcase");
 const Color = require("../../../models/color");
+const User = require("../../../models/user");
 
 const validateTestCaseInput = require("../../../validation/testcase");
 
@@ -34,7 +35,7 @@ module.exports = Router({ mergeParams: true }).put(
       if (req.body.isDeprecated) {
         updateOldCaseField.deprecated = true;
         testCaseFields.user_id = req.user.id;
-        testCaseFields.project_id = req.body.project_id ? req.body.project_id : 1;
+        testCaseFields.project_id = req.body.project_id ? req.body.project_id : 2;
       }
       testCaseFields.description = req.body.description ? req.body.description : null;
       testCaseFields.deprecated = req.body.isDeprecated ? req.body.isDeprecated : false;
@@ -92,7 +93,6 @@ module.exports = Router({ mergeParams: true }).put(
                 user_id: testCaseFields.user_id
               }).then(testcase => {
                 if (testcase) {
-                  console.log(testcase.id);
                   resolve(testcase.id);
                 } else {
                   resolve(false);
@@ -235,6 +235,12 @@ module.exports = Router({ mergeParams: true }).put(
                   as: "test_steps"
                 },
                 {
+                  model: User,
+                  attributes: ["id", "first_name", "last_name", "position"],
+                  required: true,
+                  as: "user"
+                },
+                {
                   model: Group,
                   attributes: ["id", "title", "pinned"],
                   through: {
@@ -277,7 +283,8 @@ module.exports = Router({ mergeParams: true }).put(
                   links: testcase.links,
                   uploaded_files: testcase.uploaded_files,
                   test_steps: testcase.test_steps,
-                  groups: groupsObj
+                  groups: groupsObj,
+                  author: testcase.user
                 };
                 resolve(testcasesObj);
               } else {
