@@ -13,7 +13,9 @@ function PortraitTestCase({ title, tags, author, date, description, id, projectI
 
             <div className="portrait-testcase-top-container--tags">{tags}</div>
 
-            <div className="portrait-testcase-top-container--author">Jana Antic</div>
+            <div className="portrait-testcase-top-container--author">
+              {author.first_name} {author.last_name} {author.position ? ", " + author.position : ""}
+            </div>
             <div className="portrait-testcase-top-container--date">
               {moment(date).format("Do MMMM YYYY, h:mm:ss a")}
             </div>

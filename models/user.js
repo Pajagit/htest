@@ -1,16 +1,50 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    position: DataTypes.STRING,
-    isActive: DataTypes.BOOLEAN,
-    imageUrl: DataTypes.STRING
-  }, {});
-  User.associate = function(models) {
-    // associations can be defined here
-  };
-  return User;
-};
+"use strict";
+const Sequelize = require("sequelize");
+const pgURI = require("../config/keys").postgresURI;
+const sequelize = new Sequelize(pgURI);
+const User = sequelize.define(
+  "users",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      required: true,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    first_name: {
+      type: Sequelize.STRING,
+      required: false
+    },
+    email: {
+      type: Sequelize.STRING,
+      required: true
+    },
+    last_name: {
+      type: Sequelize.STRING,
+      required: false
+    },
+    position: {
+      type: Sequelize.STRING,
+      required: false
+    },
+    active: {
+      type: Sequelize.BOOLEAN,
+      required: true
+    },
+    image_url: {
+      type: Sequelize.STRING,
+      required: false
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      required: true
+    },
+    updated_at: {
+      type: Sequelize.DATE,
+      required: false
+    }
+  },
+  { timestamps: false }
+);
+
+module.exports = User;
