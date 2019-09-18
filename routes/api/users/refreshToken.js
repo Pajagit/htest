@@ -20,8 +20,8 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
   // Ako postoji uzima podatke tog usera i kreira novi token koji koristimo u app
   var updateDate = new Date();
   var errors = {};
-  if (isEmpty(req.body.token)) {
-    return res.status(400).json({ error: "Token is missing" });
+  if (isEmpty(req.body.refreshToken)) {
+    return res.status(400).json({ error: "Refresh token is missing" });
   } else {
     function encrypt(text) {
       var cipher = crypto.createCipher(algorithm, passwordcrypto);
@@ -36,7 +36,7 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
       return dec;
     }
 
-    decryptedRefresh = decrypt(req.body.token);
+    decryptedRefresh = decrypt(req.body.refreshToken);
     var profileObj = jwtDecode(decryptedRefresh);
 
     User.findOne({
