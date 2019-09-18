@@ -7,6 +7,7 @@ const TestStep = require("../../../models/teststep");
 const Group = require("../../../models/group");
 const GroupTestCase = require("../../../models/grouptestcase");
 const Color = require("../../../models/color");
+const User = require("../../../models/user");
 
 const validateTestCaseInput = require("../../../validation/testcase");
 
@@ -141,6 +142,12 @@ module.exports = Router({ mergeParams: true }).post(
                 as: "test_steps"
               },
               {
+                model: User,
+                attributes: ["id", "first_name", "last_name", "position"],
+                required: true,
+                as: "user"
+              },
+              {
                 model: Group,
                 attributes: ["id", "title", "pinned"],
                 through: {
@@ -183,7 +190,8 @@ module.exports = Router({ mergeParams: true }).post(
                 links: testcase.links,
                 uploaded_files: testcase.uploaded_files,
                 test_steps: testcase.test_steps,
-                groups: groupsObj
+                groups: groupsObj,
+                author: testcase.user
               };
               resolve(testcasesObj);
             } else {

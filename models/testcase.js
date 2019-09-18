@@ -1,5 +1,4 @@
 "use strict";
-const { Pool } = require("pg");
 const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
@@ -9,6 +8,7 @@ const GroupTestCase = require("./grouptestcase");
 const Link = require("./link");
 const TestStep = require("./teststep");
 const UploadedFile = require("./uploadedfile");
+const User = require("./user");
 
 const TestCase = sequelize.define(
   "testcases",
@@ -89,6 +89,10 @@ TestCase.hasMany(TestStep, {
   foreignKey: "test_case_id",
   targetKey: "id",
   as: "test_steps"
+});
+TestCase.belongsTo(User, {
+  foreignKey: "user_id",
+  targetKey: "id"
 });
 
 module.exports = TestCase;
