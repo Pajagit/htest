@@ -24,7 +24,7 @@ function ListItem({ img, title, list, msg }) {
           <i className="fas fa-pen"></i>
         </div>
         <div className="list-item--buttons--remove">
-          <img src={removeBtn} alt="Remove"></img>
+          <i className="fas fa-lock-open"></i>
         </div>
       </div>
     </div>
