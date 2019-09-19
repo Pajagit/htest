@@ -27,35 +27,6 @@ module.exports = Router({ mergeParams: true }).get(
       order: [["id", "DESC"], [Project, "id", "ASC"]]
     }).then(users => {
       if (users) {
-        // var testcasesObjArray = Array();
-        // testcases.forEach(testcase => {
-        //   if (testcase.groups) {
-        //     var groupsObj = Array();
-        //     testcase.groups.forEach(group => {
-        //       var groupObject = {
-        //         id: group.id,
-        //         isPinned: group.pinned,
-        //         name: group.title,
-        //         color: group.color.title
-        //       };
-        //       groupsObj.push(groupObject);
-        //     });
-        //   }
-        //   var testcasesObj = {
-        //     id: testcase.id,
-        //     title: testcase.title,
-        //     description: testcase.description,
-        //     expected_result: testcase.expected_result,
-        //     preconditions: testcase.preconditions,
-        //     date: testcase.created_at,
-        //     links: testcase.links,
-        //     uploaded_files: testcase.uploaded_files,
-        //     test_steps: testcase.test_steps,
-        //     groups: groupsObj,
-        //     author: testcase.user
-        //   };
-        //   testcasesObjArray.push(testcasesObj);
-        // });
         res.json(users);
       } else {
         res.status(200);

@@ -16,8 +16,6 @@ const User = require("../../../models/user");
 // @desc Login user / Returning JWT token
 // @access Public
 module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
-  // Ovde ide logika koja iz google tokena vadi email i proverava da li postoji kod nas taj email
-  // Ako postoji uzima podatke tog usera i kreira novi token koji koristimo u app
   var updateDate = new Date();
   var errors = {};
   if (isEmpty(req.body.refreshToken)) {
@@ -68,7 +66,7 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
           newUserValues.image_url = profileObj.imageUrl;
         }
 
-        if (Object.keys(newUserValues) > 0) {
+        if (Object.keys(newUserValues).length > 0) {
           newUserValues.updated_at = updateDate;
           User.update(newUserValues, {
             where: { id: user.id }
@@ -78,16 +76,15 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
         // Create jwt payload
         const payload = {
           id: user.id,
-          first_name: newUserValues.first_name,
-          last_name: newUserValues.last_name,
+          first_name: newUserValues.first_name ? newUserValues.first_name : user.first_name,
+          last_name: newUserValues.last_name ? newUserValues.last_name : user.last_name,
           email: user.email,
-          image_url: newUserValues.image_url
+          image_url: newUserValues.image_url ? newUserValues.image_url : user.image_url
         };
 
         refreshToken = jwt.sign(payload, keys.secretOrKeyRefresh, {
           expiresIn: keys.refreshTokenDuration
         });
-        console.log(refreshToken);
         //Sign Token
         jwt.sign(payload, keys.secretOrKey, { expiresIn: keys.tokenDuration }, (err, token) => {
           cryptedRefresh = encrypt(refreshToken);
