@@ -55,8 +55,7 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
           id: user.id,
           first_name: newUserValues.first_name,
           last_name: newUserValues.last_name,
-          email: user.email,
-          image_url: user.image_url
+          email: user.email
         };
 
         function encrypt(text) {
