@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { logoutUser } from "../../actions/authActions";
-import profileImage from "../../img/profile.jpg";
 
 class GlobalPanel extends Component {
   onLogoutClick(e) {
@@ -14,6 +13,7 @@ class GlobalPanel extends Component {
     this.props.logoutUser();
   }
   render() {
+    var userImg = this.props.auth.user.image_url;
     var projectsActive = false;
     var notificationsActive = false;
     var statisticsActive = false;
@@ -23,6 +23,15 @@ class GlobalPanel extends Component {
       notificationsActive = false;
       statisticsActive = false;
       settingsActive = false;
+    } else if (
+      this.props.match.path === "/UserSettings" ||
+      this.props.match.path === "/ProjectSettings" ||
+      this.props.match.path === "/DeviceSettings"
+    ) {
+      projectsActive = false;
+      notificationsActive = false;
+      statisticsActive = false;
+      settingsActive = true;
     }
     return (
       <div className="global-panel global-panel-grid">
@@ -36,8 +45,8 @@ class GlobalPanel extends Component {
             notification={14}
           />
           <GlobalPanelItem icon={<i className="fas fa-chart-pie"></i>} link={"/Statistics"} active={statisticsActive} />
-          <GlobalPanelItem icon={<i className="fas fa-user-cog"></i>} link={"/Settings"} active={settingsActive} />
-          <GlobalPanelProfileImage img={profileImage} onClick={this.onLogoutClick.bind(this)} />
+          <GlobalPanelItem icon={<i className="fas fa-user-cog"></i>} link={"/UserSettings"} active={settingsActive} />
+          <GlobalPanelProfileImage img={userImg} onClick={this.onLogoutClick.bind(this)} />
         </div>
       </div>
     );

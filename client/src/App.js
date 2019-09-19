@@ -13,6 +13,10 @@ import NewTestCase from "./components/test-cases/NewTestCase";
 import TestCases from "./components/test-cases/TestCases";
 import Landing from "./pages/Landing";
 import Projects from "./pages/Projects";
+import UserSettings from "./pages/UserSettings";
+import AddUser from "./pages/AddUser";
+import ProjectSettings from "./pages/ProjectSettings";
+import DeviceSettings from "./pages/DeviceSettings";
 import TestCase from "./components/test-cases/TestCase";
 import EditTestCase from "./components/test-cases/EditTestCase";
 import { ToastContainer, Flip } from "react-toastify";
@@ -70,6 +74,10 @@ function App() {
           <PrivateRoute exact path="/:projectId/CreateTestCase" component={NewTestCase} />
           <PrivateRoute exact path="/:projectId/EditTestCase/:testcaseId" component={EditTestCase} />
           <PrivateRoute exact path="/:projectId/TestCases" component={TestCases} />
+          <PrivateRoute exact path="/UserSettings" component={UserSettings} />
+          <PrivateRoute exact path="/AddUser" component={AddUser} />
+          <PrivateRoute exact path="/ProjectSettings" component={ProjectSettings} />
+          <PrivateRoute exact path="/DeviceSettings" component={DeviceSettings} />
         </div>
       </Router>
     </Provider>
