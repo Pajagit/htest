@@ -80,7 +80,8 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
           id: user.id,
           first_name: newUserValues.first_name,
           last_name: newUserValues.last_name,
-          email: user.email
+          email: user.email,
+          image_url: newUserValues.image_url
         };
 
         refreshToken = jwt.sign(payload, keys.secretOrKeyRefresh, {
