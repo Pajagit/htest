@@ -43,7 +43,7 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
           newUserValues.image_url = req.body.profileObj.imageUrl;
         }
 
-        if (Object.keys(newUserValues) > 0) {
+        if (Object.keys(newUserValues).length > 0) {
           newUserValues.updated_at = updateDate;
           User.update(newUserValues, {
             where: { id: user.id }
@@ -53,10 +53,10 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
         // Create jwt payload
         const payload = {
           id: user.id,
-          first_name: newUserValues.first_name,
-          last_name: newUserValues.last_name,
+          first_name: newUserValues.first_name ? newUserValues.first_name : user.first_name,
+          last_name: newUserValues.last_name ? newUserValues.last_name : user.last_name,
           email: user.email,
-          image_url: newUserValues.image_url
+          image_url: newUserValues.image_url ? newUserValues.image_url : user.image_url
         };
 
         function encrypt(text) {
