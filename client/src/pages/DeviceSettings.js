@@ -12,9 +12,8 @@ import BtnAnchor from "../components/common/BtnAnchor";
 import Spinner from "../components/common/Spinner";
 import ListItem from "../components/lists/ListItem";
 import Header from "../components/common/Header";
-import placeholderImg from "../img/user-placeholder.png";
 
-class UserSettings extends Component {
+class DeviceSettings extends Component {
   componentDidMount() {
     this.props.getUsers();
   }
@@ -24,22 +23,16 @@ class UserSettings extends Component {
     if (users === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(users)) {
-      content =
-        users &&
-        users.map((user, index) => (
-          <ListItem
-            key={index}
-            title={[user.first_name ? user.first_name : user.email, " ", user.last_name ? user.last_name : ""]}
-            img={user.image_url ? user.image_url : placeholderImg}
-            list={user.projects.map((project, projectIndex) => (
-              <React.Fragment key={projectIndex}>
-                {project.title} {user.projects.length - 1 > projectIndex ? `, ` : ``}
-              </React.Fragment>
-            ))}
-          />
-        ));
+      content = (
+        <ListItem
+          title={"iPhone 6s"}
+          img={""}
+          list={"10.2 Retina, 4.7” 1334x750 - 326ppi 06f111c45fce3e4b5d"}
+          msg={"Nis"}
+        />
+      );
     } else {
-      content = <div className="testcase-container-no-content">There are no users created yet</div>;
+      content = <div className="testcase-container-no-content">There are no devices added yet</div>;
     }
 
     return (
@@ -48,11 +41,11 @@ class UserSettings extends Component {
         <SettingPanel props={this.props} />
         <div className="main-content main-content-grid">
           <Header
-            icon={<i className="fas fa-user-cog"></i>}
-            title={"User Settings"}
+            icon={<i className="fas fa-laptop"></i>}
+            title={"Device Settings"}
             history={this.props}
             canGoBack={false}
-            addBtn={<BtnAnchor type={"text"} label="Add User" className={"a-btn a-btn-primary"} link={`AddUser`} />}
+            addBtn={<BtnAnchor type={"text"} label="Add Device" className={"a-btn a-btn-primary"} link={`AddUser`} />}
           />
           <div className="list-item-container">{content}</div>
         </div>
@@ -61,7 +54,7 @@ class UserSettings extends Component {
   }
 }
 
-UserSettings.propTypes = {
+DeviceSettings.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -75,4 +68,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getUsers }
-)(withRouter(UserSettings));
+)(withRouter(DeviceSettings));

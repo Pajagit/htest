@@ -7,11 +7,22 @@ class SettingPanel extends Component {
     this.state = {
       title: "",
       img: "",
-      projectId: null,
+      userSettingActive: false,
+      projectSettingActive: false,
+      deviceSettingActive: false,
+      pathValue: {},
       errors: {}
     };
   }
-
+  componentDidMount() {
+    if (this.props.props.history.location.pathname === "/UserSettings") {
+      this.setState({ userSettingActive: true, projectSettingActive: false, deviceSettingActive: false });
+    } else if (this.props.props.history.location.pathname === "/ProjectSettings") {
+      this.setState({ userSettingActive: false, projectSettingActive: true, deviceSettingActive: false });
+    } else if (this.props.props.history.location.pathname === "/DeviceSettings") {
+      this.setState({ userSettingActive: false, projectSettingActive: false, deviceSettingActive: true });
+    }
+  }
   render() {
     return (
       <div className="setting-panel setting-panel-grid">
@@ -20,20 +31,20 @@ class SettingPanel extends Component {
           <SettingPanelItem
             icon={<i className="fas fa-user-cog"></i>}
             title={"USERS"}
-            active={true}
-            link={`/${this.state.projectId}/TestCases`}
+            active={this.state.userSettingActive}
+            link={`/UserSettings`}
           />
           <SettingPanelItem
             icon={<i className="fas fa-project-diagram"></i>}
             title={"PROJECTS"}
-            active={false}
-            link={`/${this.state.projectId}/Reports`}
+            active={this.state.projectSettingActive}
+            link={`/ProjectSettings`}
           />
           <SettingPanelItem
-            icon={<i className="fas fa-mobile-alt"></i>}
+            icon={<i className="fas fa-laptop"></i>}
             title={"DEVICES"}
-            active={false}
-            link={`/${this.state.projectId}/Statistic`}
+            active={this.state.deviceSettingActive}
+            link={`/DeviceSettings`}
           />
         </div>
       </div>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { GET_USER, GET_USERS } from "./types";
+import { GET_USER, GET_USERS, GET_ERRORS } from "./types";
 
 // Get All Users
 export const getUsers = () => dispatch => {
@@ -34,6 +34,19 @@ export const getUser = user_id => dispatch => {
       dispatch({
         type: GET_USER,
         payload: {}
+      })
+    );
+};
+
+// Create Project
+export const addUser = (userData, callback) => dispatch => {
+  axios
+    .post("/api/users/user", userData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };

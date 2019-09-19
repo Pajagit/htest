@@ -23,7 +23,11 @@ class GlobalPanel extends Component {
       notificationsActive = false;
       statisticsActive = false;
       settingsActive = false;
-    } else if (this.props.match.path === "/UserSettings") {
+    } else if (
+      this.props.match.path === "/UserSettings" ||
+      this.props.match.path === "/ProjectSettings" ||
+      this.props.match.path === "/DeviceSettings"
+    ) {
       projectsActive = false;
       notificationsActive = false;
       statisticsActive = false;
