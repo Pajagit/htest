@@ -15,8 +15,6 @@ const User = require("../../../models/user");
 // @desc Login user / Returning JWT token
 // @access Public
 module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) => {
-  // Ovde ide logika koja iz google tokena vadi email i proverava da li postoji kod nas taj email
-  // Ako postoji uzima podatke tog usera i kreira novi token koji koristimo u app
   var updateDate = new Date();
   var errors = {};
   if (isEmpty(req.body.profileObj)) {
