@@ -25,7 +25,6 @@ export const getUsers = () => dispatch => {
 // Get  User by user_id
 export const getUser = user_id => dispatch => {
   dispatch(userLoading());
-  console.log("getUser");
   axios
     .get(`/api/users/user/${user_id}`)
     .then(res =>
@@ -43,9 +42,9 @@ export const getUser = user_id => dispatch => {
 };
 
 // Edit  User by user_id
-export const editUser = user_id => dispatch => {
+export const editUser = (user_id, userData) => dispatch => {
   axios
-    .get(`/api/users/user/${user_id}`)
+    .put(`/api/users/user/${user_id}`, userData)
     .then(res =>
       dispatch({
         type: GET_USER,

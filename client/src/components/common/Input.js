@@ -2,6 +2,10 @@ import React from "react";
 import FormElementTitle from "../form/FormElementTitle";
 
 function Input({ className, type, placeholder, label, validationMsg, value, onChange, name, onKeyDown }) {
+  var classNameInput = "form-element--input";
+  if (className) {
+    classNameInput = `${classNameInput} disabled`;
+  }
   return (
     <div className="form-element">
       <div className="form-element-item">
@@ -12,10 +16,10 @@ function Input({ className, type, placeholder, label, validationMsg, value, onCh
           type={type}
           placeholder={placeholder}
           value={value}
-          className="form-element--input"
           onChange={onChange}
           name={name}
           onKeyDown={onKeyDown}
+          className={classNameInput}
         />
       </div>
     </div>

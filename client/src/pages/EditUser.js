@@ -46,6 +46,7 @@ class EditUser extends Component {
             update.email = user.email;
             update.first_name = user.first_name ? user.first_name : "";
             update.last_name = user.last_name ? user.last_name : "";
+            update.last_login = user.last_login ? user.last_login : null;
           }
           return Object.keys(update).length ? update : null;
         }
@@ -59,13 +60,14 @@ class EditUser extends Component {
     this.props.clearErrors();
     this.setState({ errors: {} });
     var userData = {};
+    var userId = this.state.userId;
     userData.email = this.state.email;
     userData.first_name = this.state.first_name;
     userData.last_name = this.state.last_name;
 
     const { errors, isValid } = UserValidation(userData);
     if (isValid) {
-      this.props.editUser(userData, res => {
+      this.props.editUser(userId, userData, res => {
         if (res.status === 200) {
           successToast("User added successfully");
           this.props.history.push(`/UserSettings`);
@@ -79,13 +81,15 @@ class EditUser extends Component {
     }
   }
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value }, () => {
-      console.log(this.state);
-    });
+    this.setState({ [e.target.name]: e.target.value });
   }
   render() {
     var { user, loading } = this.props.users;
     var content;
+    var disabledEdit;
+    if (this.state.last_login) {
+      disabledEdit = "disabled";
+    }
     if (isEmpty(user) || loading) {
       content = <Spinner />;
     } else {
@@ -100,6 +104,7 @@ class EditUser extends Component {
             onChange={e => this.onChange(e)}
             name={"email"}
             onKeyDown={this.submitFormOnEnterKey}
+            className={disabledEdit}
           />
           <Input
             type="text"
@@ -110,6 +115,7 @@ class EditUser extends Component {
             onChange={e => this.onChange(e)}
             name={"first_name"}
             onKeyDown={this.submitFormOnEnterKey}
+            className={disabledEdit}
           />
           <Input
             type="text"
@@ -120,6 +126,7 @@ class EditUser extends Component {
             onChange={e => this.onChange(e)}
             name={"last_name"}
             onKeyDown={this.submitFormOnEnterKey}
+            className={disabledEdit}
           />
           <div className="flex-column-left mt-4">
             <Btn
