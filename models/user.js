@@ -45,6 +45,10 @@ const User = sequelize.define(
     updated_at: {
       type: Sequelize.DATE,
       required: false
+    },
+    last_login: {
+      type: Sequelize.DATE,
+      required: false
     }
   },
   { timestamps: false }

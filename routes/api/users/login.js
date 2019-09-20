@@ -43,10 +43,11 @@ module.exports = Router({ mergeParams: true }).post("/users/login", (req, res) =
 
         if (Object.keys(newUserValues).length > 0) {
           newUserValues.updated_at = updateDate;
-          User.update(newUserValues, {
-            where: { id: user.id }
-          });
         }
+        newUserValues.last_login = new Date();
+        User.update(newUserValues, {
+          where: { id: user.id }
+        });
 
         // Create jwt payload
         const payload = {

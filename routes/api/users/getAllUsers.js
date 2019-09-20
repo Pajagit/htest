@@ -12,7 +12,7 @@ module.exports = Router({ mergeParams: true }).get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     User.findAll({
-      attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "active"],
+      attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "active", "last_login"],
       include: [
         {
           model: Project,

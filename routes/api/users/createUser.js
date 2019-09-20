@@ -59,7 +59,7 @@ module.exports = Router({ mergeParams: true }).post(
       return new Promise((resolve, reject) => {
         if (addedUser) {
           User.findOne({
-            attributes: ["id", "email", "first_name", "last_name", "position", "image_url"],
+            attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "last_login"],
             where: {
               id: addedUser.id
             }
