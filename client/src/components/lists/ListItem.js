@@ -1,7 +1,8 @@
 import React from "react";
 import isEmpty from "../../validation/isEmpty";
+import { Link } from "react-router-dom";
 
-function ListItem({ img, title, list, msg, activationOnClick, isActive }) {
+function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn, link }) {
   if (!isEmpty(img)) {
     var imageContainer = (
       <div className="list-item--image">
@@ -25,6 +26,18 @@ function ListItem({ img, title, list, msg, activationOnClick, isActive }) {
   } else {
     activationContainer = "";
   }
+  var editUserContainer;
+  if (loggedIn) {
+    editUserContainer = "";
+  } else {
+    editUserContainer = (
+      <Link to={link}>
+        <div className="list-item--buttons--edit">
+          <i className="fas fa-pen"></i>
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <div className="list-item">
@@ -36,9 +49,7 @@ function ListItem({ img, title, list, msg, activationOnClick, isActive }) {
         <div className="list-item--text--msg">{msg}</div>
       </div>
       <div className="list-item--buttons">
-        <div className="list-item--buttons--edit">
-          <i className="fas fa-pen"></i>
-        </div>
+        {editUserContainer}
         {activationContainer}
       </div>
     </div>

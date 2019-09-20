@@ -24,11 +24,13 @@ class UserSettings extends Component {
   }
 
   confirmActivation = ([user_id, active]) => {
-    this.props.userActivation(user_id, !active, res => {
+    var userData = {};
+    userData.active = !active;
+    this.props.userActivation(user_id, userData, res => {
       if (res.status === 200) {
-        if (!active && res.data.active === true) {
+        if (userData.active && res.data.active) {
           successToast("User activated successfully");
-        } else if (!active === false && res.data.active === false) {
+        } else if (!userData.active && !res.data.active) {
           successToast("User deactivated successfully");
         } else {
           failToast("Something went wrong with updating");
@@ -67,9 +69,11 @@ class UserSettings extends Component {
         users.map((user, index) => (
           <ListItem
             key={index}
+            loggedIn={false}
             activationOnClick={e => this.confirmModal([user.id, user.active, e])}
             title={[user.first_name ? user.first_name : user.email, " ", user.last_name ? user.last_name : ""]}
             isActive={user.active}
+            link={`/EditUser/${user.id}`}
             img={user.image_url ? user.image_url : placeholderImg}
             list={user.projects.map((project, projectIndex) => (
               <React.Fragment key={projectIndex}>

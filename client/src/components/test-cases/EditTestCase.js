@@ -75,13 +75,16 @@ class EditTestCase extends Component {
 
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
+    console.log("didMount");
     this.props.getTestcase(testcaseId);
     this.props.getGroups(1);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    console.log("deprived");
     let update = {};
     if (nextProps.testcases && nextProps.testcases.testcase) {
+      console.log(nextProps.testcases.testcase);
       if (nextProps.testcases !== prevState.testcases) {
         var { testcase } = nextProps.testcases;
         if (prevState.initialRender) {
@@ -250,6 +253,7 @@ class EditTestCase extends Component {
   }
 
   render() {
+    console.log("render");
     var bigList = [];
     bigList.push(
       { id: 1, name: "Health Check" },

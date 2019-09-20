@@ -24,6 +24,7 @@ export const getTestcases = project_id => dispatch => {
 
 // Get Test Case by Test Case id
 export const getTestcase = testcaseId => dispatch => {
+  console.log("getTC");
   dispatch(setTestCaseLoading());
 
   axios
