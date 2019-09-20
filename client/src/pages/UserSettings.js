@@ -5,8 +5,12 @@ import { withRouter } from "react-router-dom";
 
 import { getUsers } from "../actions/userActions";
 import isEmpty from "../validation/isEmpty";
+import { userActivation } from "../actions/userActions";
+import successToast from "../toast/successToast";
+import failToast from "../toast/failToast";
 
 import GlobalPanel from "../components/global-panel/GlobalPanel";
+import Confirm from "../components/common/Confirm";
 import SettingPanel from "../components/settings-panel/SettingPanel";
 import BtnAnchor from "../components/common/BtnAnchor";
 import Spinner from "../components/common/Spinner";
@@ -18,6 +22,40 @@ class UserSettings extends Component {
   componentDidMount() {
     this.props.getUsers();
   }
+
+  confirmActivation = ([user_id, active]) => {
+    this.props.userActivation(user_id, !active, res => {
+      if (res.status === 200) {
+        if (!active && res.data.active === true) {
+          successToast("User activated successfully");
+        } else if (!active === false && res.data.active === false) {
+          successToast("User deactivated successfully");
+        } else {
+          failToast("Something went wrong with updating");
+        }
+      } else {
+        failToast("Something went wrong");
+      }
+      this.props.getUsers();
+    });
+  };
+  confirmModal = ([user_id, active]) => {
+    var title;
+    var msg;
+    var reject = "No";
+    var confirm;
+    if (active) {
+      title = "Deactivate this user?";
+      msg = "User will not be able to log in or use application";
+      confirm = "Deactivate";
+    } else {
+      title = "Activate this user?";
+      msg = "User will be able to log in and use application";
+      confirm = "Activate";
+    }
+    Confirm(title, msg, reject, confirm, e => this.confirmActivation([user_id, active, e]));
+  };
+
   render() {
     var { users, loading } = this.props.users;
     var content;
@@ -29,7 +67,9 @@ class UserSettings extends Component {
         users.map((user, index) => (
           <ListItem
             key={index}
+            activationOnClick={e => this.confirmModal([user.id, user.active, e])}
             title={[user.first_name ? user.first_name : user.email, " ", user.last_name ? user.last_name : ""]}
+            isActive={user.active}
             img={user.image_url ? user.image_url : placeholderImg}
             list={user.projects.map((project, projectIndex) => (
               <React.Fragment key={projectIndex}>
@@ -74,5 +114,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getUsers }
+  { getUsers, userActivation }
 )(withRouter(UserSettings));

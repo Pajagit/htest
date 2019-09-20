@@ -50,11 +50,13 @@
     justify-content: center;
     justify-items: center;
     &--remove {
+      width: 20px;
       cursor: pointer;
       font-size: 1.6rem;
       color: $color-primary;
     }
     &--edit {
+      width: 20px;
       cursor: pointer;
       margin-right: 20px;
       font-size: 1.6rem;

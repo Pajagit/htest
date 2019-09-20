@@ -50,3 +50,11 @@ export const addUser = (userData, callback) => dispatch => {
       })
     );
 };
+
+// User Activation/Deactivation
+export const userActivation = (user_id, active, callback) => dispatch => {
+  axios
+    .put(`/api/users/user/${user_id}/deactivate`)
+    .then(res => callback(res))
+    .catch(err => callback(err));
+};

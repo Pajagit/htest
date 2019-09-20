@@ -1,8 +1,7 @@
 import React from "react";
 import isEmpty from "../../validation/isEmpty";
-import removeBtn from "../../img/removeBtn.png";
 
-function ListItem({ img, title, list, msg }) {
+function ListItem({ img, title, list, msg, activationOnClick, isActive }) {
   if (!isEmpty(img)) {
     var imageContainer = (
       <div className="list-item--image">
@@ -10,6 +9,23 @@ function ListItem({ img, title, list, msg }) {
       </div>
     );
   }
+  var activationContainer;
+  if (isActive) {
+    activationContainer = (
+      <div className="list-item--buttons--remove" onClick={activationOnClick}>
+        <i className="fas fa-lock-open"></i>
+      </div>
+    );
+  } else if (isActive === false) {
+    activationContainer = (
+      <div className="list-item--buttons--remove" onClick={activationOnClick}>
+        <i className="fas fa-lock"></i>
+      </div>
+    );
+  } else {
+    activationContainer = "";
+  }
+
   return (
     <div className="list-item">
       {imageContainer}
@@ -23,9 +39,7 @@ function ListItem({ img, title, list, msg }) {
         <div className="list-item--buttons--edit">
           <i className="fas fa-pen"></i>
         </div>
-        <div className="list-item--buttons--remove">
-          <i className="fas fa-lock-open"></i>
-        </div>
+        {activationContainer}
       </div>
     </div>
   );
