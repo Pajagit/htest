@@ -11,13 +11,6 @@ module.exports = Router({ mergeParams: true }).post(
   "/users/user",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { errors, isValid } = validateUserInput(req.body);
-
-    // Check Validation
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
     // Get fields
     const userFields = {};
 
@@ -40,6 +33,28 @@ module.exports = Router({ mergeParams: true }).post(
             resolve(false);
           }
         });
+      });
+    }
+
+    // check if same user exists
+    async function checkIfUserWithSameMailExist() {
+      return new Promise((resolve, reject) => {
+        User.findOne({
+          where: {
+            email: req.body.email,
+            id: {
+              [Op.ne]: req.params.id
+            }
+          }
+        })
+          .then(user => {
+            if (user) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          })
+          .catch(err => console.log(err));
       });
     }
 
@@ -75,6 +90,11 @@ module.exports = Router({ mergeParams: true }).post(
     }
 
     (async () => {
+      const { errors, isValid } = validateUserInput(req.body, null, false);
+      // Check Validation
+      if (!isValid) {
+        return res.status(400).json(errors);
+      }
       var userExists = await checkIfUserExists();
       if (userExists) {
         res.status(400).json({ error: "User already exist" });
