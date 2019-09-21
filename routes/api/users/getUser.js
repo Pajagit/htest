@@ -2,6 +2,7 @@ const Router = require("express").Router;
 const passport = require("passport");
 const User = require("../../../models/user");
 const Project = require("../../../models/project");
+const getLocalTimestamp = require("../../../utils/dateFunctions").getLocalTimestamp;
 
 // @route GET api/users/user/:id
 // @desc Get one user by id
@@ -38,6 +39,7 @@ module.exports = Router({ mergeParams: true }).get(
             errors.nouser = "user doesn't exist";
             res.status(404).json(errors);
           } else {
+            user.last_login = getLocalTimestamp(user.last_login);
             res.json(user);
           }
         })
