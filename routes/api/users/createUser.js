@@ -2,7 +2,7 @@ const Router = require("express").Router;
 const passport = require("passport");
 const User = require("../../../models/user");
 
-const validateUserInput = require("../../../validation/user");
+const validateUserInput = require("../../../validation/user").validateUserInput;
 
 // @route POST api/users/user
 // @desc Create new user

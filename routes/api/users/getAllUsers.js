@@ -2,7 +2,7 @@ const Router = require("express").Router;
 const passport = require("passport");
 const User = require("../../../models/user");
 const Project = require("../../../models/project");
-const UserRoleProject = require("../../../models/userroleproject");
+const getLocalTimestamp = require("../../../utils/dateFunctions").getLocalTimestamp;
 
 // @route GET api/users
 // @desc Get all users
@@ -27,6 +27,9 @@ module.exports = Router({ mergeParams: true }).get(
       order: [["id", "DESC"], [Project, "id", "ASC"]]
     }).then(users => {
       if (users) {
+        users.forEach(user => {
+          user.last_login = getLocalTimestamp(user.last_login);
+        });
         res.json(users);
       } else {
         res.status(200);

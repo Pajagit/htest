@@ -13,7 +13,6 @@ module.exports = Router({ mergeParams: true }).put(
     if (isNaN(req.params.id || isEmpty(req.params.id))) {
       res.status(400).json({ error: "User id is not valid number" });
     } else {
-      console.log(typeof req.body.active);
       if (typeof req.body.active !== "boolean") {
         res.status(400).json({ error: "Parameter 'active' must have a value" });
       } else {
