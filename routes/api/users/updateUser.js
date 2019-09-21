@@ -1,10 +1,11 @@
 const Router = require("express").Router;
 const passport = require("passport");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 const getLocalTimestamp = require("../../../utils/dateFunctions").getLocalTimestamp;
 const User = require("../../../models/user");
 const Project = require("../../../models/project");
-
-const validateUserInputOnUpdate = require("../../../validation/user").validateUserInputOnUpdate;
+const validateUserInput = require("../../../validation/user").validateUserInput;
 
 // @route PUT api/users/user/:id
 // @desc Update user by id
@@ -16,13 +17,6 @@ module.exports = Router({ mergeParams: true }).put(
     if (isNaN(req.params.id)) {
       res.status(400).json({ error: "User id is not valid number" });
     } else {
-      const { errors, isValid } = validateUserInputOnUpdate(req.body);
-      // Check Validation
-      if (!isValid) {
-        return res.status(400).json(errors);
-      }
-
-      // Get fields
       const UserFields = {};
 
       // check if user exists
@@ -45,9 +39,31 @@ module.exports = Router({ mergeParams: true }).put(
         });
       }
 
-      async function updateUser() {
+      // check if same user exists
+      async function checkIfUserWithSameMailExist() {
         return new Promise((resolve, reject) => {
-          User.update(UserFields, {
+          User.findOne({
+            where: {
+              email: req.body.email,
+              id: {
+                [Op.ne]: req.params.id
+              }
+            }
+          })
+            .then(user => {
+              if (user) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            })
+            .catch(err => console.log(err));
+        });
+      }
+
+      async function updateUser(InputUserData) {
+        return new Promise((resolve, reject) => {
+          User.update(InputUserData, {
             where: { id: req.params.id },
             returning: true,
             plain: true
@@ -56,6 +72,23 @@ module.exports = Router({ mergeParams: true }).put(
               resolve(req.params.id);
             })
             .catch(err => console.log(err));
+        });
+      }
+
+      async function createInputDateFromPayload(user) {
+        return new Promise((resolve, reject) => {
+          if (req.body.position) UserFields.position = req.body.position;
+          if (!user.last_login) {
+            UserFields.email = req.body.email ? req.body.email : null;
+            UserFields.first_name = req.body.first_name ? req.body.first_name : null;
+            UserFields.last_name = req.body.last_name ? req.body.last_name : null;
+          } else {
+            UserFields.email = user.email;
+            UserFields.first_name = user.first_name;
+            UserFields.last_name = user.last_name;
+          }
+          UserFields.image_url = user.image_url;
+          resolve(UserFields);
         });
       }
 
@@ -99,19 +132,23 @@ module.exports = Router({ mergeParams: true }).put(
         if (!user) {
           res.status(404).json({ error: "User doesn't exist" });
         } else {
-          if (!last_login) {
-            if (req.body.email) UserFields.email = req.body.email;
-            if (req.body.first_name) UserFields.first_name = req.body.first_name;
-            if (req.body.last_name) UserFields.last_name = req.body.last_name;
-            if (req.body.image_url) UserFields.image_url = req.body.image_url;
+          let InputUserData = await createInputDateFromPayload(user);
+          const { errors, isValid } = validateUserInput(InputUserData, last_login, true);
+
+          // Check Validation
+          if (!isValid) {
+            return res.status(400).json(errors);
+          } else {
+            if (req.body.email && !last_login) {
+              let anotherUserSameMail = await checkIfUserWithSameMailExist();
+              if (anotherUserSameMail) {
+                return res.status(400).json({ email: "User alredy exists" });
+              }
+            }
+            let updatedUser = await updateUser(InputUserData);
+            let user = await returnUpdatedUser(updatedUser);
+            res.json(user);
           }
-          if (req.body.position) UserFields.position = req.body.position;
-
-          let updatedUser = await updateUser();
-
-          let user = await returnUpdatedUser(updatedUser);
-
-          res.json(user);
         }
       })();
     }
