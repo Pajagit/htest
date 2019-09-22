@@ -10,49 +10,20 @@ function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn
       </div>
     );
   }
-  var activationContainer;
-  if (isActive) {
-    activationContainer = (
-      <div className="list-item--buttons--remove" onClick={activationOnClick}>
-        <i className="fas fa-lock-open"></i>
-      </div>
-    );
-  } else if (isActive === false) {
-    activationContainer = (
-      <div className="list-item--buttons--remove" onClick={activationOnClick}>
-        <i className="fas fa-lock"></i>
-      </div>
-    );
-  } else {
-    activationContainer = "";
-  }
-  var editUserContainer;
-  if (loggedIn) {
-    editUserContainer = "";
-  } else {
-    editUserContainer = (
-      <Link to={link}>
-        <div className="list-item--buttons--edit">
-          <i className="fas fa-pen"></i>
-        </div>
-      </Link>
-    );
-  }
 
   return (
-    <div className="list-item">
-      {imageContainer}
-      <div className="list-item--text">
-        <div className="list-item--text--title">{title}</div>
-        <div className="list-item--text--list">{list}</div>
+    <Link to={link}>
+      <div className="list-item">
+        {imageContainer}
+        <div className="list-item--text">
+          <div className="list-item--text--title">{title}</div>
+          <div className="list-item--text--list">{list}</div>
 
-        <div className="list-item--text--msg">{msg}</div>
+          <div className="list-item--text--msg">{msg}</div>
+        </div>
+        <div className="list-item--buttons"></div>
       </div>
-      <div className="list-item--buttons">
-        {editUserContainer}
-        {activationContainer}
-      </div>
-    </div>
+    </Link>
   );
 }
 export default ListItem;

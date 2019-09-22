@@ -55,7 +55,15 @@
   border: 1px solid $color-primary-lightest;
   overflow-y: none;
 }
+.picky__dropdown {
+  z-index: 101;
+}
 .picky__dropdown .option:hover,
 .picky__dropdown li:hover {
   background-color: $color-primary-lightest !important;
+}
+
+.selected {
+  background-color: $color-primary !important;
+  color: white;
 }

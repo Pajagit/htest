@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import { editUser } from "../actions/userActions";
 import { getUser } from "../actions/userActions";
+import { userActivation } from "../actions/userActions";
 import Input from "../components/common/Input";
 import Btn from "../components/common/Btn";
 import UnderlineAnchor from "../components/common/UnderlineAnchor";
@@ -14,10 +15,14 @@ import failToast from "../toast/failToast";
 import { clearErrors } from "../actions/errorsActions";
 import isEmpty from "../validation/isEmpty";
 
+import Confirm from "../components/common/Confirm";
+import FullBtn from "../components/common/FullBtn";
 import GlobalPanel from "../components/global-panel/GlobalPanel";
 import SettingPanel from "../components/settings-panel/SettingPanel";
 import Header from "../components/common/Header";
 import Spinner from "../components/common/Spinner";
+import Dropdown from "../components/common/Dropdown";
+import DropdownRemove from "../components/common/DropdownRemove";
 
 class EditUser extends Component {
   constructor(props) {
@@ -44,9 +49,12 @@ class EditUser extends Component {
             update.initialRender = false;
             update.userId = nextProps.match.params.userId;
             update.email = user.email;
+            update.id = user.id;
             update.first_name = user.first_name ? user.first_name : "";
             update.last_name = user.last_name ? user.last_name : "";
             update.last_login = user.last_login ? user.last_login : null;
+            update.position = user.position ? user.position : "";
+            update.active = user.active;
           }
           return Object.keys(update).length ? update : null;
         }
@@ -54,7 +62,40 @@ class EditUser extends Component {
     }
     return null;
   }
-
+  confirmActivation = ([user_id, active]) => {
+    var userData = {};
+    userData.active = !active;
+    this.props.userActivation(user_id, userData, res => {
+      if (res.status === 200) {
+        if (userData.active && res.data.active) {
+          successToast("User activated successfully");
+        } else if (!userData.active && !res.data.active) {
+          successToast("User deactivated successfully");
+        } else {
+          failToast("Something went wrong with updating");
+        }
+      } else {
+        failToast("Something went wrong");
+      }
+      this.props.getUser(this.state.id);
+    });
+  };
+  confirmModal = ([user_id, active]) => {
+    var title;
+    var msg;
+    var reject = "No";
+    var confirm;
+    if (active) {
+      title = "Deactivate this user?";
+      msg = "User will not be able to log in or use application";
+      confirm = "Deactivate";
+    } else {
+      title = "Activate this user?";
+      msg = "User will be able to log in and use application";
+      confirm = "Activate";
+    }
+    Confirm(title, msg, reject, confirm, e => this.confirmActivation([user_id, active, e]));
+  };
   submitForm(e) {
     e.preventDefault();
     this.props.clearErrors();
@@ -69,10 +110,10 @@ class EditUser extends Component {
     if (isValid) {
       this.props.editUser(userId, userData, res => {
         if (res.status === 200) {
-          successToast("User added successfully");
+          successToast("User edited successfully");
           this.props.history.push(`/UserSettings`);
         } else {
-          failToast("Adding user failed");
+          failToast("Editing user failed");
           this.props.history.push(`/AddUser`);
         }
       });
@@ -80,12 +121,21 @@ class EditUser extends Component {
       this.setState({ errors });
     }
   }
+  submitFormOnEnterKey = e => {
+    if (e.keyCode === 13) {
+      this.submitForm(e);
+    }
+  };
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
   render() {
     var { user, loading } = this.props.users;
     var content;
+    var positionOptions = [];
+    positionOptions.push({ id: 1, title: "QA" }, { id: 2, title: "PM" }, { id: 3, title: "PO" });
+    var roleOptions = [];
+    roleOptions.push({ id: 1, title: "QA" }, { id: 2, title: "Project Administrator" }, { id: 3, title: "Viewer" });
     var disabledEdit;
     if (this.state.last_login) {
       disabledEdit = "disabled";
@@ -93,8 +143,65 @@ class EditUser extends Component {
     if (isEmpty(user) || loading) {
       content = <Spinner />;
     } else {
+      var project;
+      if (isEmpty(user.projects)) {
+        project = (
+          <div>
+            <div className="header">Projects</div>
+            <div className="no-content"> User is not assigned to any project yet</div>
+            <FullBtn placeholder="Add project" />
+          </div>
+        );
+      } else {
+        project = (
+          <div>
+            <div className="header">Projects</div>
+
+            {user.projects.map((project, index) => (
+              <DropdownRemove
+                key={index}
+                placeholder="Pick Users' Project Role"
+                value={project.id}
+                onChange={e => this.onChange(e)}
+                validationMsg={this.state.errors.position}
+                name={"role"}
+                label={project.title}
+                options={roleOptions}
+              />
+            ))}
+            <FullBtn placeholder="Add New Project" />
+          </div>
+        );
+      }
+      var lockBtn;
+      var activeStatus;
+      if (user.active) {
+        lockBtn = (
+          <div className="clickable">
+            <i className="fas fa-lock-open"></i>
+          </div>
+        );
+        activeStatus = "Active";
+      } else {
+        lockBtn = (
+          <div className="clickable">
+            <i className="fas fa-lock"></i>
+          </div>
+        );
+        activeStatus = "Deactivated";
+      }
       content = (
         <div>
+          <div className="header">
+            <div className="header--title">User Information </div>
+            <div className="header--buttons">
+              <div className="header--buttons--primary">({activeStatus})</div>
+              <div className="header--buttons--secondary" onClick={e => this.confirmModal([user.id, user.active, e])}>
+                {" "}
+                {lockBtn}
+              </div>
+            </div>
+          </div>
           <Input
             type="text"
             placeholder="Enter Users' email here"
@@ -128,6 +235,16 @@ class EditUser extends Component {
             onKeyDown={this.submitFormOnEnterKey}
             className={disabledEdit}
           />
+          <Dropdown
+            placeholder="Pick Users' Position Here"
+            value={this.state.position}
+            onChange={e => this.onChange(e)}
+            validationMsg={this.state.errors.position}
+            name={"position"}
+            label="Position"
+            options={positionOptions}
+          />
+          {project}
           <div className="flex-column-left mt-4">
             <Btn
               className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
@@ -173,5 +290,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { editUser, getUser, clearErrors }
+  { editUser, getUser, userActivation, clearErrors }
 )(withRouter(EditUser));

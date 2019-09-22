@@ -7,9 +7,8 @@
 
 .list-item {
   position: relative;
-  &:not(:last-child) {
-    margin-bottom: 3px;
-  }
+
+  margin-bottom: 3px;
   &:hover {
     background-color: #eceef9;
   }
