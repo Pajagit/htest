@@ -153,8 +153,8 @@ class FilterContainer extends Component {
           <Datepicker
             forwardRef={node => (this.node = node)}
             showdatepicker={this.state.showDatepickerFrom}
-            placeholder={"Date"}
-            label={"From Date"}
+            placeholder={"From Date"}
+            label={"Select Date"}
             selectedDate={this.state.selectedDateFrom}
             onClick={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
             onChange={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
@@ -169,9 +169,8 @@ class FilterContainer extends Component {
           <Datepicker
             forwardRef={node2 => (this.node2 = node2)}
             showdatepicker={this.state.showDatepickerTo}
-            placeholder={"Date"}
-            id={"To"}
-            label={"To Date"}
+            placeholder={"To Date"}
+            label={"Select Date"}
             selectedDate={this.state.selectedDateTo}
             onClick={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
             onChange={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}

@@ -49,6 +49,7 @@ class EditTestCase extends Component {
       links: [],
       groups: [],
       pinnedGroups: [],
+      notPinnedGroups: [],
       selectedGroups: [],
       uploaded_files: [],
       titleValidation: "",
@@ -63,13 +64,14 @@ class EditTestCase extends Component {
       errors: {}
     };
     this.selectOption = this.selectOption.bind(this);
-    this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
     this.onChange = this.onChange.bind(this);
     this.addColumnStep = this.addColumnStep.bind(this);
     this.removeColumnStep = this.removeColumnStep.bind(this);
     this.addColumnLink = this.addColumnLink.bind(this);
     this.removeColumnLink = this.removeColumnLink.bind(this);
     this.toggleDeprecated = this.toggleDeprecated.bind(this);
+    this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
     this.submitForm = this.submitForm.bind(this);
   }
 
@@ -113,6 +115,12 @@ class EditTestCase extends Component {
       });
 
       update.pinnedGroups = filteredPinnedGroups;
+
+      var filteredUnpinnedGroups = groups.filter(function(group) {
+        return group.isPinned === false;
+      });
+
+      update.notPinnedGroups = filteredUnpinnedGroups;
     }
 
     return Object.keys(update).length ? update : null;
@@ -173,13 +181,25 @@ class EditTestCase extends Component {
     }
   }
   selectOption(value) {
-    console.log("Vals", value);
     this.setState({ value });
   }
-  selectMultipleOption(value) {
-    console.count("onChange");
-    console.log("Val", value);
-    this.setState({ arrayValue: value });
+  selectMultipleOptionGroups(e) {
+    var newSelectedGroup = this.state.selectedGroups;
+
+    var elementValue = parseInt(e.id);
+
+    if (newSelectedGroup.includes(elementValue)) {
+      newSelectedGroup = newSelectedGroup.filter(item => item !== elementValue);
+      this.setState({ selectedGroups: newSelectedGroup }, () => {
+        console.log(this.state);
+        this.checkValidation();
+      });
+    } else {
+      newSelectedGroup.push(elementValue);
+      this.setState({ selectedGroups: newSelectedGroup }, () => {
+        this.checkValidation();
+      });
+    }
   }
   toggleDeprecated() {
     this.setState({ isDeprecated: !this.state.isDeprecated });
@@ -213,11 +233,13 @@ class EditTestCase extends Component {
     if (newSelectedGroup.includes(elementValue)) {
       newSelectedGroup = newSelectedGroup.filter(item => item !== elementValue);
       this.setState({ selectedGroups: newSelectedGroup }, () => {
+        console.log(this.state);
         this.checkValidation();
       });
     } else {
       newSelectedGroup.push(elementValue);
       this.setState({ selectedGroups: newSelectedGroup }, () => {
+        console.log(this.state.selectedGroups);
         this.checkValidation();
       });
     }
@@ -250,15 +272,12 @@ class EditTestCase extends Component {
   }
 
   render() {
-    console.log("render");
-    var bigList = [];
-    bigList.push(
-      { id: 1, name: "Health Check" },
-      { id: 2, name: "Automation" },
-      { id: 3, name: "Regression" },
-      { id: 4, name: "API" },
-      { id: 5, name: "UI" }
-    );
+    var notPinnedGroups = this.state.notPinnedGroups;
+    // console.log("Pinned groups: " + this.state.pinnedGroups);
+    // console.log("Not pinned groups: " + this.state.notPinnedGroups);
+    // console.log("Selected groups: " + this.state.selectedGroups);
+
+    var selectedTest = [{ id: 2, isPinned: false, name: "Regression", color: "LIBERTY" }];
     var content;
     if (isEmpty(this.props.testcases.testcase) || this.props.testcases.loading) {
       content = <Spinner />;
@@ -308,9 +327,9 @@ class EditTestCase extends Component {
             onKeyDown={this.submitFormOnEnterKey}
           />
           <SearchDropdown
-            value={this.state.arrayValue}
-            options={bigList}
-            onChange={this.selectMultipleOption}
+            value={selectedTest}
+            options={notPinnedGroups}
+            onChange={e => this.selectMultipleOptionGroups(e)}
             placeholder={"Test Group"}
             label={"Add to group*"}
             validationMsg={this.state.errors.groups}

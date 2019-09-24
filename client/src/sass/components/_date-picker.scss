@@ -19,6 +19,7 @@
   width: 100%;
   & > table {
     width: 100%;
+    font-size: 1.3rem;
 
     & > tbody > tr > td {
       text-align: center;
@@ -41,4 +42,7 @@
 .active {
   background-color: $color-primary !important;
   color: #ffffff;
+}
+input.datepicker {
+  color: gray;
 }

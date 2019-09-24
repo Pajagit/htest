@@ -6,7 +6,6 @@ import "react-daypicker/lib/DayPicker.css";
 export default function Datepicker({
   name,
   placeholder,
-  label,
   validationMsg,
   showdatepicker,
   timestamp,
@@ -14,6 +13,7 @@ export default function Datepicker({
   onClick,
   onDayClick,
   selectedDate,
+  label,
   id,
   forwardRef
 }) {
@@ -29,7 +29,7 @@ export default function Datepicker({
   }
   var dateValue;
   if (!selectedDate) {
-    dateValue = label;
+    dateValue = placeholder;
   } else {
     dateValue = selectedDate;
   }
@@ -42,7 +42,6 @@ export default function Datepicker({
         <input
           id={id}
           onChange={onChange}
-          placeholder={placeholder}
           name={name}
           value={dateValue}
           showdatepicker={showdatepicker.toString()}
