@@ -118,7 +118,7 @@ module.exports = Router({ mergeParams: true }).post(
               testcase.groups.forEach(group => {
                 testcaseGroups.push(group.id);
               });
-              if (!testcaseGroups.some(r => requestObject.groups.indexOf(r) >= 0)) {
+              if (!requestObject.groups.every(r => testcaseGroups.includes(r))) {
                 inFilteredGroup = false;
               }
             }
