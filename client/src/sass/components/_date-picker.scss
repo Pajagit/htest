@@ -1,0 +1,48 @@
+.react-daypicker-root {
+  display: inline-block;
+  position: absolute;
+  border: 1px solid #b4a6eb;
+  top: 63px;
+  padding: 1rem;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
+  z-index: 100;
+  & > .header {
+    justify-content: space-around !important;
+    & > .previous-month {
+      cursor: pointer;
+    }
+    & > .next-month {
+      cursor: pointer;
+    }
+  }
+  width: 100%;
+  & > table {
+    width: 100%;
+    font-size: 1.3rem;
+
+    & > tbody > tr > td {
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        background-color: $color-primary-light !important;
+        color: white;
+      }
+    }
+  }
+}
+.datepicker {
+  cursor: pointer;
+}
+.today {
+  background-color: $color-primary-lightest !important;
+  color: #ffffff;
+}
+
+.active {
+  background-color: $color-primary !important;
+  color: #ffffff;
+}
+input.datepicker {
+  color: gray;
+}

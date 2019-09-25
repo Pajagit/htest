@@ -15,6 +15,7 @@ import Landing from "./pages/Landing";
 import Projects from "./pages/Projects";
 import UserSettings from "./pages/UserSettings";
 import AddUser from "./pages/AddUser";
+import EditUser from "./pages/EditUser";
 import ProjectSettings from "./pages/ProjectSettings";
 import DeviceSettings from "./pages/DeviceSettings";
 import TestCase from "./components/test-cases/TestCase";
@@ -78,6 +79,7 @@ function App() {
           <PrivateRoute exact path="/AddUser" component={AddUser} />
           <PrivateRoute exact path="/ProjectSettings" component={ProjectSettings} />
           <PrivateRoute exact path="/DeviceSettings" component={DeviceSettings} />
+          <PrivateRoute exact path="/EditUser/:userId" component={EditUser} />
         </div>
       </Router>
     </Provider>

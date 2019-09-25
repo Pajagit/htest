@@ -25,7 +25,10 @@ import { getGroups } from "../../actions/groupsActions";
 import filterStringArray from "../../utility/filterStringArray";
 import isEmpty from "../../validation/isEmpty";
 import TestCaseValidation from "../../validation/TestCaseValidation";
-
+import checkIfObjInArray from "../../utility/checkIfObjInArray";
+import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
+import removeObjFromArray from "../../utility/removeObjFromArray";
+import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
 const bigList = [];
 
 for (var i = 1; i <= 1000; i++) {
@@ -49,7 +52,10 @@ class EditTestCase extends Component {
       links: [],
       groups: [],
       pinnedGroups: [],
+      notPinnedGroups: [],
       selectedGroups: [],
+      selectedGroupsObjects: [],
+      filteredNotPinnedSelectedGroups: [],
       uploaded_files: [],
       titleValidation: "",
       descriptionValidation: "",
@@ -63,13 +69,14 @@ class EditTestCase extends Component {
       errors: {}
     };
     this.selectOption = this.selectOption.bind(this);
-    this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
     this.onChange = this.onChange.bind(this);
     this.addColumnStep = this.addColumnStep.bind(this);
     this.removeColumnStep = this.removeColumnStep.bind(this);
     this.addColumnLink = this.addColumnLink.bind(this);
     this.removeColumnLink = this.removeColumnLink.bind(this);
     this.toggleDeprecated = this.toggleDeprecated.bind(this);
+    this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
     this.submitForm = this.submitForm.bind(this);
   }
 
@@ -82,14 +89,16 @@ class EditTestCase extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.testcases && nextProps.testcases.testcase) {
-      if (nextProps.testcases !== prevState.testcases) {
-        var { testcase } = nextProps.testcases;
-        if (prevState.initialRender) {
+      if (prevState.initialRender) {
+        if (nextProps.testcases !== prevState.testcases) {
+          var { testcase } = nextProps.testcases;
+
           var selectedGroupIds = testcase.groups.map(function(item) {
             return item["id"];
           });
           update.initialRender = false;
           update.selectedGroups = selectedGroupIds;
+          update.selectedGroupsObjects = testcase.groups;
           update.description = !isEmpty(testcase.description) ? testcase.description : "";
           update.expected_result = !isEmpty(testcase.expected_result) ? testcase.expected_result : "";
           update.preconditions = !isEmpty(testcase.preconditions) ? testcase.preconditions : "";
@@ -97,22 +106,34 @@ class EditTestCase extends Component {
           update.testcaseId = nextProps.match.params.testcaseId;
           update.links = testcase.links;
           update.projectId = nextProps.match.params.projectId;
+
+          var filteredNotPinnedSelectedGroups = testcase.groups.filter(function(group) {
+            return group.isPinned === false;
+          });
+          console.log(groups);
+          update.filteredNotPinnedSelectedGroups = filteredNotPinnedSelectedGroups;
         }
 
         update.test_steps = testcase.test_steps;
 
         update.uploaded_files = testcase.uploaded_files;
       }
-    }
+      if (nextProps.groups && nextProps.groups.groups) {
+        var { groups } = nextProps.groups;
 
-    if (nextProps.groups && nextProps.groups.groups) {
-      var { groups } = nextProps.groups;
+        var filteredPinnedGroups = groups.filter(function(group) {
+          return group.isPinned === true;
+        });
 
-      var filteredPinnedGroups = groups.filter(function(group) {
-        return group.isPinned === true;
-      });
+        update.pinnedGroups = filteredPinnedGroups;
 
-      update.pinnedGroups = filteredPinnedGroups;
+        var filteredUnpinnedGroups = groups.filter(function(group) {
+          return group.isPinned === false;
+        });
+
+        update.notPinnedGroups = filteredUnpinnedGroups;
+        update.allGroups = groups;
+      }
     }
 
     return Object.keys(update).length ? update : null;
@@ -126,11 +147,12 @@ class EditTestCase extends Component {
     var formData = {};
     var testSteps = filterStringArray(this.state.test_steps);
     var links = filterStringArray(this.state.links);
+    var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
     formData.title = this.state.title;
     formData.description = this.state.description;
     formData.test_steps = testSteps;
     formData.expected_result = this.state.expected_result;
-    formData.groups = this.state.selectedGroups;
+    formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.isDeprecated = this.state.isDeprecated;
     formData.links = links;
@@ -145,11 +167,13 @@ class EditTestCase extends Component {
 
     var testSteps = filterStringArray(this.state.test_steps);
     var links = filterStringArray(this.state.links);
+    var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
+    console.log(groups);
     formData.title = this.state.title;
     formData.description = this.state.description;
     formData.test_steps = testSteps;
     formData.expected_result = this.state.expected_result;
-    formData.groups = this.state.selectedGroups;
+    formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.isDeprecated = this.state.isDeprecated;
     formData.links = links;
@@ -173,14 +197,25 @@ class EditTestCase extends Component {
     }
   }
   selectOption(value) {
-    console.log("Vals", value);
     this.setState({ value });
   }
-  selectMultipleOption(value) {
-    console.count("onChange");
-    console.log("Val", value);
-    this.setState({ arrayValue: value });
+  selectMultipleOptionGroups(e) {
+    var filteredUnpinnedGroups = this.state.selectedGroupsObjects.filter(function(group) {
+      return group.isPinned !== false;
+    });
+
+    function merge(a, b, prop) {
+      var reduced = a.filter(aitem => !b.find(bitem => aitem[prop] === bitem[prop]));
+      return reduced.concat(b);
+    }
+
+    var allSelectedGroups = merge(filteredUnpinnedGroups, e, "id");
+
+    this.setState({ filteredNotPinnedSelectedGroups: e, selectedGroupsObjects: allSelectedGroups }, () => {
+      this.checkValidation();
+    });
   }
+
   toggleDeprecated() {
     this.setState({ isDeprecated: !this.state.isDeprecated });
   }
@@ -206,21 +241,24 @@ class EditTestCase extends Component {
     });
   }
   onChangeSwitch(e) {
-    var newSelectedGroup = this.state.selectedGroups;
-
-    var elementValue = parseInt(e.target.id);
-
-    if (newSelectedGroup.includes(elementValue)) {
-      newSelectedGroup = newSelectedGroup.filter(item => item !== elementValue);
-      this.setState({ selectedGroups: newSelectedGroup }, () => {
-        this.checkValidation();
-      });
+    var newArray = this.state.selectedGroupsObjects;
+    if (checkIfElemInObjInArray(newArray, parseInt(e.target.id))) {
+      for (var i = 0; i < newArray.length; i++) {
+        if (newArray[i].id === parseInt(e.target.id)) {
+          newArray.splice(i, 1);
+          break;
+        }
+      }
     } else {
-      newSelectedGroup.push(elementValue);
-      this.setState({ selectedGroups: newSelectedGroup }, () => {
-        this.checkValidation();
+      var newObject = this.state.allGroups.filter(item => {
+        return item.id === parseInt(e.target.id);
       });
+      newArray.push(newObject[0]);
     }
+
+    this.setState({ selectedGroupsObjects: newArray }, () => {
+      this.checkValidation();
+    });
   }
   addColumnStep(e) {
     var test_steps = this.state.test_steps;
@@ -250,14 +288,6 @@ class EditTestCase extends Component {
   }
 
   render() {
-    var bigList = [];
-    bigList.push(
-      { id: 1, name: "Health Check" },
-      { id: 2, name: "Automation" },
-      { id: 3, name: "Regression" },
-      { id: 4, name: "API" },
-      { id: 5, name: "UI" }
-    );
     var content;
     if (isEmpty(this.props.testcases.testcase) || this.props.testcases.loading) {
       content = <Spinner />;
@@ -307,19 +337,20 @@ class EditTestCase extends Component {
             onKeyDown={this.submitFormOnEnterKey}
           />
           <SearchDropdown
-            value={this.state.arrayValue}
-            options={bigList}
-            onChange={this.selectMultipleOption}
+            value={this.state.filteredNotPinnedSelectedGroups}
+            options={this.state.notPinnedGroups}
+            onChange={e => this.selectMultipleOptionGroups(e)}
             placeholder={"Test Group"}
             label={"Add to group*"}
             validationMsg={this.state.errors.groups}
+            multiple={true}
           />
           <div className="group-grid">
             {this.state.pinnedGroups.map((group, index) => (
               <Switch
                 key={index}
                 label={group.name}
-                value={this.state.selectedGroups.includes(group.id)}
+                value={checkIfElemInObjInArray(this.state.selectedGroupsObjects, group.id)}
                 id={group.id}
                 onClick={e => this.onChangeSwitch(e)}
                 name={group.name}

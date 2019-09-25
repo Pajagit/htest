@@ -45,17 +45,29 @@
       outline: none !important;
     }
   }
-  .picky__filter__input {
-    &:focus {
-      outline: none !important;
+  .picky__filter {
+    padding: 1rem 2rem !important;
+
+    &__input {
+      &:focus {
+        outline: none !important;
+      }
     }
   }
 }
 #undefined-list {
   border: 1px solid $color-primary-lightest;
-  overflow-y: none;
+  overflow-y: auto !important;
+}
+.picky__dropdown {
+  z-index: 101;
 }
 .picky__dropdown .option:hover,
 .picky__dropdown li:hover {
   background-color: $color-primary-lightest !important;
+}
+
+.selected {
+  background-color: $color-primary !important;
+  color: white;
 }

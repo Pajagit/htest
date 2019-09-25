@@ -1,9 +1,11 @@
 import axios from "axios";
 
-import { GET_USER, GET_USERS, GET_ERRORS } from "./types";
+import { GET_USER, GET_USERS, USER_LOADING, GET_ERRORS } from "./types";
 
 // Get All Users
 export const getUsers = () => dispatch => {
+  dispatch(userLoading());
+
   axios
     .get(`/api/users`)
     .then(res =>
@@ -22,6 +24,7 @@ export const getUsers = () => dispatch => {
 
 // Get  User by user_id
 export const getUser = user_id => dispatch => {
+  dispatch(userLoading());
   axios
     .get(`/api/users/user/${user_id}`)
     .then(res =>
@@ -38,6 +41,19 @@ export const getUser = user_id => dispatch => {
     );
 };
 
+// Edit  User by user_id
+export const editUser = (user_id, userData, callback) => dispatch => {
+  axios
+    .put(`/api/users/user/${user_id}`, userData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Create Project
 export const addUser = (userData, callback) => dispatch => {
   axios
@@ -49,4 +65,19 @@ export const addUser = (userData, callback) => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+// User Activation/Deactivation
+export const userActivation = (user_id, userData, callback) => dispatch => {
+  axios
+    .put(`/api/users/user/${user_id}/activation`, userData)
+    .then(res => callback(res))
+    .catch(err => callback(err));
+};
+
+// User loading
+export const userLoading = () => {
+  return {
+    type: USER_LOADING
+  };
 };

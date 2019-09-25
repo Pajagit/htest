@@ -1,10 +1,16 @@
 .form-element {
+  position: relative;
   :last-child {
     margin-bottom: 0px;
   }
   display: flex;
   flex-direction: column;
   margin-bottom: 1.8rem;
+  &--removeElement {
+    position: absolute;
+    top: 35px;
+    right: 15px;
+  }
   &-item {
     position: relative;
     display: flex;
@@ -36,21 +42,127 @@
       border: 1px solid $color-primary;
     }
   }
+
+  &--dropdown {
+    cursor: pointer;
+    height: 3.8rem;
+    border-radius: 4px;
+    border: $element-border;
+    -webkit-box-shadow: $element-shadow;
+    -moz-box-shadow: $element-shadow;
+    box-shadow: $element-shadow;
+    padding-right: 5rem;
+    appearance: none;
+    padding-left: 1rem;
+    &-with-remove {
+      &--icon {
+        top: 10px;
+        right: 50px;
+        position: absolute;
+        font-size: 12px;
+      }
+      &--remove-element {
+        cursor: pointer;
+        position: absolute;
+        padding: 2px 5px;
+
+        right: 10px;
+        top: 9px;
+        font-size: 1.2rem;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        & > img {
+          width: 25px;
+        }
+      }
+    }
+    & > option:checked {
+      background-color: $color-primary-lightest;
+    }
+
+    &--icon {
+      top: 33px;
+      right: 15px;
+      position: absolute;
+      font-size: 12px;
+    }
+    &:active,
+    &:focus {
+      outline: none !important;
+      border: 1px solid $color-primary;
+    }
+  }
+
+  &--dropdown-with-remove {
+    position: relative;
+    cursor: pointer;
+    height: 3.8rem;
+    border-radius: 4px;
+    border: $element-border;
+    -webkit-box-shadow: $element-shadow;
+    -moz-box-shadow: $element-shadow;
+    box-shadow: $element-shadow;
+    padding-right: 5rem;
+    appearance: none;
+    padding-left: 1rem;
+
+    &--icon {
+      position: absolute;
+      top: 10px;
+      right: 60px;
+      font-size: 12px;
+    }
+    &--remove-btn {
+      background-color: rgb(228, 228, 228);
+      cursor: pointer;
+
+      position: absolute;
+      padding: 3.4px 10px;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+      border-left: 1px solid #d1d1d1;
+      right: 1px;
+      top: 1px;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      & > img {
+        margin-top: 7px;
+        width: 25px;
+      }
+    }
+
+    & > option:checked {
+      background-color: $color-primary-lightest;
+    }
+
+    &:active,
+    &:focus {
+      outline: none !important;
+      border: 1px solid $color-primary;
+    }
+  }
   &--remove {
     cursor: pointer;
     position: absolute;
     padding: 2px 5px;
-    // border-radius: 3px;
-    // background-color: $color-primary-lightest;
+
     right: 10px;
     top: 9px;
     font-size: 1.2rem;
     color: white;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
     &-img {
       width: 25px;
@@ -67,9 +179,7 @@
     -webkit-box-shadow: $element-shadow;
     -moz-box-shadow: $element-shadow;
     box-shadow: $element-shadow;
-    // &::placeholder {
-    //   color: $placeholder-color;
-    // }
+
     &:active,
     &:focus {
       outline: none !important;

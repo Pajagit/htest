@@ -3,7 +3,18 @@ import FormElementTitle from "../form/FormElementTitle";
 import "react-picky/dist/picky.css";
 import Picky from "react-picky";
 
-function SearchDropdown({ className, onChange, placeholder, options, label, value, validationMsg }) {
+function SearchDropdown({
+  className,
+  onChange,
+  placeholder,
+  options,
+  label,
+  value,
+  validationMsg,
+  id,
+  multiple,
+  numberDisplayed
+}) {
   return (
     <div className="form-element">
       <div className="form-element-item">
@@ -16,14 +27,16 @@ function SearchDropdown({ className, onChange, placeholder, options, label, valu
             <i className="fas fa-search"></i>
           </div>
           <Picky
+            id={id}
             value={value}
             options={options}
             onChange={onChange}
             placeholder={placeholder}
+            numberDisplayed={numberDisplayed}
             open={false}
             valueKey="id"
             labelKey="name"
-            multiple={true}
+            multiple={multiple}
             includeSelectAll={true}
             includeFilter={true}
             dropdownHeight={300}

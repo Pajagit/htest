@@ -1,8 +1,8 @@
 import React from "react";
 import isEmpty from "../../validation/isEmpty";
-import removeBtn from "../../img/removeBtn.png";
+import { Link } from "react-router-dom";
 
-function ListItem({ img, title, list, msg }) {
+function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn, link }) {
   if (!isEmpty(img)) {
     var imageContainer = (
       <div className="list-item--image">
@@ -10,24 +10,20 @@ function ListItem({ img, title, list, msg }) {
       </div>
     );
   }
-  return (
-    <div className="list-item">
-      {imageContainer}
-      <div className="list-item--text">
-        <div className="list-item--text--title">{title}</div>
-        <div className="list-item--text--list">{list}</div>
 
-        <div className="list-item--text--msg">{msg}</div>
-      </div>
-      <div className="list-item--buttons">
-        <div className="list-item--buttons--edit">
-          <i className="fas fa-pen"></i>
+  return (
+    <Link to={link}>
+      <div className="list-item">
+        {imageContainer}
+        <div className="list-item--text">
+          <div className="list-item--text--title">{title}</div>
+          <div className="list-item--text--list">{list}</div>
+
+          <div className="list-item--text--msg">{msg}</div>
         </div>
-        <div className="list-item--buttons--remove">
-          <img src={removeBtn} alt="Remove"></img>
-        </div>
+        <div className="list-item--buttons"></div>
       </div>
-    </div>
+    </Link>
   );
 }
 export default ListItem;

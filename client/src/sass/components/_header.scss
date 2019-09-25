@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+
+  &--buttons {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    &--primary {
+      font-size: 1.8rem;
+      &:not(:last-child) {
+        margin-right: 15px;
+      }
+    }
+    &--secondary {
+      color: $color-primary;
+    }
+  }
+}

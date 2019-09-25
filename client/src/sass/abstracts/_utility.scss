@@ -67,3 +67,19 @@ $lines-to-show: 6;
   -ms-user-select: none;
   user-select: none;
 }
+::-moz-selection {
+  background: transparent;
+}
+::selection {
+  background: transparent;
+}
+.clickable {
+  cursor: pointer;
+}
+input[type="checkbox"] {
+  opacity: 0 !important;
+}
+
+input[type="radio"] {
+  opacity: 0 !important;
+}

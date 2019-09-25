@@ -67,7 +67,6 @@ module.exports = Router({ mergeParams: true }).put(
 
       async function updateOrCreateTestCase() {
         return new Promise((resolve, reject) => {
-          console.log(testCaseFields.deprecated);
           if (!testCaseFields.deprecated) {
             TestCase.update(testCaseFields, {
               where: { id: req.params.id },
