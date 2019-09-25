@@ -209,9 +209,9 @@ class EditTestCase extends Component {
       return reduced.concat(b);
     }
 
-    var test = merge(filteredUnpinnedGroups, e, "id");
+    var allSelectedGroups = merge(filteredUnpinnedGroups, e, "id");
 
-    this.setState({ filteredNotPinnedSelectedGroups: e, selectedGroupsObjects: test }, () => {
+    this.setState({ filteredNotPinnedSelectedGroups: e, selectedGroupsObjects: allSelectedGroups }, () => {
       this.checkValidation();
     });
   }
