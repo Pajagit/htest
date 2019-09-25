@@ -25,9 +25,7 @@ import { getGroups } from "../../actions/groupsActions";
 import filterStringArray from "../../utility/filterStringArray";
 import isEmpty from "../../validation/isEmpty";
 import TestCaseValidation from "../../validation/TestCaseValidation";
-import checkIfObjInArray from "../../utility/checkIfObjInArray";
 import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
-import removeObjFromArray from "../../utility/removeObjFromArray";
 import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
 const bigList = [];
 
@@ -57,6 +55,7 @@ class EditTestCase extends Component {
       selectedGroupsObjects: [],
       filteredNotPinnedSelectedGroups: [],
       uploaded_files: [],
+      groupFilters: [],
       titleValidation: "",
       descriptionValidation: "",
       teststepsValidation: "",
@@ -110,7 +109,6 @@ class EditTestCase extends Component {
           var filteredNotPinnedSelectedGroups = testcase.groups.filter(function(group) {
             return group.isPinned === false;
           });
-          console.log(groups);
           update.filteredNotPinnedSelectedGroups = filteredNotPinnedSelectedGroups;
         }
 
@@ -168,7 +166,6 @@ class EditTestCase extends Component {
     var testSteps = filterStringArray(this.state.test_steps);
     var links = filterStringArray(this.state.links);
     var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
-    console.log(groups);
     formData.title = this.state.title;
     formData.description = this.state.description;
     formData.test_steps = testSteps;

@@ -7,7 +7,7 @@ export const getTestcases = project_id => dispatch => {
   dispatch(setTestCaseLoading());
 
   axios
-    .get(`/api/testcases?project_id=${project_id}`)
+    .post(`/api/testcases?project_id=${project_id}`)
     .then(res =>
       dispatch({
         type: GET_TESTCASES,
