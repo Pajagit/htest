@@ -9,7 +9,7 @@ const GroupTestCase = require("../../../models/grouptestcase");
 const Color = require("../../../models/color");
 const User = require("../../../models/user");
 
-const validateTestCaseInput = require("../../../validation/testcase");
+const validateTestCaseInput = require("../../../validation/testcase").validateTestCaseInput;
 
 // @route PUT api/testcases/:id
 // @desc Update test case by id
