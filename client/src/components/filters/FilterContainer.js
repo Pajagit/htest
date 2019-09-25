@@ -4,6 +4,10 @@ import Datepicker from "../common/Datepicker";
 import isEmpty from "../../validation/isEmpty";
 import Tag from "../common/Tag";
 import moment from "moment";
+import { getGroups } from "../../actions/groupsActions";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 class FilterContainer extends Component {
   constructor(props) {
@@ -24,14 +28,14 @@ class FilterContainer extends Component {
 
       groupFilters: []
     };
-    this.selectOption = this.selectOption.bind(this);
-    this.selectMultipleOption = this.selectMultipleOption.bind(this);
     this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
     this.selectMultipleOptionUsers = this.selectMultipleOptionUsers.bind(this);
   }
 
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClick, false);
+    var projectId = this.props.match.params.projectId;
+    this.props.getGroups(projectId);
   }
 
   componentWillUnmount() {
@@ -52,23 +56,11 @@ class FilterContainer extends Component {
     this.setState({ showDatepickerFrom: false, showDatepickerTo: false });
   }
 
-  selectOption(value) {
-    console.log("Vals", value);
-    this.setState({ value });
-  }
   selectMultipleOptionUsers(value) {
-    console.count("onChange");
-    console.log("Val", value);
     this.setState({ users: value });
   }
-  selectMultipleOption(value) {
-    console.count("onChange");
-    console.log("Val", value);
-    this.setState({ arrayValue: value });
-  }
+
   selectMultipleOptionGroups(value) {
-    console.count("onChange");
-    console.log("Val", value);
     this.setState({ groupFilters: value });
   }
   removeFromDate() {
@@ -90,14 +82,10 @@ class FilterContainer extends Component {
     this.setState({ selectedDateTo: "", selectedDateTimestampTo: "" });
   }
   render() {
-    var bigList = [];
-    bigList.push(
-      { id: 1, name: "Health Check", color: "KEPPEL" },
-      { id: 2, name: "Automation", color: "DARK_KHAKI" },
-      { id: 3, name: "Regression", color: "LIBERTY" },
-      { id: 4, name: "API", color: "AMARANTH" },
-      { id: 5, name: "UI", color: "VERDIGRIS" }
-    );
+    var allGroups = [];
+    if (this.props.groups && this.props.groups.groups) {
+      allGroups = this.props.groups.groups;
+    }
 
     var usersList = [];
     usersList.push(
@@ -133,7 +121,7 @@ class FilterContainer extends Component {
         <div className="testcase-grid">
           <SearchDropdown
             value={this.state.groupFilters}
-            options={bigList}
+            options={allGroups}
             onChange={this.selectMultipleOptionGroups}
             label={"Test Groups"}
             placeholder={"Groups"}
@@ -210,4 +198,18 @@ class FilterContainer extends Component {
     );
   }
 }
-export default FilterContainer;
+FilterContainer.propTypes = {
+  testcases: PropTypes.object.isRequired,
+  groups: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  testcases: state.testcases,
+  groups: state.groups
+  // auth: state.auth,
+});
+
+export default connect(
+  mapStateToProps,
+  { getGroups }
+)(withRouter(FilterContainer));
