@@ -106,31 +106,33 @@ class EditTestCase extends Component {
           update.testcaseId = nextProps.match.params.testcaseId;
           update.links = testcase.links;
           update.projectId = nextProps.match.params.projectId;
+
+          var filteredNotPinnedSelectedGroups = testcase.groups.filter(function(group) {
+            return group.isPinned === false;
+          });
+          console.log(groups);
+          update.filteredNotPinnedSelectedGroups = filteredNotPinnedSelectedGroups;
         }
 
         update.test_steps = testcase.test_steps;
 
         update.uploaded_files = testcase.uploaded_files;
-        if (nextProps.groups && nextProps.groups.groups) {
-          var { groups } = nextProps.groups;
+      }
+      if (nextProps.groups && nextProps.groups.groups) {
+        var { groups } = nextProps.groups;
 
-          var filteredPinnedGroups = groups.filter(function(group) {
-            return group.isPinned === true;
-          });
+        var filteredPinnedGroups = groups.filter(function(group) {
+          return group.isPinned === true;
+        });
 
-          update.pinnedGroups = filteredPinnedGroups;
+        update.pinnedGroups = filteredPinnedGroups;
 
-          var filteredUnpinnedGroups = groups.filter(function(group) {
-            return group.isPinned === false;
-          });
+        var filteredUnpinnedGroups = groups.filter(function(group) {
+          return group.isPinned === false;
+        });
 
-          var filteredNotPinnedSelectedGroups = groups.filter(function(group) {
-            return group.isPinned === false;
-          });
-          update.filteredNotPinnedSelectedGroups = filteredNotPinnedSelectedGroups;
-          update.notPinnedGroups = filteredUnpinnedGroups;
-          update.allGroups = groups;
-        }
+        update.notPinnedGroups = filteredUnpinnedGroups;
+        update.allGroups = groups;
       }
     }
 
@@ -198,28 +200,22 @@ class EditTestCase extends Component {
     this.setState({ value });
   }
   selectMultipleOptionGroups(e) {
-    // var elementValue = parseInt(e.id);
+    var filteredUnpinnedGroups = this.state.selectedGroupsObjects.filter(function(group) {
+      return group.isPinned !== false;
+    });
 
-    var newArray = [];
-    for (var x = 0; x < e.length; x++) {
-      if (!checkIfElemInObjInArray(this.state.selectedGroupsObjects, e[x].id)) {
-        newArray.push(e[x]);
-      } else {
-      }
+    function merge(a, b, prop) {
+      var reduced = a.filter(aitem => !b.find(bitem => aitem[prop] === bitem[prop]));
+      return reduced.concat(b);
     }
 
-    var newUnpinnedArray = [];
-    for (var i = 0; i < e.length; i++) {
-      if (e[i].isPinned === false) {
-        newUnpinnedArray.push(e[i]);
-      }
-    }
+    var test = merge(filteredUnpinnedGroups, e, "id");
 
-    this.setState({ filteredNotPinnedSelectedGroups: newUnpinnedArray, selectedGroupsObjects: newArray }, () => {
-      console.log(this.state.selectedGroupsObjects);
+    this.setState({ filteredNotPinnedSelectedGroups: e, selectedGroupsObjects: test }, () => {
       this.checkValidation();
     });
   }
+
   toggleDeprecated() {
     this.setState({ isDeprecated: !this.state.isDeprecated });
   }
@@ -248,7 +244,7 @@ class EditTestCase extends Component {
     var newArray = this.state.selectedGroupsObjects;
     if (checkIfElemInObjInArray(newArray, parseInt(e.target.id))) {
       for (var i = 0; i < newArray.length; i++) {
-        if (newArray[i].id === e.target.id) {
+        if (newArray[i].id === parseInt(e.target.id)) {
           newArray.splice(i, 1);
           break;
         }
@@ -262,7 +258,6 @@ class EditTestCase extends Component {
 
     this.setState({ selectedGroupsObjects: newArray }, () => {
       this.checkValidation();
-      console.log(this.state.selectedGroupsObjects);
     });
   }
   addColumnStep(e) {
