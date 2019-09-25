@@ -96,7 +96,6 @@ module.exports = Router({ mergeParams: true }).post(
               attributes: []
             },
             as: "groups",
-            where: whereStatementGroups,
             required: true,
             include: [
               {
@@ -113,32 +112,45 @@ module.exports = Router({ mergeParams: true }).post(
         if (testcases) {
           var testcasesObjArray = Array();
           testcases.forEach(testcase => {
-            if (testcase.groups) {
-              var groupsObj = Array();
+            var inFilteredGroup = true;
+            if (requestObject.groups.length > 0) {
+              var testcaseGroups = [];
               testcase.groups.forEach(group => {
-                var groupObject = {
-                  id: group.id,
-                  isPinned: group.pinned,
-                  name: group.title,
-                  color: group.color.title
-                };
-                groupsObj.push(groupObject);
+                testcaseGroups.push(group.id);
               });
+              if (!testcaseGroups.some(r => requestObject.groups.indexOf(r) >= 0)) {
+                inFilteredGroup = false;
+              }
             }
-            var testcasesObj = {
-              id: testcase.id,
-              title: testcase.title,
-              description: testcase.description,
-              expected_result: testcase.expected_result,
-              preconditions: testcase.preconditions,
-              date: getLocalTimestamp(testcase.created_at),
-              links: testcase.links,
-              uploaded_files: testcase.uploaded_files,
-              test_steps: testcase.test_steps,
-              groups: groupsObj,
-              author: testcase.user
-            };
-            testcasesObjArray.push(testcasesObj);
+
+            if (inFilteredGroup) {
+              if (testcase.groups) {
+                var groupsObj = Array();
+                testcase.groups.forEach(group => {
+                  var groupObject = {
+                    id: group.id,
+                    isPinned: group.pinned,
+                    name: group.title,
+                    color: group.color.title
+                  };
+                  groupsObj.push(groupObject);
+                });
+              }
+              var testcasesObj = {
+                id: testcase.id,
+                title: testcase.title,
+                description: testcase.description,
+                expected_result: testcase.expected_result,
+                preconditions: testcase.preconditions,
+                date: getLocalTimestamp(testcase.created_at),
+                links: testcase.links,
+                uploaded_files: testcase.uploaded_files,
+                test_steps: testcase.test_steps,
+                groups: groupsObj,
+                author: testcase.user
+              };
+              testcasesObjArray.push(testcasesObj);
+            }
           });
           res.json(testcasesObjArray);
         } else {
