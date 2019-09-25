@@ -113,7 +113,7 @@ module.exports = Router({ mergeParams: true }).post(
           var testcasesObjArray = Array();
           testcases.forEach(testcase => {
             var inFilteredGroup = true;
-            if (testcase.groups) {
+            if (requestObject.groups.length > 0) {
               var testcaseGroups = [];
               testcase.groups.forEach(group => {
                 testcaseGroups.push(group.id);
