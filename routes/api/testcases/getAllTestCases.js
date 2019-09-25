@@ -9,6 +9,7 @@ const Group = require("../../../models/group");
 const Color = require("../../../models/color");
 const User = require("../../../models/user");
 const getLocalTimestamp = require("../../../utils/dateFunctions").getLocalTimestamp;
+const validateTestCaseFilter = require("../../../validation/testcase").validateTestCaseFilter;
 
 // @route POST api/testcases
 // @desc POST all testcases
@@ -20,29 +21,42 @@ module.exports = Router({ mergeParams: true }).post(
     if (isNaN(req.query.project_id)) {
       res.status(400).json({ error: "Project id is not valid number" });
     } else {
-      whereStatement = {};
-      whereStatementGroups = {};
-      whereStatementUsers = {};
+      var whereStatement = {};
+      var whereStatementGroups = {};
+      var whereStatementUsers = {};
+      var requestObject = {};
 
-      var groups = req.body.groups ? req.body.groups : [];
-      var users = req.body.users ? req.body.users : [];
+      requestObject.groups = req.body.groups ? req.body.groups : [];
+      requestObject.users = req.body.users ? req.body.users : [];
+      requestObject.dateFrom = req.body.dateFrom ? req.body.dateFrom : "";
+      requestObject.dateTo = req.body.dateTo ? req.body.dateTo : "";
 
-      if (req.body.dateFrom && req.body.dateTo) {
-        whereStatement.created_at = { [Op.gte]: new Date(req.body.dateFrom), [Op.lte]: new Date(req.body.dateTo) };
+      const { errors, isValid } = validateTestCaseFilter(requestObject);
+
+      // Check Validation
+      if (!isValid) {
+        return res.status(400).json(errors);
+      }
+
+      if (requestObject.dateFrom && requestObject.dateTo) {
+        whereStatement.created_at = {
+          [Op.gte]: new Date(requestObject.dateFrom),
+          [Op.lte]: new Date(requestObject.dateTo)
+        };
       } else {
-        if (req.body.dateTo) {
-          whereStatement.created_at = { [Op.lte]: new Date(req.body.dateTo) };
+        if (requestObject.dateTo) {
+          whereStatement.created_at = { [Op.lte]: new Date(requestObject.dateTo) };
         } else {
-          if (req.body.dateFrom) {
-            whereStatement.created_at = { [Op.gte]: new Date(req.body.dateFrom) };
+          if (requestObject.dateFrom) {
+            whereStatement.created_at = { [Op.gte]: new Date(requestObject.dateFrom) };
           }
         }
       }
-      if (groups.length > 0) {
-        whereStatementGroups.id = { [Op.in]: groups };
+      if (requestObject.groups.length > 0) {
+        whereStatementGroups.id = { [Op.in]: requestObject.groups };
       }
-      if (users.length > 0) {
-        whereStatementUsers.id = { [Op.in]: users };
+      if (requestObject.users.length > 0) {
+        whereStatementUsers.id = { [Op.in]: requestObject.users };
       }
       whereStatement.project_id = req.query.project_id;
       whereStatement.deprecated = false;
