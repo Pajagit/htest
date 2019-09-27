@@ -11,10 +11,28 @@ import isEmpty from "../../validation/isEmpty";
 import { getTestcases } from "../../actions/testcaseActions";
 
 class TestCaseContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filters: {}
+    };
+  }
   componentDidMount() {
     var projectId = this.props.match.params.projectId;
     this.props.getTestcases(projectId);
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var projectId = nextProps.match.params.projectId;
+
+    if (nextProps.filters !== prevState.filters) {
+      update.filters = nextProps.filters;
+      nextProps.getTestcases(projectId, nextProps.filters);
+    }
+    return Object.keys(update).length ? update : null;
+  }
+
   render() {
     var projectId = this.props.match.params.projectId;
     var testcases = this.props.testcases;

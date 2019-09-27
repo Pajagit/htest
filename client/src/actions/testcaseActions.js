@@ -3,11 +3,11 @@ import axios from "axios";
 import { GET_TESTCASE, GET_TESTCASES, TESTCASE_LOADING } from "./types";
 
 // Get All Test Cases
-export const getTestcases = project_id => dispatch => {
+export const getTestcases = (project_id, testCaseFilters) => dispatch => {
   dispatch(setTestCaseLoading());
 
   axios
-    .post(`/api/testcases?project_id=${project_id}`)
+    .post(`/api/testcases?project_id=${project_id}`, testCaseFilters)
     .then(res =>
       dispatch({
         type: GET_TESTCASES,

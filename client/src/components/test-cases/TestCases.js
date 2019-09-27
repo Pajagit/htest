@@ -9,8 +9,15 @@ import BtnAnchor from "../common/BtnAnchor";
 import FilterBtn from "../common/FilterBtn";
 import Header from "../common/Header";
 import SearchBtn from "../common/SearchBtn";
-import FilterContainer from "../filters/FilterContainer";
 import TestCaseContainer from "../test-cases/TestCaseContainer";
+import { getGroups } from "../../actions/groupsActions";
+import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
+
+import SearchDropdown from "../common/SearchDropdown";
+import Datepicker from "../common/Datepicker";
+import isEmpty from "../../validation/isEmpty";
+import Tag from "../common/Tag";
+import moment from "moment";
 
 class TestCases extends Component {
   constructor(props) {
@@ -20,10 +27,104 @@ class TestCases extends Component {
       values: "",
       showFilters: true,
       value: null,
-      arrayValue: []
+      arrayValue: [],
+      users: [],
+      showDatepickerFrom: false,
+      selectedDateFrom: "",
+      selectedDateTimestampFrom: "",
+      activeDateFrom: "",
+      showDatepickerTo: false,
+      selectedDateTo: "",
+      selectedDateTimestampTo: "",
+      activeDateTo: "",
+      testcaseFilters: {},
+
+      groupFilters: []
     };
     this.filterBtn = this.filterBtn.bind(this);
+    this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
+    this.selectMultipleOptionUsers = this.selectMultipleOptionUsers.bind(this);
   }
+
+  componentDidMount() {
+    document.addEventListener("mousedown", this.handleClick, false);
+    var projectId = this.props.match.params.projectId;
+    this.props.getGroups(projectId);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClick, false);
+  }
+  search() {
+    var testCaseFilters = {};
+    testCaseFilters.groups = getidsFromObjectArray(this.state.groupFilters);
+    testCaseFilters.users = getidsFromObjectArray(this.state.users);
+    testCaseFilters.dateFrom = "";
+    if (moment(this.state.selectedDateTimestampFrom).format("YYYY-MM-DD") !== "Invalid date") {
+      testCaseFilters.dateFrom = moment(this.state.selectedDateTimestampFrom).format("YYYY-MM-DD HH:mm:ss");
+    }
+    testCaseFilters.dateTo = "";
+    if (moment(this.state.selectedDateTimestampTo).format("YYYY-MM-DD ") !== "Invalid date") {
+      testCaseFilters.dateTo = moment(this.state.selectedDateTimestampTo)
+        .add(23, "hours")
+        .add(59, "minutes")
+        .add(59, "seconds")
+        .format("YYYY-MM-DD HH:mm:ss");
+    }
+    this.setState({ testcaseFilters: testCaseFilters });
+  }
+  handleClick = e => {
+    if (this.node.contains(e.target)) {
+      return;
+    }
+    if (this.node2.contains(e.target)) {
+      return;
+    }
+    this.handleClickOutside();
+  };
+
+  handleClickOutside() {
+    this.setState({ showDatepickerFrom: false, showDatepickerTo: false });
+  }
+
+  selectMultipleOptionUsers(value) {
+    this.setState({ users: value }, () => {
+      this.search();
+    });
+  }
+
+  selectMultipleOptionGroups(value) {
+    this.setState({ groupFilters: value }, () => {
+      this.search();
+    });
+  }
+  removeFromDate() {
+    this.setState({ selectedDateFrom: "", selectedDateTimestampFrom: "" }, () => {
+      this.search();
+    });
+  }
+  removeGroup(e) {
+    var groups = this.state.groupFilters.filter(function(item) {
+      return item["id"] !== e;
+    });
+    this.setState({ groupFilters: groups }, () => {
+      this.search();
+    });
+  }
+  removeUser(e) {
+    var users = this.state.users.filter(function(item) {
+      return item["id"] !== e;
+    });
+    this.setState({ users }, () => {
+      this.search();
+    });
+  }
+  removeToDate() {
+    this.setState({ selectedDateTo: "", selectedDateTimestampTo: "" }, () => {
+      this.search();
+    });
+  }
+
   filterBtn() {
     var showFilters;
     if (this.state.showFilters) {
@@ -34,10 +135,45 @@ class TestCases extends Component {
     this.setState({ showFilters });
   }
   render() {
-    var filters = "";
-    if (this.state.showFilters) {
-      filters = <FilterContainer />;
+    var allGroups = [];
+    if (this.props.groups && this.props.groups.groups) {
+      allGroups = this.props.groups.groups;
     }
+
+    var usersList = [];
+    usersList.push(
+      { id: 1, name: "Aleksandar Pavlovic", color: "KEPPEL" },
+      { id: 2, name: "Jana Antic", color: "DARK_KHAKI" },
+      { id: 3, name: "Milos Najdanovic", color: "LIBERTY" }
+    );
+
+    var fromDate = "";
+    if (!isEmpty(this.state.selectedDateFrom)) {
+      fromDate = (
+        <Tag
+          title={`From: ${this.state.selectedDateFrom}`}
+          color={"DATE_COLOR"}
+          isRemovable={true}
+          onClickRemove={e => this.removeFromDate(e)}
+        />
+      );
+    }
+    var toDate = "";
+    if (!isEmpty(this.state.selectedDateTo)) {
+      toDate = (
+        <Tag
+          title={`To: ${this.state.selectedDateTo}`}
+          color={"DATE_COLOR"}
+          isRemovable={true}
+          onClickRemove={e => this.removeToDate(e)}
+        />
+      );
+    }
+
+    // var filters = "";
+    // if (this.state.showFilters) {
+    //   filters = <FilterContainer />;
+    // }
 
     return (
       <div className="wrapper">
@@ -55,8 +191,90 @@ class TestCases extends Component {
             filterBtn={<FilterBtn onClick={this.filterBtn} />}
             searchBtn={<SearchBtn />}
           />
-          {filters}
-          <TestCaseContainer />
+          {/* {filters} */}
+          <div>
+            <div className="testcase-grid">
+              <SearchDropdown
+                value={this.state.groupFilters}
+                options={allGroups}
+                onChange={this.selectMultipleOptionGroups}
+                label={"Test Groups"}
+                placeholder={"Groups"}
+                multiple={true}
+              />
+
+              <SearchDropdown
+                value={this.state.users}
+                options={usersList}
+                onChange={this.selectMultipleOptionUsers}
+                label={"Select User"}
+                placeholder={"Users"}
+                multiple={true}
+                numberDisplayed={2}
+              />
+
+              <Datepicker
+                forwardRef={node => (this.node = node)}
+                showdatepicker={this.state.showDatepickerFrom}
+                placeholder={"From Date"}
+                label={"Select Date"}
+                selectedDate={this.state.selectedDateFrom}
+                onClick={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
+                onChange={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
+                active={this.state.activeDateFrom ? this.state.activeDateFrom !== null : ""}
+                timestamp={this.state.selectedDateTimestampFrom}
+                onDayClick={day => {
+                  this.setState({ selectedDateFrom: moment(day).format(" Do MMM YY") }, () => {
+                    this.search();
+                  });
+                  this.setState({ selectedDateTimestampFrom: day });
+                  this.setState({ showDatepickerFrom: false });
+                }}
+              />
+              <Datepicker
+                forwardRef={node2 => (this.node2 = node2)}
+                showdatepicker={this.state.showDatepickerTo}
+                placeholder={"To Date"}
+                label={"Select Date"}
+                selectedDate={this.state.selectedDateTo}
+                onClick={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
+                onChange={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
+                active={this.state.activeDateTo ? this.state.activeDateTo !== null : ""}
+                timestamp={this.state.selectedDateTimestampTo}
+                onDayClick={day => {
+                  this.setState({ selectedDateTo: moment(day).format(" Do MMM YY") }, () => {
+                    this.search();
+                  });
+                  this.setState({ selectedDateTimestampTo: day });
+                  this.setState({ showDatepickerTo: false });
+                }}
+              />
+            </div>
+
+            <div className="active-filter-container">
+              {this.state.groupFilters.map((group, index) => (
+                <Tag
+                  key={index}
+                  title={group.name}
+                  color={group.color}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeGroup(group.id)}
+                />
+              ))}
+              {this.state.users.map((user, index) => (
+                <Tag
+                  key={index}
+                  title={user.name}
+                  color={"USER_COLOR"}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeUser(user.id)}
+                />
+              ))}
+              {fromDate}
+              {toDate}
+            </div>
+          </div>
+          <TestCaseContainer filters={this.state.testcaseFilters} />
         </div>
       </div>
     );
@@ -68,11 +286,13 @@ TestCases.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  testcases: state.testcases
+  testcases: state.testcases,
+  groups: state.groups
+
   // auth: state.auth,
 });
 
 export default connect(
   mapStateToProps,
-  {}
+  { getGroups }
 )(withRouter(TestCases));
