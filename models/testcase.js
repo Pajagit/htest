@@ -94,5 +94,9 @@ TestCase.belongsTo(User, {
   foreignKey: "user_id",
   targetKey: "id"
 });
+User.hasMany(TestCase, {
+  foreignKey: "user_id",
+  targetKey: "id"
+});
 
 module.exports = TestCase;
