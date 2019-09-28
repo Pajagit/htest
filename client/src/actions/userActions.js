@@ -3,11 +3,11 @@ import axios from "axios";
 import { GET_USER, GET_USERS, USER_LOADING, GET_ERRORS } from "./types";
 
 // Get All Users
-export const getUsers = () => dispatch => {
+export const getUsers = has_testcases => dispatch => {
   dispatch(userLoading());
 
   axios
-    .get(`/api/users`)
+    .get(`/api/users?has_testcases=${has_testcases}`)
     .then(res =>
       dispatch({
         type: GET_USERS,
