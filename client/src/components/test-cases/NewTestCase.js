@@ -19,6 +19,7 @@ import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 
 import TestCaseValidation from "../../validation/TestCaseValidation";
+import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
 import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
 import filterStringArray from "../../utility/filterStringArray";
 import { getGroups } from "../../actions/groupsActions";
@@ -42,6 +43,7 @@ class NewTestCase extends Component {
       test_steps: [{ id: 1, value: "" }],
       notPinnedGroups: [],
       filteredNotPinnedSelectedGroups: [],
+      allGroups: [],
       selectedGroupsObjects: [],
       arrayValue: [],
       links: [],
@@ -67,6 +69,7 @@ class NewTestCase extends Component {
       });
       update.notPinnedGroups = notPinnedGroups;
       update.pinnedGroups = filteredPinnedGroups;
+      update.allGroups = groups;
     }
 
     return Object.keys(update).length ? update : null;
@@ -168,25 +171,24 @@ class NewTestCase extends Component {
   }
 
   onChangeSwitch(e) {
-    var newSelectedGroup = this.state.selectedGroups;
-
-    var elementValue = parseInt(e.target.id);
-
-    if (newSelectedGroup.includes(elementValue)) {
-      newSelectedGroup = newSelectedGroup.filter(item => item !== elementValue);
-      this.setState({ selectedGroups: newSelectedGroup }, () => {
-        if (this.state.submitPressed) {
-          this.checkValidation();
+    var newArray = this.state.selectedGroupsObjects;
+    if (checkIfElemInObjInArray(newArray, parseInt(e.target.id))) {
+      for (var i = 0; i < newArray.length; i++) {
+        if (newArray[i].id === parseInt(e.target.id)) {
+          newArray.splice(i, 1);
+          break;
         }
-      });
+      }
     } else {
-      newSelectedGroup.push(elementValue);
-      this.setState({ selectedGroups: newSelectedGroup }, () => {
-        if (this.state.submitPressed) {
-          this.checkValidation();
-        }
+      var newObject = this.state.allGroups.filter(item => {
+        return item.id === parseInt(e.target.id);
       });
+      newArray.push(newObject[0]);
     }
+
+    this.setState({ selectedGroupsObjects: newArray }, () => {
+      this.checkValidation();
+    });
   }
 
   selectMultipleOptionGroups(e) {

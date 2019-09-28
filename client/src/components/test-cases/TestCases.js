@@ -69,7 +69,7 @@ class TestCases extends Component {
     testCaseFilters.dateTo = "";
     if (moment(this.state.selectedDateTimestampTo).format("YYYY-MM-DD ") !== "Invalid date") {
       testCaseFilters.dateTo = moment(this.state.selectedDateTimestampTo)
-        .add(23, "hours")
+        .add(21, "hours")
         .add(59, "minutes")
         .add(59, "seconds")
         .format("YYYY-MM-DD HH:mm:ss");
