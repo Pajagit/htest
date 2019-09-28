@@ -16,7 +16,7 @@ module.exports = Router({ mergeParams: true }).get(
       Group.findAll({
         attributes: ["id", "pinned", "title"],
         where: {
-          project_id: 1
+          project_id: req.query.project_id
         },
         include: [
           {
