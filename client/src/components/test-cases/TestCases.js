@@ -11,6 +11,7 @@ import Header from "../common/Header";
 import SearchBtn from "../common/SearchBtn";
 import TestCaseContainer from "../test-cases/TestCaseContainer";
 import { getGroups } from "../../actions/groupsActions";
+import { getUsers } from "../../actions/userActions";
 import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
 
 import SearchDropdown from "../common/SearchDropdown";
@@ -50,6 +51,8 @@ class TestCases extends Component {
     document.addEventListener("mousedown", this.handleClick, false);
     var projectId = this.props.match.params.projectId;
     this.props.getGroups(projectId);
+    var has_testcases = true;
+    this.props.getUsers(has_testcases);
   }
 
   componentWillUnmount() {
@@ -152,11 +155,11 @@ class TestCases extends Component {
     }
 
     var usersList = [];
-    usersList.push(
-      { id: 1, name: "Aleksandar Pavlovic", color: "KEPPEL" },
-      { id: 2, name: "Jana Antic", color: "DARK_KHAKI" },
-      { id: 3, name: "Milos Najdanovic", color: "LIBERTY" }
-    );
+    if (this.props.users && this.props.users.users) {
+      this.props.users.users.map(function(item) {
+        return usersList.push({ id: item.id, name: `${item.first_name} ${item.last_name}` });
+      });
+    }
 
     var fromDate = "";
     if (!isEmpty(this.state.selectedDateFrom)) {
@@ -300,17 +303,19 @@ class TestCases extends Component {
 }
 
 TestCases.propTypes = {
-  testcases: PropTypes.object.isRequired
+  testcases: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
-  groups: state.groups
+  groups: state.groups,
+  users: state.users
 
   // auth: state.auth,
 });
 
 export default connect(
   mapStateToProps,
-  { getGroups }
+  { getGroups, getUsers }
 )(withRouter(TestCases));
