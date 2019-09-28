@@ -81,8 +81,9 @@ class EditTestCase extends Component {
 
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
+    var projectId = this.props.match.params.projectId;
     this.props.getTestcase(testcaseId);
-    this.props.getGroups(1);
+    this.props.getGroups(projectId);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

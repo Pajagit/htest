@@ -19,15 +19,11 @@ import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 
 import TestCaseValidation from "../../validation/TestCaseValidation";
+import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
 import filterStringArray from "../../utility/filterStringArray";
 import { getGroups } from "../../actions/groupsActions";
 import { createTestCase } from "../../actions/testcaseActions";
 
-const bigList = [];
-
-for (var i = 1; i <= 1000; i++) {
-  bigList.push({ id: i, name: `Item ${i}` });
-}
 class NewTestCase extends Component {
   constructor(props) {
     super(props);
@@ -44,17 +40,18 @@ class NewTestCase extends Component {
       pinnedGroups: [],
       selectedGroups: [],
       test_steps: [{ id: 1, value: "" }],
+      notPinnedGroups: [],
+      filteredNotPinnedSelectedGroups: [],
+      selectedGroupsObjects: [],
       arrayValue: [],
       links: [],
       errors: {}
     };
-    this.selectOption = this.selectOption.bind(this);
-    this.selectMultipleOption = this.selectMultipleOption.bind(this);
   }
   componentDidMount() {
     var projectId = this.props.match.params.projectId;
     this.setState({ projectId });
-    this.props.getGroups(1);
+    this.props.getGroups(projectId);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -62,11 +59,13 @@ class NewTestCase extends Component {
 
     if (nextProps.groups && nextProps.groups.groups) {
       var { groups } = nextProps.groups;
-
       var filteredPinnedGroups = groups.filter(function(group) {
         return group.isPinned === true;
       });
-
+      var notPinnedGroups = groups.filter(function(group) {
+        return group.isPinned === false;
+      });
+      update.notPinnedGroups = notPinnedGroups;
       update.pinnedGroups = filteredPinnedGroups;
     }
 
@@ -76,11 +75,12 @@ class NewTestCase extends Component {
     var formData = {};
     var testSteps = filterStringArray(this.state.test_steps);
     var links = filterStringArray(this.state.links);
+    var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
     formData.title = this.state.title;
     formData.description = this.state.description;
     formData.test_steps = testSteps;
     formData.expected_result = this.state.expected_result;
-    formData.groups = this.state.selectedGroups;
+    formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.isDeprecated = this.state.isDeprecated;
     formData.links = links;
@@ -96,11 +96,12 @@ class NewTestCase extends Component {
 
     var testSteps = filterStringArray(this.state.test_steps);
     var links = filterStringArray(this.state.links);
+    var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
     formData.title = this.state.title;
     formData.description = this.state.description;
     formData.test_steps = testSteps;
     formData.expected_result = this.state.expected_result;
-    formData.groups = this.state.selectedGroups;
+    formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.isDeprecated = this.state.isDeprecated;
     formData.links = links;
@@ -187,6 +188,25 @@ class NewTestCase extends Component {
       });
     }
   }
+
+  selectMultipleOptionGroups(e) {
+    var filteredUnpinnedGroups = this.state.selectedGroupsObjects.filter(function(group) {
+      return group.isPinned !== false;
+    });
+
+    function merge(a, b, prop) {
+      var reduced = a.filter(aitem => !b.find(bitem => aitem[prop] === bitem[prop]));
+      return reduced.concat(b);
+    }
+
+    var allSelectedGroups = merge(filteredUnpinnedGroups, e, "id");
+
+    this.setState({ filteredNotPinnedSelectedGroups: e, selectedGroupsObjects: allSelectedGroups }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
+  }
   toggleNew() {
     this.setState({ addNew: !this.state.addNew });
   }
@@ -221,25 +241,8 @@ class NewTestCase extends Component {
       }
     });
   }
-  selectOption(value) {
-    console.log("Vals", value);
-    this.setState({ value });
-  }
-  selectMultipleOption(value) {
-    console.count("onChange");
-    console.log("Val", value);
-    this.setState({ arrayValue: value });
-  }
 
   render() {
-    var bigList = [];
-    bigList.push(
-      { id: 1, name: "Health Check" },
-      { id: 2, name: "Automation" },
-      { id: 3, name: "Regression" },
-      { id: 4, name: "API" },
-      { id: 5, name: "UI" }
-    );
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -296,12 +299,13 @@ class NewTestCase extends Component {
                 onKeyDown={this.submitFormOnEnterKey}
               />
               <SearchDropdown
-                value={this.state.arrayValue}
-                options={bigList}
-                onChange={this.selectMultipleOption}
+                value={this.state.filteredNotPinnedSelectedGroups}
+                options={this.state.notPinnedGroups}
+                onChange={e => this.selectMultipleOptionGroups(e)}
                 placeholder={"Test Group"}
                 label={"Add to group*"}
                 validationMsg={this.state.errors.groups}
+                multiple={true}
               />
               <div className="group-grid">
                 {this.state.pinnedGroups.map((group, index) => (

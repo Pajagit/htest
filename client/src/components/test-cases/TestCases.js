@@ -134,6 +134,17 @@ class TestCases extends Component {
     }
     this.setState({ showFilters });
   }
+  resetFilters() {
+    this.setState({
+      testcaseFilters: {},
+      selectedDateTo: "",
+      selectedDateTimestampTo: "",
+      users: [],
+      groupFilters: [],
+      selectedDateFrom: "",
+      selectedDateTimestampFrom: ""
+    });
+  }
   render() {
     var allGroups = [];
     if (this.props.groups && this.props.groups.groups) {
@@ -170,10 +181,17 @@ class TestCases extends Component {
       );
     }
 
-    // var filters = "";
-    // if (this.state.showFilters) {
-    //   filters = <FilterContainer />;
-    // }
+    var resetFiltersTag = "";
+    if (
+      !isEmpty(this.state.testcaseFilters.users) ||
+      !isEmpty(this.state.testcaseFilters.groups) ||
+      !isEmpty(this.state.testcaseFilters.dateFrom) ||
+      !isEmpty(this.state.testcaseFilters.dateTo)
+    ) {
+      resetFiltersTag = (
+        <Tag title={"Reset all"} color={"RESET_COLOR"} isRemovable={true} onClickRemove={e => this.resetFilters()} />
+      );
+    }
 
     return (
       <div className="wrapper">
@@ -191,7 +209,6 @@ class TestCases extends Component {
             filterBtn={<FilterBtn onClick={this.filterBtn} />}
             searchBtn={<SearchBtn />}
           />
-          {/* {filters} */}
           <div>
             <div className="testcase-grid">
               <SearchDropdown
@@ -272,6 +289,7 @@ class TestCases extends Component {
               ))}
               {fromDate}
               {toDate}
+              {resetFiltersTag}
             </div>
           </div>
           <TestCaseContainer filters={this.state.testcaseFilters} />

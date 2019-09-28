@@ -37,7 +37,6 @@ class TestCaseContainer extends Component {
     var projectId = this.props.match.params.projectId;
     var testcases = this.props.testcases;
     var { loading } = this.props.testcases;
-
     let content;
 
     if (testcases.testcases === null || loading) {
@@ -63,6 +62,13 @@ class TestCaseContainer extends Component {
             ></PortraitTestCase>
           </React.Fragment>
         ));
+    } else if (
+      !isEmpty(this.state.filters.users) ||
+      !isEmpty(this.state.filters.groups) ||
+      !isEmpty(this.state.filters.dateFrom) ||
+      !isEmpty(this.state.filters.dateTo)
+    ) {
+      content = <div className="testcase-container-no-content">There are no test cases matching selected filters</div>;
     } else {
       content = <div className="testcase-container-no-content">There are no test cases created for this project</div>;
     }
