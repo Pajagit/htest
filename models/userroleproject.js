@@ -13,7 +13,7 @@ const UserRoleProject = sequelize.define(
     },
     project_id: {
       type: Sequelize.INTEGER,
-      required: true,
+      required: false,
       foreignKey: true,
       references: { model: "projects", key: "id" }
     },

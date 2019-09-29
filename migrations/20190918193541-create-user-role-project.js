@@ -10,7 +10,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: { model: "projects", key: "id" }
       },
       user_id: {
@@ -20,7 +20,7 @@ module.exports = {
       },
       role_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: { model: "roles", key: "id" }
       }
     });
