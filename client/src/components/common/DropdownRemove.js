@@ -3,7 +3,7 @@ import isEmpty from "../../validation/isEmpty";
 import FormElementTitle from "../form/FormElementTitle";
 import removeBtn from "../../img/removeBtn.png";
 
-function DropdownRemove({ options, placeholder, value, label, validationMsg, onChange, name }) {
+function DropdownRemove({ options, placeholder, value, label, validationMsg, onChange, name, role }) {
   var placeholderValue = "";
   if (isEmpty(value)) {
     placeholderValue = (
@@ -18,7 +18,7 @@ function DropdownRemove({ options, placeholder, value, label, validationMsg, onC
         <FormElementTitle label={label} validationMsg={validationMsg} />
       </div>
       <div className="form-element-item">
-        <select className="form-element--dropdown-with-remove" onChange={onChange} name={name}>
+        <select className="form-element--dropdown-with-remove" onChange={onChange} name={name} value={role}>
           {placeholderValue}
 
           {options.map((option, index) => (

@@ -23,9 +23,9 @@ import GlobalPanel from "../../components/global-panel/GlobalPanel";
 import SettingPanel from "../../components/settings-panel/SettingPanel";
 import Header from "../../components/common/Header";
 import Spinner from "../../components/common/Spinner";
-// import Dropdown from "../components/common/Dropdown";
-import DropdownRemoveGroup from "../../components/common/DropdownRemoveGroup";
-import DropdownGroup from "../common/DropdownGroup";
+import DropdownRemove from "../../components/common/DropdownRemove";
+// import DropdownRemoveGroup from "../../components/common/DropdownRemoveGroup";
+// import DropdownGroup from "../common/DropdownGroup";
 
 class EditUser extends Component {
   constructor(props) {
@@ -143,14 +143,14 @@ class EditUser extends Component {
   render() {
     var { user, loading } = this.props.users;
     var roles = [];
-    var projects = [];
+
     if (this.props.roles && this.props.roles.roles) {
       roles = this.props.roles.roles;
     }
-
-    if (this.props.projects && this.props.projects.projects) {
-      projects = this.props.projects.projects;
-    }
+    // var projects = [];
+    // if (this.props.projects && this.props.projects.projects) {
+    //   projects = this.props.projects.projects;
+    // }
     var content;
 
     var disabledEdit;
@@ -173,15 +173,15 @@ class EditUser extends Component {
         project = (
           <div>
             <div className="header">Projects</div>
-            <DropdownRemoveGroup primary={projects} secondary={roles} validationMsg={this.state.errors.postition} />
-            <DropdownGroup
+            {/* <DropdownRemoveGroup primary={projects} secondary={roles} validationMsg={this.state.errors.postition} /> */}
+            {/* <DropdownGroup
               primary={projects}
               primaryTitle={"Select Project"}
               secondaryTitle={"SelectRole"}
               secondary={roles}
               validationMsg={this.state.errors.postition}
-            />
-            {/* {user.projects.map((project, index) => (
+            /> */}
+            {user.projects.map((project, index) => (
               <DropdownRemove
                 key={index}
                 placeholder="Pick Users' Project Role"
@@ -191,9 +191,10 @@ class EditUser extends Component {
                 name={"role"}
                 label={project.title}
                 options={roles}
+                role={project.role.id}
               />
             ))}
-            <FullBtn placeholder="Add New Project" /> */}
+            <FullBtn placeholder="Add New Project" />
           </div>
         );
       }
