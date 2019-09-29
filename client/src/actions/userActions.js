@@ -5,9 +5,12 @@ import { GET_USER, GET_USERS, USER_LOADING, GET_ERRORS } from "./types";
 // Get All Users
 export const getUsers = has_testcases => dispatch => {
   dispatch(userLoading());
-
+  var url = "/api/users";
+  if (has_testcases) {
+    url = `/api/users?has_testcases=${has_testcases}`;
+  }
   axios
-    .get(`/api/users?has_testcases=${has_testcases}`)
+    .get(url)
     .then(res =>
       dispatch({
         type: GET_USERS,

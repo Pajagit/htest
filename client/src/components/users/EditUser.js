@@ -5,6 +5,8 @@ import { withRouter } from "react-router-dom";
 
 import { editUser } from "../../actions/userActions";
 import { getUser } from "../../actions/userActions";
+import { getProjects } from "../../actions/projectActions";
+import { getRoles } from "../../actions/roleActions";
 import { userActivation } from "../../actions/userActions";
 import Input from "../../components/common/Input";
 import Btn from "../../components/common/Btn";
@@ -22,7 +24,8 @@ import SettingPanel from "../../components/settings-panel/SettingPanel";
 import Header from "../../components/common/Header";
 import Spinner from "../../components/common/Spinner";
 // import Dropdown from "../components/common/Dropdown";
-import DropdownRemove from "../../components/common/DropdownRemove";
+import DropdownRemoveGroup from "../../components/common/DropdownRemoveGroup";
+import DropdownGroup from "../common/DropdownGroup";
 
 class EditUser extends Component {
   constructor(props) {
@@ -30,6 +33,8 @@ class EditUser extends Component {
     this.state = {
       initialRender: true,
       user: this.props.users.user,
+      roles: [],
+      projects: [],
       errors: {}
     };
   }
@@ -37,30 +42,36 @@ class EditUser extends Component {
   componentDidMount() {
     var userId = this.props.match.params.userId;
     this.props.getUser(userId);
+    this.props.getProjects();
+    this.props.getRoles();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.users && nextProps.users.user) {
-      if (nextProps.users !== prevState.users) {
-        var { user } = nextProps.users;
-        if (nextProps.users.user !== prevState.user) {
-          if (prevState.initialRender) {
-            update.initialRender = false;
-            update.userId = nextProps.match.params.userId;
-            update.email = user.email;
-            update.id = user.id;
-            update.first_name = user.first_name ? user.first_name : "";
-            update.last_name = user.last_name ? user.last_name : "";
-            update.last_login = user.last_login ? user.last_login : null;
-            // update.position = user.position ? user.position : "";
-            update.active = user.active;
-          }
-          return Object.keys(update).length ? update : null;
-        }
+    var { user } = nextProps.users;
+    if (nextProps.users.user !== prevState.user) {
+      if (prevState.initialRender) {
+        update.initialRender = false;
+        update.userId = nextProps.match.params.userId;
+        update.email = user.email;
+        update.id = user.id;
+        update.first_name = user.first_name ? user.first_name : "";
+        update.last_name = user.last_name ? user.last_name : "";
+        update.last_login = user.last_login ? user.last_login : null;
+        // update.position = user.position ? user.position : "";
+        update.active = user.active;
       }
     }
-    return null;
+    var { roles } = nextProps.roles;
+    if (nextProps.roles.roles !== prevState.roles) {
+      update.roles = roles;
+    }
+    var { projects } = nextProps.projects;
+    if (nextProps.projects.projects !== prevState.projects) {
+      update.projects = projects;
+    }
+
+    return Object.keys(update).length ? update : null;
   }
   confirmActivation = ([user_id, active]) => {
     var userData = {};
@@ -131,11 +142,17 @@ class EditUser extends Component {
   }
   render() {
     var { user, loading } = this.props.users;
+    var roles = [];
+    var projects = [];
+    if (this.props.roles && this.props.roles.roles) {
+      roles = this.props.roles.roles;
+    }
+
+    if (this.props.projects && this.props.projects.projects) {
+      projects = this.props.projects.projects;
+    }
     var content;
-    // var positionOptions = [];
-    // positionOptions.push({ id: 1, title: "QA" }, { id: 2, title: "PM" }, { id: 3, title: "PO" });
-    var roleOptions = [];
-    roleOptions.push({ id: 1, title: "QA" }, { id: 2, title: "Project Administrator" }, { id: 3, title: "Viewer" });
+
     var disabledEdit;
     if (this.state.last_login) {
       disabledEdit = "disabled";
@@ -156,8 +173,15 @@ class EditUser extends Component {
         project = (
           <div>
             <div className="header">Projects</div>
-
-            {user.projects.map((project, index) => (
+            <DropdownRemoveGroup primary={projects} secondary={roles} validationMsg={this.state.errors.postition} />
+            <DropdownGroup
+              primary={projects}
+              primaryTitle={"Select Project"}
+              secondaryTitle={"SelectRole"}
+              secondary={roles}
+              validationMsg={this.state.errors.postition}
+            />
+            {/* {user.projects.map((project, index) => (
               <DropdownRemove
                 key={index}
                 placeholder="Pick Users' Project Role"
@@ -166,10 +190,10 @@ class EditUser extends Component {
                 validationMsg={this.state.errors.position}
                 name={"role"}
                 label={project.title}
-                options={roleOptions}
+                options={roles}
               />
             ))}
-            <FullBtn placeholder="Add New Project" />
+            <FullBtn placeholder="Add New Project" /> */}
           </div>
         );
       }
@@ -285,10 +309,12 @@ EditUser.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  roles: state.roles,
+  projects: state.projects,
   users: state.users
 });
 
 export default connect(
   mapStateToProps,
-  { editUser, getUser, userActivation, clearErrors }
+  { editUser, getUser, userActivation, getProjects, getRoles, clearErrors }
 )(withRouter(EditUser));

@@ -5,11 +5,15 @@ import testcaseReducer from "./testcaseReducer";
 import groupReducer from "./groupReducer";
 import authReducer from "./authReducer";
 import userReducer from "./userReducer";
+import projectReducer from "./projectReducer";
+import roleReducer from "./roleReducer";
 
 export default combineReducers({
   auth: authReducer,
   errors: errorReducer,
   testcases: testcaseReducer,
   groups: groupReducer,
-  users: userReducer
+  users: userReducer,
+  projects: projectReducer,
+  roles: roleReducer
 });
