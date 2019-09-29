@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
 import ProjectPanelItem from "./ProjectPanelItem";
 import ProjectPanelHeader from "./ProjectPanelHeader";
 import humedsLogo from "../../img/humeds-logo.png";
@@ -11,14 +15,28 @@ class ProjectPanel extends Component {
       title: "",
       img: "",
       projectId: null,
+      testcasesUrl: false,
+      reportsUrl: false,
+      statisticsUrl: false,
+      settingsUrl: false,
       errors: {}
     };
   }
   componentDidMount() {
-    if (this.props.projectId === "1") {
+    var projectId = this.props.match.params.projectId;
+    if (this.props.match.params.projectId === "1") {
       this.setState({ title: "HUMEDS", img: humedsLogo, projectId: 1 });
     } else {
       this.setState({ title: "HTEC", img: htecLogo, projectId: 2 });
+    }
+    if (this.props.match.url === `/${projectId}/TestCases`) {
+      this.setState({ testcasesUrl: true, reportsUrl: false, statisticsUrl: false, settingsUrl: false });
+    } else if (this.props.match.url === `/${projectId}/Reports`) {
+      this.setState({ testcasesUrl: false, reportsUrl: true, statisticsUrl: false, settingsUrl: false });
+    } else if (this.props.match.url === `/${projectId}/Statistics`) {
+      this.setState({ testcasesUrl: false, reportsUrl: false, statisticsUrl: true, settingsUrl: false });
+    } else if (this.props.match.url === `/${projectId}/Settings`) {
+      this.setState({ testcasesUrl: false, reportsUrl: false, statisticsUrl: false, settingsUrl: true });
     }
   }
   render() {
@@ -29,25 +47,25 @@ class ProjectPanel extends Component {
           <ProjectPanelItem
             icon={<i className="fas fa-clipboard-list"></i>}
             title={"TEST CASES"}
-            active={true}
+            active={this.state.testcasesUrl}
             link={`/${this.state.projectId}/TestCases`}
           />
           <ProjectPanelItem
             icon={<i className="fas fa-file-alt"></i>}
             title={"REPORTS"}
-            active={false}
+            active={this.state.reportsUrl}
             link={`/${this.state.projectId}/Reports`}
           />
           <ProjectPanelItem
             icon={<i className="far fa-chart-bar"></i>}
             title={"STATISTIC"}
-            active={false}
-            link={`/${this.state.projectId}/Statistic`}
+            active={this.state.statisticsUrl}
+            link={`/${this.state.projectId}/Statistics`}
           />
           <ProjectPanelItem
             icon={<i className="fas fa-cog"></i>}
             title={"SETTINGS"}
-            active={false}
+            active={this.state.settingsUrl}
             link={`/${this.state.projectId}/Settings`}
           />
         </div>
@@ -56,4 +74,18 @@ class ProjectPanel extends Component {
   }
 }
 
-export default ProjectPanel;
+ProjectPanel.propTypes = {
+  testcases: PropTypes.object.isRequired,
+  groups: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  testcases: state.testcases,
+  groups: state.groups
+  // auth: state.auth,
+});
+
+export default connect(
+  mapStateToProps,
+  {}
+)(withRouter(ProjectPanel));

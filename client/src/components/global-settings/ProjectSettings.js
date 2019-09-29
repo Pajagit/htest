@@ -3,16 +3,16 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getUsers } from "../actions/userActions";
-import isEmpty from "../validation/isEmpty";
+import { getUsers } from "../../actions/userActions";
+import isEmpty from "../../validation/isEmpty";
 
-import GlobalPanel from "../components/global-panel/GlobalPanel";
-import SettingPanel from "../components/settings-panel/SettingPanel";
-import BtnAnchor from "../components/common/BtnAnchor";
-import Spinner from "../components/common/Spinner";
-import ListItem from "../components/lists/ListItem";
-import Header from "../components/common/Header";
-import stenaImg from "../img/stena-bulk.jpg";
+import GlobalPanel from "../global-panel/GlobalPanel";
+import SettingPanel from "../settings-panel/SettingPanel";
+import BtnAnchor from "../common/BtnAnchor";
+import Spinner from "../common/Spinner";
+import ListItem from "../lists/ListItem";
+import Header from "../common/Header";
+import stenaImg from "../../img/stena-bulk.jpg";
 
 class ProjectSettings extends Component {
   componentDidMount() {

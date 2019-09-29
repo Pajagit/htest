@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import GlobalPanel from "../components/global-panel/GlobalPanel";
-import Header from "../components/common/Header";
-import ProjectContainer from "../components/project/ProjectCardContainer";
-import ProjectTableList from "../components/project/ProjectTableList";
+import GlobalPanel from "../../components/global-panel/GlobalPanel";
+import Header from "../../components/common/Header";
+import ProjectContainer from "../../components/project/ProjectCardContainer";
+import ProjectTableList from "../../components/project/ProjectTableList";
 
 class Projects extends Component {
   render() {

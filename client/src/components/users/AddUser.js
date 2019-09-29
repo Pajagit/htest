@@ -3,18 +3,18 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { addUser } from "../actions/userActions";
-import Input from "../components/common/Input";
-import Btn from "../components/common/Btn";
-import UnderlineAnchor from "../components/common/UnderlineAnchor";
-import UserValidation from "../validation/UserValidation";
-import successToast from "../toast/successToast";
-import failToast from "../toast/failToast";
-import { clearErrors } from "../actions/errorsActions";
+import { addUser } from "../../actions/userActions";
+import Input from "../../components/common/Input";
+import Btn from "../../components/common/Btn";
+import UnderlineAnchor from "../../components/common/UnderlineAnchor";
+import UserValidation from "../../validation/UserValidation";
+import successToast from "../../toast/successToast";
+import failToast from "../../toast/failToast";
+import { clearErrors } from "../../actions/errorsActions";
 
-import GlobalPanel from "../components/global-panel/GlobalPanel";
-import SettingPanel from "../components/settings-panel/SettingPanel";
-import Header from "../components/common/Header";
+import GlobalPanel from "../../components/global-panel/GlobalPanel";
+import SettingPanel from "../../components/settings-panel/SettingPanel";
+import Header from "../../components/common/Header";
 
 class AddUser extends Component {
   constructor(props) {

@@ -3,26 +3,26 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { editUser } from "../actions/userActions";
-import { getUser } from "../actions/userActions";
-import { userActivation } from "../actions/userActions";
-import Input from "../components/common/Input";
-import Btn from "../components/common/Btn";
-import UnderlineAnchor from "../components/common/UnderlineAnchor";
-import UserValidation from "../validation/UserValidation";
-import successToast from "../toast/successToast";
-import failToast from "../toast/failToast";
-import { clearErrors } from "../actions/errorsActions";
-import isEmpty from "../validation/isEmpty";
+import { editUser } from "../../actions/userActions";
+import { getUser } from "../../actions/userActions";
+import { userActivation } from "../../actions/userActions";
+import Input from "../../components/common/Input";
+import Btn from "../../components/common/Btn";
+import UnderlineAnchor from "../../components/common/UnderlineAnchor";
+import UserValidation from "../../validation/UserValidation";
+import successToast from "../../toast/successToast";
+import failToast from "../../toast/failToast";
+import { clearErrors } from "../../actions/errorsActions";
+import isEmpty from "../../validation/isEmpty";
 
-import Confirm from "../components/common/Confirm";
-import FullBtn from "../components/common/FullBtn";
-import GlobalPanel from "../components/global-panel/GlobalPanel";
-import SettingPanel from "../components/settings-panel/SettingPanel";
-import Header from "../components/common/Header";
-import Spinner from "../components/common/Spinner";
-import Dropdown from "../components/common/Dropdown";
-import DropdownRemove from "../components/common/DropdownRemove";
+import Confirm from "../../components/common/Confirm";
+import FullBtn from "../../components/common/FullBtn";
+import GlobalPanel from "../../components/global-panel/GlobalPanel";
+import SettingPanel from "../../components/settings-panel/SettingPanel";
+import Header from "../../components/common/Header";
+import Spinner from "../../components/common/Spinner";
+// import Dropdown from "../components/common/Dropdown";
+import DropdownRemove from "../../components/common/DropdownRemove";
 
 class EditUser extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class EditUser extends Component {
             update.first_name = user.first_name ? user.first_name : "";
             update.last_name = user.last_name ? user.last_name : "";
             update.last_login = user.last_login ? user.last_login : null;
-            update.position = user.position ? user.position : "";
+            // update.position = user.position ? user.position : "";
             update.active = user.active;
           }
           return Object.keys(update).length ? update : null;
@@ -132,8 +132,8 @@ class EditUser extends Component {
   render() {
     var { user, loading } = this.props.users;
     var content;
-    var positionOptions = [];
-    positionOptions.push({ id: 1, title: "QA" }, { id: 2, title: "PM" }, { id: 3, title: "PO" });
+    // var positionOptions = [];
+    // positionOptions.push({ id: 1, title: "QA" }, { id: 2, title: "PM" }, { id: 3, title: "PO" });
     var roleOptions = [];
     roleOptions.push({ id: 1, title: "QA" }, { id: 2, title: "Project Administrator" }, { id: 3, title: "Viewer" });
     var disabledEdit;
@@ -235,7 +235,7 @@ class EditUser extends Component {
             onKeyDown={this.submitFormOnEnterKey}
             className={disabledEdit}
           />
-          <Dropdown
+          {/* <Dropdown
             placeholder="Pick Users' Position Here"
             value={this.state.position}
             onChange={e => this.onChange(e)}
@@ -243,7 +243,7 @@ class EditUser extends Component {
             name={"position"}
             label="Position"
             options={positionOptions}
-          />
+          /> */}
           {project}
           <div className="flex-column-left mt-4">
             <Btn

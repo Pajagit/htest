@@ -8,16 +8,18 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import PrivateRoute from "./components/common/PrivateRoute";
 import setAuthToken from "./actions/setAuthToken";
 import store from "./store";
-import Test from "./pages/Test";
 import NewTestCase from "./components/test-cases/NewTestCase";
 import TestCases from "./components/test-cases/TestCases";
+import Reports from "./components/reports/Reports";
+import Statistics from "./components/statistics/Statistics";
+import ProjectSettingsPage from "./components/project-settings/ProjectSettings";
 import Landing from "./pages/Landing";
-import Projects from "./pages/Projects";
-import UserSettings from "./pages/UserSettings";
-import AddUser from "./pages/AddUser";
-import EditUser from "./pages/EditUser";
-import ProjectSettings from "./pages/ProjectSettings";
-import DeviceSettings from "./pages/DeviceSettings";
+import Projects from "./components/project/Projects";
+import UserSettings from "./components/global-settings/UserSettings";
+import AddUser from "./components/users/AddUser";
+import EditUser from "./components/users/EditUser";
+import ProjectSettings from "./components/global-settings/ProjectSettings";
+import DeviceSettings from "./components/global-settings/DeviceSettings";
 import TestCase from "./components/test-cases/TestCase";
 import EditTestCase from "./components/test-cases/EditTestCase";
 import { ToastContainer, Flip } from "react-toastify";
@@ -68,13 +70,15 @@ function App() {
           <div>
             <ToastContainer transition={Flip} position="bottom-right" />
           </div>
-          <Route exact path="/test" component={Test} />
           <Route exact path="/" component={Landing} />
           <PrivateRoute exact path="/Projects" component={Projects} />
           <PrivateRoute exact path="/:projectId/TestCase/:testcaseId" component={TestCase} />
           <PrivateRoute exact path="/:projectId/CreateTestCase" component={NewTestCase} />
           <PrivateRoute exact path="/:projectId/EditTestCase/:testcaseId" component={EditTestCase} />
           <PrivateRoute exact path="/:projectId/TestCases" component={TestCases} />
+          <PrivateRoute exact path="/:projectId/Reports" component={Reports} />
+          <PrivateRoute exact path="/:projectId/Statistics" component={Statistics} />
+          <PrivateRoute exact path="/:projectId/Settings" component={ProjectSettingsPage} />
           <PrivateRoute exact path="/UserSettings" component={UserSettings} />
           <PrivateRoute exact path="/AddUser" component={AddUser} />
           <PrivateRoute exact path="/ProjectSettings" component={ProjectSettings} />

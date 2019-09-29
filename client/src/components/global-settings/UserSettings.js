@@ -3,20 +3,20 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getUsers } from "../actions/userActions";
-import isEmpty from "../validation/isEmpty";
-import { userActivation } from "../actions/userActions";
-import successToast from "../toast/successToast";
-import failToast from "../toast/failToast";
+import { getUsers } from "../../actions/userActions";
+import isEmpty from "../../validation/isEmpty";
+import { userActivation } from "../../actions/userActions";
+import successToast from "../../toast/successToast";
+import failToast from "../../toast/failToast";
 
-import GlobalPanel from "../components/global-panel/GlobalPanel";
-import Confirm from "../components/common/Confirm";
-import SettingPanel from "../components/settings-panel/SettingPanel";
-import BtnAnchor from "../components/common/BtnAnchor";
-import Spinner from "../components/common/Spinner";
-import ListItem from "../components/lists/ListItem";
-import Header from "../components/common/Header";
-import placeholderImg from "../img/user-placeholder.png";
+import GlobalPanel from "../global-panel/GlobalPanel";
+import Confirm from "../common/Confirm";
+import SettingPanel from "../settings-panel/SettingPanel";
+import BtnAnchor from "../common/BtnAnchor";
+import Spinner from "../common/Spinner";
+import ListItem from "../lists/ListItem";
+import Header from "../common/Header";
+import placeholderImg from "../../img/user-placeholder.png";
 
 class UserSettings extends Component {
   componentDidMount() {
