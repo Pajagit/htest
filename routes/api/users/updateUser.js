@@ -6,8 +6,6 @@ const getLocalTimestamp = require("../../../utils/dateFunctions").getLocalTimest
 const User = require("../../../models/user");
 const Project = require("../../../models/project");
 const Role = require("../../../models/role");
-const UserRoleProject = require("../../../models/userroleproject");
-
 const validateUserInput = require("../../../validation/user").validateUserInput;
 
 // @route PUT api/users/user/:id
@@ -95,9 +93,9 @@ module.exports = Router({ mergeParams: true }).put(
         });
       }
 
-      async function returnUpdatedUser(updatedUser, addedProjects) {
+      async function returnUpdatedUser(updatedUser) {
         return new Promise((resolve, reject) => {
-          if (updatedUser && addedProjects) {
+          if (updatedUser) {
             User.findOne({
               where: {
                 id: updatedUser
@@ -162,42 +160,6 @@ module.exports = Router({ mergeParams: true }).put(
         });
       }
 
-      async function removeProjects(updatedUser) {
-        return new Promise((resolve, reject) => {
-          if (updatedUser) {
-            UserRoleProject.destroy({
-              where: {
-                user_id: req.params.id
-              }
-            }).then(afectedRows => {
-              resolve(true);
-            });
-          } else {
-            resolve(false);
-          }
-        });
-      }
-
-      async function addProjects(hasProjects, removedProjects, updatedUser) {
-        return new Promise((resolve, reject) => {
-          if (hasProjects && removedProjects && updatedUser) {
-            var arrayProjects = new Array();
-            for (var i = 0; i < req.body.projects.length; i++) {
-              arrayProjects.push({
-                user_id: req.params.id,
-                role_id: req.body.projects[i].role_id,
-                project_id: req.body.projects[i].project_id
-              });
-            }
-            UserRoleProject.bulkCreate(arrayProjects).then(projects => {
-              resolve(true);
-            });
-          } else {
-            resolve(true);
-          }
-        });
-      }
-
       (async () => {
         var user = await checkIfUserExist();
         var last_login = user.last_login;
@@ -218,16 +180,7 @@ module.exports = Router({ mergeParams: true }).put(
               }
             }
             let updatedUser = await updateUser(InputUserData);
-
-            //update projects
-            let removedProjectd = await removeProjects(updatedUser);
-            var hasProjects = false;
-            var projects = req.body.projects.filter(Boolean);
-            if (projects) {
-              hasProjects = true;
-            }
-            let addedProjects = await addProjects(hasProjects, removedProjectd, updatedUser);
-            let user = await returnUpdatedUser(updatedUser, addedProjects);
+            let user = await returnUpdatedUser(updatedUser);
             var userWithRole = {};
             userWithRole.id = user.id;
             userWithRole.email = user.email;
