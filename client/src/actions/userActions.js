@@ -86,7 +86,7 @@ export const addProject = (updateData, callback) => dispatch => {
 // Remove Project From User
 export const removeProject = (updateData, callback) => dispatch => {
   axios
-    .delete(`/api/users/user/${updateData.user_id}/project`, updateData)
+    .delete(`/api/users/user/${updateData.user_id}/project/${updateData.project_id}`)
     .then(res => callback(res))
     .catch(err =>
       dispatch({

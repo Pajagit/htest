@@ -98,7 +98,9 @@ class EditUser extends Component {
   }
 
   showAddProject(e) {
-    this.setState({ showAddProject: true });
+    this.setState({ showAddProject: true }, () => {
+      console.log(this.state.showAddProject);
+    });
   }
 
   selectProjectOption(value) {
@@ -117,7 +119,7 @@ class EditUser extends Component {
       if (res.status === 200) {
         this.props.getUser(this.props.users.user.id);
         successToast("Project added successfully");
-        this.setState({ selectedProject: [], selectedRole: [] });
+        this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
       } else {
       }
     });
@@ -127,7 +129,6 @@ class EditUser extends Component {
     var updateData = {};
     updateData.user_id = parseInt(this.props.match.params.userId);
     updateData.project_id = e;
-    console.log(updateData);
     this.props.removeProject(updateData, res => {
       if (res.status === 200) {
         this.props.getUser(this.props.users.user.id);
@@ -228,7 +229,6 @@ class EditUser extends Component {
           <div>
             <div className="header">Projects</div>
             <div className="no-content"> User is not assigned to any project yet</div>
-            <FullBtn placeholder="Add project" />
           </div>
         );
       } else {
@@ -251,49 +251,50 @@ class EditUser extends Component {
             ))}
           </div>
         );
-        if (this.state.showAddProject) {
-          addProject = (
-            <div>
-              <div className="bundle-add-new">
-                <div className="bundle-add-new--header">
-                  <div className="bundle-add-new--header-title">Add New Project</div>
-                  <div
-                    className="bundle-add-new--header-buttons"
-                    onClick={e => this.setState({ showAddProject: false, selectedRole: [], selectedProject: [] })}
-                  >
-                    <i className="fas fa-trash-alt"></i>
-                  </div>
-                </div>
-                <div className="bundle-add-new--options">
-                  <SearchDropdown
-                    value={this.state.selectedProject}
-                    options={this.state.avaliableProjects}
-                    onChange={this.selectProjectOption}
-                    placeholder={"Select New Project"}
-                    label={"Projects"}
-                    multiple={false}
-                  />
-                  <SearchDropdown
-                    value={this.state.selectedRole}
-                    options={this.state.roles}
-                    onChange={this.selectedRoleOption}
-                    label={"Roles"}
-                    placeholder={"Select Role"}
-                    multiple={false}
-                  />
-                  <Btn
-                    className={`btn btn-primary ${this.state.submitBtnDisabledClass}`}
-                    label="Add Project"
-                    type="text"
-                    onClick={e => this.submitProject(e)}
-                  />
+      }
+
+      if (this.state.showAddProject) {
+        addProject = (
+          <div>
+            <div className="bundle-add-new">
+              <div className="bundle-add-new--header">
+                <div className="bundle-add-new--header-title">Add New Project</div>
+                <div
+                  className="bundle-add-new--header-buttons"
+                  onClick={e => this.setState({ showAddProject: false, selectedRole: [], selectedProject: [] })}
+                >
+                  <i className="fas fa-trash-alt"></i>
                 </div>
               </div>
+              <div className="bundle-add-new--options">
+                <SearchDropdown
+                  value={this.state.selectedProject}
+                  options={this.state.avaliableProjects}
+                  onChange={this.selectProjectOption}
+                  placeholder={"Select New Project"}
+                  label={"Projects"}
+                  multiple={false}
+                />
+                <SearchDropdown
+                  value={this.state.selectedRole}
+                  options={this.state.roles}
+                  onChange={this.selectedRoleOption}
+                  label={"Roles"}
+                  placeholder={"Select Role"}
+                  multiple={false}
+                />
+                <Btn
+                  className={`btn btn-primary ${this.state.submitBtnDisabledClass}`}
+                  label="Add Project"
+                  type="text"
+                  onClick={e => this.submitProject(e)}
+                />
+              </div>
             </div>
-          );
-        } else {
-          addProject = <FullBtn placeholder="Add New Project" onClick={e => this.showAddProject(e)} />;
-        }
+          </div>
+        );
+      } else {
+        addProject = <FullBtn placeholder="Add New Project" onClick={e => this.showAddProject(e)} />;
       }
       var lockBtn;
       var activeStatus;
