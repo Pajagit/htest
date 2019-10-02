@@ -100,7 +100,7 @@ module.exports = Router({ mergeParams: true }).post(
           }
 
           if (projectUpdated || projectAdded) {
-            res.status(200).json();
+            res.status(200).json({ success: "Project added successfully" });
           }
         }
       })();

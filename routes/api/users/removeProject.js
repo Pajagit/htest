@@ -73,10 +73,10 @@ module.exports = Router({ mergeParams: true }).delete(
           if (hasProject) {
             var projectDeleted = await removeProject();
             if (projectDeleted) {
-              res.status(200).json({ message: "Deleted Successfully" });
+              res.status(200).json({ success: "Deleted Successfully" });
             }
           } else {
-            res.status(200).json({ message: "Project doesn't exist" });
+            res.status(404).json({ message: "Project doesn't exist" });
           }
         }
       })();
