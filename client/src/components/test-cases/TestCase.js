@@ -111,7 +111,7 @@ class TestCase extends Component {
                 <div className="testcase-details-item--value">
                   {testcase.groups.map((group, index) => (
                     <span key={index}>
-                      <Tag title={group.name} color={group.color} isRemovable={false} />
+                      <Tag title={group.title} color={group.color} isRemovable={false} />
                     </span>
                   ))}
                   <br />

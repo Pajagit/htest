@@ -57,10 +57,36 @@ export const editUser = (user_id, userData, callback) => dispatch => {
     );
 };
 
-// Create Project
+// Create User
 export const addUser = (userData, callback) => dispatch => {
   axios
     .post("/api/users/user", userData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Add Project To User
+export const addProject = (updateData, callback) => dispatch => {
+  axios
+    .post(`/api/users/user/${updateData.user_id}/project`, updateData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Remove Project From User
+export const removeProject = (updateData, callback) => dispatch => {
+  axios
+    .delete(`/api/users/user/${updateData.user_id}/project`, updateData)
     .then(res => callback(res))
     .catch(err =>
       dispatch({
