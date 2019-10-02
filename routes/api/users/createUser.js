@@ -20,22 +20,6 @@ module.exports = Router({ mergeParams: true }).post(
     userFields.position = req.body.position ? req.body.position : null;
     userFields.image_url = req.body.image_url ? req.body.image_url : null;
 
-    async function checkIfUserExists() {
-      return new Promise((resolve, reject) => {
-        User.findOne({
-          where: {
-            email: req.body.email
-          }
-        }).then(user => {
-          if (user) {
-            resolve(user);
-          } else {
-            resolve(false);
-          }
-        });
-      });
-    }
-
     // check if same user exists
     async function checkIfUserWithSameMailExist() {
       return new Promise((resolve, reject) => {
@@ -95,7 +79,7 @@ module.exports = Router({ mergeParams: true }).post(
       if (!isValid) {
         return res.status(400).json(errors);
       }
-      var userExists = await checkIfUserExists();
+      var userExists = await checkIfUserWithSameMailExist();
       if (userExists) {
         res.status(400).json({ error: "User already exist" });
       } else {

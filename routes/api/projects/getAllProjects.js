@@ -48,7 +48,17 @@ module.exports = Router({ mergeParams: true }).get(
     async function returnProjects() {
       return new Promise((resolve, reject) => {
         Project.findAll({
-          attributes: ["id", "title", "image_url", "project_manager", "url", "jira_url"],
+          attributes: [
+            "id",
+            "title",
+            "description",
+            "started_at",
+            "ended_at",
+            "image_url",
+            "project_manager",
+            "url",
+            "jira_url"
+          ],
           where: {
             deleted: false
           },
