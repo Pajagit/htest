@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('projects', {
+    return queryInterface.createTable("projects", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -25,7 +25,7 @@ module.exports = {
       },
       description: {
         allowNull: true,
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         defaultValue: null
       },
       started_at: {
@@ -40,7 +40,7 @@ module.exports = {
       },
       image_url: {
         allowNull: true,
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         defaultValue: null
       },
       project_manager: {
@@ -60,16 +60,16 @@ module.exports = {
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn("NOW")
       },
       updated_at: {
         allowNull: true,
         type: Sequelize.DATE,
-        defaultValue:null
+        defaultValue: null
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('projects');
+    return queryInterface.dropTable("projects");
   }
 };
