@@ -20,7 +20,7 @@ module.exports = Router({ mergeParams: true }).post(
     // Get fields
     const projectFields = {};
     if (req.body.title) projectFields.title = req.body.title;
-    projectFields.description ? req.body.description : null;
+    projectFields.description = req.body.description ? req.body.description : null;
     projectFields.started_at = req.body.started_at ? req.body.started_at : null;
     projectFields.ended_at = req.body.ended_at ? req.body.ended_at : null;
     projectFields.image_url = req.body.image_url ? req.body.image_url : null;
