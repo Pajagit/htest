@@ -35,10 +35,11 @@ function SearchDropdown({
             numberDisplayed={numberDisplayed}
             open={false}
             valueKey="id"
-            labelKey="name"
+            labelKey="title"
             multiple={multiple}
             includeSelectAll={true}
             includeFilter={true}
+            keepOpen={false}
             dropdownHeight={300}
           />
         </div>

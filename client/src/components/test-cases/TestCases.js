@@ -157,7 +157,7 @@ class TestCases extends Component {
     var usersList = [];
     if (this.props.users && this.props.users.users) {
       this.props.users.users.map(function(item) {
-        return usersList.push({ id: item.id, name: `${item.first_name} ${item.last_name}` });
+        return usersList.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
       });
     }
 
@@ -275,7 +275,7 @@ class TestCases extends Component {
               {this.state.groupFilters.map((group, index) => (
                 <Tag
                   key={index}
-                  title={group.name}
+                  title={group.title}
                   color={group.color}
                   isRemovable={true}
                   onClickRemove={e => this.removeGroup(group.id)}
@@ -284,7 +284,7 @@ class TestCases extends Component {
               {this.state.users.map((user, index) => (
                 <Tag
                   key={index}
-                  title={user.name}
+                  title={user.title}
                   color={"USER_COLOR"}
                   isRemovable={true}
                   onClickRemove={e => this.removeUser(user.id)}

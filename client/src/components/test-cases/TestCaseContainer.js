@@ -51,7 +51,7 @@ class TestCaseContainer extends Component {
               title={testcase.title}
               tags={testcase.groups.map((group, groupIndex) => (
                 <React.Fragment key={groupIndex}>
-                  <Tag title={group.name} color={group.color} isRemovable={false} />
+                  <Tag title={group.title} color={group.color} isRemovable={false} />
                 </React.Fragment>
               ))}
               author={testcase.author}

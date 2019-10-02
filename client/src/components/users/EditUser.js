@@ -5,6 +5,10 @@ import { withRouter } from "react-router-dom";
 
 import { editUser } from "../../actions/userActions";
 import { getUser } from "../../actions/userActions";
+import { getProjects } from "../../actions/projectActions";
+import { getRoles } from "../../actions/roleActions";
+import { addProject } from "../../actions/userActions";
+import { removeProject } from "../../actions/userActions";
 import { userActivation } from "../../actions/userActions";
 import Input from "../../components/common/Input";
 import Btn from "../../components/common/Btn";
@@ -21,8 +25,10 @@ import GlobalPanel from "../../components/global-panel/GlobalPanel";
 import SettingPanel from "../../components/settings-panel/SettingPanel";
 import Header from "../../components/common/Header";
 import Spinner from "../../components/common/Spinner";
-// import Dropdown from "../components/common/Dropdown";
 import DropdownRemove from "../../components/common/DropdownRemove";
+import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
+import removeObjFromArray from "../../utility/removeObjFromArray";
+import SearchDropdown from "../../components/common/SearchDropdown";
 
 class EditUser extends Component {
   constructor(props) {
@@ -30,38 +36,104 @@ class EditUser extends Component {
     this.state = {
       initialRender: true,
       user: this.props.users.user,
+      roles: [],
+      projects: [],
+      avaliableProjects: [],
+      selectedRole: [],
+      showAddProject: false,
       errors: {}
     };
+    this.selectProjectOption = this.selectProjectOption.bind(this);
+    this.selectedRoleOption = this.selectedRoleOption.bind(this);
+    this.showAddProject = this.showAddProject.bind(this);
+    this.removeProjectBtn = this.removeProjectBtn.bind(this);
   }
 
   componentDidMount() {
     var userId = this.props.match.params.userId;
     this.props.getUser(userId);
+    this.props.getProjects();
+    this.props.getRoles();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.users && nextProps.users.user) {
-      if (nextProps.users !== prevState.users) {
-        var { user } = nextProps.users;
-        if (nextProps.users.user !== prevState.user) {
-          if (prevState.initialRender) {
-            update.initialRender = false;
-            update.userId = nextProps.match.params.userId;
-            update.email = user.email;
-            update.id = user.id;
-            update.first_name = user.first_name ? user.first_name : "";
-            update.last_name = user.last_name ? user.last_name : "";
-            update.last_login = user.last_login ? user.last_login : null;
-            // update.position = user.position ? user.position : "";
-            update.active = user.active;
-          }
-          return Object.keys(update).length ? update : null;
-        }
+    var { user } = nextProps.users;
+    if (nextProps.users.user !== prevState.user) {
+      if (prevState.initialRender) {
+        update.initialRender = false;
+        update.userId = nextProps.match.params.userId;
+        update.email = user.email;
+        update.id = user.id;
+        update.first_name = user.first_name ? user.first_name : "";
+        update.last_name = user.last_name ? user.last_name : "";
+        update.last_login = user.last_login ? user.last_login : null;
+        update.active = user.active;
       }
     }
-    return null;
+    var { roles } = nextProps.roles;
+    if (nextProps.roles.roles !== prevState.roles) {
+      update.roles = roles;
+    }
+    var { projects } = nextProps.projects;
+    if (nextProps.projects && nextProps.projects.projects) {
+      update.projects = projects;
+
+      var avaliableProjects = nextProps.projects.projects;
+
+      if (nextProps.users.user && nextProps.users.user.projects) {
+        user.projects.forEach(project => {
+          if (checkIfElemInObjInArray(nextProps.projects.projects, project.id)) {
+            avaliableProjects = removeObjFromArray(avaliableProjects, project);
+          }
+        });
+        update.avaliableProjects = avaliableProjects;
+      }
+    }
+
+    return Object.keys(update).length ? update : null;
   }
+
+  showAddProject(e) {
+    this.setState({ showAddProject: true });
+  }
+
+  selectProjectOption(value) {
+    this.setState({ selectedProject: value });
+  }
+  selectedRoleOption(value) {
+    this.setState({ selectedRole: value });
+  }
+
+  submitProject(e) {
+    var updateData = {};
+    updateData.project_id = this.state.selectedProject.id;
+    updateData.role_id = this.state.selectedRole.id;
+    updateData.user_id = parseInt(this.props.match.params.userId);
+    this.props.addProject(updateData, res => {
+      if (res.status === 200) {
+        this.props.getUser(this.props.users.user.id);
+        successToast("Project added successfully");
+        this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
+      } else {
+      }
+    });
+  }
+
+  removeProjectBtn(e) {
+    this.setState({ showAddProject: false });
+    var updateData = {};
+    updateData.user_id = parseInt(this.props.match.params.userId);
+    updateData.project_id = e;
+    this.props.removeProject(updateData, res => {
+      if (res.status === 200) {
+        this.props.getUser(this.props.users.user.id);
+        successToast("Project removed successfully");
+      } else {
+      }
+    });
+  }
+
   confirmActivation = ([user_id, active]) => {
     var userData = {};
     userData.active = !active;
@@ -121,6 +193,7 @@ class EditUser extends Component {
       this.setState({ errors });
     }
   }
+
   submitFormOnEnterKey = e => {
     if (e.keyCode === 13) {
       this.submitForm(e);
@@ -129,49 +202,122 @@ class EditUser extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
+  onChangeRole(e, project_id) {
+    var updateData = {};
+    updateData.project_id = project_id;
+    updateData.role_id = parseInt(e.target.value);
+    updateData.user_id = parseInt(this.props.match.params.userId);
+    this.props.addProject(updateData, res => {
+      if (res.status === 200) {
+        this.props.getUser(this.props.users.user.id);
+        successToast("Project role updated successfully");
+        this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
+      } else {
+      }
+    });
+  }
   render() {
     var { user, loading } = this.props.users;
+    var roles = [];
+    if (this.props.roles && this.props.roles.roles) {
+      roles = this.props.roles.roles;
+    }
+
     var content;
-    // var positionOptions = [];
-    // positionOptions.push({ id: 1, title: "QA" }, { id: 2, title: "PM" }, { id: 3, title: "PO" });
-    var roleOptions = [];
-    roleOptions.push({ id: 1, title: "QA" }, { id: 2, title: "Project Administrator" }, { id: 3, title: "Viewer" });
+
     var disabledEdit;
+    var editUserBtn;
     if (this.state.last_login) {
       disabledEdit = "disabled";
+    } else if (!this.state.last_login && !this.state.showAddProject) {
+      editUserBtn = (
+        <div className="flex-column-left mt-4">
+          <Btn
+            className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
+            label="Edit User"
+            type="text"
+            onClick={e => this.submitForm(e)}
+          />
+          <UnderlineAnchor link={`/UserSettings`} value={"Cancel"} />
+        </div>
+      );
     }
     if (isEmpty(user) || loading) {
       content = <Spinner />;
     } else {
       var project;
+      var addProject;
       if (isEmpty(user.projects)) {
         project = (
           <div>
             <div className="header">Projects</div>
             <div className="no-content"> User is not assigned to any project yet</div>
-            <FullBtn placeholder="Add project" />
           </div>
         );
       } else {
         project = (
           <div>
             <div className="header">Projects</div>
-
             {user.projects.map((project, index) => (
               <DropdownRemove
                 key={index}
                 placeholder="Pick Users' Project Role"
                 value={project.id}
-                onChange={e => this.onChange(e)}
+                onChange={e => this.onChangeRole(e, project.id)}
                 validationMsg={this.state.errors.position}
                 name={"role"}
                 label={project.title}
-                options={roleOptions}
+                onClickRemove={() => this.removeProjectBtn(project.id)}
+                options={roles}
+                role={project.role.id}
               />
             ))}
-            <FullBtn placeholder="Add New Project" />
           </div>
         );
+      }
+
+      if (this.state.showAddProject) {
+        addProject = (
+          <div>
+            <div className="bundle-add-new">
+              <div className="bundle-add-new--header">
+                <div className="bundle-add-new--header-title">Add New Project</div>
+                <div
+                  className="bundle-add-new--header-buttons"
+                  onClick={e => this.setState({ showAddProject: false, selectedRole: [], selectedProject: [] })}
+                >
+                  <i className="fas fa-trash-alt"></i>
+                </div>
+              </div>
+              <div className="bundle-add-new--options">
+                <SearchDropdown
+                  value={this.state.selectedProject}
+                  options={this.state.avaliableProjects}
+                  onChange={this.selectProjectOption}
+                  placeholder={"Select New Project"}
+                  label={"Projects"}
+                  multiple={false}
+                />
+                <SearchDropdown
+                  value={this.state.selectedRole}
+                  options={this.state.roles}
+                  onChange={this.selectedRoleOption}
+                  label={"Roles"}
+                  placeholder={"Select Role"}
+                  multiple={false}
+                />
+                <Btn
+                  className={`btn btn-primary ${this.state.submitBtnDisabledClass}`}
+                  label="Add Project"
+                  type="text"
+                  onClick={e => this.submitProject(e)}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      } else {
+        addProject = <FullBtn placeholder="Add New Project" onClick={e => this.showAddProject(e)} />;
       }
       var lockBtn;
       var activeStatus;
@@ -235,26 +381,11 @@ class EditUser extends Component {
             onKeyDown={this.submitFormOnEnterKey}
             className={disabledEdit}
           />
-          {/* <Dropdown
-            placeholder="Pick Users' Position Here"
-            value={this.state.position}
-            onChange={e => this.onChange(e)}
-            validationMsg={this.state.errors.position}
-            name={"position"}
-            label="Position"
-            options={positionOptions}
-          /> */}
-          {project}
-          <div className="flex-column-left mt-4">
-            <Btn
-              className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-              label="Edit User"
-              type="text"
-              onClick={e => this.submitForm(e)}
-            />
 
-            <UnderlineAnchor link={`/UserSettings`} value={"Cancel"} />
-          </div>
+          {project}
+          {addProject}
+
+          {editUserBtn}
         </div>
       );
     }
@@ -285,10 +416,12 @@ EditUser.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  roles: state.roles,
+  projects: state.projects,
   users: state.users
 });
 
 export default connect(
   mapStateToProps,
-  { editUser, getUser, userActivation, clearErrors }
+  { editUser, getUser, userActivation, addProject, removeProject, getProjects, getRoles, clearErrors }
 )(withRouter(EditUser));

@@ -5,9 +5,12 @@ import { GET_USER, GET_USERS, USER_LOADING, GET_ERRORS } from "./types";
 // Get All Users
 export const getUsers = has_testcases => dispatch => {
   dispatch(userLoading());
-
+  var url = "/api/users";
+  if (has_testcases) {
+    url = `/api/users?has_testcases=${has_testcases}`;
+  }
   axios
-    .get(`/api/users?has_testcases=${has_testcases}`)
+    .get(url)
     .then(res =>
       dispatch({
         type: GET_USERS,
@@ -54,10 +57,36 @@ export const editUser = (user_id, userData, callback) => dispatch => {
     );
 };
 
-// Create Project
+// Create User
 export const addUser = (userData, callback) => dispatch => {
   axios
     .post("/api/users/user", userData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Add Project To User
+export const addProject = (updateData, callback) => dispatch => {
+  axios
+    .post(`/api/users/user/${updateData.user_id}/project`, updateData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Remove Project From User
+export const removeProject = (updateData, callback) => dispatch => {
+  axios
+    .delete(`/api/users/user/${updateData.user_id}/project/${updateData.project_id}`)
     .then(res => callback(res))
     .catch(err =>
       dispatch({
