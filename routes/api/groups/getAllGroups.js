@@ -34,7 +34,7 @@ module.exports = Router({ mergeParams: true }).get(
             var groupObject = {
               id: group.id,
               isPinned: group.pinned,
-              name: group.title,
+              title: group.title,
               color: group.color.title
             };
             groupsObj.push(groupObject);
