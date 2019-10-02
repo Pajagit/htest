@@ -3,15 +3,17 @@ const passport = require("passport");
 const User = require("../../../models/user");
 const UserRoleProject = require("../../../models/userroleproject");
 
-// @route DELETE api/users/user/:id/project
+// @route DELETE api/users/user/:id/project/:project_id
 // @desc Update user projects
 // @access private
 module.exports = Router({ mergeParams: true }).delete(
-  "/users/user/:id/project",
+  "/users/user/:id/project/:project_id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     if (isNaN(req.params.id)) {
       res.status(400).json({ error: "User id is not valid number" });
+    } else if (isNaN(req.params.project_id)) {
+      res.status(400).json({ error: "Project id is not valid number" });
     } else {
       // check if user exists
       async function checkIfUserExist() {
@@ -38,7 +40,7 @@ module.exports = Router({ mergeParams: true }).delete(
           UserRoleProject.findOne({
             where: {
               user_id: req.params.id,
-              project_id: req.body.project_id
+              project_id: req.params.project_id
             },
             attributes: ["id"]
           })
@@ -58,7 +60,7 @@ module.exports = Router({ mergeParams: true }).delete(
           UserRoleProject.destroy({
             where: {
               user_id: req.params.id,
-              project_id: req.body.project_id
+              project_id: req.params.project_id
             }
           }).then(resolve(true));
         });
@@ -76,7 +78,7 @@ module.exports = Router({ mergeParams: true }).delete(
               res.status(200).json({ success: "Deleted Successfully" });
             }
           } else {
-            res.status(404).json({ message: "Project doesn't exist" });
+            res.status(404).json({ message: "Project has already been deleted or was never assigned to the user" });
           }
         }
       })();
