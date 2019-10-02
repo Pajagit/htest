@@ -28,8 +28,6 @@ import Spinner from "../../components/common/Spinner";
 import DropdownRemove from "../../components/common/DropdownRemove";
 import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
 import removeObjFromArray from "../../utility/removeObjFromArray";
-// import DropdownRemoveGroup from "../../components/common/DropdownRemoveGroup";
-// import DropdownGroup from "../common/DropdownGroup";
 import SearchDropdown from "../../components/common/SearchDropdown";
 
 class EditUser extends Component {
@@ -90,7 +88,6 @@ class EditUser extends Component {
           }
         });
         update.avaliableProjects = avaliableProjects;
-        console.log(avaliableProjects);
       }
     }
 
@@ -98,9 +95,7 @@ class EditUser extends Component {
   }
 
   showAddProject(e) {
-    this.setState({ showAddProject: true }, () => {
-      console.log(this.state.showAddProject);
-    });
+    this.setState({ showAddProject: true });
   }
 
   selectProjectOption(value) {
@@ -126,6 +121,7 @@ class EditUser extends Component {
   }
 
   removeProjectBtn(e) {
+    this.setState({ showAddProject: false });
     var updateData = {};
     updateData.user_id = parseInt(this.props.match.params.userId);
     updateData.project_id = e;
@@ -206,6 +202,20 @@ class EditUser extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
+  onChangeRole(e, project_id) {
+    var updateData = {};
+    updateData.project_id = project_id;
+    updateData.role_id = parseInt(e.target.value);
+    updateData.user_id = parseInt(this.props.match.params.userId);
+    this.props.addProject(updateData, res => {
+      if (res.status === 200) {
+        this.props.getUser(this.props.users.user.id);
+        successToast("Project role updated successfully");
+        this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
+      } else {
+      }
+    });
+  }
   render() {
     var { user, loading } = this.props.users;
     var roles = [];
@@ -216,8 +226,21 @@ class EditUser extends Component {
     var content;
 
     var disabledEdit;
+    var editUserBtn;
     if (this.state.last_login) {
       disabledEdit = "disabled";
+    } else if (!this.state.last_login && !this.state.showAddProject) {
+      editUserBtn = (
+        <div className="flex-column-left mt-4">
+          <Btn
+            className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
+            label="Edit User"
+            type="text"
+            onClick={e => this.submitForm(e)}
+          />
+          <UnderlineAnchor link={`/UserSettings`} value={"Cancel"} />
+        </div>
+      );
     }
     if (isEmpty(user) || loading) {
       content = <Spinner />;
@@ -240,7 +263,7 @@ class EditUser extends Component {
                 key={index}
                 placeholder="Pick Users' Project Role"
                 value={project.id}
-                onChange={e => this.onChange(e)}
+                onChange={e => this.onChangeRole(e, project.id)}
                 validationMsg={this.state.errors.position}
                 name={"role"}
                 label={project.title}
@@ -358,27 +381,11 @@ class EditUser extends Component {
             onKeyDown={this.submitFormOnEnterKey}
             className={disabledEdit}
           />
-          {/* <Dropdown
-            placeholder="Pick Users' Position Here"
-            value={this.state.position}
-            onChange={e => this.onChange(e)}
-            validationMsg={this.state.errors.position}
-            name={"position"}
-            label="Position"
-            options={positionOptions}
-          /> */}
+
           {project}
           {addProject}
-          <div className="flex-column-left mt-4">
-            <Btn
-              className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-              label="Edit User"
-              type="text"
-              onClick={e => this.submitForm(e)}
-            />
 
-            <UnderlineAnchor link={`/UserSettings`} value={"Cancel"} />
-          </div>
+          {editUserBtn}
         </div>
       );
     }
