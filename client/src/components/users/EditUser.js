@@ -24,8 +24,11 @@ import SettingPanel from "../../components/settings-panel/SettingPanel";
 import Header from "../../components/common/Header";
 import Spinner from "../../components/common/Spinner";
 import DropdownRemove from "../../components/common/DropdownRemove";
+import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
+import removeObjFromArray from "../../utility/removeObjFromArray";
 // import DropdownRemoveGroup from "../../components/common/DropdownRemoveGroup";
 // import DropdownGroup from "../common/DropdownGroup";
+import SearchDropdown from "../../components/common/SearchDropdown";
 
 class EditUser extends Component {
   constructor(props) {
@@ -35,8 +38,10 @@ class EditUser extends Component {
       user: this.props.users.user,
       roles: [],
       projects: [],
+      avaliableProjects: [],
       errors: {}
     };
+    this.selectProjectOption = this.selectProjectOption.bind(this);
   }
 
   componentDidMount() {
@@ -69,10 +74,29 @@ class EditUser extends Component {
     var { projects } = nextProps.projects;
     if (nextProps.projects.projects !== prevState.projects) {
       update.projects = projects;
+
+      var avaliableProjects = nextProps.projects.projects;
+
+      if (nextProps.users.user && nextProps.users.user.projects) {
+        user.projects.forEach(project => {
+          if (checkIfElemInObjInArray(nextProps.projects.projects, project.id)) {
+            avaliableProjects = removeObjFromArray(avaliableProjects, project);
+          }
+        });
+        console.log(avaliableProjects);
+        update.avaliableProjects = avaliableProjects;
+      }
     }
 
     return Object.keys(update).length ? update : null;
   }
+
+  selectProjectOption(value) {
+    this.setState({ selectedProject: value }, () => {
+      console.log(this.state);
+    });
+  }
+
   confirmActivation = ([user_id, active]) => {
     var userData = {};
     userData.active = !active;
@@ -132,6 +156,8 @@ class EditUser extends Component {
       this.setState({ errors });
     }
   }
+
+  submitProject(e) {}
   submitFormOnEnterKey = e => {
     if (e.keyCode === 13) {
       this.submitForm(e);
@@ -142,15 +168,29 @@ class EditUser extends Component {
   }
   render() {
     var { user, loading } = this.props.users;
-    var roles = [];
+    // var avaliableProjects = [];
 
+    // var projects = [];
+    // if (this.props.projects && this.props.projects.projects) {
+    // projects = this.props.projects.projects;
+    // avaliableProjects = this.props.projects.projects;
+    // }
+
+    // var i;
+    // if (user && user.projects) {
+    //   user.projects.forEach(project => {
+    //     if (checkIfElemInObjInArray(avaliableProjects, project.id)) {
+    //       avaliableProjects = removeObjFromArray(avaliableProjects, project);
+    //     }
+    //   });
+    // }
+    // }
+    console.log(this.state.avaliableProjects);
+    var roles = [];
     if (this.props.roles && this.props.roles.roles) {
       roles = this.props.roles.roles;
     }
-    // var projects = [];
-    // if (this.props.projects && this.props.projects.projects) {
-    //   projects = this.props.projects.projects;
-    // }
+
     var content;
 
     var disabledEdit;
@@ -194,6 +234,32 @@ class EditUser extends Component {
                 role={project.role.id}
               />
             ))}
+            <div className="add-new-group">
+              <div className="add-new-group--header">
+                <div className="add-new-group--header-title">Add New Project</div>
+                <div className="add-new-group--header-buttons">
+                  <i className="fas fa-trash-alt"></i>
+                </div>
+              </div>
+              <div className="add-new-group--options">
+                <SearchDropdown
+                  value={this.state.selectedProject}
+                  options={this.state.avaliableProjects}
+                  onChange={this.selectProjectOption}
+                  label={"Select New Project"}
+                  placeholder={"Projects"}
+                  multiple={false}
+                  // numberDisplayed={2}
+                />
+                <SearchDropdown options={roles} multiple={false} placeholder={"Select Role"} label={"Roles"} />
+                <Btn
+                  className={`btn btn-primary ${this.state.submitBtnDisabledClass}`}
+                  label="Add Project"
+                  type="text"
+                  onClick={e => this.submitProject(e)}
+                />
+              </div>
+            </div>
             <FullBtn placeholder="Add New Project" />
           </div>
         );

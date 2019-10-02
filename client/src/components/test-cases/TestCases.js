@@ -157,7 +157,7 @@ class TestCases extends Component {
     var usersList = [];
     if (this.props.users && this.props.users.users) {
       this.props.users.users.map(function(item) {
-        return usersList.push({ id: item.id, name: `${item.first_name} ${item.last_name}` });
+        return usersList.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
       });
     }
 

@@ -1,0 +1,19 @@
+.add-new-group {
+  border-radius: 4px;
+  border: 1px solid #d1d1d1;
+  padding: 25px;
+  box-shadow: 1px 1px 1px 1px rgba(78, 59, 188, 0.1);
+  &--header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.6rem;
+
+    margin-bottom: 20px;
+    &-title {
+      font-weight: 500;
+    }
+    &-buttons {
+      color: $color-primary;
+    }
+  }
+}
