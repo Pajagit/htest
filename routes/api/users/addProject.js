@@ -1,7 +1,10 @@
 const Router = require("express").Router;
 const passport = require("passport");
 const User = require("../../../models/user");
+const Role = require("../../../models/role");
+const Project = require("../../../models/project");
 const UserRoleProject = require("../../../models/userroleproject");
+const validateUserProjectInput = require("../../../validation/user").validateUserProjectInput;
 
 // @route POST api/users/user/:id/project
 // @desc Update user projects
@@ -13,6 +16,12 @@ module.exports = Router({ mergeParams: true }).post(
     if (isNaN(req.params.id)) {
       res.status(400).json({ error: "User id is not valid number" });
     } else {
+      const { errors, isValid } = validateUserProjectInput(req.body);
+
+      // Check Validation
+      if (!isValid) {
+        return res.status(400).json(errors);
+      }
       // check if user exists
       async function checkIfUserExist() {
         return new Promise((resolve, reject) => {
@@ -33,7 +42,47 @@ module.exports = Router({ mergeParams: true }).post(
         });
       }
 
+      // check if project exists
       async function checkIfProjectExists() {
+        return new Promise((resolve, reject) => {
+          Project.findOne({
+            where: {
+              id: req.body.project_id
+            },
+            attributes: ["id"]
+          })
+            .then(project => {
+              if (project) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            })
+            .catch(err => console.log(err));
+        });
+      }
+
+      // check if role exists
+      async function checkIfRoleExists() {
+        return new Promise((resolve, reject) => {
+          Role.findOne({
+            where: {
+              id: req.body.role_id
+            },
+            attributes: ["id"]
+          })
+            .then(role => {
+              if (role) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            })
+            .catch(err => console.log(err));
+        });
+      }
+
+      async function checkIfProjectExistsForUser() {
         return new Promise((resolve, reject) => {
           UserRoleProject.findOne({
             where: {
@@ -92,15 +141,26 @@ module.exports = Router({ mergeParams: true }).post(
         if (!user) {
           res.status(404).json({ error: "User doesn't exist" });
         } else {
-          var hasProject = await checkIfProjectExists();
-          if (hasProject) {
-            var projectUpdated = await updateProject();
-          } else {
-            var projectAdded = await addProject();
+          var project = await checkIfProjectExists();
+          var role = await checkIfRoleExists();
+          if (!project) {
+            res.status(404).json({ error: "Project doesn't exist" });
+          }
+          if (!role) {
+            res.status(404).json({ error: "Role doesn't exist" });
           }
 
-          if (projectUpdated || projectAdded) {
-            res.status(200).json({ success: "Project added successfully" });
+          if (project && role) {
+            var hasProject = await checkIfProjectExistsForUser();
+            if (hasProject) {
+              var projectUpdated = await updateProject();
+            } else {
+              var projectAdded = await addProject();
+            }
+
+            if (projectUpdated || projectAdded) {
+              res.status(200).json({ success: "Project added successfully" });
+            }
           }
         }
       })();
