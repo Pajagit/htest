@@ -62,7 +62,11 @@ module.exports = Router({ mergeParams: true }).delete(
               user_id: req.params.id,
               project_id: req.params.project_id
             }
-          }).then(resolve(true));
+          }).then(a => {
+            if (a === 1) {
+              resolve(true);
+            }
+          });
         });
       }
 
