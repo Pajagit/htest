@@ -167,6 +167,7 @@ class EditTestCase extends Component {
     var testSteps = filterStringArray(this.state.test_steps);
     var links = filterStringArray(this.state.links);
     var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
+    formData.project_id = this.state.projectId;
     formData.title = this.state.title;
     formData.description = this.state.description;
     formData.test_steps = testSteps;
