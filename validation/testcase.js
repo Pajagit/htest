@@ -25,6 +25,11 @@ module.exports = {
       errors.title = `Title can not be more than ${titleLimit} long (${data.title.length})`;
     }
 
+    // Project id validation
+    if (isEmpty(data.project_id)) {
+      errors.project_id = "Project id is a required field";
+    }
+
     // Description validation
     if (isEmpty(data.description)) {
       errors.description = "Description is a required field";
