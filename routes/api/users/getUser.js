@@ -49,6 +49,7 @@ module.exports = Router({ mergeParams: true }).get(
           }
         });
       }
+
       async function returnUser() {
         return new Promise((resolve, reject) => {
           User.findOne({
@@ -96,7 +97,8 @@ module.exports = Router({ mergeParams: true }).get(
         userWithRole.active = user.active;
         userWithRole.last_login = user.last_login;
 
-        userWithRole.projects = await findUserRole(user.projects);
+        var projectsRoles = await findUserRole(user.projects);
+        userWithRole.projects = projectsRoles.sort((a, b) => b.id - a.id);
 
         if (userWithRole) {
           res.status(200).json(userWithRole);
