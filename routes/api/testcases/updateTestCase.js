@@ -35,7 +35,7 @@ module.exports = Router({ mergeParams: true }).put(
       if (req.body.isDeprecated) {
         updateOldCaseField.deprecated = true;
         testCaseFields.user_id = req.user.id;
-        testCaseFields.project_id = req.body.project_id ? req.body.project_id : 2;
+        testCaseFields.project_id = req.body.project_id ? req.body.project_id : null;
       }
       testCaseFields.description = req.body.description ? req.body.description : null;
       testCaseFields.deprecated = req.body.isDeprecated ? req.body.isDeprecated : false;
