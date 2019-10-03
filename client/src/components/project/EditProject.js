@@ -397,7 +397,7 @@ class EditProject extends Component {
           />
           <Textarea
             placeholder="Enter Project Description"
-            label="Description*"
+            label="Description"
             validationMsg={this.state.errors.description}
             value={this.state.description}
             onChange={e => this.onChange(e)}
