@@ -64,5 +64,28 @@ module.exports = {
       errors,
       isValid: isEmpty(errors)
     };
+  },
+  validateUserProjectInput: function(data) {
+    let errors = {};
+    // Project_id validation
+    if (isEmpty(data.project_id)) {
+      errors.project_id = "Project id is a required field";
+    } else {
+      if (isNaN(data.project_id)) {
+        errors.project_id = "Project id is not valid number";
+      }
+    }
+    // Role_id validation
+    if (isEmpty(data.role_id)) {
+      errors.role_id = "Role id is a required field";
+    } else {
+      if (isNaN(data.role_id)) {
+        errors.role_id = "Role id is not valid number";
+      }
+    }
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    };
   }
 };

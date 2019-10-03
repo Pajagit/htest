@@ -65,6 +65,8 @@ module.exports = Router({ mergeParams: true }).delete(
           }).then(a => {
             if (a === 1) {
               resolve(true);
+            } else {
+              resolve(false);
             }
           });
         });
