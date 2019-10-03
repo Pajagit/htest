@@ -42,6 +42,7 @@ class EditProject extends Component {
       availableUsers: [],
       selectedRole: [],
       image_url: "",
+      description: "",
       showAddUser: false,
       errors: {}
     };
@@ -57,7 +58,9 @@ class EditProject extends Component {
     this.props.getUsers();
     this.props.getRoles();
   }
-
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     var { project } = nextProps.projects;
@@ -67,7 +70,7 @@ class EditProject extends Component {
         update.projectId = nextProps.match.params.projectId;
         update.title = project.title;
         update.id = project.id;
-        update.description = project.description;
+        update.description = project.description ? project.description : "";
         update.deleted = project.deleted;
         update.url = project.url;
         update.image_url = project.image_url ? project.image_url : "";
@@ -223,14 +226,14 @@ class EditProject extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
-  onChangeRole(e, project_id) {
+  onChangeRole(e, user_id) {
     var updateData = {};
-    updateData.project_id = project_id;
+    updateData.user_id = user_id;
     updateData.role_id = parseInt(e.target.value);
-    updateData.user_id = parseInt(this.props.match.params.userId);
+    updateData.project_id = parseInt(this.props.match.params.projectId);
     this.props.addProject(updateData, res => {
       if (res.status === 200) {
-        this.props.getUser(this.props.users.user.id);
+        this.props.getProject(this.props.projects.project.id);
         successToast("Project role updated successfully");
         this.setState({ selectedUser: [], selectedRole: [], showAddUser: false });
       } else {
@@ -385,7 +388,7 @@ class EditProject extends Component {
             type="text"
             placeholder="Enter Project Title Here"
             label="Project Title*"
-            validationMsg={[this.state.errors.title]}
+            validationMsg={[this.state.errors.title, this.props.errors.title]}
             value={this.state.title}
             onChange={e => this.onChange(e)}
             name={"title"}
