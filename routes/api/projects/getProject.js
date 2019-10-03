@@ -97,7 +97,9 @@ module.exports = Router({ mergeParams: true }).get(
       projectWithRole.project_manager = project.project_manager;
       projectWithRole.url = project.url;
       projectWithRole.jira_url = project.jira_url;
-      projectWithRole.users = await findUserRole(project.users);
+
+      var projectRole = await findUserRole(project.users);
+      projectWithRole.users = projectRole.sort((a, b) => b.id - a.id);
 
       if (projectWithRole) {
         res.status(200).json(projectWithRole);
