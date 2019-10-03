@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getUsers } from "../../actions/userActions";
+import { getProjects } from "../../actions/projectActions";
 import isEmpty from "../../validation/isEmpty";
 
 import GlobalPanel from "../global-panel/GlobalPanel";
@@ -12,21 +12,30 @@ import BtnAnchor from "../common/BtnAnchor";
 import Spinner from "../common/Spinner";
 import ListItem from "../lists/ListItem";
 import Header from "../common/Header";
-import stenaImg from "../../img/stena-bulk.jpg";
 
 class ProjectSettings extends Component {
   componentDidMount() {
-    this.props.getUsers();
+    this.props.getProjects();
   }
   render() {
-    var { users, loading } = this.props.users;
+    var { projects, loading } = this.props.projects;
     var content;
-    if (users === null || loading) {
+    if (projects === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(users)) {
-      content = (
-        <ListItem title={"Stena Orbit"} img={stenaImg} list={"Aleksandar Pavlovic, Jana Antic, Sandra Jeremenkovic"} />
-      );
+    } else if (!isEmpty(projects)) {
+      content = projects.map((project, index) => (
+        <ListItem
+          key={index}
+          title={project.title}
+          img={project.image_url}
+          link={`/EditProject/${project.id}`}
+          list={project.users.map((user, index) => (
+            <React.Fragment key={index}>
+              {user.first_name + " " + user.last_name} {project.users.length - 1 > index ? `, ` : ``}
+            </React.Fragment>
+          ))}
+        />
+      ));
     } else {
       content = <div className="testcase-container-no-content">There are no projects created yet</div>;
     }
@@ -58,10 +67,10 @@ ProjectSettings.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
-  users: state.users
+  projects: state.projects
 });
 
 export default connect(
   mapStateToProps,
-  { getUsers }
+  { getProjects }
 )(withRouter(ProjectSettings));

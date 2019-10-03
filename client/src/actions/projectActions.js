@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { GET_PROJECT, GET_PROJECTS, PROJECT_LOADING } from "./types";
+import { GET_PROJECT, GET_PROJECTS, PROJECT_LOADING, GET_ERRORS } from "./types";
 
 // Get All Projects
 export const getProjects = () => dispatch => {
@@ -36,6 +36,19 @@ export const getProject = project_id => dispatch => {
       dispatch({
         type: GET_PROJECT,
         payload: {}
+      })
+    );
+};
+
+// Edit  Project by project_id
+export const editProject = (project_id, projectData, callback) => dispatch => {
+  axios
+    .put(`/api/projects/project/${project_id}`, projectData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };
