@@ -31,6 +31,7 @@ module.exports = Router({ mergeParams: true }).get(
                 projectUser.first_name = user.first_name;
                 projectUser.last_name = user.last_name;
                 projectUser.email = user.email;
+                projectUser.id = user.id;
                 projectUsers.push(projectUser);
                 usersProcessed++;
                 if (usersProcessed === users.length) {
@@ -56,6 +57,7 @@ module.exports = Router({ mergeParams: true }).get(
             "ended_at",
             "image_url",
             "project_manager",
+            "deleted",
             "url",
             "jira_url"
           ],
@@ -90,6 +92,8 @@ module.exports = Router({ mergeParams: true }).get(
       projectWithRole.id = project.id;
       projectWithRole.title = project.title;
       projectWithRole.image_url = project.image_url;
+      projectWithRole.description = project.description;
+      projectWithRole.deleted = project.deleted;
       projectWithRole.project_manager = project.project_manager;
       projectWithRole.url = project.url;
       projectWithRole.jira_url = project.jira_url;

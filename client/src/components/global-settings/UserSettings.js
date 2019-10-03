@@ -70,9 +70,9 @@ class UserSettings extends Component {
           <ListItem
             key={index}
             loggedIn={false}
-            activationOnClick={e => this.confirmModal([user.id, user.active, e])}
+            // activationOnClick={e => this.confirmModal([user.id, user.active, e])}
             title={[user.first_name ? user.first_name : user.email, " ", user.last_name ? user.last_name : ""]}
-            isActive={user.active}
+            // isActive={user.active}
             link={`/EditUser/${user.id}`}
             img={user.image_url ? user.image_url : placeholderImg}
             list={user.projects.map((project, projectIndex) => (
