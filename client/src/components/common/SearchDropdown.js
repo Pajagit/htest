@@ -13,6 +13,7 @@ function SearchDropdown({
   validationMsg,
   id,
   multiple,
+  name,
   numberDisplayed
 }) {
   return (
@@ -34,6 +35,7 @@ function SearchDropdown({
             placeholder={placeholder}
             numberDisplayed={numberDisplayed}
             open={false}
+            name={name}
             valueKey="id"
             labelKey="title"
             multiple={multiple}

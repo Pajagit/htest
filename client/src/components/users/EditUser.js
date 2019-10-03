@@ -107,17 +107,33 @@ class EditUser extends Component {
 
   submitProject(e) {
     var updateData = {};
-    updateData.project_id = this.state.selectedProject.id;
-    updateData.role_id = this.state.selectedRole.id;
+
     updateData.user_id = parseInt(this.props.match.params.userId);
-    this.props.addProject(updateData, res => {
-      if (res.status === 200) {
-        this.props.getUser(this.props.users.user.id);
-        successToast("Project added successfully");
-        this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
-      } else {
-      }
-    });
+    var errors = {};
+
+    if (isEmpty(this.state.selectedProject)) {
+      errors.new_project = "Project is required";
+    } else {
+      updateData.project_id = this.state.selectedProject.id;
+    }
+
+    if (isEmpty(this.state.selectedRole.id)) {
+      errors.new_role = "Role is required";
+    } else {
+      updateData.role_id = this.state.selectedRole.id;
+    }
+    if (isEmpty(errors)) {
+      this.props.addProject(updateData, res => {
+        if (res.status === 200) {
+          this.props.getUser(this.props.users.user.id);
+          successToast("Project added successfully");
+          this.setState({ selectedProject: [], selectedRole: [], showAddProject: false, errors: {} });
+        } else {
+        }
+      });
+    } else {
+      this.setState({ errors });
+    }
   }
 
   removeProjectBtn(e) {
@@ -129,6 +145,7 @@ class EditUser extends Component {
       if (res.status === 200) {
         this.props.getUser(this.props.users.user.id);
         successToast("Project removed successfully");
+        this.setState({ errors: {} });
       } else {
       }
     });
@@ -296,6 +313,8 @@ class EditUser extends Component {
                   onChange={this.selectProjectOption}
                   placeholder={"Select New Project"}
                   label={"Projects"}
+                  name={"new_project"}
+                  validationMsg={this.state.errors.new_project}
                   multiple={false}
                 />
                 <SearchDropdown
@@ -303,6 +322,8 @@ class EditUser extends Component {
                   options={this.state.roles}
                   onChange={this.selectedRoleOption}
                   label={"Roles"}
+                  name={"new_role"}
+                  validationMsg={this.state.errors.new_role}
                   placeholder={"Select Role"}
                   multiple={false}
                 />
