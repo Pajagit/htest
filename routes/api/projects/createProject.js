@@ -99,7 +99,7 @@ module.exports = Router({ mergeParams: true }).post(
     (async () => {
       var projectExists = await checkIfProjectWithSameTItleExists();
       if (projectExists) {
-        res.status(400).json({ error: "Project already exists" });
+        res.status(400).json({ title: "Project already exists" });
       } else {
         var createdProject = await createProject();
         if (createdProject) {

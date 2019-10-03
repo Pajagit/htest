@@ -125,7 +125,7 @@ module.exports = Router({ mergeParams: true }).put(
         } else {
           var projectWithSameTitle = await checkIfProjectWithSameTItleExists();
           if (projectWithSameTitle) {
-            res.status(400).json({ error: "Project already exists" });
+            res.status(400).json({ title: "Project already exists" });
           } else {
             let updatedProject = await updateProject();
             let project = await returnUpdatedProject(updatedProject);
