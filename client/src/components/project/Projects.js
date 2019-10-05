@@ -1,10 +1,17 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
+import { clearProject } from "../../actions/projectActions";
 import GlobalPanel from "../../components/global-panel/GlobalPanel";
 import Header from "../../components/common/Header";
 import ProjectContainer from "../../components/project/ProjectCardContainer";
-import ProjectTableList from "../../components/project/ProjectTableList";
 
 class Projects extends Component {
+  componentWillUnmount() {
+    this.props.clearProject();
+  }
   render() {
     return (
       <div className="wrapper">
@@ -13,10 +20,22 @@ class Projects extends Component {
           <Header icon={<i className="fas fa-th"></i>} title={"Projects"} history={this.props} canGoBack={false} />
 
           <ProjectContainer />
-          <ProjectTableList />
         </div>
       </div>
     );
   }
 }
-export default Projects;
+
+Projects.propTypes = {
+  projects: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  projects: state.projects
+  // auth: state.auth,
+});
+
+export default connect(
+  mapStateToProps,
+  { clearProject }
+)(withRouter(Projects));

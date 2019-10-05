@@ -1,0 +1,56 @@
+.portrait-project {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
+  &:hover {
+    background-color: #eceef9;
+  }
+  &-top {
+    background-color: #dcdde7;
+    min-height: 240px;
+    padding-top: 20px;
+    &-image {
+      max-width: 100%;
+
+      & > img {
+        max-width: 50%;
+        height: auto;
+        margin: auto;
+        display: block;
+      }
+    }
+  }
+  &-bottom {
+    padding: 15px 20px;
+    &-container {
+      &--title {
+        max-height: 140px;
+        overflow: hidden;
+        color: #2f25a4;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.17px;
+        line-height: 18px;
+        margin-bottom: 20px;
+      }
+      &--management {
+        max-height: 140px;
+        overflow: hidden;
+        color: #000000;
+        font-size: 14px;
+        letter-spacing: 0.17px;
+        line-height: 18px;
+      }
+      &--qa {
+        max-height: 140px;
+        overflow: hidden;
+        color: #000000;
+        font-size: 14px;
+        letter-spacing: 0.17px;
+        line-height: 18px;
+      }
+    }
+  }
+}

@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
+import { getProject } from "../../actions/projectActions";
+import isEmpty from "../../validation/isEmpty";
+
 import ProjectPanelItem from "./ProjectPanelItem";
 import ProjectPanelHeader from "./ProjectPanelHeader";
-import humedsLogo from "../../img/humeds-logo.png";
-import htecLogo from "../../img/htec-logo.png";
+import Loader from "../../img/loader.gif";
 
 class ProjectPanel extends Component {
   constructor(props) {
@@ -24,11 +26,8 @@ class ProjectPanel extends Component {
   }
   componentDidMount() {
     var projectId = this.props.match.params.projectId;
-    if (this.props.match.params.projectId === "1") {
-      this.setState({ title: "HUMEDS", img: humedsLogo, projectId: 1 });
-    } else {
-      this.setState({ title: "HTEC", img: htecLogo, projectId: 2 });
-    }
+    this.props.getProject(projectId);
+
     if (this.props.match.url === `/${projectId}/TestCases`) {
       this.setState({ testcasesUrl: true, reportsUrl: false, statisticsUrl: false, settingsUrl: false });
     } else if (this.props.match.url === `/${projectId}/Reports`) {
@@ -40,33 +39,44 @@ class ProjectPanel extends Component {
     }
   }
   render() {
+    var img;
+    var projectId = this.props.match.params.projectId;
+    var title;
+    if (this.props.projects && this.props.projects.project) {
+      img = this.props.projects.project.image_url;
+      title = this.props.projects.project.title;
+      if (isEmpty(this.props.projects.project.image_url)) {
+        img = Loader;
+      }
+    }
+
     return (
       <div className="project-panel project-panel-grid">
         <div className="project-panel-items">
-          <ProjectPanelHeader img={this.state.img} alt={this.state.title} title={this.state.title} />
+          <ProjectPanelHeader img={img} alt={title} title={title} />
           <ProjectPanelItem
             icon={<i className="fas fa-clipboard-list"></i>}
             title={"TEST CASES"}
             active={this.state.testcasesUrl}
-            link={`/${this.state.projectId}/TestCases`}
+            link={`/${projectId}/TestCases`}
           />
           <ProjectPanelItem
             icon={<i className="fas fa-file-alt"></i>}
             title={"REPORTS"}
             active={this.state.reportsUrl}
-            link={`/${this.state.projectId}/Reports`}
+            link={`/${projectId}/Reports`}
           />
           <ProjectPanelItem
             icon={<i className="far fa-chart-bar"></i>}
             title={"STATISTIC"}
             active={this.state.statisticsUrl}
-            link={`/${this.state.projectId}/Statistics`}
+            link={`/${projectId}/Statistics`}
           />
           <ProjectPanelItem
             icon={<i className="fas fa-cog"></i>}
             title={"SETTINGS"}
             active={this.state.settingsUrl}
-            link={`/${this.state.projectId}/Settings`}
+            link={`/${projectId}/Settings`}
           />
         </div>
       </div>
@@ -75,17 +85,16 @@ class ProjectPanel extends Component {
 }
 
 ProjectPanel.propTypes = {
-  testcases: PropTypes.object.isRequired,
-  groups: PropTypes.object.isRequired
+  testcases: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
-  groups: state.groups
+  projects: state.projects
   // auth: state.auth,
 });
 
 export default connect(
   mapStateToProps,
-  {}
+  { getProject }
 )(withRouter(ProjectPanel));
