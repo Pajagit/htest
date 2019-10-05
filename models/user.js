@@ -3,6 +3,8 @@ const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 const Project = require("./project");
+const Role = require("./role");
+
 const UserRoleProject = require("./userroleproject");
 
 const User = sequelize.define(
@@ -64,6 +66,19 @@ Project.belongsToMany(User, {
   foreignKey: "project_id",
   targetKey: "id",
   as: "users"
+});
+
+User.belongsToMany(Role, {
+  through: UserRoleProject,
+  foreignKey: "user_id",
+  targetKey: "id",
+  as: "roles"
+});
+Role.belongsToMany(User, {
+  through: UserRoleProject,
+  foreignKey: "project_id",
+  targetKey: "id",
+  as: "usersrole"
 });
 
 module.exports = User;
