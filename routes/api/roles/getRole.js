@@ -1,6 +1,6 @@
 const Router = require("express").Router;
 const passport = require("passport");
-const RoleController = require("../../../controllers/role");
+const RoleService = require("../../../services/role");
 
 // @route GET api/roles/role/:id
 // @desc Get role by id
@@ -8,5 +8,5 @@ const RoleController = require("../../../controllers/role");
 module.exports = Router({ mergeParams: true }).get(
   "/roles/role/:id",
   passport.authenticate("jwt", { session: false }),
-  RoleController.getRoles
+  RoleService.getRoles
 );
