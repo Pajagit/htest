@@ -25,10 +25,7 @@ module.exports = Router({ mergeParams: true }).post(
       return new Promise((resolve, reject) => {
         User.findOne({
           where: {
-            email: req.body.email,
-            id: {
-              [Op.ne]: req.params.id
-            }
+            email: req.body.email
           }
         })
           .then(user => {

@@ -59,3 +59,10 @@ export const projectLoading = () => {
     type: PROJECT_LOADING
   };
 };
+
+export const clearProject = () => dispatch => {
+  dispatch({
+    type: GET_PROJECT,
+    payload: {}
+  });
+};
