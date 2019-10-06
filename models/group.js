@@ -52,7 +52,7 @@ const Group = sequelize.define(
       type: Sequelize.DATE,
       required: true
     },
-    updated: {
+    updated_at: {
       type: Sequelize.DATE,
       required: false
     }
