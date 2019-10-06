@@ -11,10 +11,12 @@ function GlobalPanelItem({ icon, active, link, notification }) {
     activeBtnClass = "global-panel-items--item global-panel-items--item-active";
   }
   return (
-    <div className={activeBtnClass}>
-      <Link to={link}>{icon}</Link>
-      {notificationCount}
-    </div>
+    <Link to={link}>
+      <div className={activeBtnClass}>
+        {icon}
+        {notificationCount}
+      </div>
+    </Link>
   );
 }
 export default GlobalPanelItem;
