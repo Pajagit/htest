@@ -83,8 +83,6 @@ axios.interceptors.request.use(async request => {
         })
         .catch(err => {
           store.dispatch(logoutUser());
-          // Clear current profile
-          // store.dispatch(clearCurrentProfile());
         });
     }
   }

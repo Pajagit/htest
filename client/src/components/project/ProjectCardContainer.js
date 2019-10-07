@@ -26,7 +26,7 @@ class ProjectCardContainer extends Component {
                 img={project.image_url}
                 title={project.title}
                 id={project.id}
-                management={project.management}
+                management={project.project_manager}
                 qa={project.users.map((user, index) => {
                   if (project.users.length > index + 1) {
                     return user.first_name + " " + user.last_name + ", ";

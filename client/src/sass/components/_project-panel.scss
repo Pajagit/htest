@@ -65,9 +65,26 @@
         margin-right: 15px;
         width: 30px;
       }
+      &-dropdown-icon {
+        margin-right: 15px;
+        width: 30px;
+        font-size: 1.4rem;
+      }
+      &-dropdown-icon {
+        width: 40px;
+        font-size: 1.8rem;
+      }
 
       &-title {
         font-size: $font-size-default;
+        font-weight: 400;
+        color: #000;
+        &-active {
+          font-weight: 500;
+        }
+      }
+      &-dropdown-title {
+        font-size: 1.2rem;
         font-weight: 400;
         color: #000;
         &-active {
