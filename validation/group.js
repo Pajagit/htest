@@ -16,7 +16,7 @@ module.exports = {
     var errors = {};
 
     data.title = !isEmpty(data.title) ? data.title : null;
-    data.isPinned = !isEmpty(data.isPinned) ? data.isPinned : null;
+    data.pinned = !isEmpty(data.pinned) ? data.pinned : null;
     data.project_id = !isEmpty(data.project_id) ? data.project_id : null;
 
     // Title validation
@@ -39,8 +39,8 @@ module.exports = {
 
     //Pinned validation
     if (!isEmpty(data.pinned)) {
-      if (typeof data.isPinned !== "boolean") {
-        errors.isPinned = "Parameter 'isPinned' must have a true or false value";
+      if (typeof data.pinned !== "boolean") {
+        errors.pinned = "Parameter 'pinned' must have a true or false value";
       }
     }
 
