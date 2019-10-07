@@ -22,5 +22,13 @@ module.exports = {
         return res.status(500).json({ message: "Something went wrong" });
       }
     }
+  },
+  getProjects: async function(req, res) {
+    var projects = await ProjectService.getProjects(req.query.searchTerm);
+    if (projects) {
+      return res.status(200).json(projects);
+    } else {
+      return res.status(500).json({ message: "Something went wrong" });
+    }
   }
 };
