@@ -13,14 +13,15 @@ function ProjectPanelDropdownItem({ icon, title, active, link, settingsActive, o
   var dropdownArrow = <i className="fas fa-caret-down"></i>;
   if (settingsActive) {
     linkOptions = options.map((option, index) => (
-      <div className={activeBtnClass} key={index}>
-        <div className="project-panel-items-btn-dropdown-icon">
-          <i className="fas fa-arrow-right"></i>
-        </div>
-        <Link to={option.link}>
+      <Link to={option.link} key={index}>
+        <div className={activeBtnClass}>
+          <div className="project-panel-items-btn-dropdown-icon">
+            <i className="fas fa-arrow-right"></i>
+          </div>
+
           <div className={activeDropdownTitleClass}>{option.title}</div>
-        </Link>
-      </div>
+        </div>
+      </Link>
     ));
 
     dropdownArrow = <i className="fas fa-caret-up"></i>;
