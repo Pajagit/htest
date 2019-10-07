@@ -342,7 +342,7 @@ class EditProject extends Component {
                 />
                 <Btn
                   className={`btn btn-primary ${this.state.submitBtnDisabledClass}`}
-                  label="Add Project"
+                  label="Add to Project"
                   type="text"
                   onClick={e => this.submitUser(e)}
                 />
