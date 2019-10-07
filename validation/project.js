@@ -1,6 +1,16 @@
 const isEmpty = require("./is-empty");
 
 module.exports = {
+  validateRouteProjectId: function(data) {
+    var errors = {};
+    if (isNaN(data.id)) {
+      errors.message = "Project id is not valid number";
+    }
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    };
+  },
   validateProjectInput: function(data) {
     var titleLimit = 255;
     var descriptionLimit = 1000;
@@ -9,7 +19,7 @@ module.exports = {
     var jiraUrlLimit = 255;
     var urlLimit = 255;
 
-    let errors = {};
+    var errors = {};
 
     data.title = !isEmpty(data.title) ? data.title : "";
     data.description = !isEmpty(data.description) ? data.description : "";

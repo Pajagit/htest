@@ -13,7 +13,7 @@ module.exports = {
   validateGroupInput: function(data, insert) {
     var titleLimit = 255;
 
-    let errors = {};
+    var errors = {};
 
     data.title = !isEmpty(data.title) ? data.title : null;
     data.isPinned = !isEmpty(data.isPinned) ? data.isPinned : null;

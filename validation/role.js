@@ -4,7 +4,7 @@ module.exports = {
   validateRoleInput: function(data) {
     var titleLimit = 255;
 
-    let errors = {};
+    var errors = {};
 
     data.title = !isEmpty(data.title) ? data.title : "";
 
