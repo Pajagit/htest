@@ -30,7 +30,6 @@ class EditGroup extends Component {
       title: "",
       id: null,
       isPinned: false,
-      submitPressed: false,
       errors: {}
     };
   }
@@ -74,7 +73,6 @@ class EditGroup extends Component {
   }
 
   submitForm(e) {
-    this.setState({ submitPressed: true });
     this.props.clearErrors();
     var groupData = {};
     groupData.title = this.state.title;
@@ -99,9 +97,7 @@ class EditGroup extends Component {
   onChange(e) {
     this.props.clearErrors();
     this.setState({ [e.target.name]: e.target.value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
+      this.checkValidation();
     });
   }
 
