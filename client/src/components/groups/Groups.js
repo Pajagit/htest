@@ -39,7 +39,7 @@ class Groups extends Component {
         <ProjectPanel projectId={this.props.match.params.projectId} />
         <div className="main-content main-content-grid">
           <Header
-            icon={<i className="fas fa-project-diagram"></i>}
+            icon={<i className="fas fa-object-group"></i>}
             title={"Project Groups"}
             history={this.props}
             canGoBack={false}
