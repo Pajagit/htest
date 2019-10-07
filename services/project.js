@@ -15,5 +15,26 @@ module.exports = {
         }
       });
     });
+  },
+  deactivateProject: async function(id) {
+    return new Promise((resolve, reject) => {
+      Project.update(
+        {
+          deleted: true,
+          deleted_date: new Date()
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ).then(project => {
+        if (project) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
   }
 };

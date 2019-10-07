@@ -49,7 +49,7 @@ module.exports = {
         var group_fields = await GroupService.getFields(req.body, req.user, unused_color);
         var created_group = await GroupService.createGroup(group_fields);
         if (created_group) {
-          let created_group_obj = await GroupService.returnCreatedOrUpdatedGroup(created_group);
+          var created_group_obj = await GroupService.returnCreatedOrUpdatedGroup(created_group);
           res.json(created_group_obj);
         } else {
           res.status(500).json({ error: "An error occured while creating group" });
@@ -67,7 +67,7 @@ module.exports = {
         return res.status(400).json(errors);
       }
       if (req.params.id) {
-        let checkEntityExistance = await GroupService.checkIfGroupExistById(req.params.id);
+        var checkEntityExistance = await GroupService.checkIfGroupExistById(req.params.id);
         if (!checkEntityExistance) {
           return res.status(404).json({ error: "Group doesn't exist" });
         }

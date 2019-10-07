@@ -10,7 +10,7 @@ module.exports = {
     var preconditionLimit = 150;
     var linkLimit = 150;
 
-    let errors = {};
+    var errors = {};
 
     data.title = !isEmpty(data.title) ? data.title : "";
     data.preconditions = !isEmpty(data.preconditions) ? data.preconditions : "";
@@ -106,7 +106,7 @@ module.exports = {
     data.dateFrom = !isEmpty(data.dateFrom) ? data.dateFrom : "";
     data.dateTo = !isEmpty(data.dateTo) ? data.dateTo : "";
 
-    let errors = {};
+    var errors = {};
 
     var invalid_format = false;
     for (var i = 0; i < data.groups.length; i++) {

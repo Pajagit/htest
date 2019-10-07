@@ -11,7 +11,7 @@ module.exports = {
     var positionLimitMax = 30;
     var urlImageLimitMax = 255;
 
-    let errors = {};
+    var errors = {};
 
     data.email = !isEmpty(data.email) ? data.email : "";
     data.first_name = !isEmpty(data.first_name) ? data.first_name : "";
@@ -66,7 +66,7 @@ module.exports = {
     };
   },
   validateUserProjectInput: function(data) {
-    let errors = {};
+    var errors = {};
     // Project_id validation
     if (isEmpty(data.project_id)) {
       errors.project_id = "Project id is a required field";
