@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { GET_GROUPS, GET_GROUP, GROUP_LOADING } from "./types";
+import { GET_GROUPS, GET_GROUP, GROUP_LOADING, GET_ERRORS } from "./types";
 
 // Get All Groups
 export const getGroups = project_id => dispatch => {
@@ -47,8 +47,8 @@ export const createGroup = (groupData, callback) => dispatch => {
     .then(res => callback(res))
     .catch(err =>
       dispatch({
-        type: GET_GROUP,
-        payload: {}
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };

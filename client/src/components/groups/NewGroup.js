@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
+import GroupValidation from "../../validation/GroupValidation";
+import { clearErrors } from "../../actions/errorsActions";
 import Btn from "../common/Btn";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -22,6 +24,7 @@ class NewGroup extends Component {
       projectId: null,
       title: "",
       isPinned: false,
+      submitPressed: false,
       errors: {}
     };
   }
@@ -31,44 +34,63 @@ class NewGroup extends Component {
   togglePinned() {
     this.setState({ isPinned: !this.state.isPinned });
   }
+
+  checkValidation() {
+    var formData = {};
+
+    formData.title = this.state.title;
+
+    const { errors } = GroupValidation(formData);
+
+    this.setState({ errors });
+  }
+
   submitForm(e) {
+    this.setState({ submitPressed: true });
+    this.props.clearErrors();
     var groupData = {};
     groupData.title = this.state.title;
     groupData.pinned = this.state.isPinned;
     groupData.project_id = this.state.projectId;
-    this.props.createGroup(groupData, res => {
-      if (res.status === 200) {
-        this.props.history.push(`/${this.state.projectId}/Groups`);
-        if (groupData.pinned) {
-          successToast("Group successfully created and pinned");
+    const { errors, isValid } = GroupValidation(groupData);
+
+    if (isValid) {
+      this.props.createGroup(groupData, res => {
+        if (res.status === 200) {
+          this.props.history.push(`/${this.state.projectId}/Groups`);
+          if (groupData.pinned) {
+            successToast("Group successfully created and pinned");
+          } else {
+            successToast("Group successfully created");
+          }
         } else {
-          successToast("Group successfully created");
+          failToast("Group creating failed");
         }
-      } else {
-        failToast("Group creating failed");
-      }
-    });
+      });
+    } else {
+      this.setState({ errors });
+    }
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value }, () => {
-      // if (this.state.submitPressed) {
-      //   this.checkValidation();
-      // }
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
     });
   }
 
   render() {
     var content;
     var projectId = this.props.match.params.projectId;
-
+    console.log(this.props.errors);
     content = (
       <div className="main-content--content">
         <Input
           type="text"
           placeholder="Enter Group Name"
           label="Group name*"
-          validationMsg={this.state.errors.title}
+          validationMsg={[this.state.errors.title, this.props.errors.error]}
           value={this.state.title}
           onChange={e => this.onChange(e)}
           name={"title"}
@@ -114,16 +136,18 @@ class NewGroup extends Component {
 
 NewGroup.propTypes = {
   testcases: PropTypes.object.isRequired,
-  groups: PropTypes.object.isRequired
+  groups: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
-  groups: state.groups
+  groups: state.groups,
+  errors: state.errors
   // auth: state.auth,
 });
 
 export default connect(
   mapStateToProps,
-  { createGroup }
+  { createGroup, clearErrors }
 )(withRouter(NewGroup));
