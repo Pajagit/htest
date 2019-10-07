@@ -313,11 +313,11 @@ class NewTestCase extends Component {
                 {this.state.pinnedGroups.map((group, index) => (
                   <Switch
                     key={index}
-                    label={group.name}
+                    label={group.title}
                     value={this.state.selectedGroups.includes(group.id)}
                     id={group.id}
                     onClick={e => this.onChangeSwitch(e)}
-                    name={group.name}
+                    name={group.title}
                   />
                 ))}
               </div>
