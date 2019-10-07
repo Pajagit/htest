@@ -7,6 +7,7 @@ import GroupValidation from "../../validation/GroupValidation";
 import isEmpty from "../../validation/isEmpty";
 import Spinner from "../common/Spinner";
 import { clearErrors } from "../../actions/errorsActions";
+import Confirm from "../../components/common/Confirm";
 import Btn from "../common/Btn";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -16,6 +17,7 @@ import Header from "../common/Header";
 import UnderlineAnchor from "../common/UnderlineAnchor";
 import { getGroup } from "../../actions/groupsActions";
 import { editGroup } from "../../actions/groupsActions";
+import { removeGroup } from "../../actions/groupsActions";
 import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 
@@ -101,6 +103,25 @@ class EditGroup extends Component {
     });
   }
 
+  confirmActivation = e => {
+    this.props.removeGroup(this.state.groupId, res => {
+      if (res.status === 200) {
+        successToast("Group removed successfully");
+        this.props.history.push(`/${this.state.projectId}/Groups`);
+      } else {
+        failToast("Something went wrong with removing group");
+      }
+    });
+  };
+  confirmModal = ([]) => {
+    var reject = "No";
+    var title = "Remove this group?";
+    var msg = "This is only possible if there are no Test Cases assigned to this group";
+    var confirm = "Remove";
+
+    Confirm(title, msg, reject, confirm, e => this.confirmActivation([]));
+  };
+
   render() {
     var { group, loading } = this.props.groups;
 
@@ -111,11 +132,20 @@ class EditGroup extends Component {
     } else {
       content = (
         <div className="main-content--content">
+          <div className="header">
+            <div className="header--title">Group Information </div>
+            <div className="header--buttons">
+              <div className="header--buttons--primary"></div>
+              <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
+                <i className="fas fa-trash-alt"></i>
+              </div>
+            </div>
+          </div>
           <Input
             type="text"
             placeholder="Enter Group Name"
             label="Group name*"
-            validationMsg={[this.state.errors.title, this.props.errors.title]}
+            validationMsg={[this.state.errors.title, this.props.errors.title, this.props.errors.error]}
             value={this.state.title}
             onChange={e => this.onChange(e)}
             name={"title"}
@@ -174,5 +204,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getGroup, editGroup, clearErrors }
+  { getGroup, editGroup, removeGroup, clearErrors }
 )(withRouter(EditGroup));
