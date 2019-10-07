@@ -80,13 +80,17 @@ class ProjectPanel extends Component {
             settingsActive={this.state.settingsActive}
             onClick={e => this.setState({ settingsActive: !this.state.settingsActive })}
             options={[
-              { title: "PROJECT INFO", link: `/${projectId}/ProjectInfo` },
-              { title: "GROUPS", link: `/${projectId}/Groups` },
-              { title: "DEVICES", link: `/${projectId}/Devices` },
-              { title: "BROWSERS", link: `/${projectId}/Browsers` },
-              { title: "VERSIONS", link: `/${projectId}/Versions` },
-              { title: "ENVIRONMENTS", link: `/${projectId}/Environments` },
-              { title: "TEST SETUP", link: `/${projectId}/TestSetup` }
+              {
+                title: "PROJECT INFO",
+                link: `/${projectId}/ProjectInfo`,
+                icon: <i className="fas fa-project-diagram"></i>
+              },
+              { title: "GROUPS", link: `/${projectId}/Groups`, icon: <i className="fas fa-object-group"></i> },
+              { title: "DEVICES", link: `/${projectId}/Devices`, icon: <i className="fas fa-tablet-alt"></i> },
+              { title: "BROWSERS", link: `/${projectId}/Browsers`, icon: <i className="far fa-window-maximize"></i> },
+              { title: "VERSIONS", link: `/${projectId}/Versions`, icon: <i className="fas fa-code-branch"></i> },
+              { title: "ENVIRONMENTS", link: `/${projectId}/Environments`, icon: <i className="fas fa-hdd"></i> },
+              { title: "TEST SETUP", link: `/${projectId}/TestSetup`, icon: <i className="fas fa-prescription"></i> }
             ]}
           />
         </div>

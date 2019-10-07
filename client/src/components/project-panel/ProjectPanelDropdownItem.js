@@ -15,9 +15,7 @@ function ProjectPanelDropdownItem({ icon, title, active, link, settingsActive, o
     linkOptions = options.map((option, index) => (
       <Link to={option.link} key={index}>
         <div className={activeBtnClass}>
-          <div className="project-panel-items-btn-dropdown-icon">
-            <i className="fas fa-arrow-right"></i>
-          </div>
+          <div className="project-panel-items-btn-dropdown-icon">{option.icon}</div>
 
           <div className={activeDropdownTitleClass}>{option.title}</div>
         </div>
