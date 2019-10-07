@@ -50,7 +50,9 @@ class ProjectSettings extends Component {
             title={"Project Settings"}
             history={this.props}
             canGoBack={false}
-            addBtn={<BtnAnchor type={"text"} label="Add Project" className={"a-btn a-btn-primary"} link={`AddUser`} />}
+            addBtn={
+              <BtnAnchor type={"text"} label="Add Project" className={"a-btn a-btn-primary"} link={`CreateProject`} />
+            }
           />
           <div className="list-item-container">{content}</div>
         </div>
