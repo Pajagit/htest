@@ -348,7 +348,7 @@ class EditTestCase extends Component {
             {this.state.pinnedGroups.map((group, index) => (
               <Switch
                 key={index}
-                label={group.name}
+                label={group.title}
                 value={checkIfElemInObjInArray(this.state.selectedGroupsObjects, group.id)}
                 id={group.id}
                 onClick={e => this.onChangeSwitch(e)}

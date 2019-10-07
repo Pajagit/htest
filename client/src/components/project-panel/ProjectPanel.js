@@ -7,6 +7,7 @@ import { getProject } from "../../actions/projectActions";
 import isEmpty from "../../validation/isEmpty";
 
 import ProjectPanelItem from "./ProjectPanelItem";
+import ProjectPanelDropdownItem from "./ProjectPanelDropdownItem";
 import ProjectPanelHeader from "./ProjectPanelHeader";
 import Loader from "../../img/loader.gif";
 
@@ -21,6 +22,7 @@ class ProjectPanel extends Component {
       reportsUrl: false,
       statisticsUrl: false,
       settingsUrl: false,
+      settingsActive: false,
       errors: {}
     };
   }
@@ -49,7 +51,6 @@ class ProjectPanel extends Component {
         img = Loader;
       }
     }
-
     return (
       <div className="project-panel project-panel-grid">
         <div className="project-panel-items">
@@ -72,11 +73,21 @@ class ProjectPanel extends Component {
             active={this.state.statisticsUrl}
             link={`/${projectId}/Statistics`}
           />
-          <ProjectPanelItem
+          <ProjectPanelDropdownItem
             icon={<i className="fas fa-cog"></i>}
             title={"SETTINGS"}
             active={this.state.settingsUrl}
-            link={`/${projectId}/Settings`}
+            settingsActive={this.state.settingsActive}
+            onClick={e => this.setState({ settingsActive: !this.state.settingsActive })}
+            options={[
+              { title: "PROJECT INFO", link: `/${projectId}/ProjectInfo` },
+              { title: "GROUPS", link: `/${projectId}/Groups` },
+              { title: "DEVICES", link: `/${projectId}/Devices` },
+              { title: "BROWSERS", link: `/${projectId}/Browsers` },
+              { title: "VERSIONS", link: `/${projectId}/Versions` },
+              { title: "ENVIRONMENTS", link: `/${projectId}/Environments` },
+              { title: "TEST SETUP", link: `/${projectId}/TestSetup` }
+            ]}
           />
         </div>
       </div>

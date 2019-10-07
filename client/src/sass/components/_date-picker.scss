@@ -33,6 +33,9 @@
 }
 .datepicker {
   cursor: pointer;
+  & > ::selection {
+    background: transparent;
+  }
 }
 .today {
   background-color: $color-primary-lightest !important;
