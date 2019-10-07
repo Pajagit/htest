@@ -31,6 +31,9 @@ class NewGroup extends Component {
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
   }
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
   togglePinned() {
     this.setState({ isPinned: !this.state.isPinned });
   }
