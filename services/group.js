@@ -51,11 +51,12 @@ module.exports = {
       });
     });
   },
-  checkIfGroupWithSameTitleExists: async function(title) {
+  checkIfGroupWithSameTitleExists: async function(title, project_id) {
     return new Promise((resolve, reject) => {
       Group.findOne({
         where: {
-          title: title
+          title: title,
+          project_id: project_id
         }
       })
         .then(group => {
@@ -68,14 +69,15 @@ module.exports = {
         .catch(err => console.log(err));
     });
   },
-  checkIfAnotherGroupWithSameTitleExists: async function(title, id) {
+  checkIfAnotherGroupWithSameTitleExists: async function(title, id, project_id) {
     return new Promise((resolve, reject) => {
       Group.findOne({
         where: {
           title: title,
           id: {
             [Op.ne]: id
-          }
+          },
+          project_id: project_id
         }
       })
         .then(group => {
