@@ -89,8 +89,8 @@ class ProjectPanel extends Component {
               { title: "DEVICES", link: `/${projectId}/Devices`, icon: <i className="fas fa-tablet-alt"></i> },
               { title: "BROWSERS", link: `/${projectId}/Browsers`, icon: <i className="far fa-window-maximize"></i> },
               { title: "VERSIONS", link: `/${projectId}/Versions`, icon: <i className="fas fa-code-branch"></i> },
-              { title: "ENVIRONMENTS", link: `/${projectId}/Environments`, icon: <i className="fas fa-hdd"></i> },
-              { title: "TEST SETUP", link: `/${projectId}/TestSetup`, icon: <i className="fas fa-prescription"></i> }
+              { title: "ENVIRONMENTS", link: `/${projectId}/Environments`, icon: <i className="fab fa-dev"></i> },
+              { title: "TEST SETUP", link: `/${projectId}/TestSetup`, icon: <i className="fas fa-cogs"></i> }
             ]}
           />
         </div>
