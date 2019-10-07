@@ -39,8 +39,11 @@ class NewGroup extends Component {
     this.props.createGroup(groupData, res => {
       if (res.status === 200) {
         this.props.history.push(`/${this.state.projectId}/Groups`);
-
-        successToast("Group successfully created");
+        if (groupData.pinned) {
+          successToast("Group successfully created and pinned");
+        } else {
+          successToast("Group successfully created");
+        }
       } else {
         failToast("Group creating failed");
       }
