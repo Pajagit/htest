@@ -48,5 +48,20 @@ module.exports = {
       errors,
       isValid: isEmpty(errors)
     };
+  },
+  validateRouteProjectId: function(data) {
+    var errors = {};
+    if (isEmpty(data.project_id)) {
+      errors.message = "Project id is required";
+    } else {
+      if (isNaN(data.project_id)) {
+        errors.message = "Project id is not valid number";
+      }
+    }
+
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    };
   }
 };
