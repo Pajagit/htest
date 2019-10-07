@@ -16,6 +16,7 @@ import ProjectSettingsPage from "./components/project-settings/ProjectSettings";
 import Landing from "./pages/Landing";
 import Projects from "./components/project/Projects";
 import EditProject from "./components/project/EditProject";
+import NewProject from "./components/project/NewProject";
 import UserSettings from "./components/global-settings/UserSettings";
 import AddUser from "./components/users/AddUser";
 import EditUser from "./components/users/EditUser";
@@ -89,6 +90,7 @@ function App() {
           <PrivateRoute exact path="/DeviceSettings" component={DeviceSettings} />
           <PrivateRoute exact path="/EditUser/:userId" component={EditUser} />
           <PrivateRoute exact path="/EditProject/:projectId" component={EditProject} />
+          <PrivateRoute exact path="/CreateProject" component={NewProject} />
           <PrivateRoute exact path="/:projectId/CreateNewGroup" component={NewGroup} />
           <PrivateRoute exact path="/:projectId/EditGroup/:groupId" component={EditGroup} />
           <PrivateRoute exact path="/:projectId/Groups" component={Groups} />

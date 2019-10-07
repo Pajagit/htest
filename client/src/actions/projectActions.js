@@ -53,6 +53,20 @@ export const editProject = (project_id, projectData, callback) => dispatch => {
     );
 };
 
+// Create Project
+export const createProject = (projectData, callback) => dispatch => {
+  dispatch(projectLoading());
+  axios
+    .post(`/api/projects/project`, projectData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Project loading
 export const projectLoading = () => {
   return {
