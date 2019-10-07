@@ -83,8 +83,8 @@ module.exports = {
       if (req.body.title) {
         data.title = req.body.title;
       }
-      if (typeof req.body.isPinned === "boolean") {
-        data.pinned = req.body.isPinned;
+      if (typeof req.body.pinned === "boolean") {
+        data.pinned = req.body.pinned;
       }
 
       (async () => {

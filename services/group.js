@@ -250,7 +250,7 @@ module.exports = {
       if (color) {
         const groupFields = {};
         if (bodyData.title) groupFields.title = bodyData.title;
-        if (bodyData.isPinned) groupFields.pinned = bodyData.isPinned;
+        if (bodyData.pinned) groupFields.pinned = bodyData.pinned;
         groupFields.user_id = user.id;
         if (bodyData.project_id) groupFields.project_id = bodyData.project_id;
         groupFields.color_id = color;
