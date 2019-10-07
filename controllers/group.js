@@ -4,6 +4,7 @@ var ProjectService = require("../services/project");
 
 const validateRouteGroupId = require("../validation/group").validateRouteGroupId;
 const validateGroupInput = require("../validation/group").validateGroupInput;
+const validateRouteProjectId = require("../validation/group").validateRouteProjectId;
 
 module.exports = {
   getGroupById: async function(req, res) {
@@ -98,6 +99,50 @@ module.exports = {
         var group = await GroupService.returnCreatedOrUpdatedGroup(updatedGroup);
         res.status(200).json(group);
       })();
+    }
+  },
+  deleteGroup: async function(req, res) {
+    const { errors, isValid } = validateRouteGroupId(req.params);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    var checkEntityExistance = await GroupService.checkIfGroupExistById(req.params.id);
+    if (!checkEntityExistance) {
+      return res.status(404).json({ error: "Group doesn't exist" });
+    } else {
+      var groupHasTestCases = await GroupService.groupHasTestcases(req.params.id);
+
+      if (groupHasTestCases) {
+        return res.status(400).json({ error: "There are test cases related to this group" });
+      } else {
+        var removeGroup = await GroupService.removeGroup(req.params.id);
+        if (removeGroup) {
+          return res.status(200).json({ success: "Group successfully deleted" });
+        } else {
+          return res.status(500).json({ error: "Something went wrong" });
+        }
+      }
+    }
+  },
+  getAllGroups: async function(req, res) {
+    const { errors, isValid } = validateRouteProjectId(req.query);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    } else {
+      var projectExists = await ProjectService.checkIfProjectExist(req.query.project_id);
+      if (!projectExists) {
+        return res.status(404).json({ error: "Project doesn't exist" });
+      }
+      var getAllProjectGroups = await GroupService.getAllProjectGroups(req.query.project_id);
+      if (getAllProjectGroups) {
+        res.status(200).json(getAllProjectGroups);
+      } else {
+        res.status(500).json({ error: "Something went wrong" });
+      }
     }
   }
 };

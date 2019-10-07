@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const Group = require("../models/group");
 const Color = require("../models/color");
+const GroupTestCases = require("../models/grouptestcase");
 
 module.exports = {
   getGroupById: async function(id) {
@@ -115,6 +116,72 @@ module.exports = {
           resolve(group[1]);
         } else {
           resolve(false);
+        }
+      });
+    });
+  },
+  groupHasTestcases: async function(id) {
+    return new Promise((resolve, reject) => {
+      GroupTestCases.count({
+        where: {
+          group_id: id
+        }
+      }).then(testCasesCount => {
+        if (testCasesCount > 0) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeGroup: async function(id) {
+    return new Promise((resolve, reject) => {
+      Group.destroy({
+        where: {
+          id: id
+        }
+      }).then(removedRows => {
+        if (removedRows === 1) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  getAllProjectGroups: async function(id) {
+    return new Promise((resolve, reject) => {
+      Group.findAll({
+        attributes: ["id", "pinned", "title"],
+        where: {
+          project_id: id
+        },
+        include: [
+          {
+            model: Color,
+            as: "color",
+            attributes: ["title"],
+            required: true
+          }
+        ],
+        order: [["id", "ASC"]]
+      }).then(groups => {
+        if (groups) {
+          var groupsObj = Array();
+          groups.forEach(group => {
+            var groupObject = {
+              id: group.id,
+              isPinned: group.pinned,
+              title: group.title,
+              color: group.color.title
+            };
+            groupsObj.push(groupObject);
+          });
+
+          resolve(groupsObj);
+        } else {
+          resolve([]);
         }
       });
     });
