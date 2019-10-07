@@ -73,6 +73,7 @@ class NewGroup extends Component {
   }
 
   onChange(e) {
+    this.props.clearErrors();
     this.setState({ [e.target.name]: e.target.value }, () => {
       if (this.state.submitPressed) {
         this.checkValidation();
@@ -83,14 +84,13 @@ class NewGroup extends Component {
   render() {
     var content;
     var projectId = this.props.match.params.projectId;
-    console.log(this.props.errors);
     content = (
       <div className="main-content--content">
         <Input
           type="text"
           placeholder="Enter Group Name"
           label="Group name*"
-          validationMsg={[this.state.errors.title, this.props.errors.error]}
+          validationMsg={[this.state.errors.title, this.props.errors.title]}
           value={this.state.title}
           onChange={e => this.onChange(e)}
           name={"title"}
