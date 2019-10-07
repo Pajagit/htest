@@ -27,11 +27,7 @@ import isEmpty from "../../validation/isEmpty";
 import TestCaseValidation from "../../validation/TestCaseValidation";
 import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
 import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
-const bigList = [];
 
-for (var i = 1; i <= 1000; i++) {
-  bigList.push({ id: i, name: `Item ${i}` });
-}
 class EditTestCase extends Component {
   constructor(props) {
     super(props);

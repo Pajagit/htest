@@ -22,6 +22,8 @@ import EditUser from "./components/users/EditUser";
 import ProjectSettings from "./components/global-settings/ProjectSettings";
 import DeviceSettings from "./components/global-settings/DeviceSettings";
 import TestCase from "./components/test-cases/TestCase";
+import NewGroup from "./components/groups/NewGroup";
+import Groups from "./components/groups/Groups";
 import EditTestCase from "./components/test-cases/EditTestCase";
 import { ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -86,6 +88,8 @@ function App() {
           <PrivateRoute exact path="/DeviceSettings" component={DeviceSettings} />
           <PrivateRoute exact path="/EditUser/:userId" component={EditUser} />
           <PrivateRoute exact path="/EditProject/:projectId" component={EditProject} />
+          <PrivateRoute exact path="/:projectId/CreateNewGroup" component={NewGroup} />
+          <PrivateRoute exact path="/:projectId/Groups" component={Groups} />
         </div>
       </Router>
     </Provider>
