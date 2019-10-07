@@ -19,7 +19,7 @@ module.exports = {
     if (group) {
       return res.status(200).json(group);
     } else {
-      return res.status(404).json({ message: "Group doesn't exist" });
+      return res.status(404).json({ error: "Group doesn't exist" });
     }
   },
   createGroup: async function(req, res) {
@@ -34,7 +34,7 @@ module.exports = {
         var project_exists = await ProjectService.checkIfProjectExist(req.body.project_id);
       }
       if (!project_exists) {
-        return res.status(400).json({ project_id: "Project doesn't exist" });
+        return res.status(400).json({ error: "Project doesn't exist" });
       }
 
       var all_colors = await GroupService.getAllColorsFromGroups();
@@ -44,7 +44,7 @@ module.exports = {
       }
       var group_exists = await GroupService.checkIfGroupWithSameTitleExists(req.body.title);
       if (group_exists) {
-        res.status(400).json({ error: "Group already exists" });
+        res.status(400).json({ title: "Group already exists" });
       } else {
         var group_fields = await GroupService.getFields(req.body, req.user, unused_color);
         var created_group = await GroupService.createGroup(group_fields);
@@ -93,7 +93,7 @@ module.exports = {
           req.params.id
         );
         if (groupWithSameTitle) {
-          return res.status(400).json({ error: "Group already exists" });
+          return res.status(400).json({ title: "Group already exists" });
         }
         var updatedGroup = await GroupService.updateGroup(req.params.id, data);
         var group = await GroupService.returnCreatedOrUpdatedGroup(updatedGroup);
