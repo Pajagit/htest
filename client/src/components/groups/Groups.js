@@ -27,7 +27,7 @@ class Groups extends Component {
       content = <Spinner />;
     } else if (!isEmpty(groups)) {
       content = groups.map((group, index) => (
-        <ListItem key={index} title={group.title} link={`/EditGroup/${group.id}`} />
+        <ListItem key={index} title={group.title} link={`/${projectId}/EditGroup/${group.id}`} />
       ));
     } else {
       content = <div className="testcase-container-no-content">There are no groups created yet</div>;
