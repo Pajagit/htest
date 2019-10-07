@@ -44,7 +44,7 @@ module.exports = {
         }
       }).then(group => {
         if (group) {
-          resolve(true);
+          resolve(group);
         } else {
           resolve(false);
         }

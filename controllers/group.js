@@ -67,15 +67,9 @@ module.exports = {
         return res.status(400).json(errors);
       }
       if (req.params.id) {
-        var checkEntityExistance = await GroupService.checkIfGroupExistById(req.params.id);
-        if (!checkEntityExistance) {
+        var groupExists = await GroupService.checkIfGroupExistById(req.params.id);
+        if (!groupExists) {
           return res.status(404).json({ error: "Group doesn't exist" });
-        }
-      }
-      if (req.body.project_id && !isNaN(req.body.project_id)) {
-        var project_exists = await ProjectService.checkIfProjectExist(req.body.project_id);
-        if (!project_exists) {
-          return res.status(400).json({ project_id: "Project doesn't exist" });
         }
       }
 
@@ -88,10 +82,11 @@ module.exports = {
       }
 
       (async () => {
+        var group = await GroupService.checkIfGroupExistById(req.params.id);
         var groupWithSameTitle = await GroupService.checkIfAnotherGroupWithSameTitleExists(
           req.body.title,
           req.params.id,
-          req.body.project_id
+          group.project_id
         );
         if (groupWithSameTitle) {
           return res.status(400).json({ title: "Group already exists" });
