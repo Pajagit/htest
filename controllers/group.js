@@ -42,7 +42,7 @@ module.exports = {
       if (!unused_color) {
         unused_color = await GroupService.getLeastUsedColorFromGroups();
       }
-      var group_exists = await GroupService.checkIfGroupWithSameTitleExists(req.body.title);
+      var group_exists = await GroupService.checkIfGroupWithSameTitleExists(req.body.title, req.body.project_id);
       if (group_exists) {
         res.status(400).json({ title: "Group already exists" });
       } else {
@@ -90,7 +90,8 @@ module.exports = {
       (async () => {
         var groupWithSameTitle = await GroupService.checkIfAnotherGroupWithSameTitleExists(
           req.body.title,
-          req.params.id
+          req.params.id,
+          req.body.project_id
         );
         if (groupWithSameTitle) {
           return res.status(400).json({ title: "Group already exists" });
