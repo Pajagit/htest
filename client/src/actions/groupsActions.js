@@ -53,6 +53,19 @@ export const createGroup = (groupData, callback) => dispatch => {
     );
 };
 
+// Edit  Group by group_id
+export const editGroup = (group_id, groupData, callback) => dispatch => {
+  axios
+    .put(`/api/groups/group/${group_id}`, groupData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Group loading
 export const groupLoading = () => {
   return {

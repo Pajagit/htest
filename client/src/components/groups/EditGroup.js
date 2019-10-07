@@ -15,6 +15,7 @@ import ProjectPanel from "../project-panel/ProjectPanel";
 import Header from "../common/Header";
 import UnderlineAnchor from "../common/UnderlineAnchor";
 import { getGroup } from "../../actions/groupsActions";
+import { editGroup } from "../../actions/groupsActions";
 import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 
@@ -34,7 +35,7 @@ class EditGroup extends Component {
     };
   }
   componentDidMount() {
-    this.setState({ projectId: this.props.match.params.projectId });
+    this.setState({ projectId: this.props.match.params.projectId, groupId: this.props.match.params.groupId });
     var groupId = this.props.match.params.groupId;
     this.props.getGroup(groupId);
   }
@@ -78,20 +79,16 @@ class EditGroup extends Component {
     var groupData = {};
     groupData.title = this.state.title;
     groupData.pinned = this.state.isPinned;
-    groupData.project_id = this.state.projectId;
     const { errors, isValid } = GroupValidation(groupData);
 
     if (isValid) {
-      this.props.createGroup(groupData, res => {
+      this.props.editGroup(this.state.groupId, groupData, res => {
         if (res.status === 200) {
           this.props.history.push(`/${this.state.projectId}/Groups`);
-          if (groupData.pinned) {
-            successToast("Group successfully created and pinned");
-          } else {
-            successToast("Group successfully created");
-          }
+
+          successToast("Group successfully edited");
         } else {
-          failToast("Group creating failed");
+          failToast("Group editing failed");
         }
       });
     } else {
@@ -181,5 +178,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getGroup, clearErrors }
+  { getGroup, editGroup, clearErrors }
 )(withRouter(EditGroup));
