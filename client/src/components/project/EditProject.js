@@ -191,6 +191,19 @@ class EditProject extends Component {
     }
     Confirm(title, msg, reject, confirm, e => this.confirmActivation([project_id, active, e]));
   };
+
+  checkValidation() {
+    var projectData = {};
+    projectData.title = this.state.title;
+    projectData.description = this.state.description;
+    projectData.image_url = this.state.image_url;
+    projectData.url = this.state.url;
+
+    const { errors } = ProjectValidation(projectData);
+
+    this.setState({ errors });
+  }
+
   submitForm(e) {
     e.preventDefault();
     this.props.clearErrors();
@@ -224,7 +237,9 @@ class EditProject extends Component {
     }
   };
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      this.checkValidation();
+    });
   }
   onChangeRole(e, user_id) {
     var updateData = {};

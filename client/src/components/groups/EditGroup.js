@@ -113,13 +113,13 @@ class EditGroup extends Component {
       }
     });
   };
-  confirmModal = ([]) => {
+  confirmModal = () => {
     var reject = "No";
     var title = "Remove this group?";
     var msg = "This is only possible if there are no Test Cases assigned to this group";
     var confirm = "Remove";
 
-    Confirm(title, msg, reject, confirm, e => this.confirmActivation([]));
+    Confirm(title, msg, reject, confirm, e => this.confirmActivation());
   };
 
   render() {

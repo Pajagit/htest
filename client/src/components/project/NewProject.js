@@ -23,6 +23,7 @@ class NewProject extends Component {
     super(props);
     this.state = {
       initialRender: true,
+      submitPressed: false,
       project: this.props.projects.project,
       title: "",
       url: "",
@@ -36,8 +37,21 @@ class NewProject extends Component {
     this.props.clearErrors();
   }
 
+  checkValidation() {
+    var projectData = {};
+    projectData.title = this.state.title;
+    projectData.description = this.state.description;
+    projectData.image_url = this.state.image_url;
+    projectData.url = this.state.url;
+
+    const { errors } = ProjectValidation(projectData);
+
+    this.setState({ errors });
+  }
+
   submitForm(e) {
     e.preventDefault();
+    this.setState({ submitPressed: true });
     this.props.clearErrors();
     this.setState({ errors: {} });
     var projectData = {};
@@ -69,9 +83,12 @@ class NewProject extends Component {
     }
   };
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
   }
-
   render() {
     var content;
     content = (

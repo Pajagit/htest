@@ -185,6 +185,18 @@ class EditUser extends Component {
     }
     Confirm(title, msg, reject, confirm, e => this.confirmActivation([user_id, active, e]));
   };
+
+  checkValidation() {
+    var userData = {};
+    userData.email = this.state.email;
+    userData.first_name = this.state.first_name;
+    userData.last_name = this.state.last_name;
+
+    const { errors } = UserValidation(userData);
+
+    this.setState({ errors });
+  }
+
   submitForm(e) {
     e.preventDefault();
     this.props.clearErrors();
@@ -217,7 +229,9 @@ class EditUser extends Component {
     }
   };
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      this.checkValidation();
+    });
   }
   onChangeRole(e, project_id) {
     var updateData = {};
