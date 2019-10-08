@@ -21,6 +21,7 @@ class AddUser extends Component {
     super(props);
     this.state = {
       initialRender: true,
+      submitPressed: false,
       email: "",
       first_name: "",
       last_name: "",
@@ -28,8 +29,20 @@ class AddUser extends Component {
     };
   }
 
+  checkValidation() {
+    var userData = {};
+    userData.email = this.state.email;
+    userData.first_name = this.state.first_name;
+    userData.last_name = this.state.last_name;
+
+    const { errors } = UserValidation(userData);
+
+    this.setState({ errors });
+  }
+
   submitForm(e) {
     e.preventDefault();
+    this.setState({ submitPressed: true });
     this.props.clearErrors();
     this.setState({ errors: {} });
     var userData = {};
@@ -53,7 +66,11 @@ class AddUser extends Component {
     }
   }
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
   }
   render() {
     return (
