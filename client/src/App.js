@@ -42,30 +42,32 @@ import webSocket from "./configSocket/keys";
 var socket = openSocket(webSocket.webSocket);
 
 socket.on("refreshUserToken", function(data) {
-  const decoded = jwt_decode(localStorage.jwtHtestToken);
-  if (decoded.id === parseInt(data)) {
-    var refreshTokenCrypted = localStorage.getItem("jwtHtestRefreshToken");
-    let refreshTokenObj = {
-      refreshToken: refreshTokenCrypted
-    };
-    axios
-      .post("/api/token", refreshTokenObj)
-      .then(res => {
-        // Save to localStorage
-        const { token, refreshToken } = res.data;
-        // Set token to ls
-        localStorage.setItem("jwtHtestToken", token);
-        localStorage.setItem("jwtHtestRefreshToken", refreshToken);
-        // Set token to Auth header
-        setAuthToken(token);
-        // Decode token to get user data
-        const decoded = jwt_decode(token);
-        // Set current user
-        store.dispatch(setCurrentUser(decoded));
-      })
-      .catch(err => {
-        store.dispatch(logoutUser());
-      });
+  if (localStorage.jwtHtestToken) {
+    const decoded = jwt_decode(localStorage.jwtHtestToken);
+    if (decoded.id === parseInt(data)) {
+      var refreshTokenCrypted = localStorage.getItem("jwtHtestRefreshToken");
+      let refreshTokenObj = {
+        refreshToken: refreshTokenCrypted
+      };
+      axios
+        .post("/api/token", refreshTokenObj)
+        .then(res => {
+          // Save to localStorage
+          const { token, refreshToken } = res.data;
+          // Set token to ls
+          localStorage.setItem("jwtHtestToken", token);
+          localStorage.setItem("jwtHtestRefreshToken", refreshToken);
+          // Set token to Auth header
+          setAuthToken(token);
+          // Decode token to get user data
+          const decoded = jwt_decode(token);
+          // Set current user
+          store.dispatch(setCurrentUser(decoded));
+        })
+        .catch(err => {
+          store.dispatch(logoutUser());
+        });
+    }
   }
 });
 
