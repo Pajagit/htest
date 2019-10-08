@@ -247,6 +247,7 @@ class EditUser extends Component {
       if (res.status === 200) {
         this.props.getUser(this.props.users.user.id);
         successToast("Project role updated successfully");
+        socket.emit("refreshUserToken", this.state.userId);
         this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
       } else {
       }
