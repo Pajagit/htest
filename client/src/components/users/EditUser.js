@@ -29,6 +29,9 @@ import DropdownRemove from "../../components/common/DropdownRemove";
 import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
 import removeObjFromArray from "../../utility/removeObjFromArray";
 import SearchDropdown from "../../components/common/SearchDropdown";
+import openSocket from "socket.io-client";
+import webSocket from "../../configSocket/keys";
+var socket = openSocket(webSocket.webSocket);
 
 class EditUser extends Component {
   constructor(props) {
@@ -51,6 +54,7 @@ class EditUser extends Component {
 
   componentDidMount() {
     var userId = this.props.match.params.userId;
+    this.setState({ userId });
     this.props.getUser(userId);
     this.props.getProjects();
     this.props.getRoles();
@@ -160,6 +164,7 @@ class EditUser extends Component {
           successToast("User activated successfully");
         } else if (!userData.active && !res.data.active) {
           successToast("User deactivated successfully");
+          socket.emit("refreshUserToken", this.state.userId);
         } else {
           failToast("Something went wrong with updating");
         }

@@ -4,5 +4,6 @@ module.exports = {
   secretOrKey: "interviewSecret",
   secretOrKeyRefresh: "refreshKey",
   tokenDuration: 3600, // 1 hour
-  refreshTokenDuration: 172800 // 2 days
+  refreshTokenDuration: 172800, // 2 days
+  webSocket: "http://localhost:4000/"
 };
