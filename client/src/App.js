@@ -35,8 +35,39 @@ import TestSetup from "./components/test-setup/TestSetup";
 import EditTestCase from "./components/test-cases/EditTestCase";
 import { ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-
 import "./sass/main.scss";
+
+import openSocket from "socket.io-client";
+import webSocket from "./configSocket/keys";
+var socket = openSocket(webSocket.webSocket);
+
+socket.on("refreshUserToken", function(data) {
+  const decoded = jwt_decode(localStorage.jwtHtestToken);
+  if (decoded.id === parseInt(data)) {
+    var refreshTokenCrypted = localStorage.getItem("jwtHtestRefreshToken");
+    let refreshTokenObj = {
+      refreshToken: refreshTokenCrypted
+    };
+    axios
+      .post("/api/token", refreshTokenObj)
+      .then(res => {
+        // Save to localStorage
+        const { token, refreshToken } = res.data;
+        // Set token to ls
+        localStorage.setItem("jwtHtestToken", token);
+        localStorage.setItem("jwtHtestRefreshToken", refreshToken);
+        // Set token to Auth header
+        setAuthToken(token);
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // Set current user
+        store.dispatch(setCurrentUser(decoded));
+      })
+      .catch(err => {
+        store.dispatch(logoutUser());
+      });
+  }
+});
 
 // Check for token
 if (localStorage.jwtHtestToken) {
