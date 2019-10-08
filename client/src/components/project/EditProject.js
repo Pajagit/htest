@@ -30,6 +30,9 @@ import DropdownRemove from "../../components/common/DropdownRemove";
 import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
 import removeObjFromArray from "../../utility/removeObjFromArray";
 import SearchDropdown from "../../components/common/SearchDropdown";
+import openSocket from "socket.io-client";
+import webSocket from "../../configSocket/keys";
+var socket = openSocket(webSocket.webSocket);
 
 class EditProject extends Component {
   constructor(props) {
@@ -132,7 +135,8 @@ class EditProject extends Component {
       this.props.addProject(updateData, res => {
         if (res.status === 200) {
           this.props.getProject(this.props.projects.project.id);
-          successToast("Project added successfully");
+          successToast("User added successfully");
+          socket.emit("refreshUserToken", updateData.user_id);
           this.setState({ selectedUser: [], selectedRole: [], showAddUser: false, errors: {} });
         } else {
         }
@@ -150,7 +154,8 @@ class EditProject extends Component {
     this.props.removeProject(updateData, res => {
       if (res.status === 200) {
         this.props.getProject(this.props.projects.project.id);
-        successToast("Project removed successfully");
+        successToast("User removed successfully");
+        socket.emit("refreshUserToken", updateData.user_id);
         this.setState({ errors: {} });
       } else {
       }
@@ -223,7 +228,7 @@ class EditProject extends Component {
           this.props.history.push(`/ProjectSettings`);
         } else {
           failToast("Editing project failed");
-          this.props.history.push(`/AddUser`);
+          this.props.history.push(`/EditProject/${projectId}`);
         }
       });
     } else {
@@ -250,6 +255,7 @@ class EditProject extends Component {
       if (res.status === 200) {
         this.props.getProject(this.props.projects.project.id);
         successToast("Project role updated successfully");
+        socket.emit("refreshUserToken", updateData.user_id);
         this.setState({ selectedUser: [], selectedRole: [], showAddUser: false });
       } else {
       }
