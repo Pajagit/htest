@@ -26,6 +26,12 @@ import TestCase from "./components/test-cases/TestCase";
 import NewGroup from "./components/groups/NewGroup";
 import EditGroup from "./components/groups/EditGroup";
 import Groups from "./components/groups/Groups";
+import ProjectInfo from "./components/project/ProjectInfo";
+import Devices from "./components/devices/Devices";
+import Browsers from "./components/browsers/Browsers";
+import Versions from "./components/versions/Versions";
+import Environments from "./components/environments/Environments";
+import TestSetup from "./components/test-setup/TestSetup";
 import EditTestCase from "./components/test-cases/EditTestCase";
 import { ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -77,6 +83,7 @@ function App() {
           </div>
           <Route exact path="/" component={Landing} />
           <PrivateRoute exact path="/Projects" component={Projects} />
+          <PrivateRoute exact path="/:projectId/ProjectInfo" component={ProjectInfo} />
           <PrivateRoute exact path="/:projectId/TestCase/:testcaseId" component={TestCase} />
           <PrivateRoute exact path="/:projectId/CreateTestCase" component={NewTestCase} />
           <PrivateRoute exact path="/:projectId/EditTestCase/:testcaseId" component={EditTestCase} />
@@ -94,6 +101,11 @@ function App() {
           <PrivateRoute exact path="/:projectId/CreateNewGroup" component={NewGroup} />
           <PrivateRoute exact path="/:projectId/EditGroup/:groupId" component={EditGroup} />
           <PrivateRoute exact path="/:projectId/Groups" component={Groups} />
+          <PrivateRoute exact path="/:projectId/Devices" component={Devices} />
+          <PrivateRoute exact path="/:projectId/Browsers" component={Browsers} />
+          <PrivateRoute exact path="/:projectId/Versions" component={Versions} />
+          <PrivateRoute exact path="/:projectId/Environments" component={Environments} />
+          <PrivateRoute exact path="/:projectId/TestSetup" component={TestSetup} />
         </div>
       </Router>
     </Provider>
