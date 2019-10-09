@@ -6,6 +6,35 @@ const Group = require("../models/group");
 const Role = require("../models/role");
 
 module.exports = {
+  findUserRole: async function(projects) {
+    return new Promise((resolve, reject) => {
+      if (projects.length > 0) {
+        var projectUsers = [];
+        var projectsProcessed = 0;
+        projects.forEach(project => {
+          var projectUser = {};
+          Role.findOne({
+            attributes: ["title"],
+            where: {
+              id: project.userroleprojects.role_id
+            }
+          }).then(role => {
+            if (role) {
+              projectUser.role = role.title;
+              projectUser.id = project.id;
+              projectUsers.push(projectUser);
+              projectsProcessed++;
+              if (projectsProcessed === projects.length) {
+                resolve(projectUsers);
+              }
+            }
+          });
+        });
+      } else {
+        resolve([]);
+      }
+    });
+  },
   canGetProject: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];

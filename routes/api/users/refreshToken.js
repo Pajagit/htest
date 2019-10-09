@@ -11,6 +11,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../../../models/user");
+const Project = require("../../../models/project");
+
+var UserService = require("../../../services/user");
 
 // @route POST api/users/login
 // @desc Login user / Returning JWT token
@@ -49,53 +52,68 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
       where: {
         email: profileObj.email,
         active: true
-      }
+      },
+      include: [
+        {
+          model: Project,
+          attributes: ["id", "title"],
+          through: {
+            attributes: ["role_id"]
+          },
+          as: "projects",
+          required: false
+        }
+      ]
     }).then(user => {
-      if (!user) {
-        errors.email = profileObj.email + " is not authorized";
-        return res.status(401).json(errors);
-      } else {
-        var newUserValues = {};
-        if (profileObj.givenName != user.first_name) {
-          newUserValues.first_name = profileObj.givenName;
-        }
-        if (profileObj.familyName != user.last_name) {
-          newUserValues.last_name = profileObj.familyName;
-        }
-        if (profileObj.imageUrl != user.image_url) {
-          newUserValues.image_url = profileObj.imageUrl;
-        }
+      (async () => {
+        if (!user) {
+          errors.email = profileObj.email + " is not authorized";
+          return res.status(401).json(errors);
+        } else {
+          user.projects = await UserService.findUserRole(user.projects);
+          var newUserValues = {};
+          if (profileObj.givenName != user.first_name) {
+            newUserValues.first_name = profileObj.givenName;
+          }
+          if (profileObj.familyName != user.last_name) {
+            newUserValues.last_name = profileObj.familyName;
+          }
+          if (profileObj.imageUrl != user.image_url) {
+            newUserValues.image_url = profileObj.imageUrl;
+          }
 
-        if (Object.keys(newUserValues).length > 0) {
-          newUserValues.updated_at = updateDate;
-          User.update(newUserValues, {
-            where: { id: user.id }
+          if (Object.keys(newUserValues).length > 0) {
+            newUserValues.updated_at = updateDate;
+            User.update(newUserValues, {
+              where: { id: user.id }
+            });
+          }
+
+          // Create jwt payload
+          const payload = {
+            id: user.id,
+            first_name: newUserValues.first_name ? newUserValues.first_name : user.first_name,
+            last_name: newUserValues.last_name ? newUserValues.last_name : user.last_name,
+            email: user.email,
+            image_url: newUserValues.image_url ? newUserValues.image_url : user.image_url,
+            active: user.active,
+            projects: user.projects
+          };
+
+          refreshToken = jwt.sign(payload, keys.secretOrKeyRefresh, {
+            expiresIn: keys.refreshTokenDuration
+          });
+          //Sign Token
+          jwt.sign(payload, keys.secretOrKey, { expiresIn: keys.tokenDuration }, (err, token) => {
+            cryptedRefresh = encrypt(refreshToken);
+            res.json({
+              success: true,
+              token,
+              refreshToken: cryptedRefresh
+            });
           });
         }
-
-        // Create jwt payload
-        const payload = {
-          id: user.id,
-          first_name: newUserValues.first_name ? newUserValues.first_name : user.first_name,
-          last_name: newUserValues.last_name ? newUserValues.last_name : user.last_name,
-          email: user.email,
-          image_url: newUserValues.image_url ? newUserValues.image_url : user.image_url,
-          active: user.active
-        };
-
-        refreshToken = jwt.sign(payload, keys.secretOrKeyRefresh, {
-          expiresIn: keys.refreshTokenDuration
-        });
-        //Sign Token
-        jwt.sign(payload, keys.secretOrKey, { expiresIn: keys.tokenDuration }, (err, token) => {
-          cryptedRefresh = encrypt(refreshToken);
-          res.json({
-            success: true,
-            token,
-            refreshToken: cryptedRefresh
-          });
-        });
-      }
+      })();
     });
   }
 });
