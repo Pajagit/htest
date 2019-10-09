@@ -7,6 +7,7 @@ const User = require("../../../models/user");
 const Project = require("../../../models/project");
 const Role = require("../../../models/role");
 const validateUserInput = require("../../../validation/user").validateUserInput;
+const UserService = require("../../../services/user");
 
 // @route PUT api/users/user/:id
 // @desc Update user by id
@@ -173,6 +174,10 @@ module.exports = Router({ mergeParams: true }).put(
           if (!isValid) {
             return res.status(400).json(errors);
           } else {
+            var canUpdateUser = await UserService.getCreateUpdateUser(req.user);
+            if (!canUpdateUser) {
+              return res.status(403).json({ message: "Forbiden" });
+            }
             if (req.body.email && !last_login) {
               let anotherUserSameMail = await checkIfUserWithSameMailExist();
               if (anotherUserSameMail) {

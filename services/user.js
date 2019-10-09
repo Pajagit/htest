@@ -120,5 +120,53 @@ module.exports = {
         resolve(false);
       }
     });
+  },
+  addRemoveProjectFromUser: async function(user, projectId) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator"];
+      var allowed = false;
+      user.projects.forEach(project => {
+        if (allowedRoles.includes(project.role) && project.id == projectId) {
+          allowed = true;
+        }
+      });
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  },
+  getCreateUpdateUser: async function(user) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin"];
+      var allowed = false;
+      user.projects.forEach(project => {
+        if (allowedRoles.includes(project.role)) {
+          allowed = true;
+        }
+      });
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  },
+  getUsers: async function(user) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
+      var allowed = false;
+      user.projects.forEach(project => {
+        if (allowedRoles.includes(project.role)) {
+          allowed = true;
+        }
+      });
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
   }
 };

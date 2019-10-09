@@ -1,6 +1,10 @@
 const Router = require("express").Router;
 const passport = require("passport");
 const Project = require("../../../models/project");
+const Role = require("../../../models/role");
+const User = require("../../../models/user");
+const UserRoleProject = require("../../../models/userroleproject");
+
 const validateProjectInput = require("../../../validation/project").validateProjectInput;
 var UserService = require("../../../services/user");
 
@@ -44,6 +48,69 @@ module.exports = Router({ mergeParams: true }).post(
             }
           })
           .catch(err => console.log(err));
+      });
+    }
+
+    async function getSuperadminRoleId() {
+      return new Promise((resolve, reject) => {
+        Role.findOne({
+          where: {
+            title: "Superadmin"
+          }
+        })
+          .then(role => {
+            if (role) {
+              resolve(role.id);
+            } else {
+              resolve(false);
+            }
+          })
+          .catch(err => console.log(err));
+      });
+    }
+
+    async function findAllSuperadminUsers(role_id) {
+      return new Promise((resolve, reject) => {
+        User.findAll({
+          include: [
+            {
+              model: Project,
+              attributes: ["title"],
+              through: {
+                attributes: ["role_id"],
+                where: { role_id: role_id }
+              },
+              as: "projects",
+              required: true
+            }
+          ]
+        })
+          .then(users => {
+            if (users) {
+              resolve(users);
+            } else {
+              resolve(false);
+            }
+          })
+          .catch(err => console.log(err));
+      });
+    }
+
+    async function addProjectToSuperadminUsers(users, projectId, role_id) {
+      return new Promise((resolve, reject) => {
+        var userObjects = [];
+        users.forEach(user => {
+          var user = {
+            user_id: user.id,
+            role_id: role_id,
+            project_id: projectId
+          };
+          userObjects.push(user);
+        });
+
+        UserRoleProject.bulkCreate(userObjects).then(projects => {
+          resolve(true);
+        });
       });
     }
 
@@ -109,7 +176,19 @@ module.exports = Router({ mergeParams: true }).post(
         var createdProject = await createProject();
         if (createdProject) {
           let createdProjectObj = await returnCreatedProject(createdProject);
-          res.json(createdProjectObj);
+          console.log();
+          if (createdProjectObj) {
+            var superadminRoleId = await getSuperadminRoleId();
+            var superadminUsers = await findAllSuperadminUsers(superadminRoleId);
+            var addedProjectToSuperadmins = await addProjectToSuperadminUsers(
+              superadminUsers,
+              createdProjectObj.id,
+              superadminRoleId
+            );
+            if (addedProjectToSuperadmins) {
+              res.json(createdProjectObj);
+            }
+          }
         } else {
           res.status(500).json({ error: "An error occured while creating project" });
         }

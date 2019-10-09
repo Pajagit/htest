@@ -4,6 +4,7 @@ const User = require("../../../models/user");
 const Project = require("../../../models/project");
 const Role = require("../../../models/role");
 const getLocalTimestamp = require("../../../utils/dateFunctions").getLocalTimestamp;
+const UserService = require("../../../services/user");
 
 // @route GET api/users/user/:id
 // @desc Get one user by id
@@ -85,6 +86,10 @@ module.exports = Router({ mergeParams: true }).get(
       }
 
       (async () => {
+        var canUpdateUser = await UserService.getCreateUpdateUser(req.user);
+        if (!canUpdateUser) {
+          return res.status(403).json({ message: "Forbiden" });
+        }
         var user = await returnUser();
 
         var userWithRole = {};

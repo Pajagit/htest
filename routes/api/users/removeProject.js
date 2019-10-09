@@ -2,6 +2,7 @@ const Router = require("express").Router;
 const passport = require("passport");
 const User = require("../../../models/user");
 const UserRoleProject = require("../../../models/userroleproject");
+const UserService = require("../../../services/user");
 
 // @route DELETE api/users/user/:id/project/:project_id
 // @desc Update user projects
@@ -77,6 +78,10 @@ module.exports = Router({ mergeParams: true }).delete(
         if (!user) {
           res.status(404).json({ error: "User doesn't exist" });
         } else {
+          var canRemoveProjectToUser = await UserService.addRemoveProjectFromUser(req.user, req.params.project_id);
+          if (!canRemoveProjectToUser) {
+            return res.status(403).json({ message: "Forbiden" });
+          }
           var hasProject = await checkIfProjectExists();
           if (hasProject) {
             var projectDeleted = await removeProject();
