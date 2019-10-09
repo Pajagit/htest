@@ -1,7 +1,7 @@
-var GroupService = require("../services/group");
-var ColorService = require("../services/color");
-var ProjectService = require("../services/project");
-var UserService = require("../services/user");
+const GroupService = require("../services/group");
+const ColorService = require("../services/color");
+const ProjectService = require("../services/project");
+const UserService = require("../services/user");
 
 const validateRouteGroupId = require("../validation/group").validateRouteGroupId;
 const validateGroupInput = require("../validation/group").validateGroupInput;

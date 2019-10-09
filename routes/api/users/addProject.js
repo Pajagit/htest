@@ -5,6 +5,7 @@ const Role = require("../../../models/role");
 const Project = require("../../../models/project");
 const UserRoleProject = require("../../../models/userroleproject");
 const validateUserProjectInput = require("../../../validation/user").validateUserProjectInput;
+const UserService = require("../../../services/user");
 
 // @route POST api/users/user/:id/project
 // @desc Update user projects
@@ -148,6 +149,10 @@ module.exports = Router({ mergeParams: true }).post(
           }
           if (!role) {
             res.status(404).json({ error: "Role doesn't exist" });
+          }
+          var canAddProjectToUser = await UserService.addRemoveProjectFromUser(req.user, req.body.project_id);
+          if (!canAddProjectToUser) {
+            return res.status(403).json({ message: "Forbiden" });
           }
 
           if (project && role) {

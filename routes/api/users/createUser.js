@@ -1,6 +1,7 @@
 const Router = require("express").Router;
 const passport = require("passport");
 const User = require("../../../models/user");
+const UserService = require("../../../services/user");
 
 const validateUserInput = require("../../../validation/user").validateUserInput;
 
@@ -75,6 +76,10 @@ module.exports = Router({ mergeParams: true }).post(
       // Check Validation
       if (!isValid) {
         return res.status(400).json(errors);
+      }
+      var canUpdateUser = await UserService.getCreateUpdateUser(req.user);
+      if (!canUpdateUser) {
+        return res.status(403).json({ message: "Forbiden" });
       }
       var userExists = await checkIfUserWithSameMailExist();
       if (userExists) {
