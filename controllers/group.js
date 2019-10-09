@@ -1,6 +1,7 @@
 var GroupService = require("../services/group");
 var ColorService = require("../services/color");
 var ProjectService = require("../services/project");
+var UserService = require("../services/user");
 
 const validateRouteGroupId = require("../validation/group").validateRouteGroupId;
 const validateGroupInput = require("../validation/group").validateGroupInput;
@@ -17,6 +18,10 @@ module.exports = {
 
     var group = await GroupService.getGroupById(req.params.id);
     if (group) {
+      var canGetGroup = await UserService.canGetProject(req.user, group.project_id);
+      if (!canGetGroup) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
       return res.status(200).json(group);
     } else {
       return res.status(404).json({ error: "Group doesn't exist" });
@@ -36,7 +41,10 @@ module.exports = {
       if (!project_exists) {
         return res.status(400).json({ error: "Project doesn't exist" });
       }
-
+      var canCreateGroup = await UserService.canCreateEditDeleteGroup(req.user, req.body.project_id);
+      if (!canCreateGroup) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
       var all_colors = await GroupService.getAllColorsFromGroups();
       var unused_color = await ColorService.getUnusedColorFromColors(all_colors);
       if (!unused_color) {
@@ -83,6 +91,10 @@ module.exports = {
 
       (async () => {
         var group = await GroupService.checkIfGroupExistById(req.params.id);
+        var canCreateGroup = await UserService.canCreateEditDeleteGroup(req.user, group.project_id);
+        if (!canCreateGroup) {
+          return res.status(403).json({ message: "Forbiden" });
+        }
         var groupWithSameTitle = await GroupService.checkIfAnotherGroupWithSameTitleExists(
           req.body.title,
           req.params.id,
@@ -104,10 +116,14 @@ module.exports = {
     if (!isValid) {
       return res.status(400).json(errors);
     }
-    var checkEntityExistance = await GroupService.checkIfGroupExistById(req.params.id);
-    if (!checkEntityExistance) {
+    var group = await GroupService.checkIfGroupExistById(req.params.id);
+    if (!group) {
       return res.status(404).json({ error: "Group doesn't exist" });
     } else {
+      var canCreateGroup = await UserService.canCreateEditDeleteGroup(req.user, group.project_id);
+      if (!canCreateGroup) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
       var groupHasTestCases = await GroupService.groupHasTestcases(req.params.id);
 
       if (groupHasTestCases) {
@@ -123,7 +139,6 @@ module.exports = {
     }
   },
   getAllGroups: async function(req, res) {
-    console.log(req.user.projects);
     const { errors, isValid } = validateRouteProjectId(req.query);
 
     // Check Validation
@@ -134,10 +149,10 @@ module.exports = {
       if (!projectExists) {
         return res.status(404).json({ error: "Project doesn't exist" });
       }
-      // var projectInScope = await ProjectService.projectInScope(req.user.id, req.query.project_id);
-      // if (!projectInScope) {
-      //   return res.status(403).json({ message: "Forbiden" });
-      // }
+      var canGetProject = await UserService.canGetProject(req.user, req.query.project_id);
+      if (!canGetProject) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
       var getAllProjectGroups = await GroupService.getAllProjectGroups(req.query.project_id);
       if (getAllProjectGroups) {
         res.status(200).json(getAllProjectGroups);
