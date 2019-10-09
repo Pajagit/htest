@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
+import { groupsPermission } from "../../permissions/GroupPermissions";
 import { getGroups } from "../../actions/groupsActions";
 import isEmpty from "../../validation/isEmpty";
 
@@ -14,6 +15,31 @@ import ListItem from "../lists/ListItem";
 import Header from "../common/Header";
 
 class Groups extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialRender: true,
+      projectId: null,
+      user: this.props.auth.user,
+      errors: {}
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var { user } = nextProps.auth;
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = groupsPermission(nextProps.auth.user.projects, nextProps.match.params.projectId);
+
+      if (!isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+      }
+    }
+    return Object.keys(update).length ? update : null;
+  }
   componentDidMount() {
     var projectId = this.props.match.params.projectId;
     this.props.getGroups(projectId);

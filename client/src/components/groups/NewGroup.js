@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import GroupValidation from "../../validation/GroupValidation";
+import { createNewGroupPermission } from "../../permissions/GroupPermissions";
 import { clearErrors } from "../../actions/errorsActions";
 import Btn from "../common/Btn";
 import Input from "../common/Input";
@@ -23,11 +24,29 @@ class NewGroup extends Component {
       initialRender: true,
       projectId: null,
       title: "",
+      user: this.props.auth.user,
       isPinned: false,
       submitPressed: false,
       errors: {}
     };
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var { user } = nextProps.auth;
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = createNewGroupPermission(nextProps.auth.user.projects, nextProps.match.params.projectId);
+
+      if (!isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/Groups`);
+      }
+    }
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
   }
@@ -146,8 +165,8 @@ NewGroup.propTypes = {
 const mapStateToProps = state => ({
   testcases: state.testcases,
   groups: state.groups,
-  errors: state.errors
-  // auth: state.auth,
+  errors: state.errors,
+  auth: state.auth
 });
 
 export default connect(

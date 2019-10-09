@@ -5,6 +5,8 @@ import { withRouter } from "react-router-dom";
 
 import { createProject } from "../../actions/projectActions";
 import { userActivation } from "../../actions/userActions";
+import { createNewProjectPermission } from "../../permissions/ProjectPermissions";
+
 import Input from "../../components/common/Input";
 import Textarea from "../../components/common/Textarea";
 import Btn from "../../components/common/Btn";
@@ -25,12 +27,29 @@ class NewProject extends Component {
       initialRender: true,
       submitPressed: false,
       project: this.props.projects.project,
+      user: this.props.auth.user,
       title: "",
       url: "",
       image_url: "",
       description: "",
       errors: {}
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var { user } = nextProps.auth;
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = createNewProjectPermission(nextProps.auth.user.projects);
+
+      if (!isValid) {
+        nextProps.history.push(`/ProjectSettings`);
+      }
+    }
+    return Object.keys(update).length ? update : null;
   }
 
   componentWillUnmount() {

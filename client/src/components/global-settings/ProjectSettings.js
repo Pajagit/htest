@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getProjects } from "../../actions/projectActions";
+import { projectSettingsPermission } from "../../permissions/ProjectPermissions";
 import isEmpty from "../../validation/isEmpty";
 
 import GlobalPanel from "../global-panel/GlobalPanel";
@@ -14,6 +15,32 @@ import ListItem from "../lists/ListItem";
 import Header from "../common/Header";
 
 class ProjectSettings extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialRender: true,
+      projectId: null,
+      user: this.props.auth.user,
+      errors: {}
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var { user } = nextProps.auth;
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = projectSettingsPermission(nextProps.auth.user.projects);
+
+      if (!isValid) {
+        nextProps.history.push(`/Projects`);
+      }
+    }
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     this.props.getProjects();
   }
