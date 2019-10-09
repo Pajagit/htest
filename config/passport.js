@@ -27,33 +27,8 @@ module.exports = passport => {
       })
         .then(user => {
           if (user) {
-            if (user.projects.length > 0) {
-              var projectUsers = [];
-              var projectsProcessed = 0;
-              user.projects.forEach(project => {
-                var projectUser = {};
-                Role.findOne({
-                  attributes: ["title"],
-                  where: {
-                    id: project.userroleprojects.role_id
-                  }
-                }).then(role => {
-                  if (role) {
-                    projectUser.role = role.title;
-                    projectUser.id = project.id;
-                    projectUsers.push(projectUser);
-                    projectsProcessed++;
-                    if (projectsProcessed === user.projects.length) {
-                      user.projects = projectUsers;
-                      return done(null, user);
-                    }
-                  }
-                });
-              });
-            } else {
-              user.projects = [];
-              return done(null, user);
-            }
+            user.projects = jwt_payload.projects;
+            return done(null, user);
           } else {
             return done(null, false);
           }
