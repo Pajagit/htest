@@ -1,9 +1,12 @@
 import React, { Component } from "react";
+import store from "../store";
+import { logoutUser } from "../actions/authActions";
 import htestLogo from "../img/htest-logo.png";
 import { clearErrors } from "../actions/errorsActions";
 import { GoogleLogin } from "react-google-login";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { gapi } from "gapi-script";
 
 import { withRouter } from "react-router-dom";
 import { loginUser } from "../actions/authActions";
@@ -37,6 +40,11 @@ class Landing extends Component {
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/Projects");
+    } else {
+      if (gapi && gapi.auth2) {
+        gapi.auth2.getAuthInstance().signOut();
+        store.dispatch(logoutUser());
+      }
     }
   }
   responseGoogle = response => {
@@ -60,7 +68,6 @@ class Landing extends Component {
               onFailure={this.responseGoogle}
               redirectUri={"/Projects"}
               ux_mode="redirect"
-              cookiePolicy={"single_host_origin"}
             />
           </div>
           <span className="text-danger">{errors.email}</span>
