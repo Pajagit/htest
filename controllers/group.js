@@ -123,6 +123,7 @@ module.exports = {
     }
   },
   getAllGroups: async function(req, res) {
+    console.log(req.user.projects);
     const { errors, isValid } = validateRouteProjectId(req.query);
 
     // Check Validation
@@ -133,6 +134,10 @@ module.exports = {
       if (!projectExists) {
         return res.status(404).json({ error: "Project doesn't exist" });
       }
+      // var projectInScope = await ProjectService.projectInScope(req.user.id, req.query.project_id);
+      // if (!projectInScope) {
+      //   return res.status(403).json({ message: "Forbiden" });
+      // }
       var getAllProjectGroups = await GroupService.getAllProjectGroups(req.query.project_id);
       if (getAllProjectGroups) {
         res.status(200).json(getAllProjectGroups);

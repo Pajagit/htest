@@ -116,4 +116,21 @@ module.exports = {
         .catch(err => console.log(err));
     });
   }
+  // ,
+  // canGetProject: async function(userId, projectId) {
+  //   return new Promise((resolve, reject) => {
+  //     UserRoleProject.findOne({
+  //       where:{
+  //         user_id:userId,
+  //         project_id:projectId
+  //       }
+  //     }).then(userroleproject=>{
+  //       if(userroleproject){
+  //         resolve(true)
+  //       }else{
+  //         resolve(false);
+  //       }
+  //     })
+  //   });
+  // }
 };
