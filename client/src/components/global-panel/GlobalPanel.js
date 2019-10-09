@@ -1,13 +1,43 @@
 import React, { Component } from "react";
-import GlobalPanelItem from "./GlobalPanelItem";
-import GlobalPanelHeader from "./GlobalPanelHeader";
-import GlobalPanelProfileImage from "./GlobalPanelProfileImage";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
+
 import { logoutUser } from "../../actions/authActions";
+import { globalSettingsPermission } from "../../permissions/GlobalSettingsPermissions";
+
+import GlobalPanelItem from "./GlobalPanelItem";
+import GlobalPanelHeader from "./GlobalPanelHeader";
+import GlobalPanelProfileImage from "./GlobalPanelProfileImage";
 
 class GlobalPanel extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      projectId: null,
+      user: this.props.auth.user,
+      settingsVisible: false,
+      errors: {}
+    };
+  }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var { user } = nextProps.auth;
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = globalSettingsPermission(nextProps.auth.user.projects, nextProps.match.params.projectId);
+
+      if (isValid) {
+        update.settingsVisible = true;
+      } else {
+        update.settingsVisible = false;
+      }
+    }
+    return Object.keys(update).length ? update : null;
+  }
+
   onLogoutClick(e) {
     e.preventDefault();
     this.props.logoutUser();
@@ -33,7 +63,25 @@ class GlobalPanel extends Component {
       notificationsActive = false;
       statisticsActive = false;
       settingsActive = true;
+    } else if (this.props.match.path === "/Notifications") {
+      projectsActive = false;
+      notificationsActive = true;
+      statisticsActive = false;
+      settingsActive = false;
+    } else if (this.props.match.path === "/Statistics") {
+      projectsActive = false;
+      notificationsActive = false;
+      statisticsActive = true;
+      settingsActive = false;
     }
+
+    var settings;
+    if (this.state.settingsVisible) {
+      settings = (
+        <GlobalPanelItem icon={<i className="fas fa-user-cog"></i>} link={"/UserSettings"} active={settingsActive} />
+      );
+    }
+
     return (
       <div className="global-panel global-panel-grid">
         <div className="global-panel-items">
@@ -46,7 +94,7 @@ class GlobalPanel extends Component {
             notification={14}
           />
           <GlobalPanelItem icon={<i className="fas fa-chart-pie"></i>} link={"/Statistics"} active={statisticsActive} />
-          <GlobalPanelItem icon={<i className="fas fa-user-cog"></i>} link={"/UserSettings"} active={settingsActive} />
+          {settings}
           <GlobalPanelProfileImage img={userImg} onClick={this.onLogoutClick.bind(this)} />
         </div>
       </div>

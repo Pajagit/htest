@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
+import { projectPanelSettingsPermission } from "../../permissions/GroupPermissions";
 import { getProject } from "../../actions/projectActions";
 import isEmpty from "../../validation/isEmpty";
 
@@ -18,14 +19,35 @@ class ProjectPanel extends Component {
       title: "",
       img: "",
       projectId: null,
+      user: this.props.auth.user,
       testcasesUrl: false,
       reportsUrl: false,
       statisticsUrl: false,
       settingsUrl: false,
       settingsActive: false,
+      settingsVisible: false,
       errors: {}
     };
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var { user } = nextProps.auth;
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = projectPanelSettingsPermission(nextProps.auth.user.projects, nextProps.match.params.projectId);
+
+      if (isValid) {
+        update.settingsVisible = true;
+      } else {
+        update.settingsVisible = false;
+      }
+    }
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     var projectId = this.props.match.params.projectId;
     this.props.getProject(projectId);
@@ -41,8 +63,33 @@ class ProjectPanel extends Component {
     }
   }
   render() {
-    var img;
+    var settings;
     var projectId = this.props.match.params.projectId;
+    if (this.state.settingsVisible) {
+      settings = (
+        <ProjectPanelDropdownItem
+          icon={<i className="fas fa-cog"></i>}
+          title={"SETTINGS"}
+          active={this.state.settingsUrl}
+          settingsActive={this.state.settingsActive}
+          onClick={e => this.setState({ settingsActive: !this.state.settingsActive })}
+          options={[
+            {
+              title: "PROJECT INFO",
+              link: `/${projectId}/ProjectInfo`,
+              icon: <i className="fas fa-project-diagram"></i>
+            },
+            { title: "GROUPS", link: `/${projectId}/Groups`, icon: <i className="fas fa-object-group"></i> },
+            { title: "DEVICES", link: `/${projectId}/Devices`, icon: <i className="fas fa-tablet-alt"></i> },
+            { title: "BROWSERS", link: `/${projectId}/Browsers`, icon: <i className="far fa-window-maximize"></i> },
+            { title: "VERSIONS", link: `/${projectId}/Versions`, icon: <i className="fas fa-code-branch"></i> },
+            { title: "ENVIRONMENTS", link: `/${projectId}/Environments`, icon: <i className="fab fa-dev"></i> },
+            { title: "TEST SETUP", link: `/${projectId}/TestSetup`, icon: <i className="fas fa-cogs"></i> }
+          ]}
+        />
+      );
+    }
+    var img;
     var title;
     if (this.props.projects && this.props.projects.project) {
       img = this.props.projects.project.image_url;
@@ -73,26 +120,7 @@ class ProjectPanel extends Component {
             active={this.state.statisticsUrl}
             link={`/${projectId}/Statistics`}
           />
-          <ProjectPanelDropdownItem
-            icon={<i className="fas fa-cog"></i>}
-            title={"SETTINGS"}
-            active={this.state.settingsUrl}
-            settingsActive={this.state.settingsActive}
-            onClick={e => this.setState({ settingsActive: !this.state.settingsActive })}
-            options={[
-              {
-                title: "PROJECT INFO",
-                link: `/${projectId}/ProjectInfo`,
-                icon: <i className="fas fa-project-diagram"></i>
-              },
-              { title: "GROUPS", link: `/${projectId}/Groups`, icon: <i className="fas fa-object-group"></i> },
-              { title: "DEVICES", link: `/${projectId}/Devices`, icon: <i className="fas fa-tablet-alt"></i> },
-              { title: "BROWSERS", link: `/${projectId}/Browsers`, icon: <i className="far fa-window-maximize"></i> },
-              { title: "VERSIONS", link: `/${projectId}/Versions`, icon: <i className="fas fa-code-branch"></i> },
-              { title: "ENVIRONMENTS", link: `/${projectId}/Environments`, icon: <i className="fab fa-dev"></i> },
-              { title: "TEST SETUP", link: `/${projectId}/TestSetup`, icon: <i className="fas fa-cogs"></i> }
-            ]}
-          />
+          {settings}
         </div>
       </div>
     );
@@ -105,8 +133,8 @@ ProjectPanel.propTypes = {
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
-  projects: state.projects
-  // auth: state.auth,
+  projects: state.projects,
+  auth: state.auth
 });
 
 export default connect(
