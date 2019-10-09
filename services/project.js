@@ -75,15 +75,21 @@ module.exports = {
     });
   },
   // find and return projects
-  getProjects: async function(searchTerm) {
+  getProjects: async function(searchTerm, user) {
     return new Promise((resolve, reject) => {
       var whereStatement = {};
-      whereStatement.deleted = false;
+      var userProjectsIds = [];
+      user.projects.forEach(project => {
+        userProjectsIds.push(project.id);
+      });
       if (searchTerm) {
         whereStatement.title = {
           [Op.iLike]: "%" + searchTerm + "%"
         };
       }
+      whereStatement.id = {
+        [Op.in]: userProjectsIds
+      };
       Project.findAll({
         attributes: [
           "id",

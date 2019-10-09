@@ -3,6 +3,7 @@ const passport = require("passport");
 const User = require("../../../models/user");
 const Role = require("../../../models/role");
 const Project = require("../../../models/project");
+var UserService = require("../../../services/user");
 
 // @route GET api/projects/project/:id
 // @desc Get project by id
@@ -62,8 +63,7 @@ module.exports = Router({ mergeParams: true }).get(
             "jira_url"
           ],
           where: {
-            id: req.params.id,
-            deleted: false
+            id: req.params.id
           },
           include: [
             {
@@ -86,6 +86,10 @@ module.exports = Router({ mergeParams: true }).get(
     }
 
     (async () => {
+      var canGetProject = await UserService.canGetProject(req.user, req.params.id);
+      if (!canGetProject) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
       var project = await returnProject();
 
       var projectWithRole = {};

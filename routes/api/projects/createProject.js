@@ -2,6 +2,7 @@ const Router = require("express").Router;
 const passport = require("passport");
 const Project = require("../../../models/project");
 const validateProjectInput = require("../../../validation/project").validateProjectInput;
+var UserService = require("../../../services/user");
 
 // @route POST api/projects/project
 // @desc Create new project
@@ -97,6 +98,10 @@ module.exports = Router({ mergeParams: true }).post(
     }
 
     (async () => {
+      var canCreateProject = await UserService.canCreateProject(req.user, req.params.id);
+      if (!canCreateProject) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
       var projectExists = await checkIfProjectWithSameTItleExists();
       if (projectExists) {
         res.status(400).json({ title: "Project already exists" });

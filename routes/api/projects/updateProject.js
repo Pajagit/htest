@@ -3,6 +3,7 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const passport = require("passport");
 const Project = require("../../../models/project");
+var UserService = require("../../../services/user");
 
 const validateProjectInput = require("../../../validation/project").validateProjectInput;
 
@@ -123,6 +124,10 @@ module.exports = Router({ mergeParams: true }).put(
         if (!checkEntityExistance) {
           res.status(404).json({ error: "Project doesn't exist" });
         } else {
+          var canUpdateProject = await UserService.canUpdateProject(req.user, req.params.id);
+          if (!canUpdateProject) {
+            return res.status(403).json({ message: "Forbiden" });
+          }
           var projectWithSameTitle = await checkIfProjectWithSameTItleExists();
           if (projectWithSameTitle) {
             res.status(400).json({ title: "Project already exists" });

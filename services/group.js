@@ -8,7 +8,7 @@ module.exports = {
   getGroupById: async function(id) {
     return new Promise((resolve, reject) => {
       Group.findOne({
-        attributes: ["id", "pinned", "title"],
+        attributes: ["id", "pinned", "title", "project_id"],
         where: {
           id: id
         },
@@ -28,6 +28,7 @@ module.exports = {
             groupObject.isPinned = group.pinned;
             groupObject.title = group.title;
             groupObject.color = group.color.title;
+            groupObject.project_id = group.project_id;
             resolve(groupObject);
           } else {
             resolve(false);
