@@ -35,6 +35,32 @@ module.exports = {
       }
     });
   },
+  findAllSuperadminUsers: async function(role_id) {
+    return new Promise((resolve, reject) => {
+      User.findAll({
+        include: [
+          {
+            model: Project,
+            attributes: ["title"],
+            through: {
+              attributes: ["role_id"],
+              where: { role_id: role_id }
+            },
+            as: "projects",
+            required: true
+          }
+        ]
+      })
+        .then(users => {
+          if (users) {
+            resolve(users);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(err => console.log(err));
+    });
+  },
   canGetProject: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
