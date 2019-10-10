@@ -17,6 +17,7 @@ import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 import Confirm from "../common/Confirm";
 
+import { testcasesPermissions } from "../../permissions/TestcasePermissions";
 import isEmpty from "../../validation/isEmpty";
 import { getTestcase } from "../../actions/testcaseActions";
 import { setTestcaseDeprecated } from "../../actions/testcaseActions";
@@ -26,9 +27,27 @@ class TestCase extends Component {
     super(props);
     this.state = {
       testcaseId: null,
+      user: this.props.auth.user,
+      isValid: false,
       projectId: null
     };
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
+        if (!isValid) {
+          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+        }
+      }
+      update.isValid = isValid;
+    }
+
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
     var projectId = this.props.match.params.projectId;
@@ -198,8 +217,8 @@ TestCase.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  testcases: state.testcases
-  // auth: state.auth,
+  testcases: state.testcases,
+  auth: state.auth
 });
 
 export default connect(

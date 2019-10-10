@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getUsers } from "../../actions/userActions";
+import { globalUsersPermissions } from "../../permissions/UserPermissions";
 import isEmpty from "../../validation/isEmpty";
 import { userActivation } from "../../actions/userActions";
 import successToast from "../../toast/successToast";
@@ -19,6 +20,31 @@ import Header from "../common/Header";
 import placeholderImg from "../../img/user-placeholder.png";
 
 class UserSettings extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialRender: true,
+      user: this.props.auth.user,
+      errors: {}
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var { user } = nextProps.auth;
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = globalUsersPermissions(nextProps.auth.user.projects);
+
+      if (!isValid) {
+        nextProps.history.push(`/Projects`);
+      }
+    }
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     this.props.getUsers();
   }

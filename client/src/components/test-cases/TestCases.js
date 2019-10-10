@@ -12,6 +12,7 @@ import SearchBtn from "../common/SearchBtn";
 import TestCaseContainer from "../test-cases/TestCaseContainer";
 import { getGroups } from "../../actions/groupsActions";
 import { getUsers } from "../../actions/userActions";
+import { testcasesPermissions } from "../../permissions/TestcasePermissions";
 import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
 
 import SearchDropdown from "../common/SearchDropdown";
@@ -27,8 +28,10 @@ class TestCases extends Component {
       options: "",
       values: "",
       showFilters: true,
+      isValid: false,
       value: null,
       arrayValue: [],
+      user: this.props.auth.user,
       users: [],
       showDatepickerFrom: false,
       selectedDateFrom: "",
@@ -47,10 +50,26 @@ class TestCases extends Component {
     this.selectMultipleOptionUsers = this.selectMultipleOptionUsers.bind(this);
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+
+    if (nextProps.auth && nextProps.auth.user) {
+      var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
+      if (!isValid) {
+        nextProps.history.push(`/Projects`);
+      }
+      update.isValid = isValid;
+    }
+
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClick, false);
-    var projectId = this.props.match.params.projectId;
-    this.props.getGroups(projectId);
+    if (this.state.isValid) {
+      var projectId = this.props.match.params.projectId;
+      this.props.getGroups(projectId);
+    }
     var has_testcases = true;
     this.props.getUsers(has_testcases);
   }
@@ -310,9 +329,8 @@ TestCases.propTypes = {
 const mapStateToProps = state => ({
   testcases: state.testcases,
   groups: state.groups,
-  users: state.users
-
-  // auth: state.auth,
+  users: state.users,
+  auth: state.auth
 });
 
 export default connect(

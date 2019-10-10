@@ -42,8 +42,12 @@ export const projectPanelSettingsPermission = (userProjects, projectId) => {
     return project.id === parseInt(projectId);
   });
   var errors = {};
-  var roleOnProject = filteredProjects[0].role;
-  if (roleOnProject !== roles.PROJECTADMIN && roleOnProject !== roles.SUPERADMIN) {
+  if (filteredProjects.length > 0) {
+    var roleOnProject = filteredProjects[0].role;
+    if (roleOnProject !== roles.PROJECTADMIN && roleOnProject !== roles.SUPERADMIN) {
+      errors.invalid_access = true;
+    }
+  } else {
     errors.invalid_access = true;
   }
 

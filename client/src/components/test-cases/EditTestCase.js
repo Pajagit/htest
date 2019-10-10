@@ -25,6 +25,7 @@ import { getGroups } from "../../actions/groupsActions";
 import filterStringArray from "../../utility/filterStringArray";
 import isEmpty from "../../validation/isEmpty";
 import TestCaseValidation from "../../validation/TestCaseValidation";
+import { testcasesPermissions } from "../../permissions/TestcasePermissions";
 import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
 import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
 
@@ -38,6 +39,7 @@ class EditTestCase extends Component {
       options: "",
       value: null,
       arrayValue: [],
+      user: this.props.auth.user,
       title: "",
       description: "",
       expected_result: "",
@@ -128,6 +130,15 @@ class EditTestCase extends Component {
 
         update.notPinnedGroups = filteredUnpinnedGroups;
         update.allGroups = groups;
+      }
+      if (nextProps.auth && nextProps.auth.user) {
+        if (nextProps.auth.user !== prevState.user) {
+          var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
+          if (!isValid) {
+            nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+          }
+        }
+        update.isValid = isValid;
       }
     }
 
@@ -433,8 +444,8 @@ EditTestCase.propTypes = {
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
-  groups: state.groups
-  // auth: state.auth,
+  groups: state.groups,
+  auth: state.auth
 });
 
 export default connect(

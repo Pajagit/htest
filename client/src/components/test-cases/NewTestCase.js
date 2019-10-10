@@ -22,6 +22,7 @@ import TestCaseValidation from "../../validation/TestCaseValidation";
 import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
 import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
 import filterStringArray from "../../utility/filterStringArray";
+import { testcasesPermissions } from "../../permissions/TestcasePermissions";
 import { getGroups } from "../../actions/groupsActions";
 import { createTestCase } from "../../actions/testcaseActions";
 
@@ -35,10 +36,12 @@ class NewTestCase extends Component {
       options: "",
       value: null,
       title: "",
+      user: this.props.auth.user,
       description: "",
       expected_result: "",
       preconditions: "",
       pinnedGroups: [],
+      isValid: false,
       selectedGroups: [],
       test_steps: [{ id: 1, value: "" }],
       notPinnedGroups: [],
@@ -49,11 +52,6 @@ class NewTestCase extends Component {
       links: [],
       errors: {}
     };
-  }
-  componentDidMount() {
-    var projectId = this.props.match.params.projectId;
-    this.setState({ projectId });
-    this.props.getGroups(projectId);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -72,7 +70,25 @@ class NewTestCase extends Component {
       update.allGroups = groups;
     }
 
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
+        if (!isValid) {
+          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+        }
+      }
+      update.isValid = isValid;
+    }
+
     return Object.keys(update).length ? update : null;
+  }
+
+  componentDidMount() {
+    var projectId = this.props.match.params.projectId;
+    this.setState({ projectId });
+    if (this.state.isValid) {
+      this.props.getGroups(projectId);
+    }
   }
   checkValidation() {
     var formData = {};
@@ -377,8 +393,8 @@ NewTestCase.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  groups: state.groups
-  // auth: state.auth,
+  groups: state.groups,
+  auth: state.auth
 });
 
 export default connect(
