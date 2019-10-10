@@ -10,6 +10,7 @@ import { getRoles } from "../../actions/roleActions";
 import { addProject } from "../../actions/userActions";
 import { removeProject } from "../../actions/userActions";
 import { userActivation } from "../../actions/userActions";
+import { globalEditUserPermission } from "../../permissions/UserPermissions";
 import Input from "../../components/common/Input";
 import Btn from "../../components/common/Btn";
 import UnderlineAnchor from "../../components/common/UnderlineAnchor";
@@ -75,6 +76,15 @@ class EditUser extends Component {
         update.active = user.active;
       }
     }
+
+    if (nextProps.auth && nextProps.auth.user) {
+      var { isValid } = globalEditUserPermission(nextProps.auth.user.projects);
+    }
+
+    if (!isValid) {
+      nextProps.history.push(`/UserSettings`);
+    }
+
     var { roles } = nextProps.roles;
     if (nextProps.roles.roles !== prevState.roles) {
       update.roles = roles;
@@ -249,7 +259,7 @@ class EditUser extends Component {
       if (res.status === 200) {
         this.props.getUser(this.props.users.user.id);
         successToast("Project role updated successfully");
-        socket.emit("refreshUserToken", this.state.userId);
+        socket.emit("refreshUserToken", updateData.user_id);
         this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
       } else {
       }

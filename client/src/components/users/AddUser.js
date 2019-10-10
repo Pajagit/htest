@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { addUser } from "../../actions/userActions";
+import { globalAddUserPermission } from "../../permissions/UserPermissions";
 import Input from "../../components/common/Input";
 import Btn from "../../components/common/Btn";
 import UnderlineAnchor from "../../components/common/UnderlineAnchor";
@@ -27,6 +28,20 @@ class AddUser extends Component {
       last_name: "",
       errors: {}
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+
+    if (nextProps.auth && nextProps.auth.user) {
+      var { isValid } = globalAddUserPermission(nextProps.auth.user.projects);
+    }
+
+    if (!isValid) {
+      nextProps.history.push(`/UserSettings`);
+    }
+
+    return Object.keys(update).length ? update : null;
   }
 
   checkValidation() {

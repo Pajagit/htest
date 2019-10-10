@@ -7,37 +7,72 @@ import { getProjects } from "../../actions/projectActions";
 import ProjectCard from "./ProjectCard";
 
 class ProjectCardContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialRender: true,
+      user: this.props.auth.user,
+      projects: this.props.projects.projects,
+      errors: {}
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    var { user } = nextProps.auth;
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        nextProps.getProjects();
+        update.user = user;
+      }
+
+      if (nextProps.projects && nextProps.projects.projects) {
+        update.projects = nextProps.projects.projects;
+      }
+    }
+
+    return Object.keys(update).length ? update : null;
+  }
   componentDidMount() {
     this.props.getProjects();
   }
-
   render() {
     var projects = [];
+    var projectsData;
     if (this.props.projects && this.props.projects.projects) {
-      projects = this.props.projects.projects;
+      projects = this.state.projects;
+    }
+    if (projects.length > 0) {
+      projectsData = (
+        <div className="testcase-grid">
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={index}
+              img={project.image_url}
+              title={project.title}
+              id={project.id}
+              management={project.project_manager}
+              qa={project.users.map((user, index) => {
+                if (project.users.length > index + 1) {
+                  return user.first_name + " " + user.last_name + ", ";
+                } else {
+                  return user.first_name + " " + user.last_name;
+                }
+              })}
+            />
+          ))}
+        </div>
+      );
+    } else {
+      projectsData = (
+        <div className="testcase-grid">
+          <div className="testcase-container-no-content">There are no projects assigned to you</div>
+        </div>
+      );
     }
     return (
       <div>
-        <div className="project-card-container-items">
-          <div className="testcase-grid">
-            {projects.map((project, index) => (
-              <ProjectCard
-                key={index}
-                img={project.image_url}
-                title={project.title}
-                id={project.id}
-                management={project.project_manager}
-                qa={project.users.map((user, index) => {
-                  if (project.users.length > index + 1) {
-                    return user.first_name + " " + user.last_name + ", ";
-                  } else {
-                    return user.first_name + " " + user.last_name;
-                  }
-                })}
-              />
-            ))}
-          </div>
-        </div>
+        <div className="project-card-container-items">{projectsData}</div>
       </div>
     );
   }
@@ -49,8 +84,8 @@ ProjectCardContainer.propTypes = {
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
-  projects: state.projects
-  // auth: state.auth,
+  projects: state.projects,
+  auth: state.auth
 });
 
 export default connect(
