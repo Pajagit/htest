@@ -10,6 +10,7 @@ const Color = require("../../../models/color");
 const User = require("../../../models/user");
 
 const validateTestCaseInput = require("../../../validation/testcase").validateTestCaseInput;
+const UserService = require("../../../services/user");
 
 // @route PUT api/testcases/:id
 // @desc Update test case by id
@@ -299,6 +300,10 @@ module.exports = Router({ mergeParams: true }).put(
         if (!checkEntityExistance) {
           res.status(404).json({ error: "Test case doesn't exist" });
         } else {
+          var canCreateTestCase = await UserService.canCreateUpdateTestCase(req.user, req.body.project_id);
+          if (!canCreateTestCase) {
+            return res.status(403).json({ message: "Forbiden" });
+          }
           let updatedTestCase = await updateOrCreateTestCase();
 
           //update steps

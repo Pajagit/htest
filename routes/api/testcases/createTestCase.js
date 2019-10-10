@@ -10,6 +10,7 @@ const Color = require("../../../models/color");
 const User = require("../../../models/user");
 
 const validateTestCaseInput = require("../../../validation/testcase").validateTestCaseInput;
+const UserService = require("../../../services/user");
 
 // @route POST api/testcases/testcase
 // @desc Create new testcase
@@ -203,6 +204,10 @@ module.exports = Router({ mergeParams: true }).post(
     }
 
     (async () => {
+      var canCreateTestCase = await UserService.canCreateUpdateTestCase(req.user, req.body.project_id);
+      if (!canCreateTestCase) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
       let createdTestCase = await createTestCase();
       if (createdTestCase) {
         //links
