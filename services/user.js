@@ -168,5 +168,37 @@ module.exports = {
         resolve(false);
       }
     });
+  },
+  canCreateUpdateTestCase: async function(user, projectId) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
+      var allowed = false;
+      user.projects.forEach(project => {
+        if (project.id == projectId && allowedRoles.includes(project.role)) {
+          allowed = true;
+        }
+      });
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  },
+  getTestCase: async function(user, projectId) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
+      var allowed = false;
+      user.projects.forEach(project => {
+        if (project.id == projectId && allowedRoles.includes(project.role)) {
+          allowed = true;
+        }
+      });
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
   }
 };
