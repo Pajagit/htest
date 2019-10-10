@@ -21,5 +21,22 @@ module.exports = {
         })
         .catch(err => console.log(err));
     }
+  },
+  getSuperadminRoleId: async function() {
+    return new Promise((resolve, reject) => {
+      Role.findOne({
+        where: {
+          title: "Superadmin"
+        }
+      })
+        .then(role => {
+          if (role) {
+            resolve(role.id);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(err => console.log(err));
+    });
   }
 };

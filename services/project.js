@@ -3,6 +3,7 @@ const Op = Sequelize.Op;
 const User = require("../models/user");
 const Role = require("../models/role");
 const Project = require("../models/project");
+const UserRoleProject = require("../models/userroleproject");
 
 module.exports = {
   checkIfProjectExist: async function(id) {
@@ -18,6 +19,28 @@ module.exports = {
           resolve(false);
         }
       });
+    });
+  },
+  checkIfProjectWithSameTitleExists: async function(title, id) {
+    return new Promise((resolve, reject) => {
+      var whereStatement = {};
+      whereStatement.title = title;
+      if (id) {
+        whereStatement.id = {
+          [Op.ne]: id
+        };
+      }
+      Project.findOne({
+        where: whereStatement
+      })
+        .then(project => {
+          if (project) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(err => console.log(err));
     });
   },
   deactivateProject: async function(id) {
@@ -74,7 +97,6 @@ module.exports = {
       }
     });
   },
-  // find and return projects
   getProjects: async function(searchTerm, user) {
     return new Promise((resolve, reject) => {
       var whereStatement = {};
@@ -120,6 +142,123 @@ module.exports = {
           resolve(projects);
         })
         .catch(err => console.log(err));
+    });
+  },
+  getProjectById: async function(id) {
+    return new Promise((resolve, reject) => {
+      Project.findOne({
+        attributes: [
+          "id",
+          "title",
+          "description",
+          "started_at",
+          "ended_at",
+          "image_url",
+          "project_manager",
+          "deleted",
+          "url",
+          "jira_url"
+        ],
+        where: {
+          id: id
+        },
+        include: [
+          {
+            model: User,
+            attributes: ["id", "first_name", "last_name", "email"],
+            through: {
+              attributes: ["role_id"]
+            },
+            as: "users",
+            required: false
+          }
+        ],
+        order: [["id", "DESC"], [User, "id", "ASC"]]
+      })
+        .then(project => {
+          resolve(project);
+        })
+        .catch(err => console.log(err));
+    });
+  },
+  updateProject: async function(projectFields, id) {
+    return new Promise((resolve, reject) => {
+      Project.update(projectFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(project => {
+        if (project) {
+          resolve(project);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  returnUpdatedProject: async function(projectId) {
+    return new Promise((resolve, reject) => {
+      if (projectId) {
+        Project.findOne({
+          attributes: [
+            "id",
+            "title",
+            "description",
+            "started_at",
+            "ended_at",
+            "image_url",
+            "project_manager",
+            "url",
+            "jira_url"
+          ],
+          where: {
+            id: projectId
+          }
+        }).then(project => {
+          if (project) {
+            resolve(project);
+          } else {
+            resolve(false);
+          }
+        });
+      }
+    });
+  },
+  createProject: async function(projectFields) {
+    return new Promise((resolve, reject) => {
+      Project.create({
+        title: projectFields.title,
+        description: projectFields.description,
+        started_at: projectFields.started_at,
+        ended_at: projectFields.ended_at,
+        image_url: projectFields.image_url,
+        project_manager: projectFields.project_manager,
+        jira_url: projectFields.jira_url,
+        url: projectFields.url
+      }).then(project => {
+        if (project) {
+          resolve(project);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  addProjectToSuperadminUsers: async function(users, projectId, role_id) {
+    return new Promise((resolve, reject) => {
+      var userObjects = [];
+      users.forEach(user => {
+        var user = {
+          user_id: user.id,
+          role_id: role_id,
+          project_id: projectId
+        };
+        userObjects.push(user);
+      });
+
+      UserRoleProject.bulkCreate(userObjects).then(projects => {
+        resolve(true);
+      });
     });
   }
 };
