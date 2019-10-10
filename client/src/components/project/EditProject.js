@@ -45,6 +45,7 @@ class EditProject extends Component {
       availableUsers: [],
       selectedRole: [],
       image_url: "",
+      project_manager: "",
       description: "",
       showAddUser: false,
       errors: {}
@@ -76,6 +77,7 @@ class EditProject extends Component {
         update.description = project.description ? project.description : "";
         update.deleted = project.deleted;
         update.url = project.url;
+        update.project_manager = project.project_manager ? project.project_manager : "";
         update.image_url = project.image_url ? project.image_url : "";
       }
     }
@@ -219,6 +221,7 @@ class EditProject extends Component {
     projectData.description = this.state.description;
     projectData.image_url = this.state.image_url;
     projectData.url = this.state.url;
+    projectData.project_manager = this.state.project_manager;
 
     const { errors, isValid } = ProjectValidation(projectData);
     if (isValid) {
@@ -433,6 +436,17 @@ class EditProject extends Component {
             value={this.state.url}
             onChange={e => this.onChange(e)}
             name={"url"}
+            onKeyDown={this.submitFormOnEnterKey}
+            className={disabledEdit}
+          />
+          <Input
+            type="text"
+            placeholder="Enter Managers Here"
+            label="Management"
+            validationMsg={[]}
+            value={this.state.project_manager}
+            onChange={e => this.onChange(e)}
+            name={"project_manager"}
             onKeyDown={this.submitFormOnEnterKey}
             className={disabledEdit}
           />

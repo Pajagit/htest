@@ -27,6 +27,7 @@ class NewProject extends Component {
       initialRender: true,
       submitPressed: false,
       project: this.props.projects.project,
+      project_manager: "",
       user: this.props.auth.user,
       title: "",
       url: "",
@@ -62,6 +63,7 @@ class NewProject extends Component {
     projectData.description = this.state.description;
     projectData.image_url = this.state.image_url;
     projectData.url = this.state.url;
+    projectData.project_manager = this.state.project_manager;
 
     const { errors } = ProjectValidation(projectData);
 
@@ -78,6 +80,7 @@ class NewProject extends Component {
     projectData.description = this.state.description;
     projectData.image_url = this.state.image_url;
     projectData.url = this.state.url;
+    projectData.project_manager = this.state.project_manager;
 
     const { errors, isValid } = ProjectValidation(projectData);
 
@@ -143,6 +146,16 @@ class NewProject extends Component {
           value={this.state.url}
           onChange={e => this.onChange(e)}
           name={"url"}
+          onKeyDown={this.submitFormOnEnterKey}
+        />
+        <Input
+          type="text"
+          placeholder="Enter Managers Here"
+          label="Management"
+          validationMsg={[]}
+          value={this.state.project_manager}
+          onChange={e => this.onChange(e)}
+          name={"project_manager"}
           onKeyDown={this.submitFormOnEnterKey}
         />
         <Input
