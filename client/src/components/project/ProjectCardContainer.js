@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import { getProjects } from "../../actions/projectActions";
 import projectImagePlaceholder from "../../img/project-placeholder.jpg";
 import ProjectCard from "./ProjectCard";
+import Spinner from "../common/Spinner";
 
 class ProjectCardContainer extends Component {
   constructor(props) {
@@ -39,11 +40,13 @@ class ProjectCardContainer extends Component {
   }
   render() {
     var projects = [];
+    var loading = true;
     var projectsData;
     if (this.props.projects && this.props.projects.projects) {
       projects = this.state.projects;
+      loading = false;
     }
-    if (projects.length > 0) {
+    if (projects.length > 0 && !loading) {
       projectsData = (
         <div className="projects-grid">
           {projects.map((project, index) => (
@@ -64,12 +67,14 @@ class ProjectCardContainer extends Component {
           ))}
         </div>
       );
-    } else {
+    } else if (projects.length === 0 && !loading) {
       projectsData = (
         <div className="testcase-grid">
           <div className="testcase-container-no-content">There are no projects assigned to you</div>
         </div>
       );
+    } else {
+      projectsData = <Spinner />;
     }
     return (
       <div>

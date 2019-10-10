@@ -275,7 +275,10 @@ class EditProject extends Component {
     var usersList = [];
     if (this.state.availableUsers) {
       this.state.availableUsers.map(function(item) {
-        return usersList.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
+        return usersList.push({
+          id: item.id,
+          title: `${item.first_name ? item.first_name : ""} ${item.last_name ? item.last_name : ""}  (${item.email})`
+        });
       });
     }
 
@@ -320,7 +323,9 @@ class EditProject extends Component {
                 onChange={e => this.onChangeRole(e, user.id)}
                 validationMsg={this.state.errors.position}
                 name={"role"}
-                label={user.first_name + " " + user.last_name}
+                label={`${user.first_name ? user.first_name : ""} ${user.last_name ? user.last_name : ""} (${
+                  user.email
+                })`}
                 onClickRemove={() => this.removeUserBtn(user.id)}
                 options={roles}
                 role={user.role.id}
