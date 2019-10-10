@@ -59,7 +59,8 @@ class ProjectSettings extends Component {
           link={`/EditProject/${project.id}`}
           list={project.users.map((user, index) => (
             <React.Fragment key={index}>
-              {user.first_name + " " + user.last_name} {project.users.length - 1 > index ? `, ` : ``}
+              {user.first_name ? user.first_name + " " + user.last_name : user.email}
+              {project.users.length - 1 > index ? `, ` : ``}
             </React.Fragment>
           ))}
         />
