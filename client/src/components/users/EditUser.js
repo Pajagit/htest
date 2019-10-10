@@ -20,6 +20,7 @@ import failToast from "../../toast/failToast";
 import { clearErrors } from "../../actions/errorsActions";
 import isEmpty from "../../validation/isEmpty";
 
+import Switch from "../common/Switch";
 import Confirm from "../../components/common/Confirm";
 import FullBtn from "../../components/common/FullBtn";
 import GlobalPanel from "../../components/global-panel/GlobalPanel";
@@ -44,6 +45,7 @@ class EditUser extends Component {
       projects: [],
       avaliableProjects: [],
       selectedRole: [],
+      isSuperAdmin: false,
       showAddProject: false,
       errors: {}
     };
@@ -265,6 +267,10 @@ class EditUser extends Component {
       }
     });
   }
+
+  toggleSuperAdmin(e) {
+    this.setState({ isSuperAdmin: !this.state.isSuperAdmin });
+  }
   render() {
     var { user, loading } = this.props.users;
     var roles = [];
@@ -273,7 +279,6 @@ class EditUser extends Component {
     }
 
     var content;
-
     var disabledEdit;
     var editUserBtn;
     if (this.state.last_login) {
@@ -296,17 +301,40 @@ class EditUser extends Component {
     } else {
       var project;
       var addProject;
+      var superAdmin = (
+        <Switch
+          // key={index}
+          label={""}
+          value={this.state.isSuperAdmin}
+          // id={1}
+          onClick={e => this.toggleSuperAdmin(e)}
+          name={"isSuperAdmin"}
+        />
+      );
+
       if (isEmpty(user.projects)) {
         project = (
           <div>
-            <div className="header">Projects</div>
-            <div className="no-content"> User is not assigned to any project yet</div>
+            <div className="header">
+              <div className="header--title">Projects </div>
+              <div className="header--buttons">
+                <div className="header--buttons--primary">Super Admin</div>
+                <div className="header--buttons--secondary">{superAdmin}</div>
+              </div>
+            </div>
+            <div className="no-content">There are no projects assigned to this user</div>
           </div>
         );
-      } else {
+      } else if (!isEmpty(user.projects)) {
         project = (
           <div>
-            <div className="header">Projects</div>
+            <div className="header">
+              <div className="header--title">Projects </div>
+              <div className="header--buttons">
+                <div className="header--buttons--primary">Super Admin</div>
+                <div className="header--buttons--secondary">{superAdmin}</div>
+              </div>
+            </div>
             {user.projects.map((project, index) => (
               <DropdownRemove
                 key={index}
@@ -316,6 +344,7 @@ class EditUser extends Component {
                 validationMsg={this.state.errors.position}
                 name={"role"}
                 label={project.title}
+                disabled={this.state.isSuperAdmin}
                 onClickRemove={() => this.removeProjectBtn(project.id)}
                 options={roles}
                 role={project.role.id}
@@ -370,7 +399,13 @@ class EditUser extends Component {
           </div>
         );
       } else {
-        addProject = <FullBtn placeholder="Add New Project" onClick={e => this.showAddProject(e)} />;
+        addProject = (
+          <FullBtn
+            placeholder="Add New Project"
+            disabled={this.state.isSuperAdmin}
+            onClick={e => this.showAddProject(e)}
+          />
+        );
       }
       var lockBtn;
       var activeStatus;

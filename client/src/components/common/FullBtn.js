@@ -2,9 +2,13 @@ import React from "react";
 import FormElementTitle from "../form/FormElementTitle";
 import addNewBtn from "../../img/addNewBtn.png";
 
-function FullBtn({ label, placeholder, onClick }) {
+function FullBtn({ label, placeholder, disabled, onClick }) {
+  var disabledValue;
+  if (disabled) {
+    disabledValue = "disabled";
+  }
   return (
-    <div className="form-element" onClick={onClick}>
+    <div className={`form-element ${disabledValue}`} onClick={onClick}>
       <div className="form-element-item">
         <FormElementTitle label={label} />
       </div>
