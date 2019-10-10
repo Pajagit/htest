@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import { getProjects } from "../../actions/projectActions";
 import { projectSettingsPermission } from "../../permissions/ProjectPermissions";
 import isEmpty from "../../validation/isEmpty";
+import projectImagePlaceholder from "../../img/project-placeholder.jpg";
 
 import GlobalPanel from "../global-panel/GlobalPanel";
 import SettingPanel from "../settings-panel/SettingPanel";
@@ -54,7 +55,7 @@ class ProjectSettings extends Component {
         <ListItem
           key={index}
           title={project.title}
-          img={project.image_url}
+          img={project.image_url ? project.image_url : projectImagePlaceholder}
           link={`/EditProject/${project.id}`}
           list={project.users.map((user, index) => (
             <React.Fragment key={index}>

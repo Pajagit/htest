@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getProjects } from "../../actions/projectActions";
+import projectImagePlaceholder from "../../img/project-placeholder.jpg";
 import ProjectCard from "./ProjectCard";
 
 class ProjectCardContainer extends Component {
@@ -48,7 +49,7 @@ class ProjectCardContainer extends Component {
           {projects.map((project, index) => (
             <ProjectCard
               key={index}
-              img={project.image_url}
+              img={project.image_url ? project.image_url : projectImagePlaceholder}
               title={project.title}
               id={project.id}
               management={project.project_manager}
