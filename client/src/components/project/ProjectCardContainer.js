@@ -44,7 +44,7 @@ class ProjectCardContainer extends Component {
     }
     if (projects.length > 0) {
       projectsData = (
-        <div className="testcase-grid">
+        <div className="projects-grid">
           {projects.map((project, index) => (
             <ProjectCard
               key={index}

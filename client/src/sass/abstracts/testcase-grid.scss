@@ -12,6 +12,22 @@
   width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
+
+.projects-grid {
+  padding-left: 3.8rem;
+  padding-right: 3.8rem;
+  padding-top: 2.4rem;
+  width: 100%;
+  display: grid;
+  grid-gap: 1rem;
+
+  grid-template-columns: repeat(auto-fill, 80px);
+  grid-template-columns: repeat(auto-fit, 80px);
+
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 0.4fr));
+  justify-content: center;
+}
 .testcase-container {
   padding-bottom: 3rem;
   &-no-content {
