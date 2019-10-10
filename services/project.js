@@ -84,6 +84,7 @@ module.exports = {
               projectUser.first_name = user.first_name;
               projectUser.last_name = user.last_name;
               projectUser.email = user.email;
+              projectUser.id = user.id;
               projectUsers.push(projectUser);
               usersProcessed++;
               if (usersProcessed === users.length) {
