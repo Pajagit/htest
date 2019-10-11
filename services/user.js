@@ -326,6 +326,22 @@ module.exports = {
         .catch(err => console.log(err));
     });
   },
+  removeProject: async function(user_id, project_id) {
+    return new Promise((resolve, reject) => {
+      UserRoleProject.destroy({
+        where: {
+          user_id: user_id,
+          project_id: project_id
+        }
+      }).then(count => {
+        if (count === 1) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
   updateProject: async function(user_id, role_id, project_id) {
     return new Promise((resolve, reject) => {
       var userProjectRole = {
