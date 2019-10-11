@@ -13,6 +13,7 @@ import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 import { clearErrors } from "../../actions/errorsActions";
 
+import Switch from "../common/Switch";
 import GlobalPanel from "../../components/global-panel/GlobalPanel";
 import SettingPanel from "../../components/settings-panel/SettingPanel";
 import Header from "../../components/common/Header";
@@ -24,6 +25,7 @@ class AddUser extends Component {
       initialRender: true,
       submitPressed: false,
       email: "",
+      isSuperAdmin: false,
       first_name: "",
       last_name: "",
       errors: {}
@@ -34,7 +36,7 @@ class AddUser extends Component {
     let update = {};
 
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = globalAddUserPermission(nextProps.auth.user.projects);
+      var { isValid } = globalAddUserPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
     }
 
     if (!isValid) {
@@ -64,7 +66,7 @@ class AddUser extends Component {
     userData.email = this.state.email;
     userData.first_name = this.state.first_name;
     userData.last_name = this.state.last_name;
-
+    userData.superadmin = this.state.isSuperAdmin;
     const { errors, isValid } = UserValidation(userData);
     if (isValid) {
       this.props.addUser(userData, res => {
@@ -101,6 +103,20 @@ class AddUser extends Component {
             link={`/UserSettings`}
           />
           <div className="main-content--content">
+            <div className="header">
+              <div className="header--title">User Information </div>
+              <div className="header--buttons">
+                <div className="header--buttons--primary">Super Admin</div>
+                <div className="header--buttons--secondary">
+                  <Switch
+                    label={""}
+                    value={this.state.isSuperAdmin}
+                    onClick={e => this.setState({ isSuperAdmin: !this.state.isSuperAdmin })}
+                    name={"isSuperAdmin"}
+                  />
+                </div>
+              </div>
+            </div>
             <div>
               <Input
                 type="text"

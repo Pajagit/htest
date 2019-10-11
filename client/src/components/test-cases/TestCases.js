@@ -53,9 +53,12 @@ class TestCases extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
+      var { isValid } = testcasesPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
       if (!isValid) {
         nextProps.history.push(`/Projects`);
       }

@@ -19,6 +19,7 @@ import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 import { clearErrors } from "../../actions/errorsActions";
 import isEmpty from "../../validation/isEmpty";
+import { createNewProjectPermission } from "../../permissions/ProjectPermissions";
 
 import Confirm from "../../components/common/Confirm";
 import FullBtn from "../../components/common/FullBtn";
@@ -80,6 +81,12 @@ class EditProject extends Component {
         update.project_manager = project.project_manager ? project.project_manager : "";
         update.image_url = project.image_url ? project.image_url : "";
       }
+    }
+
+    var { isValid } = createNewProjectPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+
+    if (!isValid) {
+      nextProps.history.push(`/ProjectSettings`);
     }
     var { roles } = nextProps.roles;
     if (nextProps.roles.roles !== prevState.roles) {

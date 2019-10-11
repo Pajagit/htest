@@ -3,12 +3,12 @@ import roles from "../roles/roles";
 import isEmpty from "../validation/isEmpty";
 
 // Restricting all roles except SuperAdmin to access CreateProject page
-export const createNewProjectPermission = userProjects => {
+export const createNewProjectPermission = (userProjects, superadmin) => {
   var filteredProjects = userProjects.filter(function(project) {
     return project.role === roles.SUPERADMIN;
   });
   var errors = {};
-  if (filteredProjects.length === 0) {
+  if (filteredProjects.length === 0 && !superadmin) {
     errors.invalid_access = true;
   }
 
@@ -19,12 +19,12 @@ export const createNewProjectPermission = userProjects => {
 };
 
 // Restricting all roles except SuperAdmin to access ProjectSettings page
-export const projectSettingsPermission = userProjects => {
+export const projectSettingsPermission = (userProjects, superadmin) => {
   var filteredProjects = userProjects.filter(function(project) {
     return project.role === roles.SUPERADMIN;
   });
   var errors = {};
-  if (filteredProjects.length === 0) {
+  if (filteredProjects.length === 0 && !superadmin) {
     errors.invalid_access = true;
   }
 
