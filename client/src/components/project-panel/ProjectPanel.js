@@ -38,7 +38,6 @@ class ProjectPanel extends Component {
         update.user = user;
       }
       var { isValid } = projectPanelSettingsPermission(nextProps.auth.user.projects, nextProps.match.params.projectId);
-
       if (isValid) {
         update.settingsVisible = true;
       } else {

@@ -57,7 +57,10 @@ class GlobalPanel extends Component {
       this.props.match.path === "/UserSettings" ||
       this.props.match.path === "/ProjectSettings" ||
       this.props.match.path === "/DeviceSettings" ||
-      this.props.match.path === "/EditUser/:userId"
+      this.props.match.path === "/EditUser/:userId" ||
+      this.props.match.path === "/AddUser" ||
+      this.props.match.path === "/EditProject/:projectId" ||
+      this.props.match.path === "/CreateProject"
     ) {
       projectsActive = false;
       notificationsActive = false;

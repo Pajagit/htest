@@ -261,7 +261,6 @@ class EditUser extends Component {
     updateData.user_id = parseInt(this.props.match.params.userId);
     this.props.addProject(updateData, res => {
       if (res.status === 200) {
-        this.props.getUser(this.props.users.user.id);
         successToast("Project role updated successfully");
         socket.emit("refreshUserToken", updateData.user_id);
         this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
@@ -284,7 +283,6 @@ class EditUser extends Component {
         if (res.status === 200) {
           successToast("User edited successfully");
           socket.emit("refreshUserToken", userId);
-          this.props.getUser(this.props.users.user.id);
           this.props.history.push(`/EditUser/${userId}`);
         } else {
           failToast("Editing user failed");

@@ -8,7 +8,7 @@ export const createNewGroupPermission = (userProjects, projectId) => {
     return project.id === parseInt(projectId);
   });
   var errors = {};
-  var roleOnProject = filteredProjects[0].role;
+  var roleOnProject = filteredProjects[0].role.title;
   if (roleOnProject !== roles.PROJECTADMIN && roleOnProject !== roles.SUPERADMIN) {
     errors.invalid_access = true;
   }
@@ -25,7 +25,7 @@ export const groupsPermission = (userProjects, projectId) => {
     return project.id === parseInt(projectId);
   });
   var errors = {};
-  var roleOnProject = filteredProjects[0].role;
+  var roleOnProject = filteredProjects[0].role.title;
   if (roleOnProject !== roles.PROJECTADMIN && roleOnProject !== roles.SUPERADMIN) {
     errors.invalid_access = true;
   }
@@ -43,7 +43,7 @@ export const projectPanelSettingsPermission = (userProjects, projectId) => {
   });
   var errors = {};
   if (filteredProjects.length > 0) {
-    var roleOnProject = filteredProjects[0].role;
+    var roleOnProject = filteredProjects[0].role.title;
     if (roleOnProject !== roles.PROJECTADMIN && roleOnProject !== roles.SUPERADMIN) {
       errors.invalid_access = true;
     }

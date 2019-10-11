@@ -48,7 +48,13 @@ export const getUser = user_id => dispatch => {
 export const editUser = (user_id, userData, callback) => dispatch => {
   axios
     .put(`/api/users/user/${user_id}`, userData)
-    .then(res => callback(res))
+    .then(res => {
+      callback(res);
+      dispatch({
+        type: GET_USER,
+        payload: res.data
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
