@@ -8,6 +8,8 @@ import isEmpty from "../../validation/isEmpty";
 import Spinner from "../common/Spinner";
 import { clearErrors } from "../../actions/errorsActions";
 import Confirm from "../../components/common/Confirm";
+import { createNewGroupPermission } from "../../permissions/GroupPermissions";
+
 import Btn from "../common/Btn";
 import Input from "../common/Input";
 import Checkbox from "../common/Checkbox";
@@ -57,6 +59,24 @@ class EditGroup extends Component {
         }
       }
     }
+
+    var { user } = nextProps.auth;
+
+    if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = createNewGroupPermission(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+
+      if (!isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/Groups`);
+      }
+    }
+
     return Object.keys(update).length ? update : null;
   }
 
@@ -198,8 +218,8 @@ EditGroup.propTypes = {
 const mapStateToProps = state => ({
   testcases: state.testcases,
   groups: state.groups,
-  errors: state.errors
-  // auth: state.auth,
+  errors: state.errors,
+  auth: state.auth
 });
 
 export default connect(
