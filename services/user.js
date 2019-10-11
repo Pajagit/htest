@@ -277,12 +277,16 @@ module.exports = {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
       var projectIdsArray = [];
       var allowed = false;
-      user.projects.forEach(project => {
-        projectIdsArray.push(project.id);
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          projectIdsArray.push(project.id);
+          if (project.id == projectId && allowedRoles.includes(project.role)) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -296,12 +300,16 @@ module.exports = {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
       var projectIdsArray = [];
       var allowed = false;
-      user.projects.forEach(project => {
-        projectIdsArray.push(project.id);
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          projectIdsArray.push(project.id);
+          if (project.id == projectId && allowedRoles.includes(project.role)) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -314,11 +322,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin"];
       var allowed = false;
-      user.projects.forEach(project => {
-        if ((allowedRoles.includes(project.role) && project.id == projectId) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role) && project.id == projectId) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -330,11 +342,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator"];
       var allowed = false;
-      user.projects.forEach(project => {
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (project.id == projectId && allowedRoles.includes(project.role)) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -346,11 +362,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin"];
       var allowed = false;
-      user.projects.forEach(project => {
-        if (allowedRoles.includes(project.role) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role)) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -362,11 +382,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator"];
       var allowed = false;
-      user.projects.forEach(project => {
-        if ((allowedRoles.includes(project.role) && project.id == projectId) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role) && project.id == projectId) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -378,11 +402,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin"];
       var allowed = false;
-      user.projects.forEach(project => {
-        if (allowedRoles.includes(project.role) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role)) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -394,11 +422,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
       var allowed = false;
-      user.projects.forEach(project => {
-        if (allowedRoles.includes(project.role) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role)) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -410,11 +442,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
       var allowed = false;
-      user.projects.forEach(project => {
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (project.id == projectId && allowedRoles.includes(project.role)) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {
@@ -426,11 +462,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
       var allowed = false;
-      user.projects.forEach(project => {
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
-          allowed = true;
-        }
-      });
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (project.id == projectId && allowedRoles.includes(project.role)) {
+            allowed = true;
+          }
+        });
+      }
       if (allowed) {
         resolve(true);
       } else {

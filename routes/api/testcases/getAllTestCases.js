@@ -40,10 +40,10 @@ module.exports = Router({ mergeParams: true }).post(
           return res.status(400).json(errors);
         }
 
-        var getTestCase = await UserService.getTestCase(req.user, req.query.project_id);
-        if (!getTestCase) {
-          return res.status(403).json({ message: "Forbiden" });
-        }
+        // var getTestCase = await UserService.getTestCase(req.user, req.query.project_id);
+        // if (!getTestCase) {
+        //   return res.status(403).json({ message: "Forbiden" });
+        // }
 
         if (requestObject.dateFrom && requestObject.dateTo) {
           whereStatement.created_at = {
