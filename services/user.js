@@ -15,14 +15,14 @@ module.exports = {
         projects.forEach(project => {
           var projectUser = {};
           Role.findOne({
-            attributes: ["title"],
+            attributes: ["title", "id"],
             where: {
               id: project.userroleprojects.role_id
             }
           }).then(role => {
             if (role) {
               projectUser.role = role.title;
-              projectUser.id = project.id;
+              projectUser.id = role.id;
               projectUser.title = project.title;
               projectUsers.push(projectUser);
               projectsProcessed++;
