@@ -279,7 +279,7 @@ module.exports = {
       var allowed = false;
       user.projects.forEach(project => {
         projectIdsArray.push(project.id);
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || project.role == "Superadmin") {
+        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -298,7 +298,7 @@ module.exports = {
       var allowed = false;
       user.projects.forEach(project => {
         projectIdsArray.push(project.id);
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || project.role == "Superadmin") {
+        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -315,7 +315,7 @@ module.exports = {
       var allowedRoles = ["Superadmin"];
       var allowed = false;
       user.projects.forEach(project => {
-        if ((allowedRoles.includes(project.role) && project.id == projectId) || project.role == "Superadmin") {
+        if ((allowedRoles.includes(project.role) && project.id == projectId) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -331,7 +331,7 @@ module.exports = {
       var allowedRoles = ["Superadmin", "Project Administrator"];
       var allowed = false;
       user.projects.forEach(project => {
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || project.role == "Superadmin") {
+        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -347,7 +347,7 @@ module.exports = {
       var allowedRoles = ["Superadmin"];
       var allowed = false;
       user.projects.forEach(project => {
-        if (allowedRoles.includes(project.role)) {
+        if (allowedRoles.includes(project.role) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -363,7 +363,7 @@ module.exports = {
       var allowedRoles = ["Superadmin", "Project Administrator"];
       var allowed = false;
       user.projects.forEach(project => {
-        if ((allowedRoles.includes(project.role) && project.id == projectId) || project.role == "Superadmin") {
+        if ((allowedRoles.includes(project.role) && project.id == projectId) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -379,7 +379,7 @@ module.exports = {
       var allowedRoles = ["Superadmin"];
       var allowed = false;
       user.projects.forEach(project => {
-        if (allowedRoles.includes(project.role)) {
+        if (allowedRoles.includes(project.role) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -395,7 +395,7 @@ module.exports = {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
       var allowed = false;
       user.projects.forEach(project => {
-        if (allowedRoles.includes(project.role) || project.role == "Superadmin") {
+        if (allowedRoles.includes(project.role) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -411,7 +411,7 @@ module.exports = {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
       var allowed = false;
       user.projects.forEach(project => {
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || project.role == "Superadmin") {
+        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
           allowed = true;
         }
       });
@@ -427,7 +427,7 @@ module.exports = {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
       var allowed = false;
       user.projects.forEach(project => {
-        if ((project.id == projectId && allowedRoles.includes(project.role)) || project.role == "Superadmin") {
+        if ((project.id == projectId && allowedRoles.includes(project.role)) || user.superadmin == true) {
           allowed = true;
         }
       });
