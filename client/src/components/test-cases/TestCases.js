@@ -152,6 +152,7 @@ class TestCases extends Component {
   removeToDate() {
     this.setState({ selectedDateTo: "", selectedDateTimestampTo: "" }, () => {
       this.search();
+      this.checkActiveFilters();
     });
   }
 
