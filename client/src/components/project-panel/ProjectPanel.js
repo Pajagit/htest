@@ -37,7 +37,11 @@ class ProjectPanel extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = projectPanelSettingsPermission(nextProps.auth.user.projects, nextProps.match.params.projectId);
+      var { isValid } = projectPanelSettingsPermission(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
       if (isValid) {
         update.settingsVisible = true;
       } else {

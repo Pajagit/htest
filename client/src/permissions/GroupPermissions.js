@@ -37,14 +37,14 @@ export const groupsPermission = (userProjects, projectId) => {
 };
 
 // Disabling option for all roles except SuperAdmin and Admin to see project settings
-export const projectPanelSettingsPermission = (userProjects, projectId) => {
+export const projectPanelSettingsPermission = (userProjects, projectId, superadmin) => {
   var filteredProjects = userProjects.filter(function(project) {
     return project.id === parseInt(projectId);
   });
   var errors = {};
   if (filteredProjects.length > 0) {
     var roleOnProject = filteredProjects[0].role.title;
-    if (roleOnProject !== roles.PROJECTADMIN && roleOnProject !== roles.SUPERADMIN) {
+    if (roleOnProject !== roles.PROJECTADMIN && roleOnProject !== roles.SUPERADMIN && !superadmin) {
       errors.invalid_access = true;
     }
   } else {
