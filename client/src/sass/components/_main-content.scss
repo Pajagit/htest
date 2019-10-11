@@ -35,6 +35,7 @@
       font-size: 2rem;
 
       &-item {
+        position: relative;
         &-search > .search-input {
           display: none;
         }
@@ -54,6 +55,13 @@
         }
         &:not(:last-child) {
           margin-right: 12.5px;
+        }
+        &-warning {
+          position: absolute;
+          color: #ff1834;
+          top: -5px;
+          right: 0;
+          font-size: 1rem;
         }
       }
     }
