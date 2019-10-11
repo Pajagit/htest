@@ -134,16 +134,7 @@ module.exports = {
       if (createdProject) {
         let createdProjectObj = await ProjectService.returnUpdatedProject(createdProject.id);
         if (createdProjectObj) {
-          var superadminRoleId = await RoleService.getSuperadminRoleId();
-          var superadminUsers = await UserService.findAllSuperadminUsers(superadminRoleId);
-          var addedProjectToSuperadmins = await ProjectService.addProjectToSuperadminUsers(
-            superadminUsers,
-            createdProjectObj.id,
-            superadminRoleId
-          );
-          if (addedProjectToSuperadmins) {
-            return res.json(createdProjectObj);
-          }
+          return res.json(createdProjectObj);
         }
       } else {
         return res.status(500).json({ error: "An error occured while creating project" });
