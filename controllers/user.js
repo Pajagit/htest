@@ -145,7 +145,7 @@ module.exports = {
   },
   addProject: async function(req, res) {
     if (isNaN(req.params.id)) {
-      res.status(400).json({ error: "User id is not valid number" });
+      return res.status(400).json({ error: "User id is not valid number" });
     }
     const { errors, isValid } = validateUserProjectInput(req.body);
 
@@ -202,6 +202,52 @@ module.exports = {
             return res.status(200).json(userWithRole);
           }
         }
+      }
+    }
+  },
+  removeProject: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "User id is not valid number" });
+    }
+    if (isNaN(req.params.project_id)) {
+      return res.status(400).json({ error: "Project id is not valid number" });
+    }
+    var user = await UserService.checkIfUserExistById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User doesn't exist" });
+    } else {
+      var canRemoveProjectToUser = await UserService.addRemoveProjectFromUser(req.user, req.params.project_id);
+      if (!canRemoveProjectToUser) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
+      var hasProject = await UserService.checkIfProjectExistsForUser(req.params.id, req.params.project_id);
+      if (hasProject) {
+        var projectDeleted = await UserService.removeProject(req.params.id, req.params.project_id);
+        if (projectDeleted) {
+          var user = await UserService.getUserById(req.params.id);
+          var roleId = await RoleService.getSuperadminRoleId();
+          var superadmin = await UserService.userIsSuperadmin(user, roleId);
+
+          var userWithRole = {};
+          userWithRole.id = user.id;
+          userWithRole.email = user.email;
+          userWithRole.first_name = user.first_name;
+          userWithRole.last_name = user.last_name;
+          userWithRole.position = user.position;
+          userWithRole.image_url = user.image_url;
+          userWithRole.active = user.active;
+          userWithRole.last_login = user.last_login;
+          userWithRole.superadmin = superadmin;
+
+          var projectsRoles = await UserService.findUserRole(user.projects);
+          userWithRole.projects = projectsRoles.sort((a, b) => b.id - a.id);
+
+          if (userWithRole) {
+            return res.status(200).json(userWithRole);
+          }
+        }
+      } else {
+        return res.status(404).json({ message: "Project has already been deleted or was never assigned to the user" });
       }
     }
   }
