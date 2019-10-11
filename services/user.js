@@ -22,7 +22,7 @@ module.exports = {
           }).then(role => {
             if (role) {
               projectUser.role = role.title;
-              projectUser.id = project.id;
+              projectUser.id = role.id;
               projectUser.title = project.title;
               projectUsers.push(projectUser);
               projectsProcessed++;
