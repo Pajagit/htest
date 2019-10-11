@@ -38,6 +38,9 @@ module.exports = {
         );
         if (setAsSuperadmin) {
           var createdUserObj = await UserService.returnCreatedUser(createdUser);
+          var roleId = await RoleService.getSuperadminRoleId();
+          createdUserObj.superadmin = await UserService.userIsSuperadmin(createdUserObj, roleId);
+
           return res.json(createdUserObj);
         }
       } else {
@@ -79,20 +82,26 @@ module.exports = {
             await RoleService.getSuperadminRoleId(),
             true
           );
-          let user = await UserService.returnUpdatedUser(updatedUser[1]);
-          var userWithRole = {};
-          userWithRole.id = user.id;
-          userWithRole.email = user.email;
-          userWithRole.first_name = user.first_name;
-          userWithRole.last_name = user.last_name;
-          userWithRole.position = user.position;
-          userWithRole.image_url = user.image_url;
-          userWithRole.active = user.active;
-          userWithRole.last_login = user.last_login;
-          userWithRole.projects = await UserService.findUserRole(user.projects);
+          if (setAsSuperadmin) {
+            let user = await UserService.returnUpdatedUser(updatedUser[1]);
+            var roleId = await RoleService.getSuperadminRoleId();
+            var superadmin = await UserService.userIsSuperadmin(user, roleId);
 
-          if (userWithRole) {
-            return res.status(200).json(userWithRole);
+            var userWithRole = {};
+            userWithRole.id = user.id;
+            userWithRole.email = user.email;
+            userWithRole.first_name = user.first_name;
+            userWithRole.last_name = user.last_name;
+            userWithRole.position = user.position;
+            userWithRole.image_url = user.image_url;
+            userWithRole.active = user.active;
+            userWithRole.last_login = user.last_login;
+            userWithRole.projects = await UserService.findUserRole(user.projects);
+            userWithRole.superadmin = superadmin;
+
+            if (userWithRole) {
+              return res.status(200).json(userWithRole);
+            }
           }
         }
       }
