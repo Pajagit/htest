@@ -33,6 +33,7 @@ class TestCases extends Component {
       arrayValue: [],
       user: this.props.auth.user,
       users: [],
+      activeFilters: false,
       showDatepickerFrom: false,
       selectedDateFrom: "",
       selectedDateTimestampFrom: "",
@@ -96,13 +97,15 @@ class TestCases extends Component {
     this.setState({ testcaseFilters: testCaseFilters });
   }
   handleClick = e => {
-    if (this.node.contains(e.target)) {
-      return;
+    if (this.node) {
+      if (this.node.contains(e.target)) {
+        return;
+      }
+      if (this.node2.contains(e.target)) {
+        return;
+      }
+      this.handleClickOutside();
     }
-    if (this.node2.contains(e.target)) {
-      return;
-    }
-    this.handleClickOutside();
   };
 
   handleClickOutside() {
@@ -112,17 +115,20 @@ class TestCases extends Component {
   selectMultipleOptionUsers(value) {
     this.setState({ users: value }, () => {
       this.search();
+      this.checkActiveFilters();
     });
   }
 
   selectMultipleOptionGroups(value) {
     this.setState({ groupFilters: value }, () => {
       this.search();
+      this.checkActiveFilters();
     });
   }
   removeFromDate() {
     this.setState({ selectedDateFrom: "", selectedDateTimestampFrom: "" }, () => {
       this.search();
+      this.checkActiveFilters();
     });
   }
   removeGroup(e) {
@@ -131,6 +137,7 @@ class TestCases extends Component {
     });
     this.setState({ groupFilters: groups }, () => {
       this.search();
+      this.checkActiveFilters();
     });
   }
   removeUser(e) {
@@ -139,6 +146,7 @@ class TestCases extends Component {
     });
     this.setState({ users }, () => {
       this.search();
+      this.checkActiveFilters();
     });
   }
   removeToDate() {
@@ -157,16 +165,35 @@ class TestCases extends Component {
     this.setState({ showFilters });
   }
   resetFilters() {
-    this.setState({
-      testcaseFilters: {},
-      selectedDateTo: "",
-      selectedDateTimestampTo: "",
-      users: [],
-      groupFilters: [],
-      selectedDateFrom: "",
-      selectedDateTimestampFrom: ""
-    });
+    this.setState(
+      {
+        testcaseFilters: {},
+        selectedDateTo: "",
+        selectedDateTimestampTo: "",
+        users: [],
+        groupFilters: [],
+        selectedDateFrom: "",
+        selectedDateTimestampFrom: ""
+      },
+      () => {
+        this.checkActiveFilters();
+      }
+    );
   }
+
+  checkActiveFilters() {
+    var activeFilters = false;
+    if (
+      !isEmpty(this.state.selectedDateFrom) ||
+      !isEmpty(this.state.selectedDateTo) ||
+      this.state.users.length > 0 ||
+      this.state.groupFilters.length > 0
+    ) {
+      activeFilters = true;
+    }
+    this.setState({ activeFilters });
+  }
+
   render() {
     var allGroups = [];
     if (this.props.groups && this.props.groups.groups) {
@@ -215,6 +242,98 @@ class TestCases extends Component {
       );
     }
 
+    var filters;
+
+    if (this.state.showFilters) {
+      filters = (
+        <div>
+          <div className="testcase-grid">
+            <SearchDropdown
+              value={this.state.groupFilters}
+              options={allGroups}
+              onChange={this.selectMultipleOptionGroups}
+              label={"Test Groups"}
+              placeholder={"Groups"}
+              multiple={true}
+            />
+
+            <SearchDropdown
+              value={this.state.users}
+              options={usersList}
+              onChange={this.selectMultipleOptionUsers}
+              label={"Select User"}
+              placeholder={"Users"}
+              multiple={true}
+              numberDisplayed={2}
+            />
+
+            <Datepicker
+              forwardRef={node => (this.node = node)}
+              showdatepicker={this.state.showDatepickerFrom}
+              placeholder={"From Date"}
+              label={"Select Date"}
+              selectedDate={this.state.selectedDateFrom}
+              onClick={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
+              onChange={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
+              active={this.state.activeDateFrom ? this.state.activeDateFrom !== null : ""}
+              timestamp={this.state.selectedDateTimestampFrom}
+              onDayClick={day => {
+                this.setState({ selectedDateFrom: moment(day).format(" Do MMM YY") }, () => {
+                  this.search();
+                  this.checkActiveFilters();
+                });
+                this.setState({ selectedDateTimestampFrom: day });
+                this.setState({ showDatepickerFrom: false });
+              }}
+            />
+            <Datepicker
+              forwardRef={node2 => (this.node2 = node2)}
+              showdatepicker={this.state.showDatepickerTo}
+              placeholder={"To Date"}
+              label={"Select Date"}
+              selectedDate={this.state.selectedDateTo}
+              onClick={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
+              onChange={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
+              active={this.state.activeDateTo ? this.state.activeDateTo !== null : ""}
+              timestamp={this.state.selectedDateTimestampTo}
+              onDayClick={day => {
+                this.setState({ selectedDateTo: moment(day).format(" Do MMM YY") }, () => {
+                  this.search();
+                  this.checkActiveFilters();
+                });
+                this.setState({ selectedDateTimestampTo: day });
+                this.setState({ showDatepickerTo: false });
+              }}
+            />
+          </div>
+
+          <div className="active-filter-container">
+            {this.state.groupFilters.map((group, index) => (
+              <Tag
+                key={index}
+                title={group.title}
+                color={group.color}
+                isRemovable={true}
+                onClickRemove={e => this.removeGroup(group.id)}
+              />
+            ))}
+            {this.state.users.map((user, index) => (
+              <Tag
+                key={index}
+                title={user.title}
+                color={"USER_COLOR"}
+                isRemovable={true}
+                onClickRemove={e => this.removeUser(user.id)}
+              />
+            ))}
+            {fromDate}
+            {toDate}
+            {resetFiltersTag}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -228,92 +347,10 @@ class TestCases extends Component {
             addBtn={
               <BtnAnchor type={"text"} label="Add New" className={"a-btn a-btn-primary"} link={`CreateTestCase`} />
             }
-            filterBtn={<FilterBtn onClick={this.filterBtn} />}
+            filterBtn={<FilterBtn onClick={this.filterBtn} activeFilters={this.state.activeFilters} />}
             searchBtn={<SearchBtn />}
           />
-          <div>
-            <div className="testcase-grid">
-              <SearchDropdown
-                value={this.state.groupFilters}
-                options={allGroups}
-                onChange={this.selectMultipleOptionGroups}
-                label={"Test Groups"}
-                placeholder={"Groups"}
-                multiple={true}
-              />
-
-              <SearchDropdown
-                value={this.state.users}
-                options={usersList}
-                onChange={this.selectMultipleOptionUsers}
-                label={"Select User"}
-                placeholder={"Users"}
-                multiple={true}
-                numberDisplayed={2}
-              />
-
-              <Datepicker
-                forwardRef={node => (this.node = node)}
-                showdatepicker={this.state.showDatepickerFrom}
-                placeholder={"From Date"}
-                label={"Select Date"}
-                selectedDate={this.state.selectedDateFrom}
-                onClick={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
-                onChange={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
-                active={this.state.activeDateFrom ? this.state.activeDateFrom !== null : ""}
-                timestamp={this.state.selectedDateTimestampFrom}
-                onDayClick={day => {
-                  this.setState({ selectedDateFrom: moment(day).format(" Do MMM YY") }, () => {
-                    this.search();
-                  });
-                  this.setState({ selectedDateTimestampFrom: day });
-                  this.setState({ showDatepickerFrom: false });
-                }}
-              />
-              <Datepicker
-                forwardRef={node2 => (this.node2 = node2)}
-                showdatepicker={this.state.showDatepickerTo}
-                placeholder={"To Date"}
-                label={"Select Date"}
-                selectedDate={this.state.selectedDateTo}
-                onClick={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
-                onChange={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
-                active={this.state.activeDateTo ? this.state.activeDateTo !== null : ""}
-                timestamp={this.state.selectedDateTimestampTo}
-                onDayClick={day => {
-                  this.setState({ selectedDateTo: moment(day).format(" Do MMM YY") }, () => {
-                    this.search();
-                  });
-                  this.setState({ selectedDateTimestampTo: day });
-                  this.setState({ showDatepickerTo: false });
-                }}
-              />
-            </div>
-
-            <div className="active-filter-container">
-              {this.state.groupFilters.map((group, index) => (
-                <Tag
-                  key={index}
-                  title={group.title}
-                  color={group.color}
-                  isRemovable={true}
-                  onClickRemove={e => this.removeGroup(group.id)}
-                />
-              ))}
-              {this.state.users.map((user, index) => (
-                <Tag
-                  key={index}
-                  title={user.title}
-                  color={"USER_COLOR"}
-                  isRemovable={true}
-                  onClickRemove={e => this.removeUser(user.id)}
-                />
-              ))}
-              {fromDate}
-              {toDate}
-              {resetFiltersTag}
-            </div>
-          </div>
+          {filters}
           <TestCaseContainer filters={this.state.testcaseFilters} />
         </div>
       </div>
