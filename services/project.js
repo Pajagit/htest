@@ -101,18 +101,20 @@ module.exports = {
   getProjects: async function(searchTerm, user) {
     return new Promise((resolve, reject) => {
       var whereStatement = {};
-      var userProjectsIds = [];
-      user.projects.forEach(project => {
-        userProjectsIds.push(project.id);
-      });
+      if (!user.superadmin) {
+        var userProjectsIds = [];
+        user.projects.forEach(project => {
+          userProjectsIds.push(project.id);
+        });
+        whereStatement.id = {
+          [Op.in]: userProjectsIds
+        };
+      }
       if (searchTerm) {
         whereStatement.title = {
           [Op.iLike]: "%" + searchTerm + "%"
         };
       }
-      whereStatement.id = {
-        [Op.in]: userProjectsIds
-      };
       Project.findAll({
         attributes: [
           "id",

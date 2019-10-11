@@ -28,6 +28,7 @@ module.exports = passport => {
         .then(user => {
           if (user) {
             user.projects = jwt_payload.projects;
+            user.superadmin = jwt_payload.superadmin;
             return done(null, user);
           } else {
             return done(null, false);
