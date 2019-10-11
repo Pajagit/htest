@@ -317,7 +317,7 @@ module.exports = {
       } else {
         user.projects.forEach(project => {
           projectIdsArray.push(project.id);
-          if (project.id == projectId && allowedRoles.includes(project.role)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -340,7 +340,7 @@ module.exports = {
       } else {
         user.projects.forEach(project => {
           projectIdsArray.push(project.id);
-          if (project.id == projectId && allowedRoles.includes(project.role)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -361,7 +361,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role) && project.id == projectId) {
+          if (allowedRoles.includes(project.role.title) && project.id == projectId) {
             allowed = true;
           }
         });
@@ -381,7 +381,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (project.id == projectId && allowedRoles.includes(project.role)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -401,7 +401,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role)) {
+          if (allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -421,7 +421,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role) && project.id == projectId) {
+          if (allowedRoles.includes(project.role.title) && project.id == projectId) {
             allowed = true;
           }
         });
@@ -441,7 +441,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role)) {
+          if (allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -461,7 +461,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role)) {
+          if (allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -481,7 +481,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (project.id == projectId && allowedRoles.includes(project.role)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -501,11 +501,13 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (project.id == projectId && allowedRoles.includes(project.role)) {
+          console.log(project);
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
       }
+      console.log(allowed);
       if (allowed) {
         resolve(true);
       } else {
