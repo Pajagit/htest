@@ -21,6 +21,7 @@ module.exports = {
             }
           }).then(role => {
             if (role) {
+              projectUser.role = {};
               projectUser.role.title = role.title;
               projectUser.role.id = role.id;
               projectUser.title = project.title;
