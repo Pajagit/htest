@@ -18,6 +18,7 @@ module.exports = {
     data.last_name = !isEmpty(data.last_name) ? data.last_name : "";
     data.position = !isEmpty(data.position) ? data.position : "";
     data.image_url = !isEmpty(data.image_url) ? data.image_url : "";
+    data.superadmin = !isEmpty(data.superadmin) ? data.superadmin : "";
 
     // Email validation
     if ((!last_login && update) || !update) {
@@ -58,6 +59,12 @@ module.exports = {
       if (data.image_url.length > urlImageLimitMax) {
         errors.image_url = `Image url can not be more than ${urlImageLimitMax} long (${data.image_url.length})`;
       }
+    }
+
+    //Superadmin validation
+
+    if (typeof data.superadmin !== "boolean") {
+      errors.superadmin = "Parameter 'superadmin' must have a true or false value";
     }
 
     return {

@@ -14,6 +14,7 @@ const User = require("../../../models/user");
 const Project = require("../../../models/project");
 
 var UserService = require("../../../services/user");
+var RoleService = require("../../../services/role");
 
 // @route POST api/users/login
 // @desc Login user / Returning JWT token
@@ -71,6 +72,8 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
           return res.status(401).json(errors);
         } else {
           user.projects = await UserService.findUserRole(user.projects);
+          var roleId = await RoleService.getSuperadminRoleId();
+          user.superadmin = await UserService.userIsSuperadmin(user, roleId);
           var newUserValues = {};
           if (profileObj.givenName != user.first_name) {
             newUserValues.first_name = profileObj.givenName;
@@ -97,7 +100,8 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
             email: user.email,
             image_url: newUserValues.image_url ? newUserValues.image_url : user.image_url,
             active: user.active,
-            projects: user.projects
+            projects: user.projects,
+            superadmin: user.superadmin
           };
 
           refreshToken = jwt.sign(payload, keys.secretOrKeyRefresh, {
