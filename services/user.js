@@ -501,13 +501,11 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          console.log(project);
           if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
       }
-      console.log(allowed);
       if (allowed) {
         resolve(true);
       } else {
