@@ -23,6 +23,7 @@ module.exports = {
             if (role) {
               projectUser.role = role.title;
               projectUser.id = project.id;
+              projectUser.title = project.title;
               projectUsers.push(projectUser);
               projectsProcessed++;
               if (projectsProcessed === projects.length) {
