@@ -15,7 +15,7 @@ module.exports = {
         projects.forEach(project => {
           var projectUser = {};
           Role.findOne({
-            attributes: ["title"],
+            attributes: ["title", "id"],
             where: {
               id: project.userroleprojects.role_id
             }
