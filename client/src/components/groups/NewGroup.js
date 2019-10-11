@@ -38,7 +38,11 @@ class NewGroup extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = createNewGroupPermission(nextProps.auth.user.projects, nextProps.match.params.projectId);
+      var { isValid } = createNewGroupPermission(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
 
       if (!isValid) {
         nextProps.history.push(`/${nextProps.match.params.projectId}/Groups`);
