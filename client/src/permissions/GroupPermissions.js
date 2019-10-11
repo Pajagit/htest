@@ -41,18 +41,20 @@ export const projectPanelSettingsPermission = (userProjects, projectId, superadm
   var filteredProjects = userProjects.filter(function(project) {
     return project.id === parseInt(projectId);
   });
+  console.log(superadmin);
   var errors = {};
   if (filteredProjects.length > 0) {
     var roleOnProject = filteredProjects[0].role.title;
-    if (!superadmin) {
-      if (roleOnProject !== roles.PROJECTADMIN && roleOnProject !== roles.SUPERADMIN) {
-        errors.invalid_access = true;
-      }
-    } else {
+
+    if (roleOnProject !== roles.PROJECTADMIN && !superadmin) {
       errors.invalid_access = true;
     }
+  } else if (superadmin) {
+    errors = {};
+  } else {
+    errors.invalid_access = true;
   }
-
+  console.log(errors);
   return {
     errors,
     isValid: isEmpty(errors)
