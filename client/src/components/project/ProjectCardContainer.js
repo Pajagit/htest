@@ -58,9 +58,9 @@ class ProjectCardContainer extends Component {
               management={project.project_manager}
               qa={project.users.map((user, index) => {
                 if (project.users.length > index + 1) {
-                  return user.first_name + " " + user.last_name + ", ";
+                  return user.first_name ? user.first_name + " " + user.last_name + ", " : user.email + ", ";
                 } else {
-                  return user.first_name + " " + user.last_name;
+                  return user.first_name ? user.first_name + " " + user.last_name : user.email;
                 }
               })}
             />
