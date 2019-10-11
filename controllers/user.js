@@ -97,5 +97,40 @@ module.exports = {
         }
       }
     }
+  },
+  getUser: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "User id is not valid number" });
+    }
+    var user = await UserService.checkIfUserExistById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User doesn't exist" });
+    }
+
+    var canUpdateUser = await UserService.getCreateUpdateUser(req.user);
+    if (!canUpdateUser) {
+      return res.status(403).json({ message: "Forbiden" });
+    }
+    var user = await UserService.getUserById(req.params.id);
+    var roleId = await RoleService.getSuperadminRoleId();
+    var superadmin = await UserService.userIsSuperadmin(user, roleId);
+
+    var userWithRole = {};
+    userWithRole.id = user.id;
+    userWithRole.email = user.email;
+    userWithRole.first_name = user.first_name;
+    userWithRole.last_name = user.last_name;
+    userWithRole.position = user.position;
+    userWithRole.image_url = user.image_url;
+    userWithRole.active = user.active;
+    userWithRole.last_login = user.last_login;
+    userWithRole.superadmin = superadmin;
+
+    var projectsRoles = await UserService.findUserRole(user.projects);
+    userWithRole.projects = projectsRoles.sort((a, b) => b.id - a.id);
+
+    if (userWithRole) {
+      return res.status(200).json(userWithRole);
+    }
   }
 };

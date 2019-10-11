@@ -79,6 +79,38 @@ module.exports = {
         .catch(err => console.log(err));
     });
   },
+  getUserById: async function(id) {
+    return new Promise((resolve, reject) => {
+      User.findOne({
+        where: {
+          id: id
+        },
+        attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "active", "last_login"],
+        include: [
+          {
+            model: Project,
+            attributes: ["id", "title"],
+            through: {
+              attributes: ["role_id"]
+            },
+            as: "projects",
+            required: false
+          }
+        ],
+        order: [[Project, "id", "DESC"]],
+        plain: true
+      })
+        .then(user => {
+          if (!user) {
+            resolve(false);
+          } else {
+            user.last_login = getLocalTimestamp(user.last_login);
+            resolve(user);
+          }
+        })
+        .catch(err => res.status(404).json(err));
+    });
+  },
   createUser: async function(userFields) {
     return new Promise((resolve, reject) => {
       User.create(userFields).then(user => {
