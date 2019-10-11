@@ -36,7 +36,7 @@ class UserSettings extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = globalUsersPermissions(nextProps.auth.user.projects);
+      var { isValid } = globalUsersPermissions(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
 
       if (!isValid) {
         nextProps.history.push(`/Projects`);

@@ -27,7 +27,7 @@ class GlobalPanel extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = globalSettingsPermission(nextProps.auth.user.projects, nextProps.match.params.projectId);
+      var { isValid } = globalSettingsPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
 
       if (isValid) {
         update.settingsVisible = true;

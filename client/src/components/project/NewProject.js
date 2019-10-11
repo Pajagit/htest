@@ -44,7 +44,7 @@ class NewProject extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = createNewProjectPermission(nextProps.auth.user.projects);
+      var { isValid } = createNewProjectPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
 
       if (!isValid) {
         nextProps.history.push(`/ProjectSettings`);

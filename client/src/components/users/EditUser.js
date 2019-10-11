@@ -20,7 +20,6 @@ import failToast from "../../toast/failToast";
 import { clearErrors } from "../../actions/errorsActions";
 import isEmpty from "../../validation/isEmpty";
 
-import Switch from "../common/Switch";
 import Confirm from "../../components/common/Confirm";
 import FullBtn from "../../components/common/FullBtn";
 import GlobalPanel from "../../components/global-panel/GlobalPanel";
@@ -44,6 +43,7 @@ class EditUser extends Component {
       roles: [],
       projects: [],
       avaliableProjects: [],
+      superadmin: false,
       selectedRole: [],
       isSuperAdmin: false,
       showAddProject: false,
@@ -77,10 +77,11 @@ class EditUser extends Component {
         update.last_login = user.last_login ? user.last_login : null;
         update.active = user.active;
       }
+      update.isSuperAdmin = user.superadmin;
     }
 
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = globalEditUserPermission(nextProps.auth.user.projects);
+      var { isValid } = globalEditUserPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
     }
 
     if (!isValid) {
@@ -225,6 +226,7 @@ class EditUser extends Component {
     userData.email = this.state.email;
     userData.first_name = this.state.first_name;
     userData.last_name = this.state.last_name;
+    userData.superadmin = !this.state.isSuperAdmin;
 
     const { errors, isValid } = UserValidation(userData);
     if (isValid) {
@@ -268,9 +270,48 @@ class EditUser extends Component {
     });
   }
 
-  toggleSuperAdmin(e) {
-    this.setState({ isSuperAdmin: !this.state.isSuperAdmin });
-  }
+  confirmSuperadminActivation = active => {
+    var userData = {};
+    var userId = this.props.match.params.userId;
+    userData.email = this.state.email;
+    userData.first_name = this.state.first_name;
+    userData.last_name = this.state.last_name;
+    userData.superadmin = !this.state.isSuperAdmin;
+
+    const { errors, isValid } = UserValidation(userData);
+    if (isValid) {
+      this.props.editUser(userId, userData, res => {
+        if (res.status === 200) {
+          successToast("User edited successfully");
+          socket.emit("refreshUserToken", userId);
+          this.props.getUser(this.props.users.user.id);
+          this.props.history.push(`/EditUser/${userId}`);
+        } else {
+          failToast("Editing user failed");
+          this.props.history.push(`/EditUser/${userId}`);
+        }
+      });
+    } else {
+      this.setState({ errors });
+    }
+  };
+  confirmSuperadminModal = superadmin => {
+    var title;
+    var msg;
+    var reject = "No";
+    var confirm;
+    if (!superadmin) {
+      title = "Set this user as Super Administrator?";
+      msg = "User will will have all permission on all projects";
+      confirm = "Set Super Admin";
+    } else {
+      title = "Remove Super Administrator permissions?";
+      msg = "User will only be able to see dedicated projects";
+      confirm = "Remove";
+    }
+    Confirm(title, msg, reject, confirm, e => this.confirmSuperadminActivation(superadmin));
+  };
+
   render() {
     var { user, loading } = this.props.users;
     var roles = [];
@@ -301,25 +342,36 @@ class EditUser extends Component {
     } else {
       var project;
       var addProject;
-      var superAdmin = (
-        <Switch
-          // key={index}
-          label={""}
-          value={this.state.isSuperAdmin}
-          // id={1}
-          onClick={e => this.toggleSuperAdmin(e)}
-          name={"isSuperAdmin"}
-        />
-      );
-
+      var lockBtn;
+      var superAdminStatus;
+      if (!user.superadmin) {
+        lockBtn = (
+          <div className="clickable">
+            <i className="fas fa-user"></i>
+          </div>
+        );
+        superAdminStatus = "Regular User";
+      } else {
+        lockBtn = (
+          <div className="clickable">
+            <i className="fas fa-user-plus"></i>
+          </div>
+        );
+        superAdminStatus = "Super Administrator";
+      }
       if (isEmpty(user.projects)) {
         project = (
           <div>
             <div className="header">
               <div className="header--title">Projects </div>
               <div className="header--buttons">
-                <div className="header--buttons--primary">Super Admin</div>
-                <div className="header--buttons--secondary">{superAdmin}</div>
+                <div className="header--buttons--primary">({superAdminStatus})</div>
+                <div
+                  className="header--buttons--secondary"
+                  onClick={e => this.confirmSuperadminModal(this.state.isSuperAdmin)}
+                >
+                  {lockBtn}
+                </div>
               </div>
             </div>
             <div className="no-content">There are no projects assigned to this user</div>
@@ -331,8 +383,13 @@ class EditUser extends Component {
             <div className="header">
               <div className="header--title">Projects </div>
               <div className="header--buttons">
-                <div className="header--buttons--primary">Super Admin</div>
-                <div className="header--buttons--secondary">{superAdmin}</div>
+                <div className="header--buttons--primary">({superAdminStatus})</div>
+                <div
+                  className="header--buttons--secondary"
+                  onClick={e => this.confirmSuperadminModal(this.state.isSuperAdmin)}
+                >
+                  {lockBtn}
+                </div>
               </div>
             </div>
             {user.projects.map((project, index) => (
@@ -407,17 +464,17 @@ class EditUser extends Component {
           />
         );
       }
-      var lockBtn;
+      var userBtn;
       var activeStatus;
       if (user.active) {
-        lockBtn = (
+        userBtn = (
           <div className="clickable">
             <i className="fas fa-lock-open"></i>
           </div>
         );
         activeStatus = "Active";
       } else {
-        lockBtn = (
+        userBtn = (
           <div className="clickable">
             <i className="fas fa-lock"></i>
           </div>
@@ -431,8 +488,7 @@ class EditUser extends Component {
             <div className="header--buttons">
               <div className="header--buttons--primary">({activeStatus})</div>
               <div className="header--buttons--secondary" onClick={e => this.confirmModal([user.id, user.active, e])}>
-                {" "}
-                {lockBtn}
+                {userBtn}
               </div>
             </div>
           </div>

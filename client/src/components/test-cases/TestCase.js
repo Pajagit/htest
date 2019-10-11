@@ -36,11 +36,13 @@ class TestCase extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
-      if (nextProps.auth.user !== prevState.user) {
-        var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
-        if (!isValid) {
-          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
-        }
+      var { isValid } = testcasesPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+      if (!isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
       }
       update.isValid = isValid;
     }

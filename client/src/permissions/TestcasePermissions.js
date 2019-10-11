@@ -3,12 +3,12 @@
 import isEmpty from "../validation/isEmpty";
 
 // Restricting access based on token projects
-export const testcasesPermissions = (userProjects, projectId) => {
+export const testcasesPermissions = (userProjects, projectId, superadmin) => {
   var filteredProjects = userProjects.filter(function(project) {
     return project.id === parseInt(projectId);
   });
   var errors = {};
-  if (filteredProjects.length === 0) {
+  if (filteredProjects.length === 0 && !superadmin) {
     errors.invalid_access = true;
   }
 
