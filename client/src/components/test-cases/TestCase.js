@@ -17,7 +17,7 @@ import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 import Confirm from "../common/Confirm";
 
-import { testcasesPermissions } from "../../permissions/TestcasePermissions";
+import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
 import isEmpty from "../../validation/isEmpty";
 import { getTestcase } from "../../actions/testcaseActions";
 import { setTestcaseDeprecated } from "../../actions/testcaseActions";
@@ -29,6 +29,7 @@ class TestCase extends Component {
       testcaseId: null,
       user: this.props.auth.user,
       isValid: false,
+      isValidWrite: false,
       projectId: null
     };
   }
@@ -36,15 +37,26 @@ class TestCase extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
+      var isValidWrite = addTestcasesPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+
       var { isValid } = testcasesPermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
-      if (!isValid) {
-        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+      update.isValidWrite = isValidWrite.isValid;
+
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = nextProps.auth.user;
+        if (!isValid) {
+          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+        }
+        update.isValid = isValid;
       }
-      update.isValid = isValid;
     }
 
     return Object.keys(update).length ? update : null;
@@ -83,6 +95,30 @@ class TestCase extends Component {
     var { loading } = this.props.testcases;
     var projectId = this.props.match.params.projectId;
     let content;
+    var editBtn = "";
+    if (this.state.isValidWrite) {
+      editBtn = (
+        <Link to={`/${projectId}/EditTestCase/${this.props.match.params.testcaseId}`}>
+          <div className="testcase-details-button">
+            <div className="testcase-details-button-title">Edit</div>
+            <div className="testcase-details-button-icon">
+              <i className="fas fa-pen"></i>
+            </div>
+          </div>
+        </Link>
+      );
+    }
+
+    var actionBtns = "";
+    if (this.state.isValidWrite) {
+      actionBtns = (
+        <div className="flex-column-left mt-4">
+          <BtnAnchor className="a-btn a-btn-primary mr-2" label="Add To Report" link={`/${projectId}/TestCases`} />
+          <Btn className="a-btn-outline a-btn-outline-primary mr-2" label="Remove" onClick={this.confirmModal}></Btn>
+          <UnderlineAnchor link={`/${projectId}/TestCases`} value={"Cancel"} />
+        </div>
+      );
+    }
 
     if (testcase === null || loading) {
       content = <Spinner />;
@@ -95,14 +131,7 @@ class TestCase extends Component {
                 <div className="testcase-details-header--title">Test case name*</div>
                 <div className="testcase-details-header--value">{testcase.title}</div>
               </div>
-              <Link to={`/${projectId}/EditTestCase/${testcase.id}`}>
-                <div className="testcase-details-button">
-                  <div className="testcase-details-button-title">Edit</div>
-                  <div className="testcase-details-button-icon">
-                    <i className="fas fa-pen"></i>
-                  </div>
-                </div>
-              </Link>
+              {editBtn}
             </div>
           </div>
           <div className="testcase-details--body">
@@ -165,19 +194,7 @@ class TestCase extends Component {
                   </span>
                 ))}
               </div>
-              <div className="flex-column-left mt-4">
-                <BtnAnchor
-                  className="a-btn a-btn-primary mr-2"
-                  label="Add To Report"
-                  link={`/${projectId}/TestCases`}
-                />
-                <Btn
-                  className="a-btn-outline a-btn-outline-primary mr-2"
-                  label="Remove"
-                  onClick={this.confirmModal}
-                ></Btn>
-                <UnderlineAnchor link={`/${projectId}/TestCases`} value={"Cancel"} />
-              </div>
+              {actionBtns}
             </div>
           </div>
         </div>

@@ -12,7 +12,8 @@ import SearchBtn from "../common/SearchBtn";
 import TestCaseContainer from "../test-cases/TestCaseContainer";
 import { getGroups } from "../../actions/groupsActions";
 import { getUsers } from "../../actions/userActions";
-import { testcasesPermissions } from "../../permissions/TestcasePermissions";
+import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
+
 import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
 
 import SearchDropdown from "../common/SearchDropdown";
@@ -38,6 +39,7 @@ class TestCases extends Component {
       selectedDateFrom: "",
       selectedDateTimestampFrom: "",
       activeDateFrom: "",
+      isValidWrite: false,
       showDatepickerTo: false,
       selectedDateTo: "",
       selectedDateTimestampTo: "",
@@ -63,8 +65,14 @@ class TestCases extends Component {
         nextProps.history.push(`/Projects`);
       }
       update.isValid = isValid;
-    }
 
+      var isValidWrite = addTestcasesPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+    }
+    update.isValidWrite = isValidWrite.isValid;
     return Object.keys(update).length ? update : null;
   }
 
@@ -338,6 +346,13 @@ class TestCases extends Component {
       );
     }
 
+    var addTestCase = "";
+    if (this.state.isValidWrite) {
+      addTestCase = (
+        <BtnAnchor type={"text"} label="Add New" className={"a-btn a-btn-primary"} link={`CreateTestCase`} />
+      );
+    }
+
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -348,9 +363,7 @@ class TestCases extends Component {
             title={"Test Cases"}
             link={"CreateTestCase"}
             canGoBack={false}
-            addBtn={
-              <BtnAnchor type={"text"} label="Add New" className={"a-btn a-btn-primary"} link={`CreateTestCase`} />
-            }
+            addBtn={addTestCase}
             filterBtn={<FilterBtn onClick={this.filterBtn} activeFilters={this.state.activeFilters} />}
             searchBtn={<SearchBtn />}
           />

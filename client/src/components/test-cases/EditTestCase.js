@@ -25,7 +25,7 @@ import { getGroups } from "../../actions/groupsActions";
 import filterStringArray from "../../utility/filterStringArray";
 import isEmpty from "../../validation/isEmpty";
 import TestCaseValidation from "../../validation/TestCaseValidation";
-import { testcasesPermissions } from "../../permissions/TestcasePermissions";
+import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
 import checkIfElemInObjInArray from "../../utility/checkIfElemInObjInArray";
 import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
 
@@ -62,6 +62,7 @@ class EditTestCase extends Component {
       preconditionValidation: "",
       linksValidation: "",
       isDeprecated: false,
+      isValidWrite: false,
       submitBtnDisabledClass: "",
       errors: {}
     };
@@ -139,6 +140,14 @@ class EditTestCase extends Component {
           }
         }
         update.isValid = isValid;
+      }
+      var isValidWrite = addTestcasesPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+      if (!isValidWrite.isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCase/${nextProps.match.params.testcaseId}`);
       }
     }
 
