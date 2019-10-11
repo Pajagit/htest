@@ -38,5 +38,23 @@ module.exports = {
         })
         .catch(err => console.log(err));
     });
+  },
+  checkIfRoleExists: async function(id) {
+    return new Promise((resolve, reject) => {
+      Role.findOne({
+        where: {
+          id: id
+        },
+        attributes: ["id"]
+      })
+        .then(role => {
+          if (role) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(err => console.log(err));
+    });
   }
 };

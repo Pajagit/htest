@@ -307,6 +307,65 @@ module.exports = {
         .catch(err => console.log(err));
     });
   },
+  checkIfProjectExistsForUser: async function(user_id, project_id) {
+    return new Promise((resolve, reject) => {
+      UserRoleProject.findOne({
+        where: {
+          user_id: user_id,
+          project_id: project_id
+        },
+        attributes: ["id"]
+      })
+        .then(project => {
+          if (project) {
+            resolve(project);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(err => console.log(err));
+    });
+  },
+  updateProject: async function(user_id, role_id, project_id) {
+    return new Promise((resolve, reject) => {
+      var userProjectRole = {
+        role_id: role_id
+      };
+      UserRoleProject.update(userProjectRole, {
+        where: {
+          user_id: user_id,
+          project_id: project_id
+        },
+        returning: true,
+        plain: true
+      })
+        .then(userroleproject => {
+          if (userroleproject) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(err => console.log(err));
+    });
+  },
+  addProject: async function(user_id, role_id, project_id) {
+    return new Promise((resolve, reject) => {
+      var userProject = {
+        user_id: user_id,
+        role_id: role_id,
+        project_id: project_id
+      };
+
+      UserRoleProject.create(userProject).then(projects => {
+        if (projects) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
   canGetProject: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];

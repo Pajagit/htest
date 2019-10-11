@@ -3,6 +3,7 @@ const UserService = require("../services/user");
 const RoleService = require("../services/role");
 
 const validateUserInput = require("../validation/user").validateUserInput;
+const validateUserProjectInput = require("../validation/user").validateUserProjectInput;
 
 module.exports = {
   createUser: async function(req, res) {
@@ -140,6 +141,68 @@ module.exports = {
 
     if (userWithRole) {
       return res.status(200).json(userWithRole);
+    }
+  },
+  addProject: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      res.status(400).json({ error: "User id is not valid number" });
+    }
+    const { errors, isValid } = validateUserProjectInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    var user = await UserService.checkIfUserExistById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User doesn't exist" });
+    } else {
+      var project = await ProjectService.checkIfProjectExist(req.body.project_id);
+      var role = await RoleService.checkIfRoleExists(req.body.role_id);
+      if (!project) {
+        return res.status(404).json({ error: "Project doesn't exist" });
+      }
+      if (!role) {
+        return res.status(404).json({ error: "Role doesn't exist" });
+      }
+      var canAddProjectToUser = await UserService.addRemoveProjectFromUser(req.user, req.body.project_id);
+      if (!canAddProjectToUser) {
+        return res.status(403).json({ message: "Forbiden" });
+      }
+
+      if (project && role) {
+        var hasProject = await UserService.checkIfProjectExistsForUser(req.params.id, req.body.project_id);
+        if (hasProject) {
+          var projectUpdated = await UserService.updateProject(req.params.id, req.body.role_id, req.body.project_id);
+        } else {
+          var projectAdded = await UserService.addProject(req.params.id, req.body.role_id, req.body.project_id);
+        }
+
+        if (projectUpdated || projectAdded) {
+          var user = await UserService.getUserById(req.params.id);
+          var roleId = await RoleService.getSuperadminRoleId();
+          var superadmin = await UserService.userIsSuperadmin(user, roleId);
+
+          var userWithRole = {};
+          userWithRole.id = user.id;
+          userWithRole.email = user.email;
+          userWithRole.first_name = user.first_name;
+          userWithRole.last_name = user.last_name;
+          userWithRole.position = user.position;
+          userWithRole.image_url = user.image_url;
+          userWithRole.active = user.active;
+          userWithRole.last_login = user.last_login;
+          userWithRole.superadmin = superadmin;
+
+          var projectsRoles = await UserService.findUserRole(user.projects);
+          userWithRole.projects = projectsRoles.sort((a, b) => b.id - a.id);
+
+          if (userWithRole) {
+            return res.status(200).json(userWithRole);
+          }
+        }
+      }
     }
   }
 };
