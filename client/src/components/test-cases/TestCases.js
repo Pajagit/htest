@@ -229,7 +229,6 @@ class TestCases extends Component {
   }
 
   render() {
-    console.log(this.state.settings);
     var viewOptionGridClass = "";
     var viewOptionListClass = "";
     var viewOption = "";
