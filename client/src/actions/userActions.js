@@ -80,21 +80,27 @@ export const addUser = (userData, callback) => dispatch => {
 export const addProject = (updateData, callback) => dispatch => {
   axios
     .post(`/api/users/user/${updateData.user_id}/project`, updateData)
-    .then(res => callback(res))
-    .catch(
-      err => console.log(err)
-      // dispatch({
-      //   type: GET_ERRORS,
-      //   payload: err.response.data
-      // })
-    );
+    .then(res => {
+      callback(res);
+      dispatch({
+        type: GET_USER,
+        payload: res.data
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 // Remove Project From User
 export const removeProject = (updateData, callback) => dispatch => {
   axios
     .delete(`/api/users/user/${updateData.user_id}/project/${updateData.project_id}`)
-    .then(res => callback(res))
+    .then(res => {
+      callback(res);
+      dispatch({
+        type: GET_USER,
+        payload: res.data
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

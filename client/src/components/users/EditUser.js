@@ -142,7 +142,6 @@ class EditUser extends Component {
     if (isEmpty(errors)) {
       this.props.addProject(updateData, res => {
         if (res.status === 200) {
-          this.props.getUser(this.props.users.user.id);
           successToast("Project added successfully");
           socket.emit("refreshUserToken", updateData.user_id);
           this.setState({ selectedProject: [], selectedRole: [], showAddProject: false, errors: {} });
@@ -162,7 +161,6 @@ class EditUser extends Component {
     this.props.removeProject(updateData, res => {
       if (res.status === 200) {
         socket.emit("refreshUserToken", updateData.user_id);
-        this.props.getUser(updateData.user_id);
         successToast("Project removed successfully");
         this.setState({ errors: {} });
       } else {
@@ -262,7 +260,6 @@ class EditUser extends Component {
     this.props.addProject(updateData, res => {
       if (res.status === 200) {
         successToast("Project role updated successfully");
-        this.props.getUser(updateData.user_id);
         socket.emit("refreshUserToken", updateData.user_id);
         this.setState({ selectedProject: [], selectedRole: [], showAddProject: false });
       } else {
