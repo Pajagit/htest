@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import PortraitTestCase from "../common/PortraitTestCase";
+import LandscapeTestCase from "../common/LandscapeTestCase";
 import Tag from "../common/Tag";
 import Spinner from "../common/Spinner";
 import isEmpty from "../../validation/isEmpty";
@@ -14,7 +15,8 @@ class TestCaseContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filters: {}
+      filters: {},
+      viewOption: ""
     };
   }
   componentDidMount() {
@@ -30,6 +32,9 @@ class TestCaseContainer extends Component {
       update.filters = nextProps.filters;
       nextProps.getTestcases(projectId, nextProps.filters);
     }
+    if (nextProps.viewOption !== prevState.viewOption) {
+      update.viewOption = nextProps.viewOption;
+    }
     return Object.keys(update).length ? update : null;
   }
 
@@ -38,11 +43,13 @@ class TestCaseContainer extends Component {
     var testcases = this.props.testcases;
     var { loading } = this.props.testcases;
     let content;
+    let grid = "";
 
     if (testcases.testcases === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(testcases.testcases)) {
+    } else if (!isEmpty(testcases.testcases) && this.state.viewOption === "Grid") {
       testcases = this.props.testcases.testcases;
+      grid = "testcase-grid";
       content =
         testcases &&
         testcases.map((testcase, index) => (
@@ -59,7 +66,31 @@ class TestCaseContainer extends Component {
               description={testcase.description}
               id={testcase.id}
               projectId={projectId}
+              onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
             ></PortraitTestCase>
+          </React.Fragment>
+        ));
+    } else if (!isEmpty(testcases.testcases) && this.state.viewOption === "List") {
+      testcases = this.props.testcases.testcases;
+      grid = "testcase-grid grid-none";
+      content =
+        testcases &&
+        testcases.map((testcase, index) => (
+          <React.Fragment key={index}>
+            <LandscapeTestCase
+              title={testcase.title}
+              tags={testcase.groups.map((group, groupIndex) => (
+                <React.Fragment key={groupIndex}>
+                  <Tag title={group.title} color={group.color} isRemovable={false} />
+                </React.Fragment>
+              ))}
+              author={testcase.author}
+              date={testcase.date}
+              description={testcase.description}
+              id={testcase.id}
+              projectId={projectId}
+              onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
+            ></LandscapeTestCase>
           </React.Fragment>
         ));
     } else if (
@@ -73,7 +104,7 @@ class TestCaseContainer extends Component {
       content = <div className="testcase-container-no-content">There are no test cases created for this project</div>;
     }
 
-    return <div className="testcase-grid testcase-container">{content}</div>;
+    return <div className={`${grid} testcase-container`}>{content}</div>;
   }
 }
 

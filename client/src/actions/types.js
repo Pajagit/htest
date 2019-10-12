@@ -22,3 +22,5 @@ export const GET_ROLES = "GET_ROLES";
 export const ROLE_LOADING = "ROLE_LOADING";
 
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
+
+export const GET_SETTINGS = "GET_SETTINGS";

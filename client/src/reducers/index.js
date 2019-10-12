@@ -7,6 +7,7 @@ import authReducer from "./authReducer";
 import userReducer from "./userReducer";
 import projectReducer from "./projectReducer";
 import roleReducer from "./roleReducer";
+import settingReducer from "./settingReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -15,5 +16,6 @@ export default combineReducers({
   groups: groupReducer,
   users: userReducer,
   projects: projectReducer,
-  roles: roleReducer
+  roles: roleReducer,
+  settings: settingReducer
 });
