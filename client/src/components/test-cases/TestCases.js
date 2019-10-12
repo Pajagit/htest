@@ -23,6 +23,8 @@ import isEmpty from "../../validation/isEmpty";
 import Tag from "../common/Tag";
 import moment from "moment";
 
+const WAIT_INTERVAL = 500;
+const ENTER_KEY = 13;
 class TestCases extends Component {
   constructor(props) {
     super(props);
@@ -46,6 +48,7 @@ class TestCases extends Component {
       selectedDateTimestampTo: "",
       activeDateTo: "",
       testcaseFilters: {},
+      searchTerm: "",
       settings: this.props.settings.settings,
       groupFilters: []
     };
@@ -113,6 +116,24 @@ class TestCases extends Component {
     }
     this.setState({ testcaseFilters: testCaseFilters });
   }
+
+  handleChange = e => {
+    clearTimeout(this.timer);
+    this.setState({ searchTerm: e.target.value });
+    this.timer = setTimeout(this.triggerChange, WAIT_INTERVAL);
+  };
+
+  handleKeyDown = e => {
+    if (e.keyCode === ENTER_KEY) {
+      clearTimeout(this.timer);
+      this.triggerChange();
+    }
+  };
+
+  triggerChange = () => {
+    console.log(this.state.searchTerm);
+  };
+
   handleClick = e => {
     if (this.node) {
       if (this.node.contains(e.target)) {
@@ -395,7 +416,15 @@ class TestCases extends Component {
                 filtersShown={this.state.settings.activeFilters}
               />
             }
-            searchBtn={<SearchBtn />}
+            searchBtn={
+              <SearchBtn
+                name={"search"}
+                searchActive={this.state.searchTerm}
+                value={this.state.searchTerm}
+                onChange={e => this.handleChange(e)}
+                onKeyDown={e => this.handleKeyDown(e)}
+              />
+            }
           />
           <div className="view-options">
             <div className={`view-options--list clickable ${viewOptionListClass}`} onClick={e => this.setViewList(e)}>
