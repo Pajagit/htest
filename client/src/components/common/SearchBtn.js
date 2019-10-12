@@ -1,11 +1,19 @@
 import React from "react";
 
-export default function SearchBtn() {
+export default function SearchBtn({ value, onChange, searchActive }) {
+  var isActive = "";
+  if (searchActive !== "") {
+    isActive = (
+      <div className="main-content--header-buttons-item-warning">
+        <i className="fas fa-circle"></i>
+      </div>
+    );
+  }
   return (
-    <div className="main-content--header-buttons-item">
-      <div className="main-content--header-buttons-item-search">
-        <input className="search-input" type="text"></input>
-        <i className="fas fa-search"></i>
+    <div className={`main-content--header-buttons-item-search mr-1`}>
+      {isActive}
+      <div id="search-input">
+        <input onChange={onChange} type="search" value={value} className="form-element--input" />
       </div>
     </div>
   );
