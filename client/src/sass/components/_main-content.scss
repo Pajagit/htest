@@ -58,10 +58,10 @@
         }
         &-warning {
           position: absolute;
-          color: #ff1834;
-          top: -5px;
-          right: 0;
-          font-size: 1rem;
+          color: #e43dcd;
+          top: 0;
+          right: 7px;
+          font-size: 8px;
         }
       }
     }
@@ -84,4 +84,8 @@
       font-family: "IBM Plex Sans";
     }
   }
+}
+
+.active-filter-btn {
+  background-color: #dce0e4;
 }

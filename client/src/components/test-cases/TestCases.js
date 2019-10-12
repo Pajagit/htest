@@ -12,7 +12,7 @@ import SearchBtn from "../common/SearchBtn";
 import TestCaseContainer from "../test-cases/TestCaseContainer";
 import { getGroups } from "../../actions/groupsActions";
 import { getUsers } from "../../actions/userActions";
-import { editSettings } from "../../actions/settingsActions";
+import { editViewMode, editFilterActivity } from "../../actions/settingsActions";
 import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
 
 import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
@@ -73,11 +73,9 @@ class TestCases extends Component {
         nextProps.auth.user.superadmin
       );
     }
-    if (prevState.settings === null) {
-      update.settings = { viewOption: "Grid" };
-    }
-    if (nextProps.settings.settings && nextProps.settings.settings) {
-      if (nextProps.settings.settings !== prevState.settings) update.settings = nextProps.settings.settings;
+
+    if (nextProps.settings) {
+      if (nextProps.settings !== prevState.settings) update.settings = nextProps.settings;
     }
 
     update.isValidWrite = isValidWrite.isValid;
@@ -176,13 +174,9 @@ class TestCases extends Component {
   }
 
   filterBtn() {
-    var showFilters;
-    if (this.state.showFilters) {
-      showFilters = false;
-    } else {
-      showFilters = true;
-    }
-    this.setState({ showFilters });
+    var showFilters = !this.state.settings.activeFilters;
+
+    this.props.editFilterActivity(showFilters);
   }
   resetFilters() {
     this.setState(
@@ -215,31 +209,26 @@ class TestCases extends Component {
   }
 
   setViewList(e) {
-    // this.setState({ viewOption: "List" });
-    var viewOptions = { viewOption: "List" };
+    var viewMode = "List";
 
-    this.props.editSettings(viewOptions);
+    this.props.editViewMode(viewMode);
   }
 
   setViewGrid(e) {
-    // this.setState({ viewOption: "Grid" });
-    var viewOptions = { viewOption: "Grid" };
+    var viewMode = "Grid";
 
-    this.props.editSettings(viewOptions);
+    this.props.editViewMode(viewMode);
   }
 
   render() {
     var viewOptionGridClass = "";
     var viewOptionListClass = "";
-    var viewOption = "";
-    if (this.state.settings && this.state.settings.viewOption === "Grid") {
+    if (this.state.settings.viewMode === "Grid") {
       viewOptionGridClass = "activeView";
       viewOptionListClass = "";
-      viewOption = "Grid";
-    } else if (this.state.settings && this.state.settings.viewOption === "List") {
+    } else if (this.state.settings.viewMode === "List") {
       viewOptionGridClass = "";
       viewOptionListClass = "activeView";
-      viewOption = "List";
     }
 
     var allGroups = [];
@@ -289,9 +278,9 @@ class TestCases extends Component {
       );
     }
 
-    var filters;
+    var filters = <div className="padding"></div>;
 
-    if (this.state.showFilters) {
+    if (this.state.settings.activeFilters) {
       filters = (
         <div>
           <div className="testcase-grid">
@@ -399,7 +388,13 @@ class TestCases extends Component {
             link={"CreateTestCase"}
             canGoBack={false}
             addBtn={addTestCase}
-            filterBtn={<FilterBtn onClick={this.filterBtn} activeFilters={this.state.activeFilters} />}
+            filterBtn={
+              <FilterBtn
+                onClick={this.filterBtn}
+                activeFilters={this.state.activeFilters}
+                filtersShown={this.state.settings.activeFilters}
+              />
+            }
             searchBtn={<SearchBtn />}
           />
           <div className="view-options">
@@ -411,7 +406,7 @@ class TestCases extends Component {
             </div>
           </div>
           {filters}
-          <TestCaseContainer filters={this.state.testcaseFilters} viewOption={viewOption} />
+          <TestCaseContainer filters={this.state.testcaseFilters} viewOption={this.state.settings.viewMode} />
         </div>
       </div>
     );
@@ -433,5 +428,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getGroups, getUsers, editSettings }
+  { getGroups, getUsers, editViewMode, editFilterActivity }
 )(withRouter(TestCases));

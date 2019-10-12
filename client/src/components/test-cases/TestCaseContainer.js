@@ -99,9 +99,13 @@ class TestCaseContainer extends Component {
       !isEmpty(this.state.filters.dateFrom) ||
       !isEmpty(this.state.filters.dateTo)
     ) {
-      content = <div className="testcase-container-no-content">There are no test cases matching selected filters</div>;
+      content = (
+        <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>
+      );
     } else {
-      content = <div className="testcase-container-no-content">There are no test cases created for this project</div>;
+      content = (
+        <div className="testcase-container-no-content padding">There are no test cases created for this project</div>
+      );
     }
 
     return <div className={`${grid} testcase-container`}>{content}</div>;
