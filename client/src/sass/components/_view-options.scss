@@ -1,0 +1,26 @@
+.view-options {
+  position: absolute;
+  top: 70px;
+  right: 40px;
+  display: flex;
+  font-size: 2rem;
+  height: 25px;
+  color: rgb(175, 175, 175);
+  &--list {
+    height: 100%;
+    width: auto;
+    z-index: 100;
+
+    &:not(:last-child) {
+      margin-right: 15px;
+    }
+  }
+  &--grid {
+    height: 100%;
+    width: auto;
+    z-index: 100;
+  }
+}
+.activeView {
+  color: $color-primary;
+}

@@ -12,6 +12,7 @@ import SearchBtn from "../common/SearchBtn";
 import TestCaseContainer from "../test-cases/TestCaseContainer";
 import { getGroups } from "../../actions/groupsActions";
 import { getUsers } from "../../actions/userActions";
+import { editSettings } from "../../actions/settingsActions";
 import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
 
 import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
@@ -45,7 +46,7 @@ class TestCases extends Component {
       selectedDateTimestampTo: "",
       activeDateTo: "",
       testcaseFilters: {},
-
+      settings: this.props.settings.settings,
       groupFilters: []
     };
     this.filterBtn = this.filterBtn.bind(this);
@@ -72,6 +73,13 @@ class TestCases extends Component {
         nextProps.auth.user.superadmin
       );
     }
+    if (prevState.settings === null) {
+      update.settings = { viewOption: "Grid" };
+    }
+    if (nextProps.settings.settings && nextProps.settings.settings) {
+      if (nextProps.settings.settings !== prevState.settings) update.settings = nextProps.settings.settings;
+    }
+
     update.isValidWrite = isValidWrite.isValid;
     return Object.keys(update).length ? update : null;
   }
@@ -206,7 +214,35 @@ class TestCases extends Component {
     this.setState({ activeFilters });
   }
 
+  setViewList(e) {
+    // this.setState({ viewOption: "List" });
+    var viewOptions = { viewOption: "List" };
+
+    this.props.editSettings(viewOptions);
+  }
+
+  setViewGrid(e) {
+    // this.setState({ viewOption: "Grid" });
+    var viewOptions = { viewOption: "Grid" };
+
+    this.props.editSettings(viewOptions);
+  }
+
   render() {
+    console.log(this.state.settings);
+    var viewOptionGridClass = "";
+    var viewOptionListClass = "";
+    var viewOption = "";
+    if (this.state.settings && this.state.settings.viewOption === "Grid") {
+      viewOptionGridClass = "activeView";
+      viewOptionListClass = "";
+      viewOption = "Grid";
+    } else if (this.state.settings && this.state.settings.viewOption === "List") {
+      viewOptionGridClass = "";
+      viewOptionListClass = "activeView";
+      viewOption = "List";
+    }
+
     var allGroups = [];
     if (this.props.groups && this.props.groups.groups) {
       allGroups = this.props.groups.groups;
@@ -367,8 +403,16 @@ class TestCases extends Component {
             filterBtn={<FilterBtn onClick={this.filterBtn} activeFilters={this.state.activeFilters} />}
             searchBtn={<SearchBtn />}
           />
+          <div className="view-options">
+            <div className={`view-options--list clickable ${viewOptionListClass}`} onClick={e => this.setViewList(e)}>
+              <i className="fas fa-bars "></i>
+            </div>
+            <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
+              <i className="fas fa-th "></i>
+            </div>
+          </div>
           {filters}
-          <TestCaseContainer filters={this.state.testcaseFilters} />
+          <TestCaseContainer filters={this.state.testcaseFilters} viewOption={viewOption} />
         </div>
       </div>
     );
@@ -384,10 +428,11 @@ const mapStateToProps = state => ({
   testcases: state.testcases,
   groups: state.groups,
   users: state.users,
+  settings: state.settings,
   auth: state.auth
 });
 
 export default connect(
   mapStateToProps,
-  { getGroups, getUsers }
+  { getGroups, getUsers, editSettings }
 )(withRouter(TestCases));
