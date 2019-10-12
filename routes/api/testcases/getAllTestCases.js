@@ -32,6 +32,7 @@ module.exports = Router({ mergeParams: true }).post(
         requestObject.users = req.body.users ? req.body.users : [];
         requestObject.dateFrom = req.body.dateFrom ? req.body.dateFrom : "";
         requestObject.dateTo = req.body.dateTo ? req.body.dateTo : "";
+        requestObject.searchTerm = req.body.searchTerm ? req.body.searchTerm : "";
 
         const { errors, isValid } = validateTestCaseFilter(requestObject);
 
@@ -64,6 +65,11 @@ module.exports = Router({ mergeParams: true }).post(
         }
         if (requestObject.users.length > 0) {
           whereStatementUsers.id = { [Op.in]: requestObject.users };
+        }
+        if (requestObject.searchTerm.length > 0) {
+          whereStatement.title = {
+            [Op.iLike]: "%" + requestObject.searchTerm + "%"
+          };
         }
         whereStatement.project_id = req.query.project_id;
         whereStatement.deprecated = false;
