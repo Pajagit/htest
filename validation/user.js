@@ -94,5 +94,16 @@ module.exports = {
       errors,
       isValid: isEmpty(errors)
     };
+  },
+  validateUserSettingsInput: function(data) {
+    var errors = {};
+
+    if (data.testcase) {
+    }
+
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    };
   }
 };
