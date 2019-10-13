@@ -250,5 +250,54 @@ module.exports = {
         return res.status(404).json({ message: "Project has already been deleted or was never assigned to the user" });
       }
     }
+  },
+  getSettings: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "User id is not valid number" });
+    }
+    var userExists = await UserService.checkIfUserExistById(req.params.id);
+    if (!userExists) {
+      return res.status(404).json({ error: "User doesn't exist" });
+    }
+    var settings = await UserService.getSettings(req.user);
+    if (settings) {
+      return res.status(200).json(settings);
+    } else {
+      return res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  updateSettings: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "User id is not valid number" });
+    }
+    var userExists = await UserService.checkIfUserExistById(req.params.id);
+    if (!userExists) {
+      return res.status(404).json({ error: "User doesn't exist" });
+    }
+    var settingsObj = {};
+    if (req.body.testcase) {
+      if (req.body.testcase.groups) {
+        settingsObj.testcase_groups = req.body.testcase.groups;
+      }
+      if (req.body.testcase.users) {
+        settingsObj.testcase_users = req.body.testcase.users;
+      }
+      if (req.body.testcase.date_from !== "undefined") {
+        settingsObj.testcase_date_from = req.body.testcase.date_from;
+      }
+      if (req.body.testcase.date_to !== "undefined") {
+        settingsObj.testcase_date_to = req.body.testcase.date_to;
+      }
+      if (req.body.testcase.search_term !== "undefined") {
+        settingsObj.testcase_search_term = req.body.testcase.search_term;
+      }
+    }
+    var updateSettings = await UserService.updateSettings(req.user, settingsObj);
+    if (updateSettings) {
+      var settings = await UserService.getSettings(req.user);
+      return res.status(200).json(settings);
+    } else {
+      return res.status(500).json({ error: "Something went wrong" });
+    }
   }
 };
