@@ -4,6 +4,8 @@ const User = require("../models/user");
 const Project = require("../models/project");
 const UserRoleProject = require("../models/userroleproject");
 const Role = require("../models/role");
+const Settings = require("../models/settings");
+
 const getLocalTimestamp = require("../utils/dateFunctions").getLocalTimestamp;
 
 module.exports = {
@@ -378,6 +380,65 @@ module.exports = {
           resolve(true);
         } else {
           resolve(false);
+        }
+      });
+    });
+  },
+  getSettings: async function(user) {
+    return new Promise((resolve, reject) => {
+      Settings.findOne({
+        where: {
+          user_id: user.id
+        }
+      }).then(settings => {
+        if (settings) {
+          var settingsObj = {};
+          settingsObj.testcase = {};
+          if (settings) {
+            settingsObj.testcase.groups = settings.testcase_groups;
+            settingsObj.testcase.users = settings.testcase_users;
+            settingsObj.testcase.date_from = settings.testcase_date_from;
+            settingsObj.testcase.date_to = settings.testcase_date_to;
+            settingsObj.testcase.search_term = settings.testcase_search_term;
+          }
+          resolve(settingsObj);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  updateSettings: async function(user, settingsObj) {
+    return new Promise((resolve, reject) => {
+      Settings.findOne({
+        where: {
+          user_id: user.id
+        }
+      }).then(settings => {
+        if (settings) {
+          Settings.update(settingsObj, {
+            where: {
+              id: settings.id,
+              user_id: user.id
+            },
+            returning: true,
+            plain: true
+          }).then(updatedSettings => {
+            if (updatedSettings) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
+        } else {
+          settingsObj.user_id = user.id;
+          Settings.create(settingsObj).then(createdSetting => {
+            if (createdSetting) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
         }
       });
     });
