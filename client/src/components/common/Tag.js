@@ -19,7 +19,7 @@ function Tag({ title, color, isRemovable, onClickRemove }) {
   }
   return (
     <div className={className} onClick={onClickRemove}>
-      <div className={`tag--title ${clickable}`}>{title} </div>
+      <div className={`tag--title ${clickable} truncate-line`}>{title} </div>
       {remove}
     </div>
   );

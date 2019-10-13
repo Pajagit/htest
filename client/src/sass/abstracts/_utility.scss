@@ -44,7 +44,12 @@ input[type="file"] {
 // $font-size: 26px;
 $line-height: 1.4;
 $lines-to-show: 6;
-
+.truncate-line {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .truncate {
   display: block; /* Fallback for non-webkit */
   display: -webkit-box;
