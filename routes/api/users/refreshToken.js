@@ -73,6 +73,7 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
         } else {
           user.projects = await UserService.findUserRole(user.projects);
           var roleId = await RoleService.getSuperadminRoleId();
+          var projectId = await UserService.getLastVisitedProject(user.id);
           user.superadmin = await UserService.userIsSuperadmin(user, roleId);
           var newUserValues = {};
           if (profileObj.givenName != user.first_name) {
@@ -101,7 +102,8 @@ module.exports = Router({ mergeParams: true }).post("/token", (req, res) => {
             image_url: newUserValues.image_url ? newUserValues.image_url : user.image_url,
             active: user.active,
             projects: user.projects,
-            superadmin: user.superadmin
+            superadmin: user.superadmin,
+            project_id: projectId
           };
 
           refreshToken = jwt.sign(payload, keys.secretOrKeyRefresh, {

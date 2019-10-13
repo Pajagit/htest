@@ -84,6 +84,18 @@ module.exports = {
         .catch(err => console.log(err));
     });
   },
+  getLastVisitedProject: async function(user_id) {
+    return new Promise((resolve, reject) => {
+      Settings.findOne({
+        attributes: ["project_id"],
+        where: {
+          user_id: user_id
+        }
+      }).then(projectSetting => {
+        resolve(projectSetting.project_id);
+      });
+    });
+  },
   getUserById: async function(id) {
     return new Promise((resolve, reject) => {
       User.findOne({
