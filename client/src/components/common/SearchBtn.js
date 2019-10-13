@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SearchBtn({ value, onChange, searchActive }) {
+export default function SearchBtn({ value, onChange, searchActive, onKeyDown }) {
   var isActive = "";
   if (searchActive !== "") {
     isActive = (
@@ -13,7 +13,7 @@ export default function SearchBtn({ value, onChange, searchActive }) {
     <div className={`main-content--header-buttons-item-search mr-1`}>
       {isActive}
       <div id="search-input">
-        <input onChange={onChange} type="search" value={value} className="form-element--input" />
+        <input onChange={onChange} onKeyDown={onKeyDown} type="search" value={value} className="form-element--input" />
       </div>
     </div>
   );
