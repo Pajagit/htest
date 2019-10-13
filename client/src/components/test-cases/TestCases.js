@@ -114,6 +114,7 @@ class TestCases extends Component {
         .add(59, "seconds")
         .format("YYYY-MM-DD HH:mm:ss");
     }
+    testCaseFilters.searchTerm = this.state.searchTerm;
     this.setState({ testcaseFilters: testCaseFilters });
   }
 
@@ -131,7 +132,7 @@ class TestCases extends Component {
   };
 
   triggerChange = () => {
-    console.log(this.state.searchTerm);
+    this.search();
   };
 
   handleClick = e => {
