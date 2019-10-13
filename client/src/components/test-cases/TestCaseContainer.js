@@ -15,7 +15,7 @@ class TestCaseContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filters: {},
+      settings: this.props.settings,
       viewOption: ""
     };
   }
@@ -27,10 +27,18 @@ class TestCaseContainer extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     var projectId = nextProps.match.params.projectId;
+    if (nextProps.settings && nextProps.settings.settings && nextProps.settings.settings.testcase) {
+      if (nextProps.settings.settings !== prevState.settings.settings) {
+        console.log(prevState.settings.settings);
+        console.log(nextProps.settings.settings);
+        var filters = nextProps.settings.settings.testcase;
+        filters.searchTerm = filters.search_term;
+        filters.dateFrom = filters.date_from;
+        filters.dateTo = filters.date_to;
 
-    if (nextProps.filters !== prevState.filters) {
-      update.filters = nextProps.filters;
-      nextProps.getTestcases(projectId, nextProps.filters);
+        update.settings = nextProps.settings;
+        nextProps.getTestcases(projectId, filters);
+      }
     }
     if (nextProps.viewOption !== prevState.viewOption) {
       update.viewOption = nextProps.viewOption;
@@ -47,7 +55,7 @@ class TestCaseContainer extends Component {
 
     if (testcases.testcases === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(testcases.testcases) && this.state.viewOption === "Grid") {
+    } else if (!isEmpty(testcases.testcases) && this.state.viewOption === 1) {
       testcases = this.props.testcases.testcases;
       grid = "testcase-grid";
       content =
@@ -70,7 +78,7 @@ class TestCaseContainer extends Component {
             ></PortraitTestCase>
           </React.Fragment>
         ));
-    } else if (!isEmpty(testcases.testcases) && this.state.viewOption === "List") {
+    } else if (!isEmpty(testcases.testcases) && this.state.viewOption === 2) {
       testcases = this.props.testcases.testcases;
       grid = "testcase-grid grid-none";
       content =
@@ -94,10 +102,10 @@ class TestCaseContainer extends Component {
           </React.Fragment>
         ));
     } else if (
-      !isEmpty(this.state.filters.users) ||
-      !isEmpty(this.state.filters.groups) ||
-      !isEmpty(this.state.filters.dateFrom) ||
-      !isEmpty(this.state.filters.dateTo)
+      !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.users) ||
+      !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.groups) ||
+      !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.dateFrom) ||
+      !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.dateTo)
     ) {
       content = (
         <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>
@@ -117,7 +125,8 @@ TestCaseContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  testcases: state.testcases
+  testcases: state.testcases,
+  settings: state.settings
 });
 
 export default connect(
