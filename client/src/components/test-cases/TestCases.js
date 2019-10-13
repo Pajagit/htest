@@ -55,6 +55,7 @@ class TestCases extends Component {
     this.filterBtn = this.filterBtn.bind(this);
     this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
     this.selectMultipleOptionUsers = this.selectMultipleOptionUsers.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -170,6 +171,13 @@ class TestCases extends Component {
       this.checkActiveFilters();
     });
   }
+
+  removeSearchTerm() {
+    this.setState({ searchTerm: "" }, () => {
+      this.search();
+      this.checkActiveFilters();
+    });
+  }
   removeGroup(e) {
     var groups = this.state.groupFilters.filter(function(item) {
       return item["id"] !== e;
@@ -209,7 +217,8 @@ class TestCases extends Component {
         users: [],
         groupFilters: [],
         selectedDateFrom: "",
-        selectedDateTimestampFrom: ""
+        selectedDateTimestampFrom: "",
+        searchTerm: ""
       },
       () => {
         this.checkActiveFilters();
@@ -265,6 +274,18 @@ class TestCases extends Component {
       });
     }
 
+    var searchTerm = "";
+    if (!isEmpty(this.state.searchTerm)) {
+      searchTerm = (
+        <Tag
+          title={`Search: ${this.state.searchTerm}`}
+          color={"DATE_COLOR"}
+          isRemovable={true}
+          onClickRemove={e => this.removeSearchTerm(e)}
+        />
+      );
+    }
+
     var fromDate = "";
     if (!isEmpty(this.state.selectedDateFrom)) {
       fromDate = (
@@ -293,7 +314,8 @@ class TestCases extends Component {
       !isEmpty(this.state.testcaseFilters.users) ||
       !isEmpty(this.state.testcaseFilters.groups) ||
       !isEmpty(this.state.testcaseFilters.dateFrom) ||
-      !isEmpty(this.state.testcaseFilters.dateTo)
+      !isEmpty(this.state.testcaseFilters.dateTo) ||
+      !isEmpty(this.state.testcaseFilters.searchTerm)
     ) {
       resetFiltersTag = (
         <Tag title={"Reset all"} color={"RESET_COLOR"} isRemovable={true} onClickRemove={e => this.resetFilters()} />
@@ -386,6 +408,7 @@ class TestCases extends Component {
             ))}
             {fromDate}
             {toDate}
+            {searchTerm}
             {resetFiltersTag}
           </div>
         </div>
@@ -423,7 +446,7 @@ class TestCases extends Component {
                 searchActive={this.state.searchTerm}
                 value={this.state.searchTerm}
                 onChange={e => this.handleChange(e)}
-                onKeyDown={e => this.handleKeyDown(e)}
+                onKeyDown={this.handleKeyDown}
               />
             }
           />
