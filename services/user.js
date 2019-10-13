@@ -384,11 +384,11 @@ module.exports = {
       });
     });
   },
-  getSettings: async function(user) {
+  getSettings: async function(user_id) {
     return new Promise((resolve, reject) => {
       Settings.findOne({
         where: {
-          user_id: user.id
+          user_id: user_id
         }
       }).then(settings => {
         if (settings) {
@@ -408,18 +408,19 @@ module.exports = {
       });
     });
   },
-  updateSettings: async function(user, settingsObj) {
+  updateSettings: async function(user_id, settingsObj) {
     return new Promise((resolve, reject) => {
+      console.log(user_id+"asdf");
       Settings.findOne({
         where: {
-          user_id: user.id
+          user_id: user_id
         }
       }).then(settings => {
         if (settings) {
           Settings.update(settingsObj, {
             where: {
               id: settings.id,
-              user_id: user.id
+              user_id: user_id
             },
             returning: true,
             plain: true
@@ -431,7 +432,7 @@ module.exports = {
             }
           });
         } else {
-          settingsObj.user_id = user.id;
+          settingsObj.user_id = user_id;
           Settings.create(settingsObj).then(createdSetting => {
             if (createdSetting) {
               resolve(true);
