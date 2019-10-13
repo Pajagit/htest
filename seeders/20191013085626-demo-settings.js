@@ -9,8 +9,6 @@ module.exports = {
       users[0].forEach(user => {
         usersObjects.push({
           user_id: user.id,
-          testcase_groups: null,
-          testcase_users: null,
           testcase_date_from: null,
           testcase_date_to: null,
           testcase_search_term: null

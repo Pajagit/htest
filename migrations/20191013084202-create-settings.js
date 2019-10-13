@@ -10,11 +10,13 @@ module.exports = {
       },
       testcase_groups: {
         type: Sequelize.ARRAY(Sequelize.INTEGER),
-        allowNull: true
+        allowNull: true,
+        defaultValue: []
       },
       testcase_users: {
         type: Sequelize.ARRAY(Sequelize.INTEGER),
-        allowNull: true
+        allowNull: true,
+        defaultValue: []
       },
       testcase_date_from: {
         type: Sequelize.DATE,
