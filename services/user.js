@@ -423,7 +423,7 @@ module.exports = {
             settingsObj.testcase.date_to = settings.testcase_date_to;
             settingsObj.testcase.search_term = settings.testcase_search_term;
             settingsObj.testcase.view_mode = settings.testcase_view_mode;
-            settingsObj.testcase.show_fitlers = settings.testcase_show_filters;
+            settingsObj.testcase.show_filters = settings.testcase_show_filters;
             settingsObj.testcase.project_id = settings.project_id;
           }
           resolve(settingsObj);
