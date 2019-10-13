@@ -37,7 +37,15 @@ module.exports = {
           createdUser,
           await RoleService.getSuperadminRoleId()
         );
-        if (setAsSuperadmin) {
+        var settingsObj = {};
+        settingsObj.testcase_groups = null;
+        settingsObj.testcase_users = null;
+        settingsObj.testcase_date_from = null;
+        settingsObj.testcase_date_to = null;
+        settingsObj.testcase_search_term = null;
+
+        var createSettings = await UserService.updateSettings(createdUser.id, settingsObj);
+        if (setAsSuperadmin && createSettings) {
           var createdUserObj = await UserService.returnCreatedUser(createdUser);
           var roleId = await RoleService.getSuperadminRoleId();
           createdUserObj.superadmin = await UserService.userIsSuperadmin(createdUserObj, roleId);
@@ -259,7 +267,7 @@ module.exports = {
     if (!userExists) {
       return res.status(404).json({ error: "User doesn't exist" });
     }
-    var settings = await UserService.getSettings(req.user);
+    var settings = await UserService.getSettings(req.params.id);
     if (settings) {
       return res.status(200).json(settings);
     } else {
@@ -292,9 +300,9 @@ module.exports = {
         settingsObj.testcase_search_term = req.body.testcase.search_term;
       }
     }
-    var updateSettings = await UserService.updateSettings(req.user, settingsObj);
+    var updateSettings = await UserService.updateSettings(req.params.id, settingsObj);
     if (updateSettings) {
-      var settings = await UserService.getSettings(req.user);
+      var settings = await UserService.getSettings(req.params.id);
       return res.status(200).json(settings);
     } else {
       return res.status(500).json({ error: "Something went wrong" });
