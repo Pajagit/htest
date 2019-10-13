@@ -4,6 +4,7 @@ const RoleService = require("../services/role");
 
 const validateUserInput = require("../validation/user").validateUserInput;
 const validateUserProjectInput = require("../validation/user").validateUserProjectInput;
+const validateSettingsInput = require("../validation/user").validateSettingsInput;
 
 module.exports = {
   createUser: async function(req, res) {
@@ -43,6 +44,9 @@ module.exports = {
         settingsObj.testcase_date_from = null;
         settingsObj.testcase_date_to = null;
         settingsObj.testcase_search_term = null;
+        settingsObj.testcase_view_mode = 1;
+        settingsObj.testcase_show_filters = true;
+        settingsObj.testcase_project_id = null;
 
         var createSettings = await UserService.updateSettings(createdUser.id, settingsObj);
         if (setAsSuperadmin && createSettings) {
@@ -282,6 +286,11 @@ module.exports = {
     if (!userExists) {
       return res.status(404).json({ error: "User doesn't exist" });
     }
+    const { errors, isValid } = validateSettingsInput(req.body);
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
     var settingsObj = {};
     if (req.body.testcase) {
       if (req.body.testcase.groups) {
@@ -298,6 +307,12 @@ module.exports = {
       }
       if (req.body.testcase.search_term !== "undefined") {
         settingsObj.testcase_search_term = req.body.testcase.search_term;
+      }
+      if (req.body.testcase.view_mode !== "undefined") {
+        settingsObj.testcase_view_mode = req.body.testcase.view_mode;
+      }
+      if (req.body.testcase.show_filters !== "undefined") {
+        settingsObj.testcase_show_filters = req.body.testcase.show_filters;
       }
     }
     var updateSettings = await UserService.updateSettings(req.params.id, settingsObj);

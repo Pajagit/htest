@@ -3,6 +3,7 @@ const Op = Sequelize.Op;
 const User = require("../models/user");
 const Role = require("../models/role");
 const Project = require("../models/project");
+const Settings = require("../models/settings");
 const UserRoleProject = require("../models/userroleproject");
 
 module.exports = {
@@ -261,6 +262,24 @@ module.exports = {
 
       UserRoleProject.bulkCreate(userObjects).then(projects => {
         resolve(true);
+      });
+    });
+  },
+  updateSettingsProject: async function(project_id, user) {
+    return new Promise((resolve, reject) => {
+      Settings.update(
+        { project_id: project_id },
+        {
+          where: {
+            user_id: user.id
+          }
+        }
+      ).then(settings => {
+        if (settings) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
       });
     });
   }

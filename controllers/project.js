@@ -45,6 +45,9 @@ module.exports = {
       return res.status(403).json({ message: "Forbiden" });
     }
     var project = await ProjectService.getProjectById(req.params.id);
+    if (project) {
+      await ProjectService.updateSettingsProject(req.params.id, req.user);
+    }
 
     var projectWithRole = {};
     projectWithRole.id = project.id;

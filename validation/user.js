@@ -94,5 +94,34 @@ module.exports = {
       errors,
       isValid: isEmpty(errors)
     };
+  },
+  validateSettingsInput: function(data) {
+    var errors = {};
+    var arrayOfViewModes = [1, 2];
+
+    if (isEmpty(data.testcase)) {
+      errors.view_mode = "Testcase view mode is required";
+      errors.show_filters = "Testcase show filters is required";
+    } else {
+      if (isEmpty(data.testcase.view_mode)) {
+        errors.view_mode = "Testcase view mode is required";
+      } else {
+        if (!arrayOfViewModes.includes(data.testcase.view_mode)) {
+          errors.view_mode = "View mode can have one of these values [1,2]";
+        }
+      }
+      if (isEmpty(data.testcase.show_filters)) {
+        errors.show_filters = "Testcase show fitlers is required";
+      } else {
+        if (typeof data.testcase.show_filters !== "boolean") {
+          errors.show_filters = "Parameter 'show_filters' must have a true or false value";
+        }
+      }
+    }
+
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    };
   }
 };
