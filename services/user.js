@@ -387,6 +387,16 @@ module.exports = {
   getSettings: async function(user_id) {
     return new Promise((resolve, reject) => {
       Settings.findOne({
+        attributes: [
+          "testcase_groups",
+          "testcase_users",
+          "testcase_date_from",
+          "testcase_date_to",
+          "testcase_search_term",
+          "testcase_view_mode",
+          "testcase_show_filters",
+          "project_id"
+        ],
         where: {
           user_id: user_id
         }
@@ -400,6 +410,9 @@ module.exports = {
             settingsObj.testcase.date_from = settings.testcase_date_from;
             settingsObj.testcase.date_to = settings.testcase_date_to;
             settingsObj.testcase.search_term = settings.testcase_search_term;
+            settingsObj.testcase.view_mode = settings.testcase_view_mode;
+            settingsObj.testcase.show_fitlers = settings.testcase_show_filters;
+            settingsObj.testcase.project_id = settings.project_id;
           }
           resolve(settingsObj);
         } else {
@@ -410,7 +423,6 @@ module.exports = {
   },
   updateSettings: async function(user_id, settingsObj) {
     return new Promise((resolve, reject) => {
-      console.log(user_id+"asdf");
       Settings.findOne({
         where: {
           user_id: user_id
