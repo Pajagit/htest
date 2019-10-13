@@ -38,8 +38,8 @@ module.exports = {
           await RoleService.getSuperadminRoleId()
         );
         var settingsObj = {};
-        settingsObj.testcase_groups = null;
-        settingsObj.testcase_users = null;
+        settingsObj.testcase_groups = [];
+        settingsObj.testcase_users = [];
         settingsObj.testcase_date_from = null;
         settingsObj.testcase_date_to = null;
         settingsObj.testcase_search_term = null;
