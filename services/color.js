@@ -14,7 +14,7 @@ module.exports = {
         attributes: ["id"],
         limit: 1
       }).then(color => {
-        if (color) {
+        if (color.length > 0) {
           resolve(color[0].id);
         } else {
           resolve(false);
