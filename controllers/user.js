@@ -9,32 +9,32 @@ const validateSettingsInput = require("../validation/user").validateSettingsInpu
 module.exports = {
   createUser: async function(req, res) {
     // Get fields
-    const userFields = {};
+    const user_fields = {};
 
-    userFields.email = req.body.email;
-    userFields.first_name = req.body.first_name ? req.body.first_name : null;
-    userFields.last_name = req.body.last_name ? req.body.last_name : null;
-    userFields.position = req.body.position ? req.body.position : null;
-    userFields.image_url = req.body.image_url ? req.body.image_url : null;
-    userFields.superadmin = req.body.superadmin ? req.body.superadmin : null;
+    user_fields.email = req.body.email;
+    user_fields.first_name = req.body.first_name ? req.body.first_name : null;
+    user_fields.last_name = req.body.last_name ? req.body.last_name : null;
+    user_fields.position = req.body.position ? req.body.position : null;
+    user_fields.image_url = req.body.image_url ? req.body.image_url : null;
+    user_fields.superadmin = req.body.superadmin ? req.body.superadmin : null;
 
     const { errors, isValid } = validateUserInput(req.body, null, false);
     // Check Validation
     if (!isValid) {
       return res.status(400).json(errors);
     }
-    var canUpdateUser = await UserService.getCreateUpdateUser(req.user);
-    if (!canUpdateUser) {
+    var can_update_user = await UserService.getCreateUpdateUser(req.user);
+    if (!can_update_user) {
       return res.status(403).json({ message: "Forbiden" });
     }
-    var userExists = await UserService.checkIfUserWithSameMailExist(req.body.email);
-    if (userExists) {
+    var user_exists = await UserService.checkIfUserWithSameMailExist(req.body.email);
+    if (user_exists) {
       return res.status(400).json({ error: "User already exist" });
     } else {
-      var createdUser = await UserService.createUser(userFields);
+      var createdUser = await UserService.createUser(user_fields);
       if (createdUser) {
         var setAsSuperadmin = await UserService.setAsSuperadmin(
-          userFields.superadmin,
+          user_fields.superadmin,
           createdUser,
           await RoleService.getSuperadminRoleId()
         );
@@ -77,8 +77,8 @@ module.exports = {
       if (!isValid) {
         return res.status(400).json(errors);
       } else {
-        var canUpdateUser = await UserService.getCreateUpdateUser(req.user);
-        if (!canUpdateUser) {
+        var can_update_user = await UserService.getCreateUpdateUser(req.user);
+        if (!can_update_user) {
           return res.status(403).json({ message: "Forbiden" });
         }
         if (req.body.email && !last_login) {
@@ -129,8 +129,8 @@ module.exports = {
       return res.status(404).json({ error: "User doesn't exist" });
     }
 
-    var canUpdateUser = await UserService.getCreateUpdateUser(req.user);
-    if (!canUpdateUser) {
+    var can_update_user = await UserService.getCreateUpdateUser(req.user);
+    if (!can_update_user) {
       return res.status(403).json({ message: "Forbiden" });
     }
     var user = await UserService.getUserById(req.params.id);
@@ -267,8 +267,8 @@ module.exports = {
     if (isNaN(req.params.id)) {
       return res.status(400).json({ error: "User id is not valid number" });
     }
-    var userExists = await UserService.checkIfUserExistById(req.params.id);
-    if (!userExists) {
+    var user_exists = await UserService.checkIfUserExistById(req.params.id);
+    if (!user_exists) {
       return res.status(404).json({ error: "User doesn't exist" });
     }
     var settings = await UserService.getSettings(req.params.id);
@@ -282,8 +282,8 @@ module.exports = {
     if (isNaN(req.params.id)) {
       return res.status(400).json({ error: "User id is not valid number" });
     }
-    var userExists = await UserService.checkIfUserExistById(req.params.id);
-    if (!userExists) {
+    var user_exists = await UserService.checkIfUserExistById(req.params.id);
+    if (!user_exists) {
       return res.status(404).json({ error: "User doesn't exist" });
     }
     const { errors, isValid } = validateSettingsInput(req.body);

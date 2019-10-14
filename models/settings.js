@@ -40,7 +40,7 @@ const Settings = sequelize.define(
       type: Sequelize.BOOLEAN
     },
     project_id: {
-      required: false,
+      required: true,
       type: Sequelize.INTEGER,
       references: {
         model: "projects",

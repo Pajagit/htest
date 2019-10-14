@@ -25,7 +25,7 @@ module.exports = {
           var groupObject = {};
           if (group) {
             groupObject.id = group.id;
-            groupObject.isPinned = group.pinned;
+            groupObject.pinned = group.pinned;
             groupObject.title = group.title;
             groupObject.color = group.color.title;
             groupObject.project_id = group.project_id;
@@ -175,7 +175,7 @@ module.exports = {
           groups.forEach(group => {
             var groupObject = {
               id: group.id,
-              isPinned: group.pinned,
+              pinned: group.pinned,
               title: group.title,
               color: group.color.title
             };
@@ -210,8 +210,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Group.findAll({
         group: ["color_id"],
-        attributes: ["color_id", [sequelize.fn("COUNT", "color_id"), "color_count"]],
-        order: [[sequelize.fn("COUNT", "color_id"), "ASC"]],
+        attributes: ["color_id", [Sequelize.fn("COUNT", "color_id"), "color_count"]],
+        order: [[Sequelize.fn("COUNT", "color_id"), "ASC"]],
         limit: 1
       }).then(group => {
         if (group) {

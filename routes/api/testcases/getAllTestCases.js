@@ -30,9 +30,9 @@ module.exports = Router({ mergeParams: true }).post(
 
         requestObject.groups = req.body.groups ? req.body.groups : [];
         requestObject.users = req.body.users ? req.body.users : [];
-        requestObject.dateFrom = req.body.dateFrom ? req.body.dateFrom : "";
-        requestObject.dateTo = req.body.dateTo ? req.body.dateTo : "";
-        requestObject.searchTerm = req.body.searchTerm ? req.body.searchTerm : "";
+        requestObject.date_from = req.body.date_from ? req.body.date_from : "";
+        requestObject.date_to = req.body.date_to ? req.body.date_to : "";
+        requestObject.search_term = req.body.search_term ? req.body.search_term : "";
 
         const { errors, isValid } = validateTestCaseFilter(requestObject);
 
@@ -46,17 +46,17 @@ module.exports = Router({ mergeParams: true }).post(
           return res.status(403).json({ message: "Forbiden" });
         }
 
-        if (requestObject.dateFrom && requestObject.dateTo) {
+        if (requestObject.date_from && requestObject.date_to) {
           whereStatement.created_at = {
-            [Op.gte]: new Date(requestObject.dateFrom),
-            [Op.lte]: new Date(requestObject.dateTo)
+            [Op.gte]: new Date(requestObject.date_from),
+            [Op.lte]: new Date(requestObject.date_to)
           };
         } else {
-          if (requestObject.dateTo) {
-            whereStatement.created_at = { [Op.lte]: new Date(requestObject.dateTo) };
+          if (requestObject.date_to) {
+            whereStatement.created_at = { [Op.lte]: new Date(requestObject.date_to) };
           } else {
-            if (requestObject.dateFrom) {
-              whereStatement.created_at = { [Op.gte]: new Date(requestObject.dateFrom) };
+            if (requestObject.date_from) {
+              whereStatement.created_at = { [Op.gte]: new Date(requestObject.date_from) };
             }
           }
         }
@@ -66,9 +66,9 @@ module.exports = Router({ mergeParams: true }).post(
         if (requestObject.users.length > 0) {
           whereStatementUsers.id = { [Op.in]: requestObject.users };
         }
-        if (requestObject.searchTerm.length > 0) {
+        if (requestObject.search_term.length > 0) {
           whereStatement.title = {
-            [Op.iLike]: "%" + requestObject.searchTerm + "%"
+            [Op.iLike]: "%" + requestObject.search_term + "%"
           };
         }
         whereStatement.project_id = req.query.project_id;

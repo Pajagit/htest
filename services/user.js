@@ -12,10 +12,10 @@ module.exports = {
   findUserRole: async function(projects) {
     return new Promise((resolve, reject) => {
       if (projects.length > 0) {
-        var projectUsers = [];
-        var projectsProcessed = 0;
+        var project_users = [];
+        var projects_processed = 0;
         projects.forEach(project => {
-          var projectUser = {};
+          var project_user = {};
           Role.findOne({
             attributes: ["title", "id"],
             where: {
@@ -23,15 +23,15 @@ module.exports = {
             }
           }).then(role => {
             if (role) {
-              projectUser.role = {};
-              projectUser.role.title = role.title;
-              projectUser.role.id = role.id;
-              projectUser.title = project.title;
-              projectUser.id = project.id;
-              projectUsers.push(projectUser);
-              projectsProcessed++;
-              if (projectsProcessed === projects.length) {
-                resolve(projectUsers);
+              project_user.role = {};
+              project_user.role.title = role.title;
+              project_user.role.id = role.id;
+              project_user.title = project.title;
+              project_user.id = project.id;
+              project_users.push(project_user);
+              projects_processed++;
+              if (projects_processed === projects.length) {
+                resolve(project_users);
               }
             }
           });
@@ -91,8 +91,33 @@ module.exports = {
         where: {
           user_id: user_id
         }
-      }).then(projectSetting => {
-        resolve(projectSetting.project_id);
+      }).then(project_setting => {
+        resolve(project_setting.project_id);
+      });
+    });
+  },
+  getProjectsInScope: async function(user_id) {
+    return new Promise((resolve, reject) => {
+      Project.findAll({
+        attributes: ["id"],
+        include: [
+          {
+            model: User,
+            where: { id: user_id },
+            attributes: ["id"],
+            through: {
+              attributes: ["role_id"]
+            },
+            as: "users",
+            required: true
+          }
+        ]
+      }).then(projects => {
+        if (projects) {
+          resolve(projects);
+        } else {
+          resolve(false);
+        }
       });
     });
   },
@@ -128,9 +153,9 @@ module.exports = {
         .catch(err => res.status(404).json(err));
     });
   },
-  createUser: async function(userFields) {
+  createUser: async function(user_fields) {
     return new Promise((resolve, reject) => {
-      User.create(userFields).then(user => {
+      User.create(user_fields).then(user => {
         if (user) {
           resolve(user);
         } else {
@@ -166,8 +191,8 @@ module.exports = {
                   user_id: user.id,
                   role_id: role_id
                 }
-              }).then(returnedRows => {
-                if (returnedRows === 1) {
+              }).then(returned_rows => {
+                if (returned_rows === 1) {
                   resolve(true);
                 } else {
                   resolve(false);
@@ -196,31 +221,31 @@ module.exports = {
       });
     });
   },
-  createInputDateFromPayload: async function(bodyData, user) {
+  createInputDateFromPayload: async function(body_data, user) {
     return new Promise((resolve, reject) => {
-      const UserFields = {};
-      if (bodyData.position) UserFields.position = bodyData.position;
+      const user_fields = {};
+      if (body_data.position) user_fields.position = body_data.position;
       if (!user.last_login) {
-        UserFields.email = bodyData.email ? bodyData.email : null;
-        UserFields.first_name = bodyData.first_name ? bodyData.first_name : null;
-        UserFields.last_name = bodyData.last_name ? bodyData.last_name : null;
+        user_fields.email = body_data.email ? body_data.email : null;
+        user_fields.first_name = body_data.first_name ? body_data.first_name : null;
+        user_fields.last_name = body_data.last_name ? body_data.last_name : null;
       } else {
-        UserFields.email = user.email;
-        UserFields.first_name = user.first_name;
-        UserFields.last_name = user.last_name;
+        user_fields.email = user.email;
+        user_fields.first_name = user.first_name;
+        user_fields.last_name = user.last_name;
       }
-      UserFields.image_url = user.image_url;
-      UserFields.superadmin = bodyData.superadmin;
-      resolve(UserFields);
+      user_fields.image_url = user.image_url;
+      user_fields.superadmin = body_data.superadmin;
+      resolve(user_fields);
     });
   },
-  returnCreatedUser: async function(updatedUser) {
+  returnCreatedUser: async function(created_user) {
     return new Promise((resolve, reject) => {
-      if (updatedUser) {
+      if (created_user) {
         User.findOne({
           attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "last_login"],
           where: {
-            id: updatedUser.id
+            id: created_user.id
           }
         }).then(user => {
           if (user) {
@@ -232,12 +257,12 @@ module.exports = {
       }
     });
   },
-  returnUpdatedUser: async function(updatedUser) {
+  returnUpdatedUser: async function(updated_user) {
     return new Promise((resolve, reject) => {
-      if (updatedUser) {
+      if (updated_user) {
         User.findOne({
           where: {
-            id: updatedUser.id
+            id: updated_user.id
           },
           attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "active", "last_login"],
           include: [
@@ -267,15 +292,15 @@ module.exports = {
   },
   checkIfUserWithSameMailExist: async function(email, id) {
     return new Promise((resolve, reject) => {
-      var whereStatement = {};
-      whereStatement.email = email;
+      var where_statement = {};
+      where_statement.email = email;
       if (id) {
-        whereStatement.id = {
+        where_statement.id = {
           [Op.ne]: id
         };
       }
       User.findOne({
-        where: whereStatement
+        where: where_statement
       })
         .then(user => {
           if (user) {
@@ -288,16 +313,16 @@ module.exports = {
     });
   },
 
-  updateUser: async function(InputUserData, id) {
+  updateUser: async function(input_user_data, id) {
     return new Promise((resolve, reject) => {
-      User.update(InputUserData, {
+      User.update(input_user_data, {
         where: { id: id },
         returning: true,
         plain: true
       })
-        .then(UpdatedUser => {
-          if (UpdatedUser) {
-            resolve(UpdatedUser);
+        .then(updated_user => {
+          if (updated_user) {
+            resolve(updated_user);
           }
         })
         .catch(err => console.log(err));
@@ -358,10 +383,10 @@ module.exports = {
   },
   updateProject: async function(user_id, role_id, project_id) {
     return new Promise((resolve, reject) => {
-      var userProjectRole = {
+      var user_project_role = {
         role_id: role_id
       };
-      UserRoleProject.update(userProjectRole, {
+      UserRoleProject.update(user_project_role, {
         where: {
           user_id: user_id,
           project_id: project_id
@@ -381,13 +406,13 @@ module.exports = {
   },
   addProject: async function(user_id, role_id, project_id) {
     return new Promise((resolve, reject) => {
-      var userProject = {
+      var user_project = {
         user_id: user_id,
         role_id: role_id,
         project_id: project_id
       };
 
-      UserRoleProject.create(userProject).then(projects => {
+      UserRoleProject.create(user_project).then(projects => {
         if (projects) {
           resolve(true);
         } else {
@@ -414,26 +439,26 @@ module.exports = {
         }
       }).then(settings => {
         if (settings) {
-          var settingsObj = {};
-          settingsObj.testcase = {};
+          var settings_obj = {};
+          settings_obj.testcase = {};
           if (settings) {
-            settingsObj.testcase.groups = settings.testcase_groups;
-            settingsObj.testcase.users = settings.testcase_users;
-            settingsObj.testcase.date_from = settings.testcase_date_from;
-            settingsObj.testcase.date_to = settings.testcase_date_to;
-            settingsObj.testcase.search_term = settings.testcase_search_term;
-            settingsObj.testcase.view_mode = settings.testcase_view_mode;
-            settingsObj.testcase.show_filters = settings.testcase_show_filters;
-            settingsObj.testcase.project_id = settings.project_id;
+            settings_obj.testcase.groups = settings.testcase_groups;
+            settings_obj.testcase.users = settings.testcase_users;
+            settings_obj.testcase.date_from = settings.testcase_date_from;
+            settings_obj.testcase.date_to = settings.testcase_date_to;
+            settings_obj.testcase.search_term = settings.testcase_search_term;
+            settings_obj.testcase.view_mode = settings.testcase_view_mode;
+            settings_obj.testcase.show_filters = settings.testcase_show_filters;
+            settings_obj.testcase.project_id = settings.project_id;
           }
-          resolve(settingsObj);
+          resolve(settings_obj);
         } else {
           resolve(false);
         }
       });
     });
   },
-  updateSettings: async function(user_id, settingsObj) {
+  updateSettings: async function(user_id, settings_obj) {
     return new Promise((resolve, reject) => {
       Settings.findOne({
         where: {
@@ -441,24 +466,24 @@ module.exports = {
         }
       }).then(settings => {
         if (settings) {
-          Settings.update(settingsObj, {
+          Settings.update(settings_obj, {
             where: {
               id: settings.id,
               user_id: user_id
             },
             returning: true,
             plain: true
-          }).then(updatedSettings => {
-            if (updatedSettings) {
+          }).then(updated_settings => {
+            if (updated_settings) {
               resolve(true);
             } else {
               resolve(false);
             }
           });
         } else {
-          settingsObj.user_id = user_id;
-          Settings.create(settingsObj).then(createdSetting => {
-            if (createdSetting) {
+          settings_obj.user_id = user_id;
+          Settings.create(settings_obj).then(created_setting => {
+            if (created_setting) {
               resolve(true);
             } else {
               resolve(false);
