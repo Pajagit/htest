@@ -3,15 +3,16 @@ import axios from "axios";
 import { GET_SETTINGS } from "./types";
 
 // Get User Settings
-export const getUserSettings = user_id => dispatch => {
+export const getUserSettings = (user_id, callback) => dispatch => {
   axios
     .get(`/api/users/user/${user_id}/settings`)
-    .then(res =>
+    .then(res => {
+      callback(res);
       dispatch({
         type: GET_SETTINGS,
         payload: res.data
-      })
-    )
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_SETTINGS,

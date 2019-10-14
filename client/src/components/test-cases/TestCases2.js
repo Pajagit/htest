@@ -32,7 +32,7 @@ class TestCases extends Component {
       initialRender: true,
       options: "",
       values: "",
-      showFilters: null,
+      showFilters: true,
       isValid: false,
       value: null,
       arrayValue: [],
@@ -48,7 +48,6 @@ class TestCases extends Component {
       activeDateFrom: "",
       isValidWrite: false,
       showDatepickerTo: false,
-      viewMode: null,
       selectedDateTo: "",
       selectedDateTimestampTo: "",
       activeDateTo: "",
@@ -82,7 +81,6 @@ class TestCases extends Component {
         nextProps.auth.user.superadmin
       );
       if (prevState.initialRender) {
-        console.log("initial");
         update.initialRender = false;
         var usersWithTestcases = [];
         if (nextProps.users && nextProps.users.users) {
@@ -94,6 +92,7 @@ class TestCases extends Component {
           }
         }
 
+        // var projectGroups = [];
         if (nextProps.groups && nextProps.groups.groups) {
           update.projectGroups = nextProps.groups.groups;
 
@@ -149,30 +148,20 @@ class TestCases extends Component {
           update.selectedDateTimestampTo = moment(nextProps.settings.settings.testcase.date_to)._d;
           update.selectedDateTo = moment(nextProps.settings.settings.testcase.date_to).format(" Do MMM YY");
         }
-        console.log(4);
-        if (nextProps.settings && nextProps.settings.settings) {
-          console.log(3);
-          if (nextProps.settings.settings !== prevState.settings) update.settings = nextProps.settings.settings;
+      }
+      if (nextProps.settings && nextProps.settings.settings) {
+        if (nextProps.settings.settings !== prevState.settings) update.settings = nextProps.settings.settings;
+        if (nextProps.settings.settings.testcase && prevState.settings) {
+          if (nextProps.settings.settings.testcase.search_term !== prevState.settings.testcase.search_term) {
+            update.searchTerm = prevState.settings.testcase.search_term;
+          }
+        }
 
-          if (nextProps.settings.settings.testcase && prevState.settings) {
-            if (nextProps.settings.settings.testcase.search_term !== prevState.settings.testcase.search_term) {
-              update.searchTerm = prevState.settings.testcase.search_term;
-            }
-            if (nextProps.settings.settings && nextProps.settings.settings.testcase) {
-              update.showFilters = nextProps.settings.settings.testcase.show_filters;
-            }
-            console.log(2);
-            if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase) {
-              console.log(1);
-              update.viewMode = nextProps.settings.settings.testcase.view_mode;
-            }
-          }
-          if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase.date_from === null) {
-            update.dateFrom = "";
-          }
-          if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase.date_to === null) {
-            update.dateTo = "";
-          }
+        if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase.date_from === null) {
+          update.settings.testcase.date_from = "";
+        }
+        if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase.date_to === null) {
+          update.settings.testcase.date_to = "";
         }
       }
     }
@@ -184,54 +173,42 @@ class TestCases extends Component {
     document.addEventListener("mousedown", this.handleClick, false);
     if (this.state.isValid) {
       var projectId = this.props.match.params.projectId;
-
-      this.props.getUserSettings(this.props.auth.user.id, () => {
-        this.props.getGroups(projectId);
-        var has_testcases = true;
-        this.props.getUsers(has_testcases);
-      });
+      this.props.getGroups(projectId);
+      this.props.getUserSettings(this.props.auth.user.id);
     }
+    var has_testcases = true;
+    this.props.getUsers(has_testcases);
   }
 
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClick, false);
-
-    var testcase = {};
-    testcase.show_filters = !isEmpty(this.state.showFilters) ? this.state.showFilters : true;
-    testcase.search_term = this.state.searchTerm;
-    testcase.users = getidsFromObjectArray(this.state.selectedUsers);
-    testcase.groups = getidsFromObjectArray(this.state.selectedGroupFilters);
-    testcase.view_mode = !isEmpty(this.state.viewMode) ? this.state.viewMode : 1;
-
-    var payload = { testcase };
-    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
   }
   search() {
     var testCaseFilters = {};
     testCaseFilters.groups = getidsFromObjectArray(this.state.selectedGroupFilters);
-    testCaseFilters.users = getidsFromObjectArray(this.state.selectedUsers);
-    var dateFrom = "";
+    testCaseFilters.users = getidsFromObjectArray(this.state.users);
+    testCaseFilters.dateFrom = "";
     if (moment(this.state.selectedDateTimestampFrom).format("YYYY-MM-DD") !== "Invalid date") {
-      dateFrom = moment(this.state.selectedDateTimestampFrom).format("YYYY-MM-DD HH:mm:ss");
+      testCaseFilters.dateFrom = moment(this.state.selectedDateTimestampFrom).format("YYYY-MM-DD HH:mm:ss");
     }
-    var dateTo = "";
+    testCaseFilters.dateTo = "";
     if (moment(this.state.selectedDateTimestampTo).format("YYYY-MM-DD ") !== "Invalid date") {
-      dateTo = moment(this.state.selectedDateTimestampTo)
+      testCaseFilters.dateTo = moment(this.state.selectedDateTimestampTo)
         .add(21, "hours")
         .add(59, "minutes")
         .add(59, "seconds")
         .format("YYYY-MM-DD HH:mm:ss");
     }
-    testCaseFilters.date_to = dateTo !== "" ? dateTo : null;
-    testCaseFilters.date_from = dateFrom !== "" ? dateFrom : null;
-    testCaseFilters.search_term = this.state.searchTerm ? this.state.searchTerm : "";
-    testCaseFilters.view_mode = this.state.viewMode ? this.state.viewMode : 1;
-    testCaseFilters.show_filters = this.state.showFilters;
-    this.setState({ testcaseFilters: testCaseFilters }, () => {
-      console.log(this.state.testcaseFilters);
-    });
+    // testCaseFilters.searchTerm = this.state.searchTerm;
+    testCaseFilters.date_to = testCaseFilters.dateTo !== "" ? testCaseFilters.dateTo : null;
+    testCaseFilters.date_from = testCaseFilters.dateFrom !== "" ? testCaseFilters.dateFrom : null;
+    testCaseFilters.searchTerm = this.state.searchTerm;
+    testCaseFilters.view_mode = 1;
+    testCaseFilters.show_filters = this.state.settings.testcase.show_filters;
+    var testcase = testCaseFilters;
+    this.setState({ testcaseFilters: testcase });
+    // this.props.getUserSettings(this.props.auth.user.id);
   }
-
   timer = null;
   handleChange = e => {
     clearTimeout(this.timer);
@@ -249,8 +226,11 @@ class TestCases extends Component {
   };
 
   triggerChange = e => {
-    this.setState({ searchTerm: this.state.searchTerm }, () => {
-      this.search();
+    var testcase = {};
+    testcase.search_term = this.state.searchTerm;
+    var payload = { testcase };
+    this.props.editUserSettings(this.props.auth.user.id, payload, () => {
+      this.setState({ searchTerm: testcase.search_term }, () => {});
     });
   };
 
@@ -271,34 +251,25 @@ class TestCases extends Component {
   }
 
   selectMultipleOptionUsers(value) {
-    this.setState({ selectedUsers: value }, () => {
-      var testcase = {};
-      testcase.users = getidsFromObjectArray(this.state.selectedUsers);
+    this.setState({ selectedUsers: value });
 
-      var payload = { testcase };
-      this.props.editUserSettings(this.props.auth.user.id, payload, () => {
-        this.search();
-        this.checkActiveFilters();
-      });
-    });
+    var testcase = {};
+    testcase.users = getidsFromObjectArray(value);
+    var payload = { testcase };
+    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
   }
 
   selectMultipleOptionGroups(value) {
-    this.setState({ selectedGroupFilters: value }, () => {
-      var testcase = {};
-      testcase.groups = getidsFromObjectArray(this.state.selectedGroupFilters);
+    this.setState({ selectedGroupFilters: value });
 
-      var payload = { testcase };
-      this.props.editUserSettings(this.props.auth.user.id, payload, () => {
-        this.search();
-        this.checkActiveFilters();
-      });
-    });
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(value);
+    var payload = { testcase };
+    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
   }
 
   removeSearchTerm() {
     this.setState({ searchTerm: "" }, () => {
-      this.search();
       this.checkActiveFilters();
     });
   }
@@ -346,8 +317,9 @@ class TestCases extends Component {
   }
 
   filterBtn() {
-    var showFilters = !this.state.showFilters;
-    this.setState({ showFilters });
+    // console.log("test");
+    var showFilters = !this.state.settings.testcase.show_filters;
+
     var testcase = {};
     testcase.show_filters = showFilters;
     var payload = { testcase };
@@ -367,16 +339,7 @@ class TestCases extends Component {
         searchTerm: ""
       },
       () => {
-        var testcase = {};
-        testcase.date_to = null;
-        testcase.date_from = null;
-        testcase.search_term = "";
-        testcase.users = [];
-        testcase.groups = [];
-
-        this.search();
         this.checkActiveFilters();
-        this.props.editUserSettings(this.props.auth.user.id, { testcase }, () => {});
       }
     );
   }
@@ -384,57 +347,61 @@ class TestCases extends Component {
   checkActiveFilters() {
     var activeFilters = false;
     if (
-      !isEmpty(this.state.selectedUsers) ||
-      !isEmpty(this.state.selectedGroupFilters) ||
-      this.state.selectedDateTimestampFrom !== "" ||
-      this.state.selectedDateTimestampTo !== ""
+      !isEmpty(this.state.selectedDateFrom) ||
+      !isEmpty(this.state.selectedDateTo) ||
+      this.state.selectedUsers.length > 0 ||
+      this.state.selectedGroupFilters.length > 0
     ) {
       activeFilters = true;
     }
-    this.setState({ activeFilters }, () => console.log(activeFilters));
+    this.setState({ activeFilters });
   }
 
   setViewList(e) {
     var view_mode = 2;
-    this.setState({ viewMode: view_mode }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, { testcase: { view_mode } }, () => {});
-    });
+    var testcase = { view_mode };
+
+    var payload = { testcase };
+
+    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
   }
 
   setViewGrid(e) {
     var view_mode = 1;
-    this.setState({ viewMode: view_mode }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, { testcase: { view_mode } }, () => {});
-    });
+    var testcase = { view_mode };
+
+    var payload = { testcase };
+    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
   }
 
   render() {
     var view_mode;
     var viewOptionGridClass = "";
     var viewOptionListClass = "";
-    if (this.state.viewMode) {
-      view_mode = this.state.viewMode;
+    if (this.state.settings && this.state.settings.testcase) {
+      view_mode = this.state.settings.testcase.view_mode;
 
-      if (view_mode === 1) {
+      if (this.state.settings.testcase.view_mode === 1) {
         viewOptionGridClass = "activeView";
         viewOptionListClass = "";
-      } else if (view_mode === 2) {
+      } else if (this.state.settings.testcase.view_mode === 2) {
         viewOptionGridClass = "";
         viewOptionListClass = "activeView";
       }
     }
-    var searchTerm = "";
-    if (!isEmpty(this.state.searchTerm)) {
-      searchTerm = (
-        <Tag
-          title={`Search: ${this.state.searchTerm}`}
-          color={"DATE_COLOR"}
-          isRemovable={true}
-          onClickRemove={e => this.removeSearchTerm(e)}
-        />
-      );
+    if (this.state.settings && this.state.settings.testcase) {
+      var searchTerm = "";
+      if (!isEmpty(this.state.settings.testcase.search_term)) {
+        searchTerm = (
+          <Tag
+            title={`Search: ${this.state.settings.testcase.search_term}`}
+            color={"DATE_COLOR"}
+            isRemovable={true}
+            onClickRemove={e => this.removeSearchTerm(e)}
+          />
+        );
+      }
     }
-
     var fromDate = "";
     if (!isEmpty(this.state.selectedDateFrom)) {
       fromDate = (
@@ -459,18 +426,18 @@ class TestCases extends Component {
     }
     var resetFiltersTag = "";
     if (
-      !isEmpty(this.state.selectedUsers) ||
-      !isEmpty(this.state.selectedGroupFilters) ||
-      this.state.selectedDateTimestampFrom !== "" ||
-      this.state.selectedDateTimestampTo !== "" ||
-      !isEmpty(this.state.searchTerm)
+      !isEmpty(this.state.testcaseFilters.users) ||
+      !isEmpty(this.state.testcaseFilters.groups) ||
+      !isEmpty(this.state.testcaseFilters.dateFrom) ||
+      !isEmpty(this.state.testcaseFilters.dateTo) ||
+      !isEmpty(this.state.testcaseFilters.searchTerm)
     ) {
       resetFiltersTag = (
         <Tag title={"Reset all"} color={"RESET_COLOR"} isRemovable={true} onClickRemove={e => this.resetFilters()} />
       );
     }
     var filters = <div className="padding"></div>;
-    if (this.state.showFilters) {
+    if (this.state.settings && this.state.settings.testcase && this.state.settings.testcase.show_filters) {
       filters = (
         <div>
           <div className="testcase-grid">
@@ -622,7 +589,7 @@ class TestCases extends Component {
           </div>
           {filters}
           {/* <TestCaseContainer filters={this.state.testcaseFilters} viewOption={this.state.settings.testcase.view_mode} /> */}
-          <TestCaseContainer filters={this.state.testcaseFilters} viewOption={view_mode} />
+          <TestCaseContainer filters={this.props.testcaseFilters} viewOption={view_mode} />
         </div>
       </div>
     );
