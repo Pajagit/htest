@@ -85,7 +85,7 @@ module.exports = Router({ mergeParams: true }).get(
                 testcase.groups.forEach(group => {
                   var groupObject = {
                     id: group.id,
-                    isPinned: group.pinned,
+                    pinned: group.pinned,
                     title: group.title,
                     color: group.color.title
                   };

@@ -1,25 +1,32 @@
-"use strict";
-const User = require("../models/user");
+// "use strict";
+// const User = require("../models/user");
+// const Project = require("../models/user");
 
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    const users = await Promise.all([User.findAll()]);
-    var usersObjects = [];
-    if (users) {
-      users[0].forEach(user => {
-        usersObjects.push({
-          user_id: user.id,
-          testcase_date_from: null,
-          testcase_date_to: null,
-          testcase_search_term: null
-        });
-      });
-    }
+// const UserService = require("../services/user");
 
-    return queryInterface.bulkInsert("settings", usersObjects, {});
-  },
+// module.exports = {
+//   up: async (queryInterface, Sequelize) => {
+//     const users = await Promise.all([User.findAll()]);
+//     var usersObjects = [];
+//     if (users) {
+//       users[0].forEach(async function(user) {
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("settings", null, {});
-  }
-};
+//         projects.forEach(project => {
+//           usersObjects.push({
+//             user_id: user.id,
+//             testcase_date_from: null,
+//             testcase_date_to: null,
+//             testcase_search_term: null,
+//             project_id: 2
+//           });
+//         });
+//       });
+//     }
+
+//     return queryInterface.bulkInsert("settings", usersObjects, {});
+//   },
+
+//   down: async (queryInterface, Sequelize) => {
+//     return queryInterface.bulkDelete("settings", null, {});
+//   }
+// };

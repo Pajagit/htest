@@ -6,7 +6,7 @@ module.exports = {
       type: Sequelize.INTEGER,
       references: { model: "projects", key: "id" },
       defaultValue: null,
-      allowNull: true
+      allowNull: false
     });
   },
 

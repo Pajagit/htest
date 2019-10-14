@@ -33,13 +33,13 @@ module.exports = Router({ mergeParams: true }).put(
       const updateOldCaseField = {};
 
       if (req.body.title) testCaseFields.title = req.body.title;
-      if (req.body.isDeprecated) {
+      if (req.body.deprecated) {
         updateOldCaseField.deprecated = true;
         testCaseFields.user_id = req.user.id;
         testCaseFields.project_id = req.body.project_id ? req.body.project_id : null;
       }
       testCaseFields.description = req.body.description ? req.body.description : null;
-      testCaseFields.deprecated = req.body.isDeprecated ? req.body.isDeprecated : false;
+      testCaseFields.deprecated = req.body.deprecated ? req.body.deprecated : false;
       testCaseFields.preconditions = req.body.preconditions ? req.body.preconditions : null;
       if (req.body.expected_result) testCaseFields.expected_result = req.body.expected_result;
       var test_steps = req.body.test_steps.filter(Boolean);
@@ -266,7 +266,7 @@ module.exports = Router({ mergeParams: true }).put(
                   testcase.groups.forEach(group => {
                     var groupObject = {
                       id: group.id,
-                      isPinned: group.pinned,
+                      pinned: group.pinned,
                       title: group.title,
                       color: group.color.title
                     };
