@@ -6,12 +6,12 @@ import { GET_SETTINGS } from "./types";
 export const getUserSettings = user_id => dispatch => {
   axios
     .get(`/api/users/user/${user_id}/settings`)
-    .then(res =>
+    .then(res => {
       dispatch({
         type: GET_SETTINGS,
         payload: res.data
-      })
-    )
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_SETTINGS,
@@ -21,11 +21,10 @@ export const getUserSettings = user_id => dispatch => {
 };
 
 // Get User Settings
-export const editUserSettings = (user_id, settingsData, callback) => dispatch => {
+export const editUserSettings = (user_id, settingsData) => dispatch => {
   axios
     .put(`/api/users/user/${user_id}/settings`, settingsData)
     .then(res => {
-      callback(res);
       dispatch({
         type: GET_SETTINGS,
         payload: res.data

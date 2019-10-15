@@ -15,33 +15,20 @@ class TestCaseContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settings: this.props.settings,
-      viewOption: ""
+      settings: {},
+      filters: this.props.settings.settings
     };
-  }
-  componentDidMount() {
-    var projectId = this.props.match.params.projectId;
-    this.props.getTestcases(projectId);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     var projectId = nextProps.match.params.projectId;
     if (nextProps.settings && nextProps.settings.settings && nextProps.settings.settings.testcase) {
-      if (nextProps.settings.settings !== prevState.settings.settings) {
-        console.log(prevState.settings.settings);
-        console.log(nextProps.settings.settings);
-        var filters = nextProps.settings.settings.testcase;
-        filters.searchTerm = filters.search_term;
-        filters.dateFrom = filters.date_from;
-        filters.dateTo = filters.date_to;
-
-        update.settings = nextProps.settings;
-        nextProps.getTestcases(projectId, filters);
+      if (nextProps.settings.settings.testcase !== prevState.filters) {
+        update.filters = nextProps.settings.settings.testcase;
+        nextProps.getTestcases(projectId, nextProps.settings.settings.testcase);
       }
-    }
-    if (nextProps.viewOption !== prevState.viewOption) {
-      update.viewOption = nextProps.viewOption;
+      update.settings = nextProps.settings;
     }
     return Object.keys(update).length ? update : null;
   }
@@ -55,7 +42,7 @@ class TestCaseContainer extends Component {
 
     if (testcases.testcases === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(testcases.testcases) && this.state.viewOption === 1) {
+    } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 1) {
       testcases = this.props.testcases.testcases;
       grid = "testcase-grid";
       content =
@@ -78,7 +65,7 @@ class TestCaseContainer extends Component {
             ></PortraitTestCase>
           </React.Fragment>
         ));
-    } else if (!isEmpty(testcases.testcases) && this.state.viewOption === 2) {
+    } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 2) {
       testcases = this.props.testcases.testcases;
       grid = "testcase-grid grid-none";
       content =
@@ -112,7 +99,9 @@ class TestCaseContainer extends Component {
       );
     } else {
       content = (
-        <div className="testcase-container-no-content padding">There are no test cases created for this project</div>
+        <div className="testcase-container-no-content padding">
+          There are no test cases created or none match the filters
+        </div>
       );
     }
 

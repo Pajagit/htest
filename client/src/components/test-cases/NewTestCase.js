@@ -60,10 +60,10 @@ class NewTestCase extends Component {
     if (nextProps.groups && nextProps.groups.groups) {
       var { groups } = nextProps.groups;
       var filteredPinnedGroups = groups.filter(function(group) {
-        return group.isPinned === true;
+        return group.pinned === true;
       });
       var notPinnedGroups = groups.filter(function(group) {
-        return group.isPinned === false;
+        return group.pinned === false;
       });
       update.notPinnedGroups = notPinnedGroups;
       update.pinnedGroups = filteredPinnedGroups;
@@ -209,7 +209,7 @@ class NewTestCase extends Component {
 
   selectMultipleOptionGroups(e) {
     var filteredUnpinnedGroups = this.state.selectedGroupsObjects.filter(function(group) {
-      return group.isPinned !== false;
+      return group.pinned !== false;
     });
 
     function merge(a, b, prop) {

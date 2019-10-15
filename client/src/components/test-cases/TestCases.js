@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { createSelector } from "reselect";
 
 import GlobalPanel from "../global-panel/GlobalPanel";
 import ProjectPanel from "../project-panel/ProjectPanel";
@@ -29,26 +30,17 @@ class TestCases extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      options: "",
-      values: "",
-      showFilters: true,
       isValid: false,
       value: null,
-      arrayValue: [],
       user: this.props.auth.user,
       selectedUsers: [],
       users: [],
       usersWithTestcases: [],
       projectGroups: [],
-      activeFilters: false,
       showDatepickerFrom: false,
-      selectedDateFrom: "",
-      selectedDateTimestampFrom: "",
       activeDateFrom: "",
       isValidWrite: false,
       showDatepickerTo: false,
-      selectedDateTo: "",
-      selectedDateTimestampTo: "",
       activeDateTo: "",
       testcaseFilters: {},
       searchTerm: "",
@@ -74,6 +66,11 @@ class TestCases extends Component {
         nextProps.history.push(`/Projects`);
       }
       update.isValid = isValid;
+      var isValidWrite = addTestcasesPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
 
       var usersWithTestcases = [];
       if (nextProps.users && nextProps.users.users) {
@@ -85,98 +82,10 @@ class TestCases extends Component {
         }
       }
 
-      // var projectGroups = [];
       if (nextProps.groups && nextProps.groups.groups) {
         update.projectGroups = nextProps.groups.groups;
-
-        var selectedGroups = [];
-        nextProps.groups.groups.map(function(item) {
-          if (
-            nextProps.settings.settings &&
-            nextProps.settings.settings.testcase &&
-            nextProps.settings.settings.testcase.groups
-          ) {
-            if (nextProps.settings.settings.testcase.groups.includes(item.id)) {
-              selectedGroups.push({ id: item.id, title: item.title, color: item.color });
-            }
-          }
-          return selectedGroups;
-        });
-        update.selectedGroupFilters = selectedGroups;
-      }
-
-      if (nextProps.users && nextProps.users.users) {
-        update.users = nextProps.users.users;
-
-        var selectedUsers = [];
-        nextProps.users.users.map(function(item) {
-          if (
-            nextProps.settings.settings &&
-            nextProps.settings.settings.testcase &&
-            nextProps.settings.settings.testcase.users
-          ) {
-            if (nextProps.settings.settings.testcase.users.includes(item.id)) {
-              selectedUsers.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
-            }
-          }
-          return selectedUsers;
-        });
-        update.selectedUsers = selectedUsers;
-      }
-
-      if (
-        nextProps.settings.settings &&
-        nextProps.settings.settings.testcase &&
-        nextProps.settings.settings.testcase.date_from
-      ) {
-        update.selectedDateTimestampFrom = moment(nextProps.settings.settings.testcase.date_from)._d;
-        update.selectedDateFrom = moment(nextProps.settings.settings.testcase.date_from).format(" Do MMM YY");
-        console.log("test selectedDate");
-      }
-
-      if (
-        nextProps.settings.settings &&
-        nextProps.settings.settings.testcase &&
-        nextProps.settings.settings.testcase.date_to
-      ) {
-        update.selectedDateTimestampTo = moment(nextProps.settings.settings.testcase.date_to)._d;
-        update.selectedDateTo = moment(nextProps.settings.settings.testcase.date_to).format(" Do MMM YY");
-      }
-
-      var isValidWrite = addTestcasesPermissions(
-        nextProps.auth.user.projects,
-        nextProps.match.params.projectId,
-        nextProps.auth.user.superadmin
-      );
-    }
-    if (nextProps.settings && nextProps.settings.settings) {
-      // console.log(nextProps.settings);
-      // console.log(prevState.settings);
-      if (nextProps.settings.settings !== prevState.settings) update.settings = nextProps.settings.settings;
-      // if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase.groups === null) {
-      //   update.settings.testcase.groups = [];
-      // }
-      // if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase.users === null) {
-      //   update.settings.testcase.users = [];
-      // }
-
-      if (nextProps.settings.settings.testcase && prevState.settings) {
-        console.log(nextProps.settings.settings.testcase.search_term);
-        console.log(prevState.settings.testcase.search_term);
-        if (nextProps.settings.settings.testcase.search_term !== prevState.settings.testcase.search_term) {
-          update.settings.testcase.search_term = prevState.settings.testcase.search_term;
-          console.log("test");
-        }
-      }
-
-      if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase.date_from === null) {
-        update.settings.testcase.date_from = "";
-      }
-      if (nextProps.settings.settings.testcase && nextProps.settings.settings.testcase.date_to === null) {
-        update.settings.testcase.date_to = "";
       }
     }
-    // console.log(prevState);
     update.isValidWrite = isValidWrite.isValid;
     return Object.keys(update).length ? update : null;
   }
@@ -186,42 +95,16 @@ class TestCases extends Component {
     if (this.state.isValid) {
       var projectId = this.props.match.params.projectId;
       this.props.getGroups(projectId);
+      var has_testcases = true;
+      this.props.getUsers(has_testcases);
       this.props.getUserSettings(this.props.auth.user.id);
     }
-    var has_testcases = true;
-    this.props.getUsers(has_testcases);
   }
 
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClick, false);
   }
-  search() {
-    // var testCaseFilters = {};
-    // testCaseFilters.groups = getidsFromObjectArray(this.state.selectedGroupFilters);
-    // testCaseFilters.users = getidsFromObjectArray(this.state.users);
-    // testCaseFilters.dateFrom = "";
-    // if (moment(this.state.selectedDateTimestampFrom).format("YYYY-MM-DD") !== "Invalid date") {
-    //   testCaseFilters.dateFrom = moment(this.state.selectedDateTimestampFrom).format("YYYY-MM-DD HH:mm:ss");
-    // }
-    // testCaseFilters.dateTo = "";
-    // if (moment(this.state.selectedDateTimestampTo).format("YYYY-MM-DD ") !== "Invalid date") {
-    //   testCaseFilters.dateTo = moment(this.state.selectedDateTimestampTo)
-    //     .add(21, "hours")
-    //     .add(59, "minutes")
-    //     .add(59, "seconds")
-    //     .format("YYYY-MM-DD HH:mm:ss");
-    // }
-    // testCaseFilters.searchTerm = this.state.searchTerm;
-    // testCaseFilters.date_to = testCaseFilters.dateTo !== "" ? testCaseFilters.dateTo : null;
-    // testCaseFilters.date_from = testCaseFilters.dateFrom !== "" ? testCaseFilters.dateFrom : null;
-    // testCaseFilters.search_term = this.state.searchTerm;
-    // testCaseFilters.view_mode = 1;
-    // testCaseFilters.show_filters = this.state.settings.testcase.show_filters;
-    // var testcase = testCaseFilters;
-    // console.log(testcase);
-    // this.setState({ settings: testcase });
-    // this.props.getUserSettings(this.props.auth.user.id);
-  }
+
   timer = null;
   handleChange = e => {
     clearTimeout(this.timer);
@@ -239,12 +122,10 @@ class TestCases extends Component {
   };
 
   triggerChange = e => {
-    var testcase = {};
-    testcase.search_term = this.state.searchTerm;
+    var search_term = this.state.searchTerm;
+    var testcase = { search_term };
     var payload = { testcase };
-    this.setState({ searchTerm: testcase.search_term }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
-    });
+    this.props.editUserSettings(this.props.auth.user.id, payload);
   };
 
   handleClick = e => {
@@ -264,27 +145,28 @@ class TestCases extends Component {
   }
 
   selectMultipleOptionUsers(value) {
-    this.setState({ selectedUsers: value });
+    this.setState({ selectedUsers: value }, () => {
+      var testcase = {};
+      testcase.users = getidsFromObjectArray(this.state.selectedUsers);
 
-    var testcase = {};
-    testcase.users = getidsFromObjectArray(value);
-    var payload = { testcase };
-    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
+      var payload = { testcase };
+      this.props.editUserSettings(this.props.auth.user.id, payload);
+    });
   }
 
   selectMultipleOptionGroups(value) {
-    this.setState({ selectedGroupFilters: value });
+    this.setState({ selectedGroupFilters: value }, () => {
+      var testcase = {};
+      testcase.groups = getidsFromObjectArray(this.state.selectedGroupFilters);
 
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(value);
-    var payload = { testcase };
-    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
+      var payload = { testcase };
+      this.props.editUserSettings(this.props.auth.user.id, payload);
+    });
   }
 
   removeSearchTerm() {
-    this.setState({ searchTerm: "" }, () => {
-      this.checkActiveFilters();
-    });
+    this.props.editUserSettings(this.props.auth.user.id, { testcase: { search_term: null } });
+    this.setState({ searchTerm: "" });
   }
   removeGroupFilter(e) {
     var groups = this.state.selectedGroupFilters.filter(function(item) {
@@ -296,8 +178,7 @@ class TestCases extends Component {
     var payload = { testcase };
 
     this.setState({ selectedGroupFilters: groups }, () => {
-      this.checkActiveFilters();
-      this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
+      this.props.editUserSettings(this.props.auth.user.id, payload);
     });
   }
   removeUser(e) {
@@ -310,121 +191,79 @@ class TestCases extends Component {
     var payload = { testcase };
 
     this.setState({ selectedUsers }, () => {
-      this.checkActiveFilters();
-      this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
+      this.props.editUserSettings(this.props.auth.user.id, payload);
     });
   }
 
   removeFromDate() {
-    this.setState({ selectedDateFrom: "", selectedDateTimestampFrom: "" }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, { testcase: { date_from: null } }, () => {});
-      this.checkActiveFilters();
-    });
+    this.props.editUserSettings(this.props.auth.user.id, { testcase: { date_from: null } });
   }
 
   removeToDate() {
-    this.setState({ selectedDateTo: "", selectedDateTimestampTo: "" }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, { testcase: { date_to: null } }, () => {});
-      this.checkActiveFilters();
-    });
+    this.props.editUserSettings(this.props.auth.user.id, { testcase: { date_to: null } });
   }
 
   filterBtn() {
-    // console.log("test");
-    var showFilters = !this.state.settings.testcase.show_filters;
-
+    var showFilters = !this.props.filters.showFilters;
     var testcase = {};
     testcase.show_filters = showFilters;
     var payload = { testcase };
 
-    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
+    this.props.editUserSettings(this.props.auth.user.id, payload);
   }
   resetFilters() {
-    this.setState(
-      {
-        testcaseFilters: {},
-        selectedDateTo: "",
-        selectedDateTimestampTo: "",
-        selectedUsers: [],
-        selectedGroupFilters: [],
-        selectedDateFrom: "",
-        selectedDateTimestampFrom: "",
-        searchTerm: ""
-      },
-      () => {
-        this.checkActiveFilters();
-      }
-    );
-  }
+    var testcase = {};
+    testcase.date_to = null;
+    testcase.date_from = null;
+    testcase.search_term = "";
+    testcase.users = [];
+    testcase.groups = [];
 
-  checkActiveFilters() {
-    var activeFilters = false;
-    if (
-      !isEmpty(this.state.selectedDateFrom) ||
-      !isEmpty(this.state.selectedDateTo) ||
-      this.state.selectedUsers.length > 0 ||
-      this.state.selectedGroupFilters.length > 0
-    ) {
-      activeFilters = true;
-    }
-    this.setState({ activeFilters });
+    this.props.editUserSettings(this.props.auth.user.id, { testcase });
   }
 
   setViewList(e) {
     var view_mode = 2;
-    var testcase = { view_mode };
-
-    var payload = { testcase };
-
-    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
+    this.props.editUserSettings(this.props.auth.user.id, { testcase: { view_mode } });
   }
 
   setViewGrid(e) {
     var view_mode = 1;
-    var testcase = { view_mode };
-
-    var payload = { testcase };
-    this.props.editUserSettings(this.props.auth.user.id, payload, () => {});
+    this.props.editUserSettings(this.props.auth.user.id, { testcase: { view_mode } });
   }
 
   render() {
-    var activeFilters;
-    if (this.state.settings && this.state.settings.testcase) {
-      // console.log(this.state.settings.testcase);
-      activeFilters = this.state.settings;
-    }
     var view_mode;
     var viewOptionGridClass = "";
     var viewOptionListClass = "";
-    if (this.state.settings && this.state.settings.testcase) {
-      view_mode = this.state.settings.testcase.view_mode;
+    if (this.props.filters.viewMode) {
+      view_mode = this.props.filters.viewMode;
 
-      if (this.state.settings.testcase.view_mode === 1) {
+      if (view_mode === 1) {
         viewOptionGridClass = "activeView";
         viewOptionListClass = "";
-      } else if (this.state.settings.testcase.view_mode === 2) {
+      } else if (view_mode === 2) {
         viewOptionGridClass = "";
         viewOptionListClass = "activeView";
       }
     }
-    if (this.state.settings && this.state.settings.testcase) {
-      var searchTerm = "";
-      if (!isEmpty(this.state.settings.testcase.search_term)) {
-        searchTerm = (
-          <Tag
-            title={`Search: ${this.state.settings.testcase.search_term}`}
-            color={"DATE_COLOR"}
-            isRemovable={true}
-            onClickRemove={e => this.removeSearchTerm(e)}
-          />
-        );
-      }
+    var searchTerm = "";
+    if (!isEmpty(this.props.filters.searchTerm)) {
+      searchTerm = (
+        <Tag
+          title={`Search: ${this.props.filters.searchTerm}`}
+          color={"DATE_COLOR"}
+          isRemovable={true}
+          onClickRemove={e => this.removeSearchTerm(e)}
+        />
+      );
     }
+
     var fromDate = "";
-    if (!isEmpty(this.state.selectedDateFrom)) {
+    if (!isEmpty(this.props.filters.selectedDateFrom)) {
       fromDate = (
         <Tag
-          title={`From: ${this.state.selectedDateFrom}`}
+          title={`From: ${this.props.filters.selectedDateFrom}`}
           color={"DATE_COLOR"}
           isRemovable={true}
           onClickRemove={e => this.removeFromDate(e)}
@@ -432,10 +271,10 @@ class TestCases extends Component {
       );
     }
     var toDate = "";
-    if (!isEmpty(this.state.selectedDateTo)) {
+    if (!isEmpty(this.props.filters.selectedDateTo)) {
       toDate = (
         <Tag
-          title={`To: ${this.state.selectedDateTo}`}
+          title={`To: ${this.props.filters.selectedDateTo}`}
           color={"DATE_COLOR"}
           isRemovable={true}
           onClickRemove={e => this.removeToDate(e)}
@@ -444,23 +283,23 @@ class TestCases extends Component {
     }
     var resetFiltersTag = "";
     if (
-      !isEmpty(this.state.testcaseFilters.users) ||
-      !isEmpty(this.state.testcaseFilters.groups) ||
-      !isEmpty(this.state.testcaseFilters.dateFrom) ||
-      !isEmpty(this.state.testcaseFilters.dateTo) ||
-      !isEmpty(this.state.testcaseFilters.searchTerm)
+      !isEmpty(this.props.filters.selectedUsers) ||
+      !isEmpty(this.props.filters.selectedGroupFilters) ||
+      this.props.filters.selectedDateTimestampFrom !== "" ||
+      this.props.filters.selectedDateTimestampTo !== "" ||
+      !isEmpty(this.props.filters.searchTerm)
     ) {
       resetFiltersTag = (
         <Tag title={"Reset all"} color={"RESET_COLOR"} isRemovable={true} onClickRemove={e => this.resetFilters()} />
       );
     }
     var filters = <div className="padding"></div>;
-    if (this.state.settings && this.state.settings.testcase && this.state.settings.testcase.show_filters) {
+    if (this.props.filters.showFilters) {
       filters = (
         <div>
           <div className="testcase-grid">
             <SearchDropdown
-              value={this.state.selectedGroupFilters}
+              value={this.props.filters.selectedGroupFilters}
               options={this.state.projectGroups}
               onChange={this.selectMultipleOptionGroups}
               label={"Test Groups"}
@@ -469,7 +308,7 @@ class TestCases extends Component {
             />
 
             <SearchDropdown
-              value={this.state.selectedUsers}
+              value={this.props.filters.selectedUsers}
               options={this.state.usersWithTestcases}
               onChange={this.selectMultipleOptionUsers}
               label={"Select User"}
@@ -483,25 +322,15 @@ class TestCases extends Component {
               showdatepicker={this.state.showDatepickerFrom}
               placeholder={"From Date"}
               label={"Select Date"}
-              selectedDate={this.state.selectedDateFrom}
+              selectedDate={this.props.filters.selectedDateFrom}
               onClick={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
               onChange={e => this.setState({ showDatepickerFrom: !this.state.showDatepickerFrom })}
               active={this.state.activeDateFrom ? this.state.activeDateFrom !== null : ""}
-              timestamp={this.state.selectedDateTimestampFrom}
+              timestamp={this.props.filters.selectedDateTimestampFrom}
               onDayClick={day => {
-                this.setState({ selectedDateFrom: moment(day).format(" Do MMM YY") }, () => {
-                  this.search();
-                  this.checkActiveFilters();
+                this.props.editUserSettings(this.props.auth.user.id, {
+                  testcase: { date_from: moment(day).format("YYYY-MM-DD HH:mm:ss") }
                 });
-                this.setState({ selectedDateTimestampFrom: day });
-                this.setState({ showDatepickerFrom: false });
-                this.props.editUserSettings(
-                  this.props.auth.user.id,
-                  {
-                    testcase: { date_from: moment(day).format("YYYY-MM-DD HH:mm:ss") }
-                  },
-                  () => {}
-                );
               }}
             />
             <Datepicker
@@ -509,32 +338,22 @@ class TestCases extends Component {
               showdatepicker={this.state.showDatepickerTo}
               placeholder={"To Date"}
               label={"Select Date"}
-              selectedDate={this.state.selectedDateTo}
+              selectedDate={this.props.filters.selectedDateTo}
               onClick={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
               onChange={e => this.setState({ showDatepickerTo: !this.state.showDatepickerTo })}
               active={this.state.activeDateTo ? this.state.activeDateTo !== null : ""}
-              timestamp={this.state.selectedDateTimestampTo}
+              timestamp={this.props.filters.selectedDateTimestampTo}
               onDayClick={day => {
-                this.setState({ selectedDateTo: moment(day).format(" Do MMM YY") }, () => {
-                  this.search();
-                  this.checkActiveFilters();
+                this.props.editUserSettings(this.props.auth.user.id, {
+                  testcase: { date_to: moment(day).format("YYYY-MM-DD HH:mm:ss") }
                 });
-                this.setState({ selectedDateTimestampTo: day });
-                this.setState({ showDatepickerTo: false });
-                this.props.editUserSettings(
-                  this.props.auth.user.id,
-                  {
-                    testcase: { date_to: moment(day).format("YYYY-MM-DD HH:mm:ss") }
-                  },
-                  () => {}
-                );
               }}
             />
           </div>
 
           <div className="active-filter-container">
-            {this.state.selectedGroupFilters &&
-              this.state.selectedGroupFilters.map((group, index) => (
+            {this.props.filters.selectedGroupFilters &&
+              this.props.filters.selectedGroupFilters.map((group, index) => (
                 <Tag
                   key={index}
                   title={group.title}
@@ -543,8 +362,8 @@ class TestCases extends Component {
                   onClickRemove={e => this.removeGroupFilter(group.id)}
                 />
               ))}
-            {this.state.selectedUsers &&
-              this.state.selectedUsers.map((user, index) => (
+            {this.props.filters.selectedUsers &&
+              this.props.filters.selectedUsers.map((user, index) => (
                 <Tag
                   key={index}
                   title={user.title}
@@ -582,16 +401,15 @@ class TestCases extends Component {
             filterBtn={
               <FilterBtn
                 onClick={this.filterBtn}
-                activeFilters={this.state.activeFilters}
-                // filtersShown={this.state.settings.activeFilters}
+                activeFilters={this.props.filters.activeFilters}
                 filtersShown={true}
               />
             }
             searchBtn={
               <SearchBtn
                 name={"search"}
-                searchActive={this.state.searchTerm}
-                value={this.state.searchTerm}
+                searchActive={this.props.filters.searchTerm}
+                value={this.state.searchTerm !== null ? this.state.searchTerm : this.props.filters.searchTerm}
                 onChange={e => this.handleChange(e)}
                 onKeyDown={this.handleKeyDown}
               />
@@ -606,8 +424,7 @@ class TestCases extends Component {
             </div>
           </div>
           {filters}
-          {/* <TestCaseContainer filters={this.state.testcaseFilters} viewOption={this.state.settings.testcase.view_mode} /> */}
-          <TestCaseContainer filters={this.props.settings} viewOption={view_mode} />
+          <TestCaseContainer filters={this.state.testcaseFilters} viewOption={view_mode} />
         </div>
       </div>
     );
@@ -621,6 +438,7 @@ TestCases.propTypes = {
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
+  filters: filterSelector(state),
   groups: state.groups,
   users: state.users,
   settings: state.settings,
@@ -631,3 +449,114 @@ export default connect(
   mapStateToProps,
   { getGroups, getUsers, getUserSettings, editUserSettings }
 )(withRouter(TestCases));
+
+const getSettings = state => state.settings.settings;
+const getUsersProps = state => state.users;
+const getGroupsProps = state => state.groups;
+
+const filterSelector = createSelector(
+  [getSettings, getUsersProps, getGroupsProps],
+  (settings, users, groups) => {
+    var dateFrom = "";
+    var selectedDateTimestampFrom = "";
+    var selectedDateFrom = "";
+    var selectedDateFromFormated = "";
+
+    var dateTo = "";
+    var selectedDateTimestampTo = "";
+    var selectedDateTo = "";
+    var selectedDateToFormated = "";
+
+    var viewMode = 1;
+    var showFilters = true;
+    var searchTerm = "";
+
+    var selectedUsers = [];
+    var selectedGroupFilters = [];
+
+    var activeFilters = false;
+
+    if (settings && settings.testcase) {
+      if (groups) {
+        if (groups.groups) {
+          var selectedGroup = [];
+          groups.groups.map(function(item) {
+            if (settings.testcase && settings.testcase.groups) {
+              if (settings.testcase.groups.includes(item.id)) {
+                selectedGroup.push({ id: item.id, title: item.title, color: item.color });
+              }
+            }
+            return selectedGroup;
+          });
+          selectedGroupFilters = selectedGroup;
+        }
+      }
+
+      if (users) {
+        if (users.users) {
+          var selectedUsersObjects = [];
+          users.users.map(function(item) {
+            if (settings.testcase && settings.testcase.users) {
+              if (settings.testcase.users.includes(item.id)) {
+                selectedUsersObjects.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
+              }
+            }
+            return selectedUsersObjects;
+          });
+          selectedUsers = selectedUsersObjects;
+        }
+      }
+
+      if (settings.testcase.date_from) {
+        dateFrom = settings.testcase.date_from;
+        selectedDateTimestampFrom = moment(settings.testcase.date_from)._d;
+        selectedDateFrom = moment(settings.testcase.date_from).format(" Do MMM YY");
+        selectedDateFromFormated = moment(settings.testcase.date_from).format("YYYY-MM-DD HH:mm:ss");
+      }
+      if (settings.testcase.date_to) {
+        dateTo = settings.testcase.date_to;
+        selectedDateTimestampTo = moment(settings.testcase.date_to)._d;
+        selectedDateTo = moment(settings.testcase.date_to).format(" Do MMM YY");
+        selectedDateToFormated = moment(settings.testcase.date_to)
+          .add(21, "hours")
+          .add(59, "minutes")
+          .add(59, "seconds")
+          .format("YYYY-MM-DD HH:mm:ss");
+      }
+      if (settings.testcase.view_mode) {
+        viewMode = settings.testcase.view_mode;
+      }
+      showFilters = settings.testcase.show_filters;
+      if (settings.testcase.search_term !== null) {
+        searchTerm = settings.testcase.search_term;
+      }
+
+      if (
+        !isEmpty(selectedUsers) ||
+        !isEmpty(selectedGroupFilters) ||
+        selectedDateTimestampFrom !== "" ||
+        selectedDateTimestampTo !== "" ||
+        searchTerm !== ""
+      ) {
+        activeFilters = true;
+      }
+      return {
+        dateFrom,
+        selectedDateTimestampFrom,
+        selectedDateFrom,
+        dateTo,
+        selectedDateTimestampTo,
+        selectedDateTo,
+        viewMode,
+        showFilters,
+        searchTerm,
+        selectedUsers,
+        selectedGroupFilters,
+        activeFilters,
+        selectedDateFromFormated,
+        selectedDateToFormated
+      };
+    }
+    return {};
+  }
+);
