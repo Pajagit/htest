@@ -61,7 +61,7 @@ class EditTestCase extends Component {
       groupsValidation: "",
       preconditionValidation: "",
       linksValidation: "",
-      isDeprecated: false,
+      deprecated: false,
       isValidWrite: false,
       submitBtnDisabledClass: "",
       errors: {}
@@ -107,7 +107,7 @@ class EditTestCase extends Component {
           update.projectId = nextProps.match.params.projectId;
 
           var filteredNotPinnedSelectedGroups = testcase.groups.filter(function(group) {
-            return group.isPinned === false;
+            return group.pinned === false;
           });
           update.filteredNotPinnedSelectedGroups = filteredNotPinnedSelectedGroups;
         }
@@ -120,13 +120,13 @@ class EditTestCase extends Component {
         var { groups } = nextProps.groups;
 
         var filteredPinnedGroups = groups.filter(function(group) {
-          return group.isPinned === true;
+          return group.pinned === true;
         });
 
         update.pinnedGroups = filteredPinnedGroups;
 
         var filteredUnpinnedGroups = groups.filter(function(group) {
-          return group.isPinned === false;
+          return group.pinned === false;
         });
 
         update.notPinnedGroups = filteredUnpinnedGroups;
@@ -169,7 +169,7 @@ class EditTestCase extends Component {
     formData.expected_result = this.state.expected_result;
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
-    formData.isDeprecated = this.state.isDeprecated;
+    formData.deprecated = this.state.deprecated;
     formData.links = links;
 
     const { errors } = TestCaseValidation(formData);
@@ -190,16 +190,16 @@ class EditTestCase extends Component {
     formData.expected_result = this.state.expected_result;
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
-    formData.isDeprecated = this.state.isDeprecated;
+    formData.deprecated = this.state.deprecated;
     formData.links = links;
 
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
       this.props.editTestcase(this.state.testcaseId, formData, res => {
-        if (res.status === 200 && !formData.isDeprecated) {
+        if (res.status === 200 && !formData.deprecated) {
           successToast("Test case edited successfully");
           this.props.history.push(`/${this.state.projectId}/TestCase/${res.data.id}`);
-        } else if (res.status === 200 && formData.isDeprecated) {
+        } else if (res.status === 200 && formData.deprecated) {
           successToast("New Test Case version created");
           this.props.history.push(`/${this.state.projectId}/TestCase/${res.data.id}`);
         } else {
@@ -216,7 +216,7 @@ class EditTestCase extends Component {
   }
   selectMultipleOptionGroups(e) {
     var filteredUnpinnedGroups = this.state.selectedGroupsObjects.filter(function(group) {
-      return group.isPinned !== false;
+      return group.pinned !== false;
     });
 
     function merge(a, b, prop) {
@@ -232,7 +232,7 @@ class EditTestCase extends Component {
   }
 
   toggleDeprecated() {
-    this.setState({ isDeprecated: !this.state.isDeprecated });
+    this.setState({ deprecated: !this.state.deprecated });
   }
 
   onChange(e) {
@@ -421,8 +421,8 @@ class EditTestCase extends Component {
           <Checkbox
             label="Set old test case as deprecated"
             onClick={e => this.toggleDeprecated(e)}
-            name="isDeprecated"
-            value={this.state.isDeprecated}
+            name="deprecated"
+            value={this.state.deprecated}
           />
         </div>
       );

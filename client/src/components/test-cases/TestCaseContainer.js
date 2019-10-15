@@ -25,13 +25,8 @@ class TestCaseContainer extends Component {
     var projectId = nextProps.match.params.projectId;
     if (nextProps.settings && nextProps.settings.settings && nextProps.settings.settings.testcase) {
       if (nextProps.settings.settings.testcase !== prevState.filters) {
-        var filters = nextProps.settings.settings.testcase;
-        filters.searchTerm = filters.search_term;
-        filters.dateFrom = filters.date_from;
-        filters.dateTo = filters.date_to;
-
-        update.filters = filters;
-        nextProps.getTestcases(projectId, filters);
+        update.filters = nextProps.settings.settings.testcase;
+        nextProps.getTestcases(projectId, nextProps.settings.settings.testcase);
       }
       update.settings = nextProps.settings;
     }
