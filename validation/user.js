@@ -99,19 +99,14 @@ module.exports = {
     var errors = {};
     var arrayOfViewModes = [1, 2];
 
-    if (isEmpty(data.testcase)) {
-      errors.view_mode = "Testcase view mode is required";
-      errors.show_filters = "Testcase show filters is required";
-    } else {
-      if (!isEmpty(data.testcase.view_mode)) {
-        if (!arrayOfViewModes.includes(data.testcase.view_mode)) {
-          errors.view_mode = "View mode can have one of these values [1,2]";
-        }
+    if (!isEmpty(data.view_mode)) {
+      if (!arrayOfViewModes.includes(data.view_mode)) {
+        errors.view_mode = "View mode can have one of these values [1,2]";
       }
-      if (!isEmpty(data.testcase.show_filters)) {
-        if (typeof data.testcase.show_filters !== "boolean") {
-          errors.show_filters = "Parameter 'show_filters' must have a true or false value";
-        }
+    }
+    if (!isEmpty(data.show_filters)) {
+      if (typeof data.show_filters !== "boolean") {
+        errors.show_filters = "Parameter 'show_filters' must have a true or false value";
       }
     }
 
