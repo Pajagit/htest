@@ -15,7 +15,7 @@ import { getGroups } from "../../actions/groupsActions";
 import { getUsers } from "../../actions/userActions";
 import { getUserSettings, editUserSettings } from "../../actions/settingsActions";
 import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
-
+import { getTestcases } from "../../actions/testcaseActions";
 import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
 
 import SearchDropdown from "../common/SearchDropdown";
@@ -122,10 +122,17 @@ class TestCases extends Component {
   };
 
   triggerChange = e => {
-    var search_term = this.state.searchTerm;
-    var testcase = { search_term };
-    var payload = { testcase };
-    this.props.editUserSettings(this.props.auth.user.id, payload);
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = this.state.searchTerm;
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
+
+    this.props.editUserSettings(this.props.auth.user.id, { testcase: { search_term: this.state.searchTerm } });
   };
 
   handleClick = e => {
@@ -147,10 +154,13 @@ class TestCases extends Component {
   selectMultipleOptionUsers(value) {
     this.setState({ selectedUsers: value }, () => {
       var testcase = {};
+      testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
       testcase.users = getidsFromObjectArray(this.state.selectedUsers);
-
-      var payload = { testcase };
-      this.props.editUserSettings(this.props.auth.user.id, payload);
+      testcase.date_from = this.props.filters.selectedDateFromFormated;
+      testcase.date_to = this.props.filters.selectedDateToFormated;
+      testcase.search_term = this.state.searchTerm;
+      this.props.getTestcases(this.props.match.params.projectId, testcase);
+      this.props.editUserSettings(this.props.auth.user.id, { testcase: { users: testcase.users } });
     });
   }
 
@@ -158,27 +168,48 @@ class TestCases extends Component {
     this.setState({ selectedGroupFilters: value }, () => {
       var testcase = {};
       testcase.groups = getidsFromObjectArray(this.state.selectedGroupFilters);
-
-      var payload = { testcase };
-      this.props.editUserSettings(this.props.auth.user.id, payload);
+      testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+      testcase.date_from =
+        this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+      testcase.date_to =
+        this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+      testcase.search_term = this.state.searchTerm;
+      this.props.getTestcases(this.props.match.params.projectId, testcase);
+      this.props.editUserSettings(this.props.auth.user.id, { testcase: { groups: testcase.groups } });
     });
   }
 
   removeSearchTerm() {
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
+
     this.props.editUserSettings(this.props.auth.user.id, { testcase: { search_term: null } });
     this.setState({ searchTerm: "" });
   }
   removeGroupFilter(e) {
-    var groups = this.state.selectedGroupFilters.filter(function(item) {
+    var groups = this.props.filters.selectedGroupFilters.filter(function(item) {
       return item["id"] !== e;
     });
 
     var testcase = {};
     testcase.groups = getidsFromObjectArray(groups);
-    var payload = { testcase };
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
 
     this.setState({ selectedGroupFilters: groups }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, payload);
+      this.props.editUserSettings(this.props.auth.user.id, { testcase });
     });
   }
   removeUser(e) {
@@ -187,19 +218,62 @@ class TestCases extends Component {
     });
 
     var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
     testcase.users = getidsFromObjectArray(selectedUsers);
-    var payload = { testcase };
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
 
     this.setState({ selectedUsers }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, payload);
+      this.props.editUserSettings(this.props.auth.user.id, { testcase });
     });
   }
 
   removeFromDate() {
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.date_from = null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
     this.props.editUserSettings(this.props.auth.user.id, { testcase: { date_from: null } });
+  }
+  setFromDate(day) {
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.date_from = moment(day).format("YYYY-MM-DD HH:mm:ss");
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = this.state.searchTerm;
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
+  }
+  setToDate(day) {
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to = moment(day).format("YYYY-MM-DD HH:mm:ss");
+
+    testcase.search_term = this.state.searchTerm;
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
   }
 
   removeToDate() {
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to = null;
+    testcase.search_term = "";
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
     this.props.editUserSettings(this.props.auth.user.id, { testcase: { date_to: null } });
   }
 
@@ -219,6 +293,7 @@ class TestCases extends Component {
     testcase.users = [];
     testcase.groups = [];
 
+    this.props.getTestcases(this.props.match.params.projectId, testcase);
     this.props.editUserSettings(this.props.auth.user.id, { testcase });
   }
 
@@ -328,6 +403,7 @@ class TestCases extends Component {
               active={this.state.activeDateFrom ? this.state.activeDateFrom !== null : ""}
               timestamp={this.props.filters.selectedDateTimestampFrom}
               onDayClick={day => {
+                this.setFromDate(day);
                 this.props.editUserSettings(this.props.auth.user.id, {
                   testcase: { date_from: moment(day).format("YYYY-MM-DD HH:mm:ss") }
                 });
@@ -344,6 +420,7 @@ class TestCases extends Component {
               active={this.state.activeDateTo ? this.state.activeDateTo !== null : ""}
               timestamp={this.props.filters.selectedDateTimestampTo}
               onDayClick={day => {
+                this.setToDate(day);
                 this.props.editUserSettings(this.props.auth.user.id, {
                   testcase: { date_to: moment(day).format("YYYY-MM-DD HH:mm:ss") }
                 });
@@ -447,7 +524,7 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getGroups, getUsers, getUserSettings, editUserSettings }
+  { getGroups, getUsers, getUserSettings, editUserSettings, getTestcases }
 )(withRouter(TestCases));
 
 const getSettings = state => state.settings.settings;
