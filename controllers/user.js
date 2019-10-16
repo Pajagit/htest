@@ -40,8 +40,6 @@ module.exports = {
         );
         var settingsObj = {};
 
-        settingsObj.testcase_view_mode = 1;
-        settingsObj.testcase_show_filters = true;
         settingsObj.testcase_project_id = null;
 
         var createSettings = await UserService.updateSettings(createdUser.id, settingsObj);
