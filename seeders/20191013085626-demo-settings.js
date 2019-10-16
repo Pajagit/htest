@@ -9,8 +9,6 @@ module.exports = {
       users[0].forEach(async function(user) {
         usersObjects.push({
           user_id: user.id,
-          testcase_show_filters: true,
-          testcase_view_mode: 1,
           project_id: null
         });
       });

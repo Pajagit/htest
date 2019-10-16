@@ -26,6 +26,16 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true
       },
+      testcase_view_mode: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1
+      },
+      testcase_show_filters: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
       testcase_search_term: {
         type: Sequelize.STRING,
         allowNull: true

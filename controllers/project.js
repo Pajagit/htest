@@ -4,7 +4,7 @@ var RoleService = require("../services/role");
 
 const validateRouteProjectId = require("../validation/project").validateRouteProjectId;
 const validateProjectInput = require("../validation/project").validateProjectInput;
-const validateSettingsInput = require("../validation/user").validateSettingsInput;
+const validateSettingsInput = require("../validation/project").validateSettingsInput;
 
 module.exports = {
   deactivateProject: async function(req, res) {
@@ -169,25 +169,38 @@ module.exports = {
       return res.status(404).json({ error: "Project doesn't exist" });
     }
 
-    var settingsObj = {};
-    if (req.body.testcase) {
-      if (req.body.testcase.groups) {
-        settingsObj.testcase_groups = req.body.testcase.groups;
-      }
-      if (req.body.testcase.users) {
-        settingsObj.testcase_users = req.body.testcase.users;
-      }
-      if (req.body.testcase.date_from !== "undefined") {
-        settingsObj.testcase_date_from = req.body.testcase.date_from;
-      }
-      if (req.body.testcase.date_to !== "undefined") {
-        settingsObj.testcase_date_to = req.body.testcase.date_to;
-      }
-      if (req.body.testcase.search_term !== "undefined") {
-        settingsObj.testcase_search_term = req.body.testcase.search_term;
-      }
-      settingsObj.project_id = req.params.id;
+    const { errors, isValid } = validateSettingsInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
     }
+
+    var settingsObj = {};
+
+    if (req.body.groups) {
+      settingsObj.testcase_groups = req.body.groups;
+    }
+    if (req.body.users) {
+      settingsObj.testcase_users = req.body.users;
+    }
+    if (req.body.date_from !== "undefined") {
+      settingsObj.testcase_date_from = req.body.date_from;
+    }
+    if (req.body.date_to !== "undefined") {
+      settingsObj.testcase_date_to = req.body.date_to;
+    }
+    if (req.body.search_term !== "undefined") {
+      settingsObj.testcase_search_term = req.body.search_term;
+    }
+    if (req.body.view_mode !== "undefined") {
+      settingsObj.testcase_view_mode = req.body.view_mode;
+    }
+    if (req.body.show_filters !== "undefined") {
+      settingsObj.testcase_show_filters = req.body.show_filters;
+    }
+    settingsObj.project_id = req.params.id;
+
     var updateSettings = await ProjectService.updateProjectSettings(req.user.id, req.params.id, settingsObj);
     if (updateSettings) {
       var settings = await ProjectService.getSettings(req.params.id, req.user);
