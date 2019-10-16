@@ -54,7 +54,9 @@ module.exports = {
           "testcase_date_from",
           "testcase_date_to",
           "testcase_search_term",
-          "project_id"
+          "project_id",
+          "testcase_view_mode",
+          "testcase_show_filters"
         ],
         where: {
           user_id: user.id,
@@ -62,21 +64,24 @@ module.exports = {
         }
       }).then(settings => {
         var settings_obj = {};
-        settings_obj.testcase = {};
-        settings_obj.testcase.groups = [];
-        settings_obj.testcase.users = [];
-        settings_obj.testcase.date_from = null;
-        settings_obj.testcase.date_to = null;
-        settings_obj.testcase.search_term = null;
-        settings_obj.testcase.project_id = null;
+        settings_obj.groups = [];
+        settings_obj.users = [];
+        settings_obj.date_from = null;
+        settings_obj.date_to = null;
+        settings_obj.search_term = null;
+        settings_obj.view_mode = null;
+        settings_obj.show_filters = null;
+        settings_obj.project_id = null;
 
         if (settings) {
-          settings_obj.testcase.groups = settings.testcase_groups;
-          settings_obj.testcase.users = settings.testcase_users;
-          settings_obj.testcase.date_from = settings.testcase_date_from;
-          settings_obj.testcase.date_to = settings.testcase_date_to;
-          settings_obj.testcase.search_term = settings.testcase_search_term;
-          settings_obj.testcase.project_id = settings.project_id;
+          settings_obj.groups = settings.testcase_groups;
+          settings_obj.users = settings.testcase_users;
+          settings_obj.date_from = settings.testcase_date_from;
+          settings_obj.date_to = settings.testcase_date_to;
+          settings_obj.search_term = settings.testcase_search_term;
+          settings_obj.view_mode = settings.testcase_view_mode;
+          settings_obj.show_filters = settings.testcase_show_filters;
+          settings_obj.project_id = settings.project_id;
         }
         resolve(settings_obj);
       });

@@ -8,16 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      testcase_view_mode: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 1
-      },
-      testcase_show_filters: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-      },
       user_id: {
         allowNull: false,
         type: Sequelize.INTEGER,

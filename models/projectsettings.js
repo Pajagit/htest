@@ -31,6 +31,14 @@ const ProjectSettings = sequelize.define(
       required: false,
       type: Sequelize.STRING
     },
+    testcase_show_filters: {
+      required: true,
+      type: Sequelize.BOOLEAN
+    },
+    testcase_view_mode: {
+      required: true,
+      type: Sequelize.INTEGER
+    },
     project_id: {
       required: true,
       type: Sequelize.INTEGER,

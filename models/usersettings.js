@@ -11,15 +11,6 @@ const UserSettings = sequelize.define(
       primaryKey: true,
       autoIncrement: true
     },
-    testcase_show_filters: {
-      required: true,
-      type: Sequelize.BOOLEAN
-    },
-    testcase_view_mode: {
-      required: true,
-      type: Sequelize.INTEGER
-    },
-
     project_id: {
       required: false,
       type: Sequelize.INTEGER,
