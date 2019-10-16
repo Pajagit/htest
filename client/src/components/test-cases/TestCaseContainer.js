@@ -16,7 +16,8 @@ class TestCaseContainer extends Component {
     super(props);
     this.state = {
       settings: {},
-      filters: this.props.settings.settings
+      filters: this.props.settings.settings,
+      projectId: null
     };
   }
 
@@ -26,7 +27,8 @@ class TestCaseContainer extends Component {
     if (nextProps.settings && nextProps.settings.settings && nextProps.settings.settings.testcase) {
       if (nextProps.settings.settings.testcase !== prevState.filters) {
         update.filters = nextProps.settings.settings.testcase;
-        if (prevState.filters === null) {
+        if (prevState.filters === null || prevState.projectId === null) {
+          update.projectId = projectId;
           nextProps.getTestcases(projectId, nextProps.settings.settings.testcase);
         }
       }
