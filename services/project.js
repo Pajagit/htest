@@ -3,7 +3,8 @@ const Op = Sequelize.Op;
 const User = require("../models/user");
 const Role = require("../models/role");
 const Project = require("../models/project");
-const Settings = require("../models/settings");
+const ProjectSettings = require("../models/projectsettings");
+const UserSettings = require("../models/usersettings");
 const UserRoleProject = require("../models/userroleproject");
 
 module.exports = {
@@ -42,6 +43,81 @@ module.exports = {
           }
         })
         .catch(err => console.log(err));
+    });
+  },
+  getSettings: async function(project_id, user) {
+    return new Promise((resolve, reject) => {
+      ProjectSettings.findOne({
+        attributes: [
+          "testcase_groups",
+          "testcase_users",
+          "testcase_date_from",
+          "testcase_date_to",
+          "testcase_search_term",
+          "project_id"
+        ],
+        where: {
+          user_id: user.id,
+          project_id: project_id
+        }
+      }).then(settings => {
+        var settings_obj = {};
+        settings_obj.testcase = {};
+        settings_obj.testcase.groups = [];
+        settings_obj.testcase.users = [];
+        settings_obj.testcase.date_from = null;
+        settings_obj.testcase.date_to = null;
+        settings_obj.testcase.search_term = null;
+        settings_obj.testcase.project_id = null;
+
+        if (settings) {
+          settings_obj.testcase.groups = settings.testcase_groups;
+          settings_obj.testcase.users = settings.testcase_users;
+          settings_obj.testcase.date_from = settings.testcase_date_from;
+          settings_obj.testcase.date_to = settings.testcase_date_to;
+          settings_obj.testcase.search_term = settings.testcase_search_term;
+          settings_obj.testcase.project_id = settings.project_id;
+        }
+        resolve(settings_obj);
+      });
+    });
+  },
+  updateProjectSettings: async function(user_id, project_id, settings_obj) {
+    return new Promise((resolve, reject) => {
+      ProjectSettings.findOne({
+        where: {
+          user_id: user_id,
+          project_id: project_id
+        }
+      }).then(settings => {
+        if (settings) {
+          ProjectSettings.update(settings_obj, {
+            where: {
+              id: settings.id,
+              user_id: user_id,
+              project_id: project_id
+            },
+            returning: true,
+            plain: true
+          }).then(updated_settings => {
+            if (updated_settings) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
+        } else {
+          settings_obj.user_id = user_id;
+          settings_obj.project_id = project_id;
+          ProjectSettings.create(settings_obj).then(created_setting => {
+            if (created_setting) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
+        }
+      });
     });
   },
   deactivateProject: async function(id) {
@@ -267,7 +343,7 @@ module.exports = {
   },
   updateSettingsProject: async function(project_id, user) {
     return new Promise((resolve, reject) => {
-      Settings.update(
+      UserSettings.update(
         { project_id: project_id },
         {
           where: {

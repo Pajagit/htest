@@ -39,11 +39,7 @@ module.exports = {
           await RoleService.getSuperadminRoleId()
         );
         var settingsObj = {};
-        settingsObj.testcase_groups = [];
-        settingsObj.testcase_users = [];
-        settingsObj.testcase_date_from = null;
-        settingsObj.testcase_date_to = null;
-        settingsObj.testcase_search_term = null;
+
         settingsObj.testcase_view_mode = 1;
         settingsObj.testcase_show_filters = true;
         settingsObj.testcase_project_id = null;
@@ -292,29 +288,14 @@ module.exports = {
       return res.status(400).json(errors);
     }
     var settingsObj = {};
-    if (req.body.testcase) {
-      if (req.body.testcase.groups) {
-        settingsObj.testcase_groups = req.body.testcase.groups;
-      }
-      if (req.body.testcase.users) {
-        settingsObj.testcase_users = req.body.testcase.users;
-      }
-      if (req.body.testcase.date_from !== "undefined") {
-        settingsObj.testcase_date_from = req.body.testcase.date_from;
-      }
-      if (req.body.testcase.date_to !== "undefined") {
-        settingsObj.testcase_date_to = req.body.testcase.date_to;
-      }
-      if (req.body.testcase.search_term !== "undefined") {
-        settingsObj.testcase_search_term = req.body.testcase.search_term;
-      }
-      if (req.body.testcase.view_mode !== "undefined") {
-        settingsObj.testcase_view_mode = req.body.testcase.view_mode;
-      }
-      if (req.body.testcase.show_filters !== "undefined") {
-        settingsObj.testcase_show_filters = req.body.testcase.show_filters;
-      }
+
+    if (req.body.view_mode !== "undefined") {
+      settingsObj.testcase_view_mode = req.body.view_mode;
     }
+    if (req.body.show_filters !== "undefined") {
+      settingsObj.testcase_show_filters = req.body.show_filters;
+    }
+
     var updateSettings = await UserService.updateSettings(req.params.id, settingsObj);
     if (updateSettings) {
       var settings = await UserService.getSettings(req.params.id);
