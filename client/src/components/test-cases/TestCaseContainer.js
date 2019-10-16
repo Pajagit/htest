@@ -39,12 +39,13 @@ class TestCaseContainer extends Component {
 
   render() {
     var projectId = this.props.match.params.projectId;
+    var settingsLoading = this.props.settings.loading;
     var testcases = this.props.testcases;
     var { loading } = this.props.testcases;
     let content;
     let grid = "";
 
-    if (testcases.testcases === null || loading) {
+    if (testcases.testcases === null || loading || this.state.filters === null || settingsLoading) {
       content = <Spinner />;
     } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 1) {
       testcases = this.props.testcases.testcases;

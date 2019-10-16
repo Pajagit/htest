@@ -1,9 +1,10 @@
 import axios from "axios";
 
-import { GET_PROJECT_SETTINGS } from "./types";
+import { GET_PROJECT_SETTINGS, SETTINGS_LOADING, CLEAR_SETTINGS } from "./types";
 
 // Get User Settings
 export const getProjectSettings = project_id => dispatch => {
+  dispatch(setSettingsLoading());
   axios
     .get(`/api/projects/project/${project_id}/settings`)
     .then(res => {
@@ -36,4 +37,18 @@ export const editProjectSettings = (project_id, settingsData) => dispatch => {
         payload: {}
       })
     );
+};
+
+// Settings loading
+export const setSettingsLoading = () => {
+  return {
+    type: SETTINGS_LOADING
+  };
+};
+
+export const clearSettings = () => dispatch => {
+  dispatch({
+    type: CLEAR_SETTINGS,
+    payload: {}
+  });
 };

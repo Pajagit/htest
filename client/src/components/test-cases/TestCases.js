@@ -13,7 +13,7 @@ import SearchBtn from "../common/SearchBtn";
 import TestCaseContainer from "../test-cases/TestCaseContainer";
 import { getGroups } from "../../actions/groupsActions";
 import { getUsers } from "../../actions/userActions";
-import { getProjectSettings, editProjectSettings } from "../../actions/settingsActions";
+import { getProjectSettings, editProjectSettings, clearSettings } from "../../actions/settingsActions";
 import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
 import { getTestcases } from "../../actions/testcaseActions";
 import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
@@ -103,6 +103,7 @@ class TestCases extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClick, false);
+    this.props.clearSettings();
   }
 
   timer = null;
@@ -523,7 +524,7 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getGroups, getUsers, getProjectSettings, editProjectSettings, getTestcases }
+  { getGroups, getUsers, getProjectSettings, editProjectSettings, getTestcases, clearSettings }
 )(withRouter(TestCases));
 
 const getSettings = state => state.settings.settings;
