@@ -93,7 +93,11 @@ module.exports = {
           user_id: user_id
         }
       }).then(user_setting => {
-        resolve(user_setting.project_id);
+        if (user_setting) {
+          resolve(user_setting.project_id);
+        } else {
+          resolve(null);
+        }
       });
     });
   },
