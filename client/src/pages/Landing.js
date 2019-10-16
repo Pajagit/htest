@@ -22,7 +22,11 @@ class Landing extends Component {
     if (nextProps.auth) {
       if (nextProps.auth !== prevState.auth) {
         if (nextProps.auth.isAuthenticated) {
-          nextProps.history.push("/Projects");
+          if (nextProps.auth.user.project_id !== null) {
+            nextProps.history.push(`/${nextProps.auth.user.project_id}/TestCases`);
+          } else {
+            nextProps.history.push("/Projects");
+          }
         }
         if (nextProps.errors) {
           update.errors = nextProps.errors;
