@@ -69,8 +69,8 @@ module.exports = {
         settings_obj.date_from = null;
         settings_obj.date_to = null;
         settings_obj.search_term = null;
-        settings_obj.view_mode = null;
-        settings_obj.show_filters = null;
+        settings_obj.view_mode = 1;
+        settings_obj.show_filters = true;
         settings_obj.project_id = null;
 
         if (settings) {
