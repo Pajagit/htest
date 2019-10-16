@@ -1,15 +1,24 @@
 import React from "react";
 // import { Link } from "react-router-dom";
 
-function GlobalPanelProfileImage({ img, onClick }) {
+function GlobalPanelProfileImage({ img, onClick, linkStyle, onMouseEnter, onMouseLeave }) {
+  var btnStyle = "";
+  if (linkStyle) {
+    btnStyle = "show-long-text";
+  }
+
   return (
-    <div className="global-panel-items--item-profile-image" onClick={onClick}>
-      <nav className="global-panel-items--item-profile-image-options">
-        <img src={img} alt="Profile"></img>
-        <a href="#1">Item 1</a>
-        <a href="#2">Item 2</a>
-        <a href="#3">Item 3</a>
-      </nav>
+    <div className="global-panel-items--item-profile-image">
+      <div className="right-corder-container" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+        <button className="right-corder-container-button">
+          <span className="short-text">
+            <img src={img} alt="Profile" className="global-panel-items--item-profile-image-options-parent"></img>
+          </span>
+          <span className={`long-text clickable ${btnStyle}`} onClick={onClick}>
+            Logout <i className="fas fa-sign-out-alt"></i>
+          </span>
+        </button>
+      </div>
     </div>
   );
 }

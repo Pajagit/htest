@@ -17,6 +17,7 @@ class GlobalPanel extends Component {
       projectId: null,
       user: this.props.auth.user,
       settingsVisible: false,
+      hover: false,
       errors: {}
     };
   }
@@ -41,6 +42,10 @@ class GlobalPanel extends Component {
   onLogoutClick(e) {
     e.preventDefault();
     this.props.logoutUser();
+  }
+
+  toggleHover() {
+    this.setState({ hover: !this.state.hover });
   }
   render() {
     var userImg = this.props.auth.user.image_url;
@@ -98,7 +103,13 @@ class GlobalPanel extends Component {
           />
           <GlobalPanelItem icon={<i className="fas fa-chart-pie"></i>} link={"/Statistics"} active={statisticsActive} />
           {settings}
-          <GlobalPanelProfileImage img={userImg} onClick={this.onLogoutClick.bind(this)} />
+          <GlobalPanelProfileImage
+            img={userImg}
+            onMouseEnter={e => this.toggleHover()}
+            linkStyle={this.state.hover}
+            onMouseLeave={e => this.toggleHover()}
+            onClick={this.onLogoutClick.bind(this)}
+          />
         </div>
       </div>
     );
