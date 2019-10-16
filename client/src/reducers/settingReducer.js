@@ -1,4 +1,4 @@
-import { GET_SETTINGS } from "../actions/types";
+import { GET_PROJECT_SETTINGS } from "../actions/types";
 
 const initialState = {
   settings: null,
@@ -7,7 +7,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case GET_SETTINGS:
+    case GET_PROJECT_SETTINGS:
       return {
         ...state,
         settings: action.payload,

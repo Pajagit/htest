@@ -13,7 +13,7 @@ import SearchBtn from "../common/SearchBtn";
 import TestCaseContainer from "../test-cases/TestCaseContainer";
 import { getGroups } from "../../actions/groupsActions";
 import { getUsers } from "../../actions/userActions";
-import { getUserSettings, editUserSettings } from "../../actions/settingsActions";
+import { getProjectSettings, editProjectSettings } from "../../actions/settingsActions";
 import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
 import { getTestcases } from "../../actions/testcaseActions";
 import getidsFromObjectArray from "../../utility/getIdsFromObjArray";
@@ -97,7 +97,7 @@ class TestCases extends Component {
       this.props.getGroups(projectId);
       var has_testcases = true;
       this.props.getUsers(has_testcases);
-      this.props.getUserSettings(this.props.auth.user.id);
+      this.props.getProjectSettings(this.props.match.params.projectId);
     }
   }
 
@@ -132,7 +132,7 @@ class TestCases extends Component {
     testcase.search_term = this.state.searchTerm;
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
-    this.props.editUserSettings(this.props.auth.user.id, { testcase: { search_term: this.state.searchTerm } });
+    this.props.editProjectSettings(this.props.match.params.projectId, { search_term: this.state.searchTerm });
   };
 
   handleClick = e => {
@@ -160,7 +160,7 @@ class TestCases extends Component {
       testcase.date_to = this.props.filters.selectedDateToFormated;
       testcase.search_term = this.state.searchTerm;
       this.props.getTestcases(this.props.match.params.projectId, testcase);
-      this.props.editUserSettings(this.props.auth.user.id, { testcase: { users: testcase.users } });
+      this.props.editProjectSettings(this.props.match.params.projectId, { users: testcase.users });
     });
   }
 
@@ -175,7 +175,7 @@ class TestCases extends Component {
         this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
       testcase.search_term = this.state.searchTerm;
       this.props.getTestcases(this.props.match.params.projectId, testcase);
-      this.props.editUserSettings(this.props.auth.user.id, { testcase: { groups: testcase.groups } });
+      this.props.editProjectSettings(this.props.match.params.projectId, { groups: testcase.groups });
     });
   }
 
@@ -190,7 +190,7 @@ class TestCases extends Component {
     testcase.search_term = "";
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
-    this.props.editUserSettings(this.props.auth.user.id, { testcase: { search_term: null } });
+    this.props.editProjectSettings(this.props.match.params.projectId, { search_term: null });
     this.setState({ searchTerm: "" });
   }
   removeGroupFilter(e) {
@@ -209,7 +209,7 @@ class TestCases extends Component {
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
     this.setState({ selectedGroupFilters: groups }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, { testcase });
+      this.props.editProjectSettings(this.props.match.params.projectId, testcase);
     });
   }
   removeUser(e) {
@@ -228,7 +228,7 @@ class TestCases extends Component {
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
     this.setState({ selectedUsers }, () => {
-      this.props.editUserSettings(this.props.auth.user.id, { testcase });
+      this.props.editProjectSettings(this.props.match.params.projectId, testcase);
     });
   }
 
@@ -241,7 +241,7 @@ class TestCases extends Component {
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = "";
     this.props.getTestcases(this.props.match.params.projectId, testcase);
-    this.props.editUserSettings(this.props.auth.user.id, { testcase: { date_from: null } });
+    this.props.editProjectSettings(this.props.match.params.projectId, { date_from: null });
   }
   setFromDate(day) {
     var testcase = {};
@@ -274,16 +274,15 @@ class TestCases extends Component {
     testcase.date_to = null;
     testcase.search_term = "";
     this.props.getTestcases(this.props.match.params.projectId, testcase);
-    this.props.editUserSettings(this.props.auth.user.id, { testcase: { date_to: null } });
+    this.props.editProjectSettings(this.props.match.params.projectId, { date_to: null });
   }
 
   filterBtn() {
     var showFilters = !this.props.filters.showFilters;
     var testcase = {};
     testcase.show_filters = showFilters;
-    var payload = { testcase };
 
-    this.props.editUserSettings(this.props.auth.user.id, payload);
+    this.props.editProjectSettings(this.props.match.params.projectId, testcase);
   }
   resetFilters() {
     var testcase = {};
@@ -294,17 +293,17 @@ class TestCases extends Component {
     testcase.groups = [];
 
     this.props.getTestcases(this.props.match.params.projectId, testcase);
-    this.props.editUserSettings(this.props.auth.user.id, { testcase });
+    this.props.editProjectSettings(this.props.match.params.projectId, testcase);
   }
 
   setViewList(e) {
     var view_mode = 2;
-    this.props.editUserSettings(this.props.auth.user.id, { testcase: { view_mode } });
+    this.props.editProjectSettings(this.props.match.params.projectId, { view_mode });
   }
 
   setViewGrid(e) {
     var view_mode = 1;
-    this.props.editUserSettings(this.props.auth.user.id, { testcase: { view_mode } });
+    this.props.editProjectSettings(this.props.match.params.projectId, { view_mode });
   }
 
   render() {
@@ -327,7 +326,7 @@ class TestCases extends Component {
       searchTerm = (
         <Tag
           title={`Search: ${this.props.filters.searchTerm}`}
-          color={"DATE_COLOR"}
+          color={"SEARCH_COLOR"}
           isRemovable={true}
           onClickRemove={e => this.removeSearchTerm(e)}
         />
@@ -404,8 +403,8 @@ class TestCases extends Component {
               timestamp={this.props.filters.selectedDateTimestampFrom}
               onDayClick={day => {
                 this.setFromDate(day);
-                this.props.editUserSettings(this.props.auth.user.id, {
-                  testcase: { date_from: moment(day).format("YYYY-MM-DD HH:mm:ss") }
+                this.props.editProjectSettings(this.props.match.params.projectId, {
+                  date_from: moment(day).format("YYYY-MM-DD HH:mm:ss")
                 });
               }}
             />
@@ -421,8 +420,8 @@ class TestCases extends Component {
               timestamp={this.props.filters.selectedDateTimestampTo}
               onDayClick={day => {
                 this.setToDate(day);
-                this.props.editUserSettings(this.props.auth.user.id, {
-                  testcase: { date_to: moment(day).format("YYYY-MM-DD HH:mm:ss") }
+                this.props.editProjectSettings(this.props.match.params.projectId, {
+                  date_to: moment(day).format("YYYY-MM-DD HH:mm:ss")
                 });
               }}
             />
@@ -524,7 +523,7 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getGroups, getUsers, getUserSettings, editUserSettings, getTestcases }
+  { getGroups, getUsers, getProjectSettings, editProjectSettings, getTestcases }
 )(withRouter(TestCases));
 
 const getSettings = state => state.settings.settings;
@@ -553,13 +552,13 @@ const filterSelector = createSelector(
 
     var activeFilters = false;
 
-    if (settings && settings.testcase) {
+    if (settings) {
       if (groups) {
         if (groups.groups) {
           var selectedGroup = [];
           groups.groups.map(function(item) {
-            if (settings.testcase && settings.testcase.groups) {
-              if (settings.testcase.groups.includes(item.id)) {
+            if (settings && settings.groups) {
+              if (settings.groups.includes(item.id)) {
                 selectedGroup.push({ id: item.id, title: item.title, color: item.color });
               }
             }
@@ -573,8 +572,8 @@ const filterSelector = createSelector(
         if (users.users) {
           var selectedUsersObjects = [];
           users.users.map(function(item) {
-            if (settings.testcase && settings.testcase.users) {
-              if (settings.testcase.users.includes(item.id)) {
+            if (settings && settings.users) {
+              if (settings.users.includes(item.id)) {
                 selectedUsersObjects.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
               }
             }
@@ -584,28 +583,28 @@ const filterSelector = createSelector(
         }
       }
 
-      if (settings.testcase.date_from) {
-        dateFrom = settings.testcase.date_from;
-        selectedDateTimestampFrom = moment(settings.testcase.date_from)._d;
-        selectedDateFrom = moment(settings.testcase.date_from).format(" Do MMM YY");
-        selectedDateFromFormated = moment(settings.testcase.date_from).format("YYYY-MM-DD HH:mm:ss");
+      if (settings.date_from) {
+        dateFrom = settings.date_from;
+        selectedDateTimestampFrom = moment(settings.date_from)._d;
+        selectedDateFrom = moment(settings.date_from).format(" Do MMM YY");
+        selectedDateFromFormated = moment(settings.date_from).format("YYYY-MM-DD HH:mm:ss");
       }
-      if (settings.testcase.date_to) {
-        dateTo = settings.testcase.date_to;
-        selectedDateTimestampTo = moment(settings.testcase.date_to)._d;
-        selectedDateTo = moment(settings.testcase.date_to).format(" Do MMM YY");
-        selectedDateToFormated = moment(settings.testcase.date_to)
+      if (settings.date_to) {
+        dateTo = settings.date_to;
+        selectedDateTimestampTo = moment(settings.date_to)._d;
+        selectedDateTo = moment(settings.date_to).format(" Do MMM YY");
+        selectedDateToFormated = moment(settings.date_to)
           .add(21, "hours")
           .add(59, "minutes")
           .add(59, "seconds")
           .format("YYYY-MM-DD HH:mm:ss");
       }
-      if (settings.testcase.view_mode) {
-        viewMode = settings.testcase.view_mode;
+      if (settings.view_mode) {
+        viewMode = settings.view_mode;
       }
-      showFilters = settings.testcase.show_filters;
-      if (settings.testcase.search_term !== null) {
-        searchTerm = settings.testcase.search_term;
+      showFilters = settings.show_filters;
+      if (settings.search_term !== null) {
+        searchTerm = settings.search_term;
       }
 
       if (

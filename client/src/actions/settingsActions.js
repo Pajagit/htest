@@ -1,38 +1,38 @@
 import axios from "axios";
 
-import { GET_SETTINGS } from "./types";
+import { GET_PROJECT_SETTINGS } from "./types";
 
 // Get User Settings
-export const getUserSettings = user_id => dispatch => {
+export const getProjectSettings = project_id => dispatch => {
   axios
-    .get(`/api/users/user/${user_id}/settings`)
+    .get(`/api/projects/project/${project_id}/settings`)
     .then(res => {
       dispatch({
-        type: GET_SETTINGS,
+        type: GET_PROJECT_SETTINGS,
         payload: res.data
       });
     })
     .catch(err =>
       dispatch({
-        type: GET_SETTINGS,
+        type: GET_PROJECT_SETTINGS,
         payload: {}
       })
     );
 };
 
 // Get User Settings
-export const editUserSettings = (user_id, settingsData) => dispatch => {
+export const editProjectSettings = (project_id, settingsData) => dispatch => {
   axios
-    .put(`/api/users/user/${user_id}/settings`, settingsData)
+    .put(`/api/projects/project/${project_id}/settings`, settingsData)
     .then(res => {
       dispatch({
-        type: GET_SETTINGS,
+        type: GET_PROJECT_SETTINGS,
         payload: res.data
       });
     })
     .catch(err =>
       dispatch({
-        type: GET_SETTINGS,
+        type: GET_PROJECT_SETTINGS,
         payload: {}
       })
     );
