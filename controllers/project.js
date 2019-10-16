@@ -4,6 +4,7 @@ var RoleService = require("../services/role");
 
 const validateRouteProjectId = require("../validation/project").validateRouteProjectId;
 const validateProjectInput = require("../validation/project").validateProjectInput;
+const validateSettingsInput = require("../validation/project").validateSettingsInput;
 
 module.exports = {
   deactivateProject: async function(req, res) {
@@ -45,9 +46,9 @@ module.exports = {
       return res.status(403).json({ message: "Forbiden" });
     }
     var project = await ProjectService.getProjectById(req.params.id);
-    // if (project) {
-    //   await ProjectService.updateSettingsProject(req.params.id, req.user);
-    // }
+    if (project) {
+      await ProjectService.updateSettingsProject(req.params.id, req.user);
+    }
 
     var projectWithRole = {};
     projectWithRole.id = project.id;
@@ -142,6 +143,70 @@ module.exports = {
       } else {
         return res.status(500).json({ error: "An error occured while creating project" });
       }
+    }
+  },
+  getProjectSettings: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Project id is not valid number" });
+    }
+    var project_exists = await ProjectService.checkIfProjectExist(req.params.id);
+    if (!project_exists) {
+      return res.status(404).json({ error: "Project doesn't exist" });
+    }
+    var settings = await ProjectService.getSettings(req.params.id, req.user);
+    if (settings) {
+      return res.status(200).json(settings);
+    } else {
+      return res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  updateProjectSettings: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Project id is not valid number" });
+    }
+    var project_exists = await ProjectService.checkIfProjectExist(req.params.id);
+    if (!project_exists) {
+      return res.status(404).json({ error: "Project doesn't exist" });
+    }
+
+    const { errors, isValid } = validateSettingsInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    var settingsObj = {};
+
+    if (req.body.groups) {
+      settingsObj.testcase_groups = req.body.groups;
+    }
+    if (req.body.users) {
+      settingsObj.testcase_users = req.body.users;
+    }
+    if (req.body.date_from !== "undefined") {
+      settingsObj.testcase_date_from = req.body.date_from;
+    }
+    if (req.body.date_to !== "undefined") {
+      settingsObj.testcase_date_to = req.body.date_to;
+    }
+    if (req.body.search_term !== "undefined") {
+      settingsObj.testcase_search_term = req.body.search_term;
+    }
+    if (req.body.view_mode !== "undefined") {
+      settingsObj.testcase_view_mode = req.body.view_mode;
+    }
+    if (req.body.show_filters !== "undefined") {
+      settingsObj.testcase_show_filters = req.body.show_filters;
+    }
+    settingsObj.project_id = req.params.id;
+
+    var updateSettings = await ProjectService.updateProjectSettings(req.user.id, req.params.id, settingsObj);
+    if (updateSettings) {
+      var settings = await ProjectService.getSettings(req.params.id, req.user);
+      return res.status(200).json(settings);
+    } else {
+      return res.status(500).json({ error: "Something went wrong" });
     }
   }
 };

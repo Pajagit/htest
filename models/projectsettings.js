@@ -2,8 +2,8 @@
 const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
-const Settings = sequelize.define(
-  "settings",
+const ProjectSettings = sequelize.define(
+  "projectsettings",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -31,13 +31,13 @@ const Settings = sequelize.define(
       required: false,
       type: Sequelize.STRING
     },
-    testcase_view_mode: {
-      required: true,
-      type: Sequelize.INTEGER
-    },
     testcase_show_filters: {
       required: true,
       type: Sequelize.BOOLEAN
+    },
+    testcase_view_mode: {
+      required: true,
+      type: Sequelize.INTEGER
     },
     project_id: {
       required: true,
@@ -60,4 +60,4 @@ const Settings = sequelize.define(
   { timestamps: false }
 );
 
-module.exports = Settings;
+module.exports = ProjectSettings;

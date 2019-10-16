@@ -4,7 +4,8 @@ const User = require("../models/user");
 const Project = require("../models/project");
 const UserRoleProject = require("../models/userroleproject");
 const Role = require("../models/role");
-const Settings = require("../models/settings");
+const UserSettings = require("../models/usersettings");
+const ProjectSettings = require("../models/projectsettings");
 
 const getLocalTimestamp = require("../utils/dateFunctions").getLocalTimestamp;
 
@@ -86,13 +87,17 @@ module.exports = {
   },
   getLastVisitedProject: async function(user_id) {
     return new Promise((resolve, reject) => {
-      Settings.findOne({
+      UserSettings.findOne({
         attributes: ["project_id"],
         where: {
           user_id: user_id
         }
-      }).then(project_setting => {
-        resolve(project_setting.project_id);
+      }).then(user_setting => {
+        if (user_setting) {
+          resolve(user_setting.project_id);
+        } else {
+          resolve(null);
+        }
       });
     });
   },
@@ -423,33 +428,19 @@ module.exports = {
   },
   getSettings: async function(user_id) {
     return new Promise((resolve, reject) => {
-      Settings.findOne({
-        attributes: [
-          "testcase_groups",
-          "testcase_users",
-          "testcase_date_from",
-          "testcase_date_to",
-          "testcase_search_term",
-          "testcase_view_mode",
-          "testcase_show_filters",
-          "project_id"
-        ],
+      UserSettings.findOne({
+        attributes: ["testcase_view_mode", "testcase_show_filters", "project_id"],
         where: {
           user_id: user_id
         }
       }).then(settings => {
         if (settings) {
           var settings_obj = {};
-          settings_obj.testcase = {};
+          settings_obj = {};
           if (settings) {
-            settings_obj.testcase.groups = settings.testcase_groups;
-            settings_obj.testcase.users = settings.testcase_users;
-            settings_obj.testcase.date_from = settings.testcase_date_from;
-            settings_obj.testcase.date_to = settings.testcase_date_to;
-            settings_obj.testcase.search_term = settings.testcase_search_term;
-            settings_obj.testcase.view_mode = settings.testcase_view_mode;
-            settings_obj.testcase.show_filters = settings.testcase_show_filters;
-            settings_obj.testcase.project_id = settings.project_id;
+            settings_obj.view_mode = settings.testcase_view_mode;
+            settings_obj.show_filters = settings.testcase_show_filters;
+            settings_obj.project_id = settings.project_id;
           }
           resolve(settings_obj);
         } else {
@@ -460,13 +451,13 @@ module.exports = {
   },
   updateSettings: async function(user_id, settings_obj) {
     return new Promise((resolve, reject) => {
-      Settings.findOne({
+      UserSettings.findOne({
         where: {
           user_id: user_id
         }
       }).then(settings => {
         if (settings) {
-          Settings.update(settings_obj, {
+          UserSettings.update(settings_obj, {
             where: {
               id: settings.id,
               user_id: user_id
@@ -482,7 +473,7 @@ module.exports = {
           });
         } else {
           settings_obj.user_id = user_id;
-          Settings.create(settings_obj).then(created_setting => {
+          UserSettings.create(settings_obj).then(created_setting => {
             if (created_setting) {
               resolve(true);
             } else {
@@ -493,6 +484,7 @@ module.exports = {
       });
     });
   },
+
   canGetProject: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];

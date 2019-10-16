@@ -24,12 +24,12 @@ class TestCaseContainer extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     var projectId = nextProps.match.params.projectId;
-    if (nextProps.settings && nextProps.settings.settings && nextProps.settings.settings.testcase) {
-      if (nextProps.settings.settings.testcase !== prevState.filters) {
-        update.filters = nextProps.settings.settings.testcase;
+    if (nextProps.settings && nextProps.settings.settings) {
+      if (nextProps.settings.settings !== prevState.filters) {
+        update.filters = nextProps.settings.settings;
         if (prevState.filters === null || prevState.projectId === null) {
           update.projectId = projectId;
-          nextProps.getTestcases(projectId, nextProps.settings.settings.testcase);
+          nextProps.getTestcases(projectId, nextProps.settings.settings);
         }
       }
       update.settings = nextProps.settings;
@@ -93,10 +93,10 @@ class TestCaseContainer extends Component {
           </React.Fragment>
         ));
     } else if (
-      !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.users) ||
-      !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.groups) ||
-      (this.state.settings && this.state.settings.testcase && this.state.settings.testcase.date_from !== null) ||
-      (this.state.settings && this.state.settings.testcase && this.state.settings.testcase.date_to !== null)
+      !isEmpty(this.state.settings && this.state.settings.users) ||
+      !isEmpty(this.state.settings && this.state.settings.groups) ||
+      (this.state.settings && this.state.settings.date_from !== null) ||
+      (this.state.settings && this.state.settings.date_to !== null)
     ) {
       content = (
         <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>

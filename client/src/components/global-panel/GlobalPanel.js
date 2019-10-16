@@ -111,7 +111,6 @@ GlobalPanel.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  // testcases: state.testcases
   auth: state.auth,
   errors: state.errors
 });

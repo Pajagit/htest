@@ -1,5 +1,5 @@
 .global-panel {
-  position: fixed;
+  position: relative;
   display: flex;
   flex-direction: row;
   padding-top: 16px;
@@ -38,13 +38,53 @@
       &:not(:last-child) {
         margin-bottom: 0.5rem;
       }
-      &-profile-image > img {
-        position: absolute;
-        bottom: 20px;
-        left: 20px;
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
+      &-profile-image {
+        &-options {
+          width: 50px;
+          height: 50px;
+          & > img {
+            // position: absolute;
+            // bottom: 20px;
+            // left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+          }
+          position: absolute;
+          bottom: 20px;
+          left: 10px;
+
+          display: inline-block;
+          overflow: hidden;
+          text-align: center;
+          & span,
+          & a {
+            display: inline-block;
+            font-size: 12px;
+            white-space: nowrap;
+            transition: transform 0.5s ease-out, opacity 0.5s;
+          }
+          & a {
+            position: absolute;
+            left: 100%;
+            top: -60px;
+            // width: 33.33%;
+          }
+          &:hover a:nth-child(2) {
+            transform: translateX(-100%);
+            color: red;
+          }
+          // &:hover a:nth-child(3) {
+          //   transform: translateX(-200%);
+          // }
+          // &:hover a:nth-child(4) {
+          //   transform: translateX(-100%);
+          // }
+          // &:hover span {
+          //   transform: translateX(-50%);
+          //   opacity: 0;
+          // }
+        }
       }
       &-notification {
         border-radius: 50%;

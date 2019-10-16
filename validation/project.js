@@ -70,5 +70,26 @@ module.exports = {
       errors,
       isValid: isEmpty(errors)
     };
+  },
+
+  validateSettingsInput: function(data) {
+    var errors = {};
+    var arrayOfViewModes = [1, 2];
+
+    if (!isEmpty(data.view_mode)) {
+      if (!arrayOfViewModes.includes(data.view_mode)) {
+        errors.view_mode = "View mode can have one of these values [1,2]";
+      }
+    }
+    if (!isEmpty(data.show_filters)) {
+      if (typeof data.show_filters !== "boolean") {
+        errors.show_filters = "Parameter 'show_filters' must have a true or false value";
+      }
+    }
+
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    };
   }
 };
