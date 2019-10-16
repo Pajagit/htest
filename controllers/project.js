@@ -147,11 +147,11 @@ module.exports = {
   },
   getProjectSettings: async function(req, res) {
     if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "User id is not valid number" });
+      return res.status(400).json({ error: "Project id is not valid number" });
     }
     var project_exists = await ProjectService.checkIfProjectExist(req.params.id);
     if (!project_exists) {
-      return res.status(404).json({ error: "User doesn't exist" });
+      return res.status(404).json({ error: "Project doesn't exist" });
     }
     var settings = await ProjectService.getSettings(req.params.id, req.user);
     if (settings) {
