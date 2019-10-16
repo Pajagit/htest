@@ -26,7 +26,9 @@ class TestCaseContainer extends Component {
     if (nextProps.settings && nextProps.settings.settings && nextProps.settings.settings.testcase) {
       if (nextProps.settings.settings.testcase !== prevState.filters) {
         update.filters = nextProps.settings.settings.testcase;
-        nextProps.getTestcases(projectId, nextProps.settings.settings.testcase);
+        if (prevState.filters === null) {
+          nextProps.getTestcases(projectId, nextProps.settings.settings.testcase);
+        }
       }
       update.settings = nextProps.settings;
     }
@@ -91,8 +93,8 @@ class TestCaseContainer extends Component {
     } else if (
       !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.users) ||
       !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.groups) ||
-      !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.dateFrom) ||
-      !isEmpty(this.state.settings && this.state.settings.testcase && this.state.settings.testcase.dateTo)
+      (this.state.settings && this.state.settings.testcase && this.state.settings.testcase.date_from !== null) ||
+      (this.state.settings && this.state.settings.testcase && this.state.settings.testcase.date_to !== null)
     ) {
       content = (
         <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>
