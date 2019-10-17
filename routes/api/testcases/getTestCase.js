@@ -78,7 +78,7 @@ module.exports = Router({ mergeParams: true }).get(
             (async () => {
               var getTestCase = await UserService.getTestCase(req.user, testcase.project_id);
               if (!getTestCase) {
-                return res.status(403).json({ message: "Forbiden" });
+                return res.status(403).json({ message: "Forbidden" });
               }
               if (testcase.groups) {
                 var groupsObj = Array();

@@ -302,7 +302,7 @@ module.exports = Router({ mergeParams: true }).put(
         } else {
           var canCreateTestCase = await UserService.canCreateUpdateTestCase(req.user, req.body.project_id);
           if (!canCreateTestCase) {
-            return res.status(403).json({ message: "Forbiden" });
+            return res.status(403).json({ message: "Forbidden" });
           }
           let updatedTestCase = await updateOrCreateTestCase();
 

@@ -16,7 +16,7 @@ module.exports = Router({ mergeParams: true }).get(
     (async () => {
       var getUsers = await UserService.getUsers(req.user);
       if (!getUsers) {
-        return res.status(403).json({ message: "Forbiden" });
+        return res.status(403).json({ message: "Forbidden" });
       }
       var includeArray = [
         {

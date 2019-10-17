@@ -25,7 +25,7 @@ module.exports = {
     }
     var can_update_user = await UserService.getCreateUpdateUser(req.user);
     if (!can_update_user) {
-      return res.status(403).json({ message: "Forbiden" });
+      return res.status(403).json({ message: "Forbidden" });
     }
     var user_exists = await UserService.checkIfUserWithSameMailExist(req.body.email);
     if (user_exists) {
@@ -73,7 +73,7 @@ module.exports = {
       } else {
         var can_update_user = await UserService.getCreateUpdateUser(req.user);
         if (!can_update_user) {
-          return res.status(403).json({ message: "Forbiden" });
+          return res.status(403).json({ message: "Forbidden" });
         }
         if (req.body.email && !last_login) {
           let anotherUserSameMail = await UserService.checkIfUserWithSameMailExist(req.body.email, req.params.id);
@@ -125,7 +125,7 @@ module.exports = {
 
     var can_update_user = await UserService.getCreateUpdateUser(req.user);
     if (!can_update_user) {
-      return res.status(403).json({ message: "Forbiden" });
+      return res.status(403).json({ message: "Forbidden" });
     }
     var user = await UserService.getUserById(req.params.id);
     var roleId = await RoleService.getSuperadminRoleId();
@@ -174,7 +174,7 @@ module.exports = {
       }
       var canAddProjectToUser = await UserService.addRemoveProjectFromUser(req.user, req.body.project_id);
       if (!canAddProjectToUser) {
-        return res.status(403).json({ message: "Forbiden" });
+        return res.status(403).json({ message: "Forbidden" });
       }
 
       if (project && role) {
@@ -224,7 +224,7 @@ module.exports = {
     } else {
       var canRemoveProjectToUser = await UserService.addRemoveProjectFromUser(req.user, req.params.project_id);
       if (!canRemoveProjectToUser) {
-        return res.status(403).json({ message: "Forbiden" });
+        return res.status(403).json({ message: "Forbidden" });
       }
       var hasProject = await UserService.checkIfProjectExistsForUser(req.params.id, req.params.project_id);
       if (hasProject) {

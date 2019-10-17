@@ -43,7 +43,7 @@ module.exports = Router({ mergeParams: true }).post(
 
         var getTestCase = await UserService.getTestCase(req.user, req.query.project_id);
         if (!getTestCase) {
-          return res.status(403).json({ message: "Forbiden" });
+          return res.status(403).json({ message: "Forbidden" });
         }
 
         if (requestObject.date_from && requestObject.date_to) {

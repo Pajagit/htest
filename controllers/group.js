@@ -20,7 +20,7 @@ module.exports = {
     if (group) {
       var canGetGroup = await UserService.canGetProject(req.user, group.project_id);
       if (!canGetGroup) {
-        return res.status(403).json({ message: "Forbiden" });
+        return res.status(403).json({ message: "Forbidden" });
       }
       return res.status(200).json(group);
     } else {
@@ -43,7 +43,7 @@ module.exports = {
       }
       var canCreateGroup = await UserService.canCreateEditDeleteGroup(req.user, req.body.project_id);
       if (!canCreateGroup) {
-        return res.status(403).json({ message: "Forbiden" });
+        return res.status(403).json({ message: "Forbidden" });
       }
       var all_colors = await GroupService.getAllColorsFromGroups();
       var unused_color = await ColorService.getUnusedColorFromColors(all_colors);
@@ -93,7 +93,7 @@ module.exports = {
         var group = await GroupService.checkIfGroupExistById(req.params.id);
         var canCreateGroup = await UserService.canCreateEditDeleteGroup(req.user, group.project_id);
         if (!canCreateGroup) {
-          return res.status(403).json({ message: "Forbiden" });
+          return res.status(403).json({ message: "Forbidden" });
         }
         var groupWithSameTitle = await GroupService.checkIfAnotherGroupWithSameTitleExists(
           req.body.title,
@@ -122,7 +122,7 @@ module.exports = {
     } else {
       var canCreateGroup = await UserService.canCreateEditDeleteGroup(req.user, group.project_id);
       if (!canCreateGroup) {
-        return res.status(403).json({ message: "Forbiden" });
+        return res.status(403).json({ message: "Forbidden" });
       }
       var groupHasTestCases = await GroupService.groupHasTestcases(req.params.id);
 
@@ -151,7 +151,7 @@ module.exports = {
       }
       var canGetProject = await UserService.canGetProject(req.user, req.query.project_id);
       if (!canGetProject) {
-        return res.status(403).json({ message: "Forbiden" });
+        return res.status(403).json({ message: "Forbidden" });
       }
       var getAllProjectGroups = await GroupService.getAllProjectGroups(req.query.project_id);
       if (getAllProjectGroups) {

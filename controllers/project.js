@@ -21,7 +21,7 @@ module.exports = {
     } else {
       var canDeleteProject = await UserService.canDeleteProject(req.user, req.params.id);
       if (!canDeleteProject) {
-        return res.status(403).json({ message: "Forbiden" });
+        return res.status(403).json({ message: "Forbidden" });
       }
       var deleteProject = await ProjectService.deactivateProject(req.params.id);
       if (deleteProject) {
@@ -43,7 +43,7 @@ module.exports = {
   getProjectById: async function(req, res) {
     var canGetProject = await UserService.canGetProject(req.user, req.params.id);
     if (!canGetProject) {
-      return res.status(403).json({ message: "Forbiden" });
+      return res.status(403).json({ message: "Forbidden" });
     }
     var project = await ProjectService.getProjectById(req.params.id);
     if (project) {
@@ -73,7 +73,7 @@ module.exports = {
     }
     var canUpdateProject = await UserService.canUpdateProject(req.user, req.params.id);
     if (!canUpdateProject) {
-      return res.status(403).json({ message: "Forbiden" });
+      return res.status(403).json({ message: "Forbidden" });
     }
     const { errors, isValid } = validateProjectInput(req.body);
     // Check Validation
@@ -110,7 +110,7 @@ module.exports = {
   createProject: async function(req, res) {
     var canCreateProject = await UserService.canCreateProject(req.user);
     if (!canCreateProject) {
-      return res.status(403).json({ message: "Forbiden" });
+      return res.status(403).json({ message: "Forbidden" });
     }
     const { errors, isValid } = validateProjectInput(req.body);
 

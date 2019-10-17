@@ -23,7 +23,7 @@ module.exports = Router({ mergeParams: true }).put(
           if (!isEmpty(testcase)) {
             var canCreateTestCase = await UserService.canCreateUpdateTestCase(req.user, testcase.project_id);
             if (!canCreateTestCase) {
-              return res.status(403).json({ message: "Forbiden" });
+              return res.status(403).json({ message: "Forbidden" });
             }
             testCaseFields = {};
             testCaseFields.deprecated = true;

@@ -20,7 +20,7 @@ module.exports = Router({ mergeParams: true }).put(
         } else {
           var canActivateUser = await UserService.getCreateUpdateUser(req.user);
           if (!canActivateUser) {
-            return res.status(403).json({ message: "Forbiden" });
+            return res.status(403).json({ message: "Forbidden" });
           }
           User.findOne({
             where: {
