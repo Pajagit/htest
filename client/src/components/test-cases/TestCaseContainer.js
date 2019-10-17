@@ -8,6 +8,7 @@ import LandscapeTestCase from "../common/LandscapeTestCase";
 import Tag from "../common/Tag";
 import Spinner from "../common/Spinner";
 import isEmpty from "../../validation/isEmpty";
+import Pagination from "../pagination/Pagination";
 
 import { getTestcases } from "../../actions/testcaseActions";
 
@@ -17,7 +18,8 @@ class TestCaseContainer extends Component {
     this.state = {
       settings: {},
       filters: this.props.settings.settings,
-      projectId: null
+      projectId: null,
+      page: this.props.match.params.page
     };
   }
 
@@ -29,10 +31,15 @@ class TestCaseContainer extends Component {
         update.filters = nextProps.settings.settings;
         if (prevState.filters === null || prevState.projectId === null) {
           update.projectId = projectId;
-          nextProps.getTestcases(projectId, nextProps.settings.settings);
+          nextProps.getTestcases(projectId, nextProps.settings.settings, nextProps.match.params.page);
         }
       }
       update.settings = nextProps.settings;
+    }
+
+    if (nextProps.match.params.page !== prevState.page) {
+      update.page = nextProps.match.params.page;
+      nextProps.getTestcases(projectId, nextProps.settings.settings, nextProps.match.params.page);
     }
     return Object.keys(update).length ? update : null;
   }
@@ -42,17 +49,23 @@ class TestCaseContainer extends Component {
     var settingsLoading = this.props.settings.loading;
     var testcases = this.props.testcases;
     var { loading } = this.props.testcases;
+
+    var pageCount = null;
+    if (testcases.testcases) {
+      pageCount = testcases.testcases.pages;
+    }
     let content;
     let grid = "";
-
+    var pagination = "";
     if (testcases.testcases === null || loading || this.state.filters === null || settingsLoading) {
       content = <Spinner />;
     } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 1) {
       testcases = this.props.testcases.testcases;
+      pagination = <Pagination pageCount={pageCount} projectId={this.state.projectId} />;
       grid = "testcase-grid";
       content =
-        testcases &&
-        testcases.map((testcase, index) => (
+        testcases.testcases &&
+        testcases.testcases.map((testcase, index) => (
           <React.Fragment key={index}>
             <PortraitTestCase
               title={testcase.title}
@@ -72,10 +85,11 @@ class TestCaseContainer extends Component {
         ));
     } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 2) {
       testcases = this.props.testcases.testcases;
+      pagination = <Pagination pageCount={pageCount} projectId={this.state.projectId} />;
       grid = "testcase-grid grid-none";
       content =
-        testcases &&
-        testcases.map((testcase, index) => (
+        testcases.testcases &&
+        testcases.testcases.map((testcase, index) => (
           <React.Fragment key={index}>
             <LandscapeTestCase
               title={testcase.title}
@@ -110,7 +124,11 @@ class TestCaseContainer extends Component {
       );
     }
 
-    return <div className={`${grid} testcase-container`}>{content}</div>;
+    return (
+      <div>
+        <div className={`${grid} testcase-container`}>{content}</div> {pagination}
+      </div>
+    );
   }
 }
 
