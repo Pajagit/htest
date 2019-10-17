@@ -479,7 +479,7 @@ class TestCases extends Component {
               <FilterBtn
                 onClick={this.filterBtn}
                 activeFilters={this.props.filters.activeFilters}
-                filtersShown={true}
+                filtersShown={this.props.filters.showFilters}
               />
             }
             searchBtn={
