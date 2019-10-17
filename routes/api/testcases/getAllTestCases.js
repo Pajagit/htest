@@ -20,7 +20,7 @@ module.exports = Router({ mergeParams: true }).post(
   "/testcases",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    if (isNaN(req.body.project_id)) {
+    if (isNaN(req.query.project_id)) {
       res.status(400).json({ error: "Project id is not valid number" });
     } else {
       (async () => {
@@ -34,8 +34,8 @@ module.exports = Router({ mergeParams: true }).post(
         requestObject.date_from = req.body.date_from ? req.body.date_from : "";
         requestObject.date_to = req.body.date_to ? req.body.date_to : "";
         requestObject.search_term = req.body.search_term ? req.body.search_term : "";
-        requestObject.page = page = req.body.page;
-        requestObject.page_size = pageSize = req.body.page_size;
+        requestObject.page = page = req.query.page;
+        requestObject.page_size = pageSize = req.query.page_size;
 
         const { errors, isValid } = validateTestCaseFilter(requestObject);
 
@@ -44,7 +44,7 @@ module.exports = Router({ mergeParams: true }).post(
           return res.status(400).json(errors);
         }
 
-        var getTestCase = await UserService.getTestCase(req.user, req.body.project_id);
+        var getTestCase = await UserService.getTestCase(req.user, req.query.project_id);
         if (!getTestCase) {
           return res.status(403).json({ message: "Forbidden" });
         }
@@ -74,7 +74,7 @@ module.exports = Router({ mergeParams: true }).post(
             [Op.iLike]: "%" + requestObject.search_term + "%"
           };
         }
-        whereStatement.project_id = req.body.project_id;
+        whereStatement.project_id = req.query.project_id;
         whereStatement.deprecated = false;
 
         TestCase.findAndCountAll({
