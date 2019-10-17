@@ -136,7 +136,7 @@ class EditTestCase extends Component {
         if (nextProps.auth.user !== prevState.user) {
           var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
           if (!isValid) {
-            nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/1`);
+            nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/Page/0`);
           }
         }
         update.isValid = isValid;

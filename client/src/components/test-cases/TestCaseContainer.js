@@ -51,8 +51,13 @@ class TestCaseContainer extends Component {
     var { loading } = this.props.testcases;
 
     var pageCount = null;
+    var showPagination = false;
     if (testcases.testcases) {
       pageCount = testcases.testcases.pages;
+
+      if (testcases.testcases.testcases.length >= 6) {
+        showPagination = true;
+      }
     }
     let content;
     let grid = "";
@@ -61,7 +66,11 @@ class TestCaseContainer extends Component {
       content = <Spinner />;
     } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 1) {
       testcases = this.props.testcases.testcases;
-      pagination = <Pagination pageCount={pageCount} projectId={this.state.projectId} />;
+      if (showPagination) {
+        pagination = (
+          <Pagination pageCount={pageCount} page={this.props.match.params.page} projectId={this.state.projectId} />
+        );
+      }
       grid = "testcase-grid";
       content =
         testcases.testcases &&
@@ -85,7 +94,10 @@ class TestCaseContainer extends Component {
         ));
     } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 2) {
       testcases = this.props.testcases.testcases;
-      pagination = <Pagination pageCount={pageCount} projectId={this.state.projectId} />;
+      testcases = this.props.testcases.testcases;
+      if (showPagination) {
+        pagination = <Pagination pageCount={pageCount} projectId={this.state.projectId} />;
+      }
       grid = "testcase-grid grid-none";
       content =
         testcases.testcases &&

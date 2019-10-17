@@ -122,7 +122,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/TestCase/:testcaseId" component={TestCase} />
           <PrivateRoute exact path="/:projectId/CreateTestCase" component={NewTestCase} />
           <PrivateRoute exact path="/:projectId/EditTestCase/:testcaseId" component={EditTestCase} />
-          <PrivateRoute exact path="/:projectId/TestCases/:page" component={TestCases} />
+          <PrivateRoute exact path="/:projectId/TestCases/Page/:page" component={TestCases} />
           <PrivateRoute exact path="/:projectId/Reports" component={Reports} />
           <PrivateRoute exact path="/:projectId/Statistics" component={Statistics} />
           <PrivateRoute exact path="/:projectId/Settings" component={ProjectSettingsPage} />

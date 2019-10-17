@@ -460,7 +460,12 @@ class TestCases extends Component {
     var addTestCase = "";
     if (this.state.isValidWrite) {
       addTestCase = (
-        <BtnAnchor type={"text"} label="Add New" className={"a-btn a-btn-primary"} link={`CreateTestCase`} />
+        <BtnAnchor
+          type={"text"}
+          label="Add New"
+          className={"a-btn a-btn-primary"}
+          link={`/${this.props.match.params.projectId}/CreateTestCase`}
+        />
       );
     }
 
@@ -472,7 +477,7 @@ class TestCases extends Component {
           <Header
             icon={<i className="fas fa-clipboard-list"></i>}
             title={"Test Cases"}
-            link={"CreateTestCase"}
+            // link={"CreateTestCase"}
             canGoBack={false}
             addBtn={addTestCase}
             filterBtn={

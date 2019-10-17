@@ -11,7 +11,7 @@ function ProjectCard({ img, title, management, qa, id }) {
   }
   return (
     <div className="portrait-project">
-      <Link to={`/${id}/TestCases/1`}>
+      <Link to={`/${id}/TestCases/Page/0`}>
         <div className="portrait-project-top">
           <div className="portrait-project-top-image">
             <img src={img} alt="" />

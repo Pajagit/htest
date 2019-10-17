@@ -23,7 +23,7 @@ class Landing extends Component {
       if (nextProps.auth !== prevState.auth) {
         if (nextProps.auth.isAuthenticated) {
           if (nextProps.auth.user.project_id !== null) {
-            nextProps.history.push(`/${nextProps.auth.user.project_id}/TestCases`);
+            nextProps.history.push(`/${nextProps.auth.user.project_id}/TestCases/Page/0`);
           } else {
             nextProps.history.push("/Projects");
           }

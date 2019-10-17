@@ -53,7 +53,7 @@ class TestCase extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = nextProps.auth.user;
         if (!isValid) {
-          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/1`);
+          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/Page/0`);
         }
         update.isValid = isValid;
       }
@@ -72,7 +72,7 @@ class TestCase extends Component {
   confirmDeprecate = () => {
     this.props.setTestcaseDeprecated(this.state.testcaseId, res => {
       if (res.status === 200) {
-        this.props.history.push(`/${this.state.projectId}/TestCases/1`);
+        this.props.history.push(`/${this.state.projectId}/TestCases/Page/0`);
         successToast("Test case set as deprecated successfully");
       } else {
         this.props.getTestcase(this.state.testcaseId);
@@ -113,9 +113,13 @@ class TestCase extends Component {
     if (this.state.isValidWrite) {
       actionBtns = (
         <div className="flex-column-left mt-4">
-          <BtnAnchor className="a-btn a-btn-primary mr-2" label="Add To Report" link={`/${projectId}/TestCases`} />
+          <BtnAnchor
+            className="a-btn a-btn-primary mr-2"
+            label="Add To Report"
+            link={`/${projectId}/TestCases/Page/0`}
+          />
           <Btn className="a-btn-outline a-btn-outline-primary mr-2" label="Remove" onClick={this.confirmModal}></Btn>
-          <UnderlineAnchor link={`/${projectId}/TestCases/1`} value={"Cancel"} />
+          <UnderlineAnchor link={`/${projectId}/TestCases/Page/0`} value={"Cancel"} />
         </div>
       );
     }
@@ -222,7 +226,7 @@ class TestCase extends Component {
             icon={<i className="fas fa-arrow-left"></i>}
             title={"Back to All Test Cases"}
             canGoBack={true}
-            link={`/${projectId}/TestCases/1`}
+            link={`/${projectId}/TestCases/Page/0`}
           />
           {content}
         </div>
