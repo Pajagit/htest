@@ -11,6 +11,7 @@ const User = require("../../../models/user");
 const getLocalTimestamp = require("../../../utils/dateFunctions").getLocalTimestamp;
 const validateTestCaseFilter = require("../../../validation/testcase").validateTestCaseFilter;
 const UserService = require("../../../services/user");
+const paginate = require("../../../utils/pagination").paginate;
 
 // @route POST api/testcases
 // @desc POST all testcases
@@ -19,7 +20,7 @@ module.exports = Router({ mergeParams: true }).post(
   "/testcases",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    if (isNaN(req.query.project_id)) {
+    if (isNaN(req.body.project_id)) {
       res.status(400).json({ error: "Project id is not valid number" });
     } else {
       (async () => {
@@ -33,6 +34,8 @@ module.exports = Router({ mergeParams: true }).post(
         requestObject.date_from = req.body.date_from ? req.body.date_from : "";
         requestObject.date_to = req.body.date_to ? req.body.date_to : "";
         requestObject.search_term = req.body.search_term ? req.body.search_term : "";
+        requestObject.page = page = req.body.page;
+        requestObject.page_size = pageSize = req.body.page_size;
 
         const { errors, isValid } = validateTestCaseFilter(requestObject);
 
@@ -41,7 +44,7 @@ module.exports = Router({ mergeParams: true }).post(
           return res.status(400).json(errors);
         }
 
-        var getTestCase = await UserService.getTestCase(req.user, req.query.project_id);
+        var getTestCase = await UserService.getTestCase(req.user, req.body.project_id);
         if (!getTestCase) {
           return res.status(403).json({ message: "Forbidden" });
         }
@@ -71,10 +74,10 @@ module.exports = Router({ mergeParams: true }).post(
             [Op.iLike]: "%" + requestObject.search_term + "%"
           };
         }
-        whereStatement.project_id = req.query.project_id;
+        whereStatement.project_id = req.body.project_id;
         whereStatement.deprecated = false;
 
-        TestCase.findAll({
+        TestCase.findAndCountAll({
           attributes: ["id", "title", "description", "expected_result", "preconditions", "created_at"],
           where: whereStatement,
           include: [
@@ -120,11 +123,15 @@ module.exports = Router({ mergeParams: true }).post(
               ]
             }
           ],
-          order: [["created_at", "DESC"], [Group, "id", "ASC"]]
+          order: [["created_at", "DESC"]],
+          ...paginate({ page, pageSize }),
+          subQuery: false
         }).then(testcases => {
-          if (testcases) {
+          if (testcases.rows) {
+            testcasesRes = {};
+            testcasesRes.pages = Math.ceil(testcases.count / pageSize);
             var testcasesObjArray = Array();
-            testcases.forEach(testcase => {
+            testcases.rows.forEach(testcase => {
               var inFilteredGroup = true;
               if (requestObject.groups.length > 0) {
                 var testcaseGroups = [];
@@ -164,8 +171,10 @@ module.exports = Router({ mergeParams: true }).post(
                 };
                 testcasesObjArray.push(testcasesObj);
               }
+
+              testcasesRes.projects = testcasesObjArray;
             });
-            res.json(testcasesObjArray);
+            res.json(testcasesRes);
           } else {
             res.status(200);
           }
