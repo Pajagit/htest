@@ -77,7 +77,26 @@ module.exports = Router({ mergeParams: true }).post(
         whereStatement.project_id = req.query.project_id;
         whereStatement.deprecated = false;
 
-        TestCase.findAndCountAll({
+        var testCaseIds = await new Promise(resolve => {
+          TestCase.findAndCountAll({
+            attributes: ["id"],
+            where: whereStatement,
+            order: [["created_at", "DESC"]],
+            ...paginate({ page, pageSize })
+          }).then(testcase_ids => {
+            var ids = [];
+            if (testcase_ids.rows) {
+              testcase_ids.rows.forEach(testcase_id => {
+                ids.push(testcase_id.id);
+              });
+            }
+            resolve({ ids, count: testcase_ids.count });
+          });
+        });
+        whereStatement.id = {
+          [Op.in]: testCaseIds.ids
+        };
+        TestCase.findAll({
           attributes: ["id", "title", "description", "expected_result", "preconditions", "created_at"],
           where: whereStatement,
           include: [
@@ -123,15 +142,13 @@ module.exports = Router({ mergeParams: true }).post(
               ]
             }
           ],
-          order: [["created_at", "DESC"]],
-          ...paginate({ page, pageSize }),
-          subQuery: false
+          order: [["created_at", "DESC"]]
         }).then(testcases => {
-          if (testcases.rows) {
+          if (testcases) {
             testcasesRes = {};
-            testcasesRes.pages = Math.ceil(testcases.count / pageSize);
+            testcasesRes.pages = Math.ceil(testCaseIds.count / pageSize);
             var testcasesObjArray = Array();
-            testcases.rows.forEach(testcase => {
+            testcases.forEach(testcase => {
               var inFilteredGroup = true;
               if (requestObject.groups.length > 0) {
                 var testcaseGroups = [];
