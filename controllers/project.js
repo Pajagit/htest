@@ -32,7 +32,7 @@ module.exports = {
     }
   },
   getProjects: async function(req, res) {
-    var projects = await ProjectService.getProjects(req.query.searchTerm, req.user);
+    var projects = await ProjectService.getProjects(req.query.search_term, req.user);
 
     if (projects) {
       return res.status(200).json(projects);
