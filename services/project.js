@@ -180,7 +180,7 @@ module.exports = {
       }
     });
   },
-  getProjects: async function(searchTerm, user) {
+  getProjects: async function(search_term, user) {
     return new Promise((resolve, reject) => {
       var whereStatement = {};
       if (!user.superadmin) {
@@ -192,9 +192,9 @@ module.exports = {
           [Op.in]: userProjectsIds
         };
       }
-      if (searchTerm) {
+      if (search_term) {
         whereStatement.title = {
-          [Op.iLike]: "%" + searchTerm + "%"
+          [Op.iLike]: "%" + search_term + "%"
         };
       }
       Project.findAll({
