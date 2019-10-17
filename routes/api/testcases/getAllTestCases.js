@@ -142,7 +142,7 @@ module.exports = Router({ mergeParams: true }).post(
               ]
             }
           ],
-          order: [["created_at", "DESC"]]
+          order: [["created_at", "DESC"], [{ model: TestStep, as: "test_steps" }, "id", "ASC"], [Group, "id", "ASC"]]
         }).then(testcases => {
           if (testcases) {
             testcasesRes = {};
