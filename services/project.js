@@ -6,6 +6,7 @@ const Project = require("../models/project");
 const ProjectSettings = require("../models/projectsettings");
 const UserSettings = require("../models/usersettings");
 const UserRoleProject = require("../models/userroleproject");
+const paginate = require("../utils/pagination").paginate;
 
 module.exports = {
   checkIfProjectExist: async function(id) {
@@ -180,7 +181,7 @@ module.exports = {
       }
     });
   },
-  getProjects: async function(search_term, user) {
+  getProjects: async function(search_term, user, page, pageSize) {
     return new Promise((resolve, reject) => {
       var whereStatement = {};
       if (!user.superadmin) {

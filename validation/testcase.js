@@ -103,8 +103,10 @@ module.exports = {
   validateTestCaseFilter: function(data) {
     data.groups = !isEmpty(data.groups) ? data.groups : [];
     data.users = !isEmpty(data.users) ? data.users : [];
-    data.dateFrom = !isEmpty(data.dateFrom) ? data.dateFrom : "";
-    data.dateTo = !isEmpty(data.dateTo) ? data.dateTo : "";
+    data.dateFrom = !isEmpty(data.date_from) ? data.date_from : "";
+    data.dateTo = !isEmpty(data.date_to) ? data.date_to : "";
+    data.page = !isEmpty(data.page) ? data.page : "";
+    data.page_size = !isEmpty(data.page_size) ? data.page_size : "";
 
     var errors = {};
 
@@ -126,6 +128,20 @@ module.exports = {
     }
     if (invalid_format_users) {
       errors.users = "User id is not a valid number";
+    }
+    if (isEmpty(data.page)) {
+      errors.page = "Page is required";
+    } else {
+      if (isNaN(data.page)) {
+        errors.page = "Page is not a valid number";
+      }
+    }
+    if (isEmpty(data.page_size)) {
+      errors.page_size = "Page size is required";
+    } else {
+      if (isNaN(data.page_size)) {
+        errors.page_size = "Page size is not a valid number";
+      }
     }
 
     return { errors, isValid: isEmpty(errors) };
