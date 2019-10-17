@@ -15,6 +15,7 @@ class ProjectCardContainer extends Component {
       initialRender: true,
       user: this.props.auth.user,
       projects: this.props.projects.projects,
+      searchTerm: null,
       errors: {}
     };
   }
@@ -23,6 +24,10 @@ class ProjectCardContainer extends Component {
     let update = {};
     var { user } = nextProps.auth;
     if (nextProps.auth && nextProps.auth.user) {
+      if (nextProps.searchTerm !== prevState.searchTerm && nextProps.searchTerm === "") {
+        update.searchTerm = nextProps.searchTerm;
+        nextProps.getProjects();
+      }
       if (nextProps.auth.user !== prevState.user) {
         nextProps.getProjects();
         update.user = user;
@@ -35,9 +40,7 @@ class ProjectCardContainer extends Component {
 
     return Object.keys(update).length ? update : null;
   }
-  componentDidMount() {
-    this.props.getProjects();
-  }
+
   render() {
     var projects = [];
     var loading = true;
@@ -70,7 +73,9 @@ class ProjectCardContainer extends Component {
     } else if (projects.length === 0 && !loading) {
       projectsData = (
         <div className="testcase-grid">
-          <div className="testcase-container-no-content">There are no projects assigned to you</div>
+          <div className="testcase-container-no-content">
+            There are no projects assigned to you or none match search term
+          </div>
         </div>
       );
     } else {

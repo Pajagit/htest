@@ -3,10 +3,14 @@ import axios from "axios";
 import { GET_PROJECT, GET_PROJECTS, PROJECT_LOADING, GET_ERRORS } from "./types";
 
 // Get All Projects
-export const getProjects = () => dispatch => {
+export const getProjects = searchTerm => dispatch => {
+  var url = "/api/projects";
+  if (searchTerm) {
+    url = `/api/projects?search_term=${searchTerm}`;
+  }
   dispatch(projectLoading());
   axios
-    .get("/api/projects")
+    .get(url)
     .then(res =>
       dispatch({
         type: GET_PROJECTS,
