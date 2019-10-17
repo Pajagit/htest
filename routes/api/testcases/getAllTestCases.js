@@ -172,7 +172,7 @@ module.exports = Router({ mergeParams: true }).post(
                 testcasesObjArray.push(testcasesObj);
               }
 
-              testcasesRes.projects = testcasesObjArray;
+              testcasesRes.testcases = testcasesObjArray;
             });
             res.json(testcasesRes);
           } else {
