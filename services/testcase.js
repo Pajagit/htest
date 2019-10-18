@@ -26,9 +26,7 @@ module.exports = {
         requestObject.groups.forEach(group => {
           groupCondition =
             groupCondition +
-            ' and "testcases"."id" in (select "test_case_id" from "grouptestcases" where "group_id" =' +
-            group +
-            ")";
+            ` and "testcases"."id" in (select "test_case_id" from "grouptestcases" where "group_id" = ${group})`;
         });
       }
       if (requestObject.date_to) {
@@ -38,23 +36,15 @@ module.exports = {
         dateFromCondition = ` and "created_at" >= '${requestObject.date_from}'`;
       }
       if (requestObject.search_term.length > 0) {
-        searchTermCondition = ' and "title" ilike \'%' + requestObject.search_term + "%'";
+        searchTermCondition = ` and "title" ilike '%${requestObject.search_term}%'`;
       }
       if (requestObject.users.length > 0) {
-        userCondition = 'and "user_id" in (' + requestObject.users + ")";
+        userCondition = `and "user_id" in (${requestObject.users})`;
       }
       sequelize
         .query(
-          'select "id" from "testcases" where "deprecated" = false ' +
-            groupCondition +
-            userCondition +
-            dateToCondition +
-            dateFromCondition +
-            searchTermCondition +
-            'order by "created_at" desc offset ' +
-            page * pageSize +
-            " limit " +
-            pageSize,
+          `select "id" from "testcases" where "deprecated" = false ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition} order by "created_at" desc offset ${page *
+            pageSize} limit ${pageSize}`,
           { type: sequelize.QueryTypes.SELECT }
         )
         .then(testcases => {
@@ -66,12 +56,7 @@ module.exports = {
           }
           sequelize
             .query(
-              'select count("id") from "testcases" where "deprecated" = false ' +
-                groupCondition +
-                userCondition +
-                dateToCondition +
-                dateFromCondition +
-                searchTermCondition,
+              `select count("id") from "testcases" where "deprecated" = false ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition}`,
               { type: sequelize.QueryTypes.SELECT }
             )
             .then(count => {
