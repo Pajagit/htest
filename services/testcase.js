@@ -64,7 +64,19 @@ module.exports = {
               testcase_ids.push(testcase_id.id);
             });
           }
-          resolve({ ids: testcase_ids, count: testcases.length });
+          sequelize
+            .query(
+              'select count("id") from "testcases" where "deprecated" = false ' +
+                groupCondition +
+                userCondition +
+                dateToCondition +
+                dateFromCondition +
+                searchTermCondition,
+              { type: sequelize.QueryTypes.SELECT }
+            )
+            .then(count => {
+              resolve({ ids: testcase_ids, count: count[0].count });
+            });
         });
     });
   },
