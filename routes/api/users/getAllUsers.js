@@ -30,15 +30,20 @@ module.exports = Router({ mergeParams: true }).get(
         }
       ];
       if (req.query.has_testcases == "true") {
+        var whereCondition = {
+          deprecated: false
+        };
+        if (req.query.project_id) {
+          whereCondition.project_id = req.query.project_id;
+        }
         includeArray.push({
           model: TestCase,
-          where: {
-            deprecated: false
-          },
+          where: whereCondition,
           attributes: [],
           required: true
         });
       }
+
       User.findAll({
         attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "active", "last_login"],
 
