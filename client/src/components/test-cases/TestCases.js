@@ -188,7 +188,7 @@ class TestCases extends Component {
       this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = this.state.searchTerm;
+    testcase.search_term = "";
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
     this.props.editProjectSettings(this.props.match.params.projectId, { search_term: null });
