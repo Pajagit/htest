@@ -14,8 +14,8 @@ function ProjectPanelDropdownItem({ icon, title, active, link, settingsActive, o
   if (settingsActive) {
     linkOptions = options.map((option, index) => (
       <Link to={option.link} key={index}>
-        <div className={activeBtnClass}>
-          <div className="project-panel-items-btn-dropdown-icon">{option.icon}</div>
+        <div className={`${activeBtnClass}`}>
+          <div className="project-panel-items-btn-icon">{option.icon}</div>
 
           <div className={activeDropdownTitleClass}>{option.title}</div>
         </div>
@@ -31,7 +31,7 @@ function ProjectPanelDropdownItem({ icon, title, active, link, settingsActive, o
         <div className={activeTitleClass}>{title}</div>
         <div className="project-panel-items-btn-dropdown-icon float-right">{dropdownArrow}</div>
       </div>
-      <div> {linkOptions}</div>
+      <div className="project-panel-dropdown"> {linkOptions}</div>
     </div>
   );
 }

@@ -54,8 +54,12 @@ class ProjectPanel extends Component {
   componentDidMount() {
     var projectId = this.props.match.params.projectId;
     this.props.getProject(projectId);
-
-    if (this.props.match.url === `/${projectId}/TestCases`) {
+    if (
+      this.props.match.url === `/${projectId}/TestCases/Page/${this.props.match.params.page}` ||
+      this.props.match.path === `/:projectId/TestCase/:testcaseId` ||
+      this.props.match.path === "/:projectId/CreateTestCase" ||
+      this.props.match.path === "/:projectId/EditTestCase/:testcaseId"
+    ) {
       this.setState({ testcasesUrl: true, reportsUrl: false, statisticsUrl: false, settingsUrl: false });
     } else if (this.props.match.url === `/${projectId}/Reports`) {
       this.setState({ testcasesUrl: false, reportsUrl: true, statisticsUrl: false, settingsUrl: false });
@@ -109,7 +113,7 @@ class ProjectPanel extends Component {
             icon={<i className="fas fa-clipboard-list"></i>}
             title={"TEST CASES"}
             active={this.state.testcasesUrl}
-            link={`/${projectId}/TestCases`}
+            link={`/${projectId}/TestCases/Page/0`}
           />
           <ProjectPanelItem
             icon={<i className="fas fa-file-alt"></i>}

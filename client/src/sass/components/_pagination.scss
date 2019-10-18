@@ -1,0 +1,44 @@
+.pagination {
+  margin-left: 3.8rem;
+  padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+  position: fixed;
+  bottom: 0;
+  background-color: white;
+  box-shadow: 2px -2px 2px 0px rgba(221, 218, 239, 0.5);
+
+  &-items {
+    display: flex;
+    font-size: 1.2rem;
+    &--item {
+      background-color: #ffffff;
+      border: 1px solid rgb(243, 243, 243);
+
+      padding: 10px 16.4px;
+      cursor: pointer;
+      &:not(:last-child) {
+        margin-right: 2px;
+      }
+      &:hover {
+        background-color: #eceef9;
+        color: black;
+      }
+    }
+  }
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+.active-page {
+  cursor: default;
+  color: white;
+  background-color: #4d3cb5;
+}
+
+.disabled-page {
+  cursor: default !important;
+  pointer-events: none !important;
+  box-shadow: 0 0 0 0 !important;
+  color: rgb(233, 233, 233) !important;
+}

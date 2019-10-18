@@ -10,7 +10,7 @@
   grid-template-columns: repeat(auto-fit, 80px);
 
   width: 100%;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 0.3fr));
 }
 
 .projects-grid {
@@ -26,10 +26,11 @@
 
   width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(350px, 0.3fr));
-  justify-content: center;
+  // justify-content: center;
 }
 .testcase-container {
   padding-bottom: 3rem;
+  margin-bottom: 5rem;
   &-no-content {
     font-size: 1.8rem;
     font-style: italic;

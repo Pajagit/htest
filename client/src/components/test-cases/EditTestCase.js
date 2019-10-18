@@ -14,12 +14,15 @@ import Checkbox from "../common/Checkbox";
 import GlobalPanel from "../global-panel/GlobalPanel";
 import ProjectPanel from "../project-panel/ProjectPanel";
 import Header from "../common/Header";
+import Confirm from "../common/Confirm";
 import UnderlineAnchor from "../common/UnderlineAnchor";
 import SearchDropdown from "../common/SearchDropdown";
 import successToast from "../../toast/successToast";
 import failToast from "../../toast/failToast";
 
 import { getTestcase } from "../../actions/testcaseActions";
+import { setTestcaseDeprecated } from "../../actions/testcaseActions";
+
 import { editTestcase } from "../../actions/testcaseActions";
 import { getGroups } from "../../actions/groupsActions";
 import filterStringArray from "../../utility/filterStringArray";
@@ -136,7 +139,7 @@ class EditTestCase extends Component {
         if (nextProps.auth.user !== prevState.user) {
           var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
           if (!isValid) {
-            nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+            nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/Page/0`);
           }
         }
         update.isValid = isValid;
@@ -301,7 +304,26 @@ class EditTestCase extends Component {
       this.checkValidation();
     });
   }
-
+  confirmDeprecate = () => {
+    this.props.setTestcaseDeprecated(this.state.testcaseId, res => {
+      if (res.status === 200) {
+        this.props.history.push(`/${this.state.projectId}/TestCases/Page/0`);
+        successToast("Test case set as deprecated successfully");
+      } else {
+        this.props.getTestcase(this.state.testcaseId);
+        failToast(`Can not find Test Case with ${this.state.testcaseId} id`);
+      }
+    });
+  };
+  confirmModal = () => {
+    Confirm(
+      "Set this Test Case as deprecated?",
+      "You will not be able to see or edit this Test Case anymore",
+      "No",
+      "Delete",
+      this.confirmDeprecate
+    );
+  };
   render() {
     var content;
     if (isEmpty(this.props.testcases.testcase) || this.props.testcases.loading) {
@@ -309,6 +331,15 @@ class EditTestCase extends Component {
     } else {
       content = (
         <div className="main-content--content">
+          <div className="header">
+            <div className="header--title">Edit Test Case </div>
+            <div className="header--buttons">
+              <div className="header--buttons--primary"></div>
+              <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
+                <i className="fas fa-trash-alt"></i>
+              </div>
+            </div>
+          </div>
           <Input
             type="text"
             placeholder="Enter Test Case Name"
@@ -459,5 +490,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getTestcase, editTestcase, getGroups }
+  { getTestcase, editTestcase, getGroups, setTestcaseDeprecated }
 )(withRouter(EditTestCase));

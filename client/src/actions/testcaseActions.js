@@ -1,13 +1,18 @@
 import axios from "axios";
 
 import { GET_TESTCASE, GET_TESTCASES, TESTCASE_LOADING } from "./types";
+import isEmpty from "../validation/isEmpty";
 
 // Get All Test Cases
-export const getTestcases = (project_id, testCaseFilters) => dispatch => {
+export const getTestcases = (project_id, testCaseFilters, page) => dispatch => {
   dispatch(setTestCaseLoading());
 
+  if (isEmpty(page)) {
+    page = 0;
+  }
+  var page_size = 15;
   axios
-    .post(`/api/testcases?project_id=${project_id}`, testCaseFilters)
+    .post(`/api/testcases?project_id=${project_id}&page=${page}&page_size=${page_size}`, testCaseFilters)
     .then(res =>
       dispatch({
         type: GET_TESTCASES,

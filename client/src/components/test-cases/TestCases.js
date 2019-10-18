@@ -188,7 +188,7 @@ class TestCases extends Component {
       this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = this.state.searchTerm;
+    testcase.search_term = "";
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
     this.props.editProjectSettings(this.props.match.params.projectId, { search_term: null });
@@ -460,7 +460,12 @@ class TestCases extends Component {
     var addTestCase = "";
     if (this.state.isValidWrite) {
       addTestCase = (
-        <BtnAnchor type={"text"} label="Add New" className={"a-btn a-btn-primary"} link={`CreateTestCase`} />
+        <BtnAnchor
+          type={"text"}
+          label="Add New"
+          className={"a-btn a-btn-primary"}
+          link={`/${this.props.match.params.projectId}/CreateTestCase`}
+        />
       );
     }
 
@@ -472,7 +477,7 @@ class TestCases extends Component {
           <Header
             icon={<i className="fas fa-clipboard-list"></i>}
             title={"Test Cases"}
-            link={"CreateTestCase"}
+            // link={"CreateTestCase"}
             canGoBack={false}
             addBtn={addTestCase}
             filterBtn={

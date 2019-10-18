@@ -6,21 +6,15 @@ import { Link } from "react-router-dom";
 
 import GlobalPanel from "../global-panel/GlobalPanel";
 import ProjectPanel from "../project-panel/ProjectPanel";
-import UnderlineAnchor from "../common/UnderlineAnchor";
 import BtnAnchor from "../common/BtnAnchor";
 import Header from "../common/Header";
 import Spinner from "../common/Spinner";
 import openExternalBtn from "../../img/openExternalBtn.png";
 import Tag from "../common/Tag";
-import Btn from "../common/Btn";
-import successToast from "../../toast/successToast";
-import failToast from "../../toast/failToast";
-import Confirm from "../common/Confirm";
 
 import { testcasesPermissions, addTestcasesPermissions } from "../../permissions/TestcasePermissions";
 import isEmpty from "../../validation/isEmpty";
 import { getTestcase } from "../../actions/testcaseActions";
-import { setTestcaseDeprecated } from "../../actions/testcaseActions";
 
 class TestCase extends Component {
   constructor(props) {
@@ -53,7 +47,7 @@ class TestCase extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = nextProps.auth.user;
         if (!isValid) {
-          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/Page/0`);
         }
         update.isValid = isValid;
       }
@@ -68,27 +62,6 @@ class TestCase extends Component {
     this.setState({ testcaseId, projectId });
     this.props.getTestcase(testcaseId);
   }
-
-  confirmDeprecate = () => {
-    this.props.setTestcaseDeprecated(this.state.testcaseId, res => {
-      if (res.status === 200) {
-        this.props.history.push(`/${this.state.projectId}/TestCases`);
-        successToast("Test case set as deprecated successfully");
-      } else {
-        this.props.getTestcase(this.state.testcaseId);
-        failToast(`Can not find Test Case with ${this.state.testcaseId} id`);
-      }
-    });
-  };
-  confirmModal = () => {
-    Confirm(
-      "Set this Test Case as deprecated?",
-      "You will not be able to see or edit this Test Case anymore",
-      "No",
-      "Delete",
-      this.confirmDeprecate
-    );
-  };
 
   render() {
     var { testcase } = this.props.testcases;
@@ -113,9 +86,11 @@ class TestCase extends Component {
     if (this.state.isValidWrite) {
       actionBtns = (
         <div className="flex-column-left mt-4">
-          <BtnAnchor className="a-btn a-btn-primary mr-2" label="Add To Report" link={`/${projectId}/TestCases`} />
-          <Btn className="a-btn-outline a-btn-outline-primary mr-2" label="Remove" onClick={this.confirmModal}></Btn>
-          <UnderlineAnchor link={`/${projectId}/TestCases`} value={"Cancel"} />
+          <BtnAnchor
+            className="a-btn a-btn-primary mr-2"
+            label="Add To Report"
+            link={`/${projectId}/TestCases/Page/0`}
+          />
         </div>
       );
     }
@@ -128,7 +103,7 @@ class TestCase extends Component {
           <div className="testcase-details--header">
             <div className="testcase-details-container-top">
               <div className="testcase-details-header">
-                <div className="testcase-details-header--title">Test case name*</div>
+                <div className="testcase-details-header--title">Test case name</div>
                 <div className="testcase-details-header--value">{testcase.title}</div>
               </div>
               {editBtn}
@@ -137,11 +112,11 @@ class TestCase extends Component {
           <div className="testcase-details--body">
             <div className="testcase-details-container-bottom">
               <div className="testcase-details-item">
-                <div className="testcase-details-item--title">Description*</div>
+                <div className="testcase-details-item--title">Description</div>
                 <div className="testcase-details-item--value">{testcase.description}</div>
               </div>
               <div className="testcase-details-item">
-                <div className="testcase-details-item--title">Test Steps*</div>
+                <div className="testcase-details-item--title">Test Steps</div>
 
                 {testcase.test_steps.map((test_step, index) => (
                   <div className="testcase-details-item--value" key={index}>
@@ -153,11 +128,11 @@ class TestCase extends Component {
                 ))}
               </div>
               <div className="testcase-details-item">
-                <div className="testcase-details-item--title">Expected Result*</div>
+                <div className="testcase-details-item--title">Expected Result</div>
                 <div className="testcase-details-item--value">{testcase.expected_result}</div>
               </div>
               <div className="testcase-details-item">
-                <div className="testcase-details-item--title">Groups*</div>
+                <div className="testcase-details-item--title">Groups</div>
                 <div className="testcase-details-item--value">
                   {testcase.groups.map((group, index) => (
                     <span key={index}>
@@ -222,7 +197,7 @@ class TestCase extends Component {
             icon={<i className="fas fa-arrow-left"></i>}
             title={"Back to All Test Cases"}
             canGoBack={true}
-            link={`/${projectId}/TestCases`}
+            link={`/${projectId}/TestCases/Page/0`}
           />
           {content}
         </div>
@@ -242,5 +217,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getTestcase, setTestcaseDeprecated }
+  { getTestcase }
 )(withRouter(TestCase));
