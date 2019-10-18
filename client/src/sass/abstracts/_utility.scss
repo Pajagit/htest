@@ -37,6 +37,13 @@
   box-shadow: 0 0 0 0 !important;
 }
 
+.disabled-light {
+  opacity: 0.75 !important;
+  cursor: default !important;
+  pointer-events: none !important;
+  box-shadow: 0 0 0 0 !important;
+}
+
 input[type="file"] {
   display: none;
 }
