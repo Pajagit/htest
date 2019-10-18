@@ -1,13 +1,19 @@
 import axios from "axios";
 
+import isEmpty from "../validation/isEmpty";
+
 import { GET_USER, GET_USERS, USER_LOADING, GET_ERRORS } from "./types";
 
 // Get All Users
-export const getUsers = has_testcases => dispatch => {
+export const getUsers = (has_testcases, projectId) => dispatch => {
   dispatch(userLoading());
   var url = "/api/users";
   if (has_testcases) {
-    url = `/api/users?has_testcases=${has_testcases}`;
+    if (!isEmpty(projectId)) {
+      url = `/api/users?has_testcases=${has_testcases}&project_id=${projectId}`;
+    } else {
+      url = `/api/users?has_testcases=${has_testcases}`;
+    }
   }
   axios
     .get(url)

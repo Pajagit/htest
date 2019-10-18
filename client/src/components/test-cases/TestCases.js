@@ -96,7 +96,7 @@ class TestCases extends Component {
       var projectId = this.props.match.params.projectId;
       this.props.getGroups(projectId);
       var has_testcases = true;
-      this.props.getUsers(has_testcases);
+      this.props.getUsers(has_testcases, projectId);
       this.props.getProjectSettings(this.props.match.params.projectId);
     }
   }
