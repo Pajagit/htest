@@ -64,7 +64,7 @@ class TestCaseContainer extends Component {
     var pagination = "";
     if (testcases.testcases === null || loading || this.state.filters === null || settingsLoading) {
       content = <Spinner />;
-    } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 1) {
+    } else if (testcases.testcases.testcases.length > 0 && this.state.filters.view_mode === 1) {
       testcases = this.props.testcases.testcases;
       if (showPagination) {
         pagination = (
@@ -92,7 +92,7 @@ class TestCaseContainer extends Component {
             ></PortraitTestCase>
           </React.Fragment>
         ));
-    } else if (!isEmpty(testcases.testcases) && this.state.filters.view_mode === 2) {
+    } else if (testcases.testcases.testcases.length > 0 && this.state.filters.view_mode === 2) {
       testcases = this.props.testcases.testcases;
       testcases = this.props.testcases.testcases;
       if (showPagination) {
@@ -121,21 +121,21 @@ class TestCaseContainer extends Component {
             ></LandscapeTestCase>
           </React.Fragment>
         ));
-    } else if (
-      !isEmpty(this.state.settings && this.state.settings.users) ||
-      !isEmpty(this.state.settings && this.state.settings.groups) ||
-      (this.state.settings && this.state.settings.date_from !== null) ||
-      (this.state.settings && this.state.settings.date_to !== null)
-    ) {
-      content = (
-        <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>
-      );
     } else {
-      content = (
-        <div className="testcase-container-no-content padding">
-          There are no test cases created or none match the filters
-        </div>
-      );
+      if (
+        !isEmpty(this.state.settings && this.state.settings.settings.users) ||
+        !isEmpty(this.state.settings && this.state.settings.settings.groups) ||
+        (this.state.settings && this.state.settings.settings.date_from !== null) ||
+        (this.state.settings && this.state.settings.settings.date_to !== null)
+      ) {
+        content = (
+          <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>
+        );
+      } else {
+        content = (
+          <div className="testcase-container-no-content padding">There are no test cases created for this project</div>
+        );
+      }
     }
 
     return (

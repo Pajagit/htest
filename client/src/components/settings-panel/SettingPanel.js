@@ -15,11 +15,20 @@ class SettingPanel extends Component {
     };
   }
   componentDidMount() {
-    if (this.props.props.history.location.pathname === "/UserSettings") {
+    var pathName = this.props.props.history.location.pathname;
+    if (
+      pathName === "/UserSettings" ||
+      pathName === `/EditUser/${this.props.props.match.params.userId}` ||
+      pathName === "/AddUser"
+    ) {
       this.setState({ userSettingActive: true, projectSettingActive: false, deviceSettingActive: false });
-    } else if (this.props.props.history.location.pathname === "/ProjectSettings") {
+    } else if (
+      pathName === "/ProjectSettings" ||
+      pathName === `/EditProject/${this.props.props.match.params.projectId}` ||
+      pathName === "/CreateProject"
+    ) {
       this.setState({ userSettingActive: false, projectSettingActive: true, deviceSettingActive: false });
-    } else if (this.props.props.history.location.pathname === "/DeviceSettings") {
+    } else if (pathName === "/DeviceSettings") {
       this.setState({ userSettingActive: false, projectSettingActive: false, deviceSettingActive: true });
     }
   }

@@ -25,7 +25,6 @@ class ProjectCardContainer extends Component {
     var { user } = nextProps.auth;
     if (nextProps.auth && nextProps.auth.user) {
       if (nextProps.searchTerm !== prevState.searchTerm && nextProps.searchTerm === "") {
-        update.searchTerm = nextProps.searchTerm;
         nextProps.getProjects();
       }
       if (nextProps.auth.user !== prevState.user) {
@@ -36,6 +35,7 @@ class ProjectCardContainer extends Component {
       if (nextProps.projects && nextProps.projects.projects) {
         update.projects = nextProps.projects.projects;
       }
+      update.searchTerm = nextProps.searchTerm;
     }
 
     return Object.keys(update).length ? update : null;
@@ -71,13 +71,15 @@ class ProjectCardContainer extends Component {
         </div>
       );
     } else if (projects.length === 0 && !loading) {
-      projectsData = (
-        <div className="testcase-grid">
-          <div className="testcase-container-no-content">
-            There are no projects assigned to you or none match search term
-          </div>
-        </div>
-      );
+      if (this.state.searchTerm === null || this.state.searchTerm === "") {
+        projectsData = (
+          <div className="testcase-container-no-content padding">There are no projects assigned to you</div>
+        );
+      } else {
+        projectsData = (
+          <div className="testcase-container-no-content padding">There are no projects matching search term</div>
+        );
+      }
     } else {
       projectsData = <Spinner />;
     }

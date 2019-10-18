@@ -32,10 +32,10 @@ module.exports = {
         });
       }
       if (requestObject.date_to) {
-        dateToCondition = ' and "created_at" <=' + requestObject.date_to;
+        dateToCondition = ` and "created_at" <= '${requestObject.date_to}'`;
       }
       if (requestObject.date_from) {
-        dateFromCondition = ' and "created_at" >=' + requestObject.date_from;
+        dateFromCondition = ` and "created_at" >= '${requestObject.date_from}'`;
       }
       if (requestObject.search_term.length > 0) {
         searchTermCondition = ' and "title" ilike \'%' + requestObject.search_term + "%'";
