@@ -15,7 +15,7 @@ function GlobalPanelProfileImage({ img, onClick, linkStyle, onMouseEnter, onMous
             <img src={img} alt="Profile" className="global-panel-items--item-profile-image-options-parent"></img>
           </span>
           <span className={`long-text clickable ${btnStyle}`} onClick={onClick}>
-            Logout <i className="fas fa-sign-out-alt"></i>
+            <i className="fas fa-sign-out-alt"></i> Logout
           </span>
         </button>
       </div>

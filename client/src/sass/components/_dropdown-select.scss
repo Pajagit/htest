@@ -56,8 +56,10 @@
   }
 }
 #undefined-list {
-  border: 1px solid $color-primary-lightest;
+  // border: 1px solid $color-primary-lightest;
+  border: 1px solid #d1d1d1 !important;
   overflow-y: auto !important;
+  box-shadow: 1px 1px 1px 1px rgba(78, 59, 188, 0.1) !important;
 }
 .picky__dropdown {
   z-index: 101;

@@ -96,7 +96,9 @@ class TestCaseContainer extends Component {
       testcases = this.props.testcases.testcases;
       testcases = this.props.testcases.testcases;
       if (showPagination) {
-        pagination = <Pagination pageCount={pageCount} projectId={this.state.projectId} />;
+        pagination = (
+          <Pagination pageCount={pageCount} page={this.props.match.params.page} projectId={this.state.projectId} />
+        );
       }
       grid = "testcase-grid grid-none";
       content =

@@ -10,7 +10,10 @@
   width: 187px;
   background-color: #ffffff;
   box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
-
+  &-dropdown {
+    background-color: rgb(238, 238, 238);
+    border-radius: 4px;
+  }
   &-items {
     width: 100%;
     padding: 0 10px;
@@ -52,6 +55,7 @@
       display: flex;
       justify-content: left;
       align-items: center;
+      position: relative;
 
       color: $color-primary;
       padding: 5px 8px;
@@ -70,13 +74,12 @@
         width: 30px;
       }
       &-dropdown-icon {
-        margin-right: 8px;
-        width: 30px;
         font-size: 1.4rem;
       }
       &-dropdown-icon {
-        width: 40px;
         font-size: 1.8rem;
+        position: absolute;
+        right: 12px;
       }
 
       &-title {
@@ -88,7 +91,7 @@
         }
       }
       &-dropdown-title {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 400;
         color: #000;
         &-active {
