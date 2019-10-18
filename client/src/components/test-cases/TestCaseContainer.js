@@ -55,7 +55,7 @@ class TestCaseContainer extends Component {
     if (testcases.testcases) {
       pageCount = testcases.testcases.pages;
 
-      if (testcases.testcases.testcases.length >= 6) {
+      if (pageCount > 1) {
         showPagination = true;
       }
     }
