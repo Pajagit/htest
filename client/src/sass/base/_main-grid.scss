@@ -1,6 +1,10 @@
 .wrapper {
   display: grid;
+
   grid-template-columns: 8rem 19rem 1fr;
+  @media only screen and (max-width: $bp-600) {
+    grid-template-columns: 8rem 8rem 1fr;
+  }
 }
 
 .global-panel-grid {
