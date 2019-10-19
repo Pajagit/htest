@@ -54,6 +54,16 @@ input::-webkit-input-placeholder {
 }
 #search-input input[type="search"]:focus {
   width: 20rem;
+  @media only screen and (max-width: $bp-1000) {
+    width: 12rem;
+  }
+  @media only screen and (max-width: $bp-800) {
+    width: 18rem;
+  }
+  @media only screen and (max-width: $bp-600) {
+    width: 16rem;
+  }
+
   padding-left: 3.2rem;
   color: #000;
   background-color: #dce0e4;

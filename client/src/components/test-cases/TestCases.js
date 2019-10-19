@@ -6,7 +6,7 @@ import { createSelector } from "reselect";
 
 import GlobalPanel from "../global-panel/GlobalPanel";
 import ProjectPanel from "../project-panel/ProjectPanel";
-import BtnAnchor from "../common/BtnAnchor";
+import BtnAnchorResponsive from "../common/BtnAnchorResponsive";
 import FilterBtn from "../common/FilterBtn";
 import Header from "../common/Header";
 import SearchBtn from "../common/SearchBtn";
@@ -485,10 +485,10 @@ class TestCases extends Component {
     var addTestCase = "";
     if (this.state.isValidWrite) {
       addTestCase = (
-        <BtnAnchor
+        <BtnAnchorResponsive
           type={"text"}
           label="Add New"
-          className={"a-btn a-btn-primary"}
+          className={"a-btn-responsive a-btn-primary"}
           link={`/${this.props.match.params.projectId}/CreateTestCase`}
         />
       );

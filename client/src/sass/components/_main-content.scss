@@ -27,7 +27,13 @@
       &-value {
         margin-left: 1.5rem;
       }
+      @media only screen and (max-width: $bp-800) {
+        &-value {
+          display: none;
+        }
+      }
     }
+
     &-buttons {
       display: flex;
       align-content: center;
