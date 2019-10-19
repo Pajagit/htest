@@ -18,30 +18,31 @@ class TestCaseContainer extends Component {
     this.state = {
       settings: {},
       filters: this.props.settings.settings,
+      testcases: this.props.testcases.testcases,
       projectId: null,
-      page: this.props.match.params.page
+      page: 0
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    var projectId = nextProps.match.params.projectId;
     if (nextProps.settings && nextProps.settings.settings) {
       if (nextProps.settings.settings !== prevState.filters) {
         update.filters = nextProps.settings.settings;
-        if (prevState.filters === null || prevState.projectId === null) {
-          update.projectId = projectId;
-          nextProps.getTestcases(projectId, nextProps.settings.settings, nextProps.match.params.page);
-        }
       }
       update.settings = nextProps.settings;
     }
 
-    if (nextProps.match.params.page !== prevState.page) {
-      update.page = nextProps.match.params.page;
-      nextProps.getTestcases(projectId, nextProps.settings.settings, nextProps.match.params.page);
+    if (nextProps.testcases && nextProps.testcases.testcases) {
+      update.testcases = nextProps.testcases.testcases;
+      if (nextProps.testcases.testcases.page !== prevState.page) {
+        update.page = nextProps.testcases.testcases.page;
+      }
     }
     return Object.keys(update).length ? update : null;
+  }
+  componentDidMount() {
+    this.props.getTestcases(this.props.match.params.projectId, this.state.settings.settings, 0);
   }
 
   render() {
@@ -72,7 +73,7 @@ class TestCaseContainer extends Component {
             pageCount={pageCount}
             page={this.state.page}
             searchTerm={this.state.searchTerm}
-            projectId={this.state.projectId}
+            projectId={projectId}
           />
         );
       }
@@ -106,7 +107,7 @@ class TestCaseContainer extends Component {
             pageCount={pageCount}
             page={this.state.page}
             searchTerm={this.state.searchTerm}
-            projectId={this.state.projectId}
+            projectId={projectId}
           />
         );
       }

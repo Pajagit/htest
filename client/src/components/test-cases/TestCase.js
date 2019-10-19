@@ -47,7 +47,7 @@ class TestCase extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = nextProps.auth.user;
         if (!isValid) {
-          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/Page/0`);
+          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
         }
         update.isValid = isValid;
       }
@@ -86,11 +86,7 @@ class TestCase extends Component {
     if (this.state.isValidWrite) {
       actionBtns = (
         <div className="flex-column-left mt-4">
-          <BtnAnchor
-            className="a-btn a-btn-primary mr-2"
-            label="Add To Report"
-            link={`/${projectId}/TestCases/Page/0`}
-          />
+          <BtnAnchor className="a-btn a-btn-primary mr-2" label="Add To Report" link={`/${projectId}/TestCases`} />
         </div>
       );
     }
@@ -197,7 +193,7 @@ class TestCase extends Component {
             icon={<i className="fas fa-arrow-left"></i>}
             title={"Back to All Test Cases"}
             canGoBack={true}
-            link={`/${projectId}/TestCases/Page/0`}
+            link={`/${projectId}/TestCases`}
           />
           {content}
         </div>

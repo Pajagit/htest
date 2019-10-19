@@ -59,7 +59,7 @@ class EditUser extends Component {
     var userId = this.props.match.params.userId;
     this.setState({ userId });
     this.props.getUser(userId);
-    this.props.getProjects();
+    this.props.getProjects("", 0);
     this.props.getRoles();
   }
 
@@ -92,15 +92,16 @@ class EditUser extends Component {
     if (nextProps.roles.roles !== prevState.roles) {
       update.roles = roles;
     }
-    var { projects } = nextProps.projects;
-    if (nextProps.projects && nextProps.projects.projects) {
+
+    if (nextProps.projects && nextProps.projects.projects && nextProps.projects.projects.projects) {
+      var { projects } = nextProps.projects.projects.projects;
       update.projects = projects;
 
-      var avaliableProjects = nextProps.projects.projects;
+      var avaliableProjects = nextProps.projects.projects.projects;
 
       if (nextProps.users.user && nextProps.users.user.projects) {
         user.projects.forEach(project => {
-          if (checkIfElemInObjInArray(nextProps.projects.projects, project.id)) {
+          if (checkIfElemInObjInArray(nextProps.projects.projects.projects, project.id)) {
             avaliableProjects = removeObjFromArray(avaliableProjects, project);
           }
         });

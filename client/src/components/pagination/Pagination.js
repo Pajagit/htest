@@ -35,8 +35,6 @@ class Pagination extends Component {
     return Object.keys(update).length ? update : null;
   }
   newPage(e) {
-    console.log(e);
-
     var page = 0;
     var currentPage = this.props.page;
     if (e === 0) {
@@ -57,7 +55,6 @@ class Pagination extends Component {
     }
   }
   newPagePredefined(e) {
-    console.log(e.target.textContent);
     var page = 0;
     if (!isNaN(e.target.textContent)) {
       page = parseInt(e.target.textContent) - 1;
