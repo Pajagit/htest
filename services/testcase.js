@@ -119,6 +119,7 @@ module.exports = {
           testcasesRes = {};
           testcasesRes.testcases = [];
           testcasesRes.pages = Math.ceil(testCaseIds.count / pageSize);
+          testcasesRes.page = Number(page);
           var testcasesObjArray = [];
           testcases.forEach(testcase => {
             var inFilteredGroup = true;
