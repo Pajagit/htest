@@ -24,6 +24,9 @@
     font-size: 2rem;
     text-align: center;
     color: $color-primary-lightest;
+    @media only screen and (max-width: $bp-600) {
+      padding: 0 1.5rem;
+    }
     &-header {
       display: flex;
       align-content: center;
@@ -77,12 +80,18 @@
       &-icon {
         margin-right: 1rem;
         width: 3rem;
+        @media only screen and (max-width: $bp-600) {
+          margin-right: 0;
+        }
       }
 
       &-dropdown-icon {
         font-size: 1.8rem;
         position: absolute;
         right: 1.2rem;
+        @media only screen and (max-width: $bp-600) {
+          right: 0.5rem;
+        }
       }
 
       &-title {
@@ -118,6 +127,7 @@
         justify-content: left;
         align-items: center;
         background-color: #ffffff;
+        margin-right: 0.5rem;
 
         font-weight: 600;
       }
