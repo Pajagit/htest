@@ -1,11 +1,12 @@
 input[type="search"] {
   -webkit-appearance: textfield;
   -webkit-box-sizing: content-box;
+  box-sizing: content-box;
   font-family: inherit;
   font-size: 1.4rem;
   color: #000000;
   letter-spacing: 0.17px;
-  line-height: 18px;
+  line-height: 1.8rem;
 }
 input::-webkit-search-decoration,
 input::-webkit-search-cancel-button {
@@ -15,9 +16,9 @@ input::-webkit-search-cancel-button {
 input[type="search"] {
   box-shadow: none !important;
   border: 1px solid #e7ebef !important;
-  background: #ffffff url(https://i.ibb.co/ypt6tXb/output-onlinepngtools-8.png) no-repeat 8px center;
-  padding: 3px 18px;
-  width: 55px;
+  background: #ffffff url(https://i.ibb.co/ypt6tXb/output-onlinepngtools-8.png) no-repeat 0.8rem center;
+  padding: 0.3rem 1.8rem;
+  width: 5.5rem;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
@@ -27,21 +28,12 @@ input[type="search"] {
   transition: all 0.5s;
 }
 input[type="search"]:focus {
-  width: 135px;
+  width: 13.5rem;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
 }
-
-// input[type="search"]:focus + input::-webkit-search-decoration,
-// input::-webkit-search-cancel-button {
-//   display: inline-block !important;
-// }
-// input[type="search"]:hover + input::-webkit-search-decoration,
-// input::-webkit-search-cancel-button {
-//   display: none !important;
-// }
 
 input:-moz-placeholder {
   color: #999;
@@ -51,8 +43,8 @@ input::-webkit-input-placeholder {
 }
 
 #search-input input[type="search"] {
-  width: 15px;
-  padding-left: 8px;
+  width: 1.5rem;
+  padding-left: 0.8rem;
   color: transparent;
   cursor: pointer;
 }
@@ -60,8 +52,8 @@ input::-webkit-input-placeholder {
   background-color: #e7ebef;
 }
 #search-input input[type="search"]:focus {
-  width: 200px;
-  padding-left: 32px;
+  width: 20rem;
+  padding-left: 3.2rem;
   color: #000;
   background-color: #dce0e4;
   cursor: auto;

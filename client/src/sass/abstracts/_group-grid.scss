@@ -6,11 +6,11 @@
   justify-self: center;
   align-items: center;
 
-  grid-template-columns: repeat(auto-fill, 80px);
-  grid-template-columns: repeat(auto-fit, 80px);
+  grid-template-columns: repeat(auto-fill, 8rem);
+  grid-template-columns: repeat(auto-fit, 8rem);
 
   width: 100%;
-  grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(13.8rem, 1fr));
   margin-bottom: 1.8rem;
 }
 .group-grid > .switch-element {

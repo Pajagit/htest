@@ -25,16 +25,16 @@
     &--title {
       margin-bottom: 1rem;
       color: #9b9b9b;
-      font-size: 14px;
+      font-size: 1.4rem;
       letter-spacing: 0.17px;
-      line-height: 18px;
+      line-height: 1.8rem;
     }
     &--value {
       color: #000000;
-      font-size: 14px;
-      line-height: 23px;
+      font-size: 1.4rem;
+      line-height: 2.3rem;
       &-img {
-        width: 18px;
+        width: 1.8rem;
       }
     }
   }
@@ -42,27 +42,27 @@
     &--title {
       margin-bottom: 1rem;
       color: #9b9b9b;
-      font-size: 14px;
+      font-size: 1.4rem;
       letter-spacing: 0.17px;
-      line-height: 18px;
+      line-height: 1.8rem;
     }
     &--value {
-      font-size: 16px;
+      font-size: 1.6rem;
       font-weight: 500;
       letter-spacing: 0.2px;
-      line-height: 20px;
+      line-height: 2rem;
     }
   }
   &-button {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 1.4rem;
     &-title {
       margin-right: 1.5rem;
       color: #9b9b9b;
 
       letter-spacing: 0.17px;
-      line-height: 18px;
+      line-height: 1.8rem;
     }
     &-icon {
       color: $color-primary;

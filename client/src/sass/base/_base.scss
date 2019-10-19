@@ -6,9 +6,26 @@
   box-sizing: inherit;
 }
 
+// RESPONSIVE BREAKPOINTS
+$bp-1600: 100em; // 1600
+$bp-1400: 87.5em; // 1400px
+$bp-1200: 75em; // 1200px
+$bp-1000: 62.5em; // 1000px
+$bp-800: 50em; // 800px;
+$bp-600: 37.5em; // 600px;
+
 html {
   // This defines what 1rem is
   font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
+  @media only screen and (max-width: $bp-1200) {
+    font-size: 56.25%;
+  }
+  @media only screen and (max-width: $bp-800) {
+    font-size: 50%;
+  }
+  @media only screen and (max-width: $bp-600) {
+    font-size: 38.5%;
+  }
 }
 
 body {

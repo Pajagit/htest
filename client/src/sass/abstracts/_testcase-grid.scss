@@ -6,11 +6,26 @@
   display: grid;
   grid-gap: 1rem;
 
-  grid-template-columns: repeat(auto-fill, 80px);
-  grid-template-columns: repeat(auto-fit, 80px);
+  grid-template-columns: repeat(auto-fill, 8rem);
+  grid-template-columns: repeat(auto-fit, 8rem);
 
   width: 100%;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 0.3fr));
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 0.33fr));
+  @media only screen and (max-width: $bp-1600) {
+    grid-template-columns: repeat(auto-fit, minmax(32rem, 0.33fr));
+  }
+  @media only screen and (max-width: $bp-1400) {
+    grid-template-columns: repeat(auto-fit, minmax(27.2rem, 0.33fr));
+  }
+  @media only screen and (max-width: $bp-1200) {
+    grid-template-columns: repeat(auto-fit, minmax(35rem, 0.5fr));
+  }
+  @media only screen and (max-width: $bp-1000) {
+    grid-template-columns: repeat(auto-fit, minmax(25.6rem, 0.5fr));
+  }
+  @media only screen and (max-width: $bp-800) {
+    grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+  }
 }
 
 .projects-grid {
@@ -21,12 +36,27 @@
   display: grid;
   grid-gap: 1rem;
 
-  grid-template-columns: repeat(auto-fill, 80px);
-  grid-template-columns: repeat(auto-fit, 80px);
+  grid-template-columns: repeat(auto-fill, 8rem);
+  grid-template-columns: repeat(auto-fit, 8rem);
 
   width: 100%;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 0.3fr));
-  // justify-content: center;
+
+  grid-template-columns: repeat(auto-fit, minmax(35rem, 0.33fr));
+  @media only screen and (max-width: $bp-1600) {
+    grid-template-columns: repeat(auto-fit, minmax(35rem, 0.33fr));
+  }
+  @media only screen and (max-width: $bp-1400) {
+    grid-template-columns: repeat(auto-fit, minmax(31rem, 0.33fr));
+  }
+  @media only screen and (max-width: $bp-1200) {
+    grid-template-columns: repeat(auto-fit, minmax(35rem, 0.5fr));
+  }
+  @media only screen and (max-width: $bp-1000) {
+    grid-template-columns: repeat(auto-fit, minmax(31rem, 0.5fr));
+  }
+  @media only screen and (max-width: $bp-800) {
+    grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+  }
 }
 .testcase-container {
   padding-bottom: 3rem;
@@ -41,10 +71,10 @@
   padding: 2.4rem 3.8rem;
   &-title {
     color: #000000;
-    font-size: 16px;
+    font-size: 1.6rem;
     font-weight: 500;
     letter-spacing: 0.2px;
-    line-height: 20px;
+    line-height: 2rem;
     margin-bottom: 2rem;
   }
   &-items {
@@ -74,19 +104,19 @@
 
       &--header {
         color: #000000;
-        font-size: 16px;
+        font-size: 1.6rem;
         font-weight: 500;
         letter-spacing: 0.2px;
-        line-height: 20px;
+        line-height: 2rem;
         border-bottom: 1px solid rgb(241, 241, 241);
-        padding: 8px 15px;
+        padding: 0.8rem 1.5rem;
       }
       &--value {
         color: #000000;
-        font-size: 16px;
+        font-size: 1.6rem;
         letter-spacing: 0.2px;
-        line-height: 20px;
-        padding: 8px 15px;
+        line-height: 2rem;
+        padding: 0.8rem 1.5rem;
         border-bottom: 1px solid rgb(241, 241, 241);
 
         &-title {
@@ -97,17 +127,17 @@
             background-color: #eceef9;
           }
           &-img {
-            height: 3px;
+            height: 0.3rem;
           }
           &--img > img {
-            height: 45px;
-            width: 45px;
+            height: 4.5rem;
+            width: 4.5rem;
             border-radius: 50%;
             border: 1px solid rgb(224, 224, 224);
-            padding: 2px;
+            padding: 0.2rem;
           }
           &--name {
-            margin-left: 10px;
+            margin-left: 1rem;
           }
         }
       }

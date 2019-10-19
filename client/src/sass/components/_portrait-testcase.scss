@@ -4,22 +4,22 @@
     background-color: #eceef9;
   }
   display: flex;
-  min-height: 300px;
+  min-height: 30rem;
   flex-direction: column;
   background-color: #ffffff;
   box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
 
   &-top {
     &-container {
-      padding: 15px 20px;
+      padding: 1.5rem 2rem;
       box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
       &--title {
         font-weight: 500;
-        padding-bottom: 13px;
-        font-size: 16px;
+        padding-bottom: 1.3rem;
+        font-size: 1.6rem;
         font-weight: 500;
         letter-spacing: 0.2px;
-        line-height: 23px;
+        line-height: 2.3rem;
       }
       &--tags {
         &:after {
@@ -27,43 +27,43 @@
           display: block;
           clear: both;
         }
-        margin-bottom: 13px;
+        margin-bottom: 1.3rem;
       }
 
       &--author {
-        padding-bottom: 5px;
+        padding-bottom: 0.5rem;
         color: #4a4a4a;
-        font-size: 14px;
+        font-size: 1.4rem;
         letter-spacing: 0.17px;
-        line-height: 18px;
+        line-height: 1.8rem;
       }
       &--date {
         color: #8a94a3;
-        font-size: 12px;
+        font-size: 1.2rem;
         letter-spacing: 0.15px;
-        line-height: 15px;
+        line-height: 1.5rem;
       }
     }
   }
 
   &-bottom {
-    padding: 15px 20px;
+    padding: 1.5rem 2rem;
     &-container {
       &--description {
-        max-height: 140px;
+        max-height: 14rem;
         overflow: hidden;
         color: #000000;
-        font-size: 14px;
+        font-size: 1.4rem;
         letter-spacing: 0.17px;
-        line-height: 18px;
-        // padding-bottom: 20px;
-        margin-bottom: 50px;
+        line-height: 1.8rem;
+
+        margin-bottom: 5rem;
       }
       &--button {
         position: absolute;
-        bottom: 20px;
-        left: 20px;
-        margin-top: 20px;
+        bottom: 2rem;
+        left: 2rem;
+        margin-top: 2rem;
       }
     }
   }

@@ -13,10 +13,10 @@
       background-color: #ffffff;
       border: 1px solid rgb(243, 243, 243);
 
-      padding: 10px 16.4px;
+      padding: 1rem 1.64rem;
       cursor: pointer;
       &:not(:last-child) {
-        margin-right: 2px;
+        margin-right: 0.2rem;
       }
       &:hover {
         background-color: #eceef9;
