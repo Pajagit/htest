@@ -14,7 +14,7 @@ const paginate = require("../utils/pagination").paginate;
 const getLocalTimestamp = require("../utils/dateFunctions").getLocalTimestamp;
 
 module.exports = {
-  getTestcasesIds: async function(whereStatement, page, pageSize, requestObject) {
+  getTestcasesIds: async function(project_id, page, pageSize, requestObject) {
     return new Promise((resolve, reject) => {
       groupCondition = " ";
       userCondition = " ";
@@ -43,7 +43,7 @@ module.exports = {
       }
       sequelize
         .query(
-          `select "id" from "testcases" where "deprecated" = false ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition} order by "created_at" desc offset ${page *
+          `select "id" from "testcases" where "deprecated" = false and "project_id"=${project_id} ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition} order by "created_at" desc offset ${page *
             pageSize} limit ${pageSize}`,
           { type: sequelize.QueryTypes.SELECT }
         )
@@ -56,7 +56,7 @@ module.exports = {
           }
           sequelize
             .query(
-              `select count("id") from "testcases" where "deprecated" = false ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition}`,
+              `select count("id") from "testcases" where "deprecated" = false and "project_id"=${project_id} ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition}`,
               { type: sequelize.QueryTypes.SELECT }
             )
             .then(count => {
@@ -119,6 +119,7 @@ module.exports = {
           testcasesRes = {};
           testcasesRes.testcases = [];
           testcasesRes.pages = Math.ceil(testCaseIds.count / pageSize);
+          testcasesRes.page = Number(page);
           var testcasesObjArray = [];
           testcases.forEach(testcase => {
             var inFilteredGroup = true;

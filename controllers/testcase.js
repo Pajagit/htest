@@ -64,7 +64,7 @@ module.exports = {
       whereStatement.project_id = req.query.project_id;
       whereStatement.deprecated = false;
 
-      var testCaseIds = await TestcaseService.getTestcasesIds(whereStatement, page, pageSize, requestObject);
+      var testCaseIds = await TestcaseService.getTestcasesIds(req.query.project_id, page, pageSize, requestObject);
 
       whereStatement.id = {
         [Op.in]: testCaseIds.ids

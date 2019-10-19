@@ -39,7 +39,7 @@ class Groups extends Component {
       );
 
       if (!isValid) {
-        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/Page/0`);
+        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
       }
     }
     return Object.keys(update).length ? update : null;

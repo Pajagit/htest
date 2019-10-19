@@ -43,7 +43,7 @@ class ProjectSettings extends Component {
   }
 
   componentDidMount() {
-    this.props.getProjects();
+    this.props.getProjects("", 0);
   }
   render() {
     var { projects, loading } = this.props.projects;
@@ -51,7 +51,7 @@ class ProjectSettings extends Component {
     if (projects === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(projects)) {
-      content = projects.map((project, index) => (
+      content = projects.projects.map((project, index) => (
         <ListItem
           key={index}
           title={project.title}

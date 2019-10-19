@@ -198,36 +198,51 @@ module.exports = {
           [Op.iLike]: "%" + search_term + "%"
         };
       }
-      Project.findAll({
-        attributes: [
-          "id",
-          "title",
-          "description",
-          "started_at",
-          "ended_at",
-          "image_url",
-          "project_manager",
-          "url",
-          "jira_url"
-        ],
+      Project.findAndCountAll({
+        attributes: ["id"],
         where: whereStatement,
-        include: [
-          {
-            model: User,
-            attributes: ["id", "first_name", "last_name", "email"],
-            through: {
-              attributes: ["role_id"]
-            },
-            as: "users",
-            required: false
-          }
-        ],
-        order: [["id", "DESC"], [User, "id", "ASC"]]
-      })
-        .then(projects => {
-          resolve(projects);
+        ...paginate({ page, pageSize }),
+        order: [["id", "DESC"]]
+      }).then(project_ids => {
+        var ids = [];
+        project_ids.rows.forEach(row => {
+          ids.push(row.id);
+        });
+        var pages = Math.ceil(project_ids.count / pageSize);
+        whereStatement.id = {
+          [Op.in]: ids
+        };
+        Project.findAll({
+          attributes: [
+            "id",
+            "title",
+            "description",
+            "started_at",
+            "ended_at",
+            "image_url",
+            "project_manager",
+            "url",
+            "jira_url"
+          ],
+          where: whereStatement,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "first_name", "last_name", "email"],
+              through: {
+                attributes: ["role_id"]
+              },
+              as: "users",
+              required: false
+            }
+          ],
+          order: [["id", "DESC"], [User, "id", "ASC"]]
         })
-        .catch(err => console.log(err));
+          .then(projects => {
+            resolve({ projects, pages, page: Number(page) });
+          })
+          .catch(err => console.log(err));
+      });
     });
   },
   getProjectById: async function(id) {

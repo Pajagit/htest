@@ -55,7 +55,7 @@ class ProjectPanel extends Component {
     var projectId = this.props.match.params.projectId;
     this.props.getProject(projectId);
     if (
-      this.props.match.url === `/${projectId}/TestCases/Page/${this.props.match.params.page}` ||
+      this.props.match.url === `/${projectId}/TestCases` ||
       this.props.match.path === `/:projectId/TestCase/:testcaseId` ||
       this.props.match.path === "/:projectId/CreateTestCase" ||
       this.props.match.path === "/:projectId/EditTestCase/:testcaseId"
@@ -113,7 +113,7 @@ class ProjectPanel extends Component {
             icon={<i className="fas fa-clipboard-list"></i>}
             title={"TEST CASES"}
             active={this.state.testcasesUrl}
-            link={`/${projectId}/TestCases/Page/0`}
+            link={`/${projectId}/TestCases`}
           />
           <ProjectPanelItem
             icon={<i className="fas fa-file-alt"></i>}

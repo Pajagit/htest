@@ -43,7 +43,7 @@ class Projects extends Component {
   };
 
   triggerChange = e => {
-    this.props.getProjects(this.state.searchTerm);
+    this.props.getProjects(this.state.searchTerm, 0);
   };
 
   render() {

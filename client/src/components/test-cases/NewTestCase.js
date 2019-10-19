@@ -74,7 +74,7 @@ class NewTestCase extends Component {
       if (nextProps.auth.user !== prevState.user) {
         var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
         if (!isValid) {
-          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases/Page/0`);
+          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
         }
       }
       update.isValid = isValid;
@@ -269,7 +269,7 @@ class NewTestCase extends Component {
           <Header
             icon={<i className="fas fa-arrow-left"></i>}
             title={"Back to All Test Cases"}
-            link={`/${this.state.projectId}/TestCases/Page/0`}
+            link={`/${this.state.projectId}/TestCases`}
             canGoBack={true}
           />
           <div className="main-content--content">
