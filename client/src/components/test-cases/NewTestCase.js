@@ -366,12 +366,12 @@ class NewTestCase extends Component {
 
               <div className="flex-column-left mt-4">
                 <Btn
-                  className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
+                  className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1`}
                   label="Save Test Case"
                   type="text"
                   onClick={e => this.submitForm(e)}
                 />
-                <Btn className="btn btn-primary mr-2" label="Add To Report" type="text" />
+                <Btn className="btn btn-primary mr-2 mb-1" label="Add To Report" type="text" />
                 <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
               </div>
               <Checkbox
