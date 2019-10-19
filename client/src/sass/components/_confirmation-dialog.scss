@@ -1,7 +1,7 @@
 .confirmation-dialog {
   text-align: center;
-  width: 500px;
-  padding: 40px;
+  width: 50rem;
+  padding: 4rem;
   background: #ffffff;
   box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
   color: #000;
@@ -18,13 +18,13 @@
     display: flex;
     justify-content: center;
     &--reject {
-      width: 150px;
-      padding: 10px;
+      width: 15rem;
+      padding: 1rem;
       border: 1px solid #fff;
-      border-radius: 3px;
-      margin: 10px;
+      border-radius: 4px;
+      margin: 1rem;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 1.4rem;
       color: #fff;
       background-color: $color-primary;
 
@@ -34,14 +34,14 @@
       }
     }
     &--confirm {
-      width: 150px;
-      padding: 10px;
+      width: 15rem;
+      padding: 1rem;
       border: 1px solid #fff;
       border-radius: 3px;
-      margin: 10px;
+      margin: 1rem;
       cursor: pointer;
       color: #fff;
-      font-size: 14px;
+      font-size: 1.4rem;
       background-color: $color-primary;
 
       &:hover {

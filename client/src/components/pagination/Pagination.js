@@ -46,6 +46,7 @@ class Pagination extends Component {
     if (!isNaN(this.state.pageCount)) {
       pageCount = parseInt(this.state.pageCount);
     }
+    var link = "";
 
     var backPageBtn = 0;
     var backPageBtnClass = "";
@@ -76,12 +77,14 @@ class Pagination extends Component {
     var counter = 0;
     var content = [];
 
+    if (this.props.match.path === "/:projectId/TestCases/Page/:page") {
+      link = `/${this.props.projectId}/TestCases/Page/`;
+    }
+
     while (counter < this.state.pageCount) {
       content.push(
-        <Link key={counter} to={`/${this.props.projectId}/TestCases/Page/${counter}`}>
-          <div className={`pagination-items--item ${parseInt(this.props.page) === counter ? "active-page" : ""}`}>
-            {counter + 1}
-          </div>
+        <Link key={counter} to={`${link}${counter}`}>
+          <div className={`pagination-items--item ${currentPage === counter ? "active-page" : ""}`}>{counter + 1}</div>
         </Link>
       );
       counter++;
@@ -89,23 +92,23 @@ class Pagination extends Component {
     return (
       <div className="pagination">
         <div className="pagination-items">
-          <Link to={`/${this.props.projectId}/TestCases/Page/${firstPageBtn}`} className={firstPageBtnClass}>
+          <Link to={`${link}${firstPageBtn}`} className={firstPageBtnClass}>
             <div className="pagination-items--item">
               <i className="fas fa-backward"></i>
             </div>
           </Link>
-          <Link to={`/${this.props.projectId}/TestCases/Page/${backPageBtn}`} className={backPageBtnClass}>
+          <Link to={`${link}${backPageBtn}`} className={backPageBtnClass}>
             <div className="pagination-items--item">
               <i className="fas fa-step-backward"></i>
             </div>
           </Link>
           {content}
-          <Link to={`/${this.props.projectId}/TestCases/Page/${forwardPageBtn}`} className={forwardPageBtnClass}>
+          <Link to={`${link}${forwardPageBtn}`} className={forwardPageBtnClass}>
             <div className="pagination-items--item">
               <i className="fas fa-step-forward"></i>
             </div>
           </Link>
-          <Link to={`/${this.props.projectId}/TestCases/Page/${lastPageBtn}`} className={lastPageBtnClass}>
+          <Link to={`${link}${lastPageBtn}`} className={lastPageBtnClass}>
             <div className="pagination-items--item">
               <i className="fas fa-forward"></i>
             </div>

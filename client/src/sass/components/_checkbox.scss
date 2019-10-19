@@ -1,6 +1,6 @@
 .container {
   position: relative;
-  padding-left: 25px;
+  padding-left: 2.5rem;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -26,8 +26,8 @@
   position: absolute;
   top: -3px;
   left: 0;
-  height: 14px;
-  width: 14px;
+  height: 1.4rem;
+  width: 1.4rem;
   background-color: $inactive-element;
   border-radius: 2px;
 }
@@ -56,10 +56,10 @@
 
 /* Style the checkmark/indicator */
 .container .checkmark:after {
-  left: 5px;
-  top: 1.5px;
-  width: 4px;
-  height: 9px;
+  left: 0.5rem;
+  top: 0.15rem;
+  width: 0.4rem;
+  height: 0.9rem;
   border: solid white;
   border-width: 0 2px 2px 0;
   -webkit-transform: rotate(45deg);

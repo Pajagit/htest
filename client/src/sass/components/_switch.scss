@@ -1,28 +1,28 @@
-/* The switch - the box around the slider */
 .switch-element {
   display: flex;
   flex-direction: column;
   &--label {
     font-size: $font-size-default;
-    padding-bottom: 5px;
-    // font-weight: 600;
+    padding-bottom: 0.5rem;
+    max-width: 13.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 20px;
+  width: 5rem;
+  height: 2rem;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -38,10 +38,10 @@
 .slider:before {
   position: absolute;
   content: "";
-  height: 12px;
-  width: 12px;
-  left: 4px;
-  bottom: 4px;
+  height: 1.2rem;
+  width: 1.2rem;
+  left: 0.4rem;
+  bottom: 0.4rem;
   background-color: white;
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -56,14 +56,13 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(30px);
-  -ms-transform: translateX(30px);
-  transform: translateX(30px);
+  -webkit-transform: translateX(3rem);
+  -ms-transform: translateX(3rem);
+  transform: translateX(3rem);
 }
 
-/* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+  border-radius: 3.4rem;
 }
 
 .slider.round:before {

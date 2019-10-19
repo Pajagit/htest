@@ -62,6 +62,7 @@ class Landing extends Component {
               buttonText="Sign in with Google"
               onSuccess={this.responseGoogle}
               onFailure={this.responseGoogle}
+              className={"login-btn"}
               redirectUri={"/Projects"}
               prompt={"consent"}
               ux_mode="redirect"

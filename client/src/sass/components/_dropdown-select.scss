@@ -4,7 +4,7 @@
   &--icon {
     position: absolute;
     top: 25%;
-    left: 15px;
+    left: 1.5rem;
     width: 5rem;
     height: 100%;
     font-size: $font-size-default;
@@ -24,12 +24,12 @@
   box-shadow: $element-shadow !important;
 
   &::placeholder {
-    // color: $placeholder-color;
-    margin-left: 60px;
+    margin-left: 6rem;
   }
   &__placeholder {
     color: $placeholder-color !important;
-    margin-left: 35px;
+    margin-left: 3.5rem;
+    font-size: 1.4rem !important;
   }
   &__filter {
     padding: 1rem !important;

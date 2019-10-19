@@ -2,9 +2,9 @@
   margin-left: auto;
   margin-right: auto;
   cursor: pointer;
-  height: 54px;
-  width: 262px;
-  border-radius: 2px;
+  height: 5.4rem;
+  width: 26.2rem;
+  border-radius: 3px;
   background-color: #f5f6fa;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.24);
 
@@ -31,20 +31,20 @@
 .google-button__icon {
   display: inline-block;
   vertical-align: middle;
-  margin: 8px 0 8px 0;
-  width: 25px;
-  height: 25px;
+  margin: 0.8rem 0 0.8rem 0;
+  width: 2.5rem;
+  height: 2.5rem;
   box-sizing: border-box;
 }
 
 .google-button__text {
   display: inline-block;
   vertical-align: middle;
-  height: 20px;
-  width: 172px;
+  height: 2rem;
+  width: 17.2rem;
   color: #757575;
   font-family: "IBM Plex Sans";
-  font-size: 16px;
+  font-size: 1.6rem;
   letter-spacing: 0.46px;
-  line-height: 20px;
+  line-height: 2rem;
 }

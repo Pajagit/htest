@@ -1,10 +1,10 @@
 .view-options {
   position: absolute;
-  top: 70px;
-  right: 40px;
+  top: 7rem;
+  right: 4rem;
   display: flex;
   font-size: 2rem;
-  height: 25px;
+  height: 2.5rem;
   color: rgb(175, 175, 175);
   &--list {
     height: 100%;
@@ -12,7 +12,7 @@
     z-index: 100;
 
     &:not(:last-child) {
-      margin-right: 15px;
+      margin-right: 1.5rem;
     }
   }
   &--grid {
