@@ -32,6 +32,21 @@ module.exports = {
     }
   },
   getProjects: async function(req, res) {
+    if (!req.query.page) {
+      res.status(400).json({ page: "Page is required" });
+    } else {
+      if (isNaN(req.query.page)) {
+        res.status(400).json({ page: "Page is not a vallid number" });
+      }
+    }
+    if (!req.query.page_size) {
+      res.status(400).json({ page_size: "Page size is required" });
+    } else {
+      if (isNaN(req.query.page_size)) {
+        res.status(400).json({ page_size: "Page size is not a vallid number" });
+      }
+    }
+
     var projects = await ProjectService.getProjects(
       req.query.search_term,
       req.user,
