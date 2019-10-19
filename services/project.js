@@ -239,7 +239,7 @@ module.exports = {
           order: [["id", "DESC"], [User, "id", "ASC"]]
         })
           .then(projects => {
-            resolve({ projects, pages });
+            resolve({ projects, pages, page: Number(page) });
           })
           .catch(err => console.log(err));
       });
