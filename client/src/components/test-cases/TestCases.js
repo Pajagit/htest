@@ -45,13 +45,18 @@ class TestCases extends Component {
       testcaseFilters: {},
       searchTerm: "",
       settings: this.props.settings.settings,
-      selectedGroupFilters: []
+      selectedGroupFilters: [],
+      listViewActivity: "",
+      disabledAlready: false,
+      width: 0,
+      height: 0
     };
     this.filterBtn = this.filterBtn.bind(this);
     this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
     this.selectMultipleOptionUsers = this.selectMultipleOptionUsers.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -98,14 +103,21 @@ class TestCases extends Component {
       var has_testcases = true;
       this.props.getUsers(has_testcases, projectId);
       this.props.getProjectSettings(this.props.match.params.projectId);
+
+      this.updateWindowDimensions();
+      window.addEventListener("resize", this.updateWindowDimensions);
     }
   }
 
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClick, false);
+    window.removeEventListener("resize", this.updateWindowDimensions);
     this.props.clearSettings();
   }
 
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
   timer = null;
   handleChange = e => {
     clearTimeout(this.timer);
@@ -306,8 +318,21 @@ class TestCases extends Component {
     var view_mode = 1;
     this.props.editProjectSettings(this.props.match.params.projectId, { view_mode });
   }
+  disableListView() {
+    var view_mode = 1;
+    this.props.editProjectSettings(this.props.match.params.projectId, { view_mode });
+    this.setState({ listViewActivity: "disabled", disabledAlready: true });
+  }
+  enableListView() {
+    this.setState({ listViewActivity: "", disabledAlready: false });
+  }
 
   render() {
+    if (this.state.width <= 1400 && !this.state.disabledAlready) {
+      this.disableListView();
+    } else if (this.state.width > 1400 && this.state.disabledAlready) {
+      this.enableListView();
+    }
     var view_mode;
     var viewOptionGridClass = "";
     var viewOptionListClass = "";
@@ -498,7 +523,10 @@ class TestCases extends Component {
             }
           />
           <div className="view-options">
-            <div className={`view-options--list clickable ${viewOptionListClass}`} onClick={e => this.setViewList(e)}>
+            <div
+              className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
+              onClick={e => this.setViewList(e)}
+            >
               <i className="fas fa-bars "></i>
             </div>
             <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
