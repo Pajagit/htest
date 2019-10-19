@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import { getProjects } from "../../actions/projectActions";
 import projectImagePlaceholder from "../../img/project-placeholder.jpg";
+import Pagination from "../pagination/Pagination";
 import ProjectCard from "./ProjectCard";
 import Spinner from "../common/Spinner";
 
@@ -16,40 +17,55 @@ class ProjectCardContainer extends Component {
       user: this.props.auth.user,
       projects: this.props.projects.projects,
       searchTerm: null,
+      page: 0,
       errors: {}
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    var { user } = nextProps.auth;
     if (nextProps.auth && nextProps.auth.user) {
       if (nextProps.searchTerm !== prevState.searchTerm && nextProps.searchTerm === "") {
-        nextProps.getProjects();
-      }
-      if (nextProps.auth.user !== prevState.user) {
-        nextProps.getProjects();
-        update.user = user;
+        nextProps.getProjects("", 0);
       }
 
       if (nextProps.projects && nextProps.projects.projects) {
         update.projects = nextProps.projects.projects;
+        if (nextProps.projects.projects.page !== prevState.page) {
+          update.page = nextProps.projects.projects.page;
+        }
       }
       update.searchTerm = nextProps.searchTerm;
     }
-
+    if (nextProps.projects && nextProps.projects.projects) {
+    }
     return Object.keys(update).length ? update : null;
   }
 
   render() {
-    var projects = [];
     var loading = true;
     var projectsData;
-    if (this.props.projects && this.props.projects.projects) {
-      projects = this.state.projects;
+    var projects = this.props.projects;
+
+    var pageCount = null;
+    var showPagination = false;
+    if (projects.projects) {
+      pageCount = projects.projects.pages;
+
+      if (pageCount > 1) {
+        showPagination = true;
+      }
+    }
+
+    var pagination = "";
+    if (this.props.projects.projects && this.props.projects.projects.projects) {
+      projects = this.state.projects.projects;
       loading = false;
     }
     if (projects.length > 0 && !loading) {
+      if (showPagination) {
+        pagination = <Pagination pageCount={pageCount} page={this.state.page} searchTerm={this.state.searchTerm} />;
+      }
       projectsData = (
         <div className="projects-grid">
           {projects.map((project, index) => (
@@ -85,7 +101,10 @@ class ProjectCardContainer extends Component {
     }
     return (
       <div>
-        <div className="project-card-container-items">{projectsData}</div>
+        <div className="project-card-container-items">
+          {projectsData}
+          {pagination}
+        </div>
       </div>
     );
   }

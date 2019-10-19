@@ -53,7 +53,7 @@ class GlobalPanel extends Component {
     var notificationsActive = false;
     var statisticsActive = false;
     var settingsActive = false;
-    if (this.props.match.path.substring(0, 12) === "/:projectId/" || this.props.match.path === "/Projects") {
+    if (this.props.match.path.substring(0, 12) === "/:projectId/" || this.props.match.path === "/Projects/Page/:page") {
       projectsActive = true;
       notificationsActive = false;
       statisticsActive = false;
@@ -94,7 +94,7 @@ class GlobalPanel extends Component {
       <div className="global-panel global-panel-grid">
         <div className="global-panel-items">
           <GlobalPanelHeader />
-          <GlobalPanelItem icon={<i className="fas fa-th"></i>} link={"/Projects"} active={projectsActive} />
+          <GlobalPanelItem icon={<i className="fas fa-th"></i>} link={"/Projects/Page/0"} active={projectsActive} />
           <GlobalPanelItem
             icon={<i className="fas fa-bell"></i>}
             link={"/Notifications"}
