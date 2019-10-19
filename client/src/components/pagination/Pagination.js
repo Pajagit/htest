@@ -50,7 +50,7 @@ class Pagination extends Component {
     }
     if (this.props.match.url === "/Projects") {
       this.props.getProjects(this.props.searchTerm, page);
-    } else if (this.props.match.url === "/1/TestCases") {
+    } else if (this.props.match.url === `/${this.state.projectId}/TestCases`) {
       this.props.getTestcases(this.state.projectId, this.props.settings.settings, page);
     }
   }
@@ -61,7 +61,7 @@ class Pagination extends Component {
     }
     if (this.props.match.url === "/Projects") {
       this.props.getProjects(this.props.searchTerm, page);
-    } else if (this.props.match.url === "/1/TestCases") {
+    } else if (this.props.match.url === `/${this.state.projectId}/TestCases`) {
       this.props.getTestcases(this.state.projectId, this.props.settings.settings, page);
     }
   }
