@@ -208,7 +208,10 @@ module.exports = {
         project_ids.rows.forEach(row => {
           ids.push(row.id);
         });
-        var pages = Math.ceil(project_ids.count / pageSize);
+        var pages = 1;
+        if (project_ids.count > 0) {
+          pages = Math.ceil(project_ids.count / pageSize);
+        }
         whereStatement.id = {
           [Op.in]: ids
         };
