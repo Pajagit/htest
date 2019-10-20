@@ -79,7 +79,7 @@ module.exports = {
   },
   updateDevice: async function(req, res) {
     if (isNaN(req.params.id)) {
-      res.status(400).json({ error: "Device id is not valid number" });
+      return res.status(400).json({ error: "Device id is not valid number" });
     } else {
       const { errors, isValid } = validateDeviceInput(req.body);
       // Check Validation
@@ -150,6 +150,23 @@ module.exports = {
       return res.status(200).json({ success: "Device removed successfully" });
     } else {
       return res.status(500).json({ message: "Something went wrong" });
+    }
+  },
+  getDeviceById: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Device id is not valid number" });
+    }
+    if (req.params.id) {
+      var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id);
+      if (!deviceExists) {
+        return res.status(404).json({ error: "Device doesn't exist" });
+      }
+    }
+    var device = await DeviceService.getDeviceById(req.params.id);
+    if (device) {
+      return res.status(200).json(device);
+    } else {
+      return res.status(500).json({ error: "Something went wrong" });
     }
   }
 };
