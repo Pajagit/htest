@@ -43,7 +43,7 @@ module.exports = {
         userCondition = `and "user_id" in (${requestObject.users})`;
       }
       if (page >= 0 && pageSize) {
-        limitOffsetCondition = `offset ${page * pageSize} limit ${pageSize}`;
+        limitOffsetCondition = `offset ${(page - 1) * pageSize} limit ${pageSize}`;
       }
       sequelize
         .query(
@@ -121,14 +121,11 @@ module.exports = {
         if (testcases) {
           testcasesRes = {};
           testcasesRes.testcases = [];
-          if (page >= 0 && pageSize) {
+          testcasesRes.pages = 1;
+          testcasesRes.page = 1;
+          if (page >= 0 && pageSize && testCaseIds.count > 0) {
             testcasesRes.pages = Math.ceil(testCaseIds.count / pageSize);
             testcasesRes.page = Number(page);
-          } else {
-            if (testCaseIds.count > 0) {
-              testcasesRes.pages = 1;
-              testcasesRes.page = 0;
-            }
           }
 
           var testcasesObjArray = [];
