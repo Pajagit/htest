@@ -145,5 +145,30 @@ module.exports = {
         }
       });
     });
+  },
+  getDeviceById: async function(id) {
+    return new Promise((resolve, reject) => {
+      if (id) {
+        Device.findOne({
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "simulator", "deleted"],
+          where: {
+            id: id
+          },
+          include: [
+            {
+              model: Office,
+              attributes: ["id", "city"],
+              required: false
+            }
+          ]
+        }).then(device => {
+          if (device) {
+            resolve(device);
+          } else {
+            resolve(false);
+          }
+        });
+      }
+    });
   }
 };
