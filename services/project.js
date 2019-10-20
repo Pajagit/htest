@@ -289,11 +289,8 @@ module.exports = {
         order: [["id", "DESC"], [User, "id", "ASC"]]
       })
         .then(projects_and_count => {
-          var page = 0;
-          var pages = 0;
-          if (projects_and_count.rows.length > 0) {
-            pages = 1;
-          }
+          var page = 1;
+          var pages = 1;
           var projects = projects_and_count.rows;
           resolve({ projects, pages, page });
         })
