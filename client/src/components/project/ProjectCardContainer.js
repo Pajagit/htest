@@ -18,6 +18,7 @@ class ProjectCardContainer extends Component {
       projects: this.props.projects.projects,
       searchTerm: null,
       page: 0,
+      dimensions: null,
       errors: {}
     };
   }
@@ -26,7 +27,7 @@ class ProjectCardContainer extends Component {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
       if (nextProps.searchTerm !== prevState.searchTerm && nextProps.searchTerm === "") {
-        nextProps.getProjects("", 0);
+        nextProps.getProjects("", 1);
       }
 
       if (nextProps.projects && nextProps.projects.projects) {
@@ -40,6 +41,22 @@ class ProjectCardContainer extends Component {
     if (nextProps.projects && nextProps.projects.projects) {
     }
     return Object.keys(update).length ? update : null;
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener("resize", this.updateWindowDimensions);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions);
+  }
+  updateWindowDimensions() {
+    this.setState({
+      dimensions: {
+        width: this.container.offsetWidth,
+        height: this.container.offsetHeight
+      }
+    });
   }
 
   render() {
@@ -64,7 +81,14 @@ class ProjectCardContainer extends Component {
     }
     if (projects.length > 0 && !loading) {
       if (showPagination) {
-        pagination = <Pagination pageCount={pageCount} page={this.state.page} searchTerm={this.state.searchTerm} />;
+        pagination = (
+          <Pagination
+            pageCount={pageCount}
+            page={this.state.page}
+            width={this.state.dimensions.width}
+            searchTerm={this.state.searchTerm}
+          />
+        );
       }
       projectsData = (
         <div className="projects-grid">
@@ -101,7 +125,7 @@ class ProjectCardContainer extends Component {
     }
     return (
       <div>
-        <div className="project-card-container-items">
+        <div className="project-card-container-items" ref={el => (this.container = el)}>
           {projectsData}
           {pagination}
         </div>

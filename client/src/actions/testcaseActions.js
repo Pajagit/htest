@@ -8,9 +8,9 @@ export const getTestcases = (project_id, testCaseFilters, page) => dispatch => {
   dispatch(setTestCaseLoading());
 
   if (isEmpty(page)) {
-    page = 0;
+    page = 1;
   }
-  var page_size = 10;
+  var page_size = 2;
   axios
     .post(`/api/testcases?project_id=${project_id}&page=${page}&page_size=${page_size}`, testCaseFilters)
     .then(res =>

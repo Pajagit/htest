@@ -35,10 +35,10 @@ class Pagination extends Component {
     return Object.keys(update).length ? update : null;
   }
   newPage(e) {
-    var page = 0;
+    var page = 1;
     var currentPage = this.props.page;
     if (e === 0) {
-      page = 0;
+      page = 1;
     } else if (e === 1) {
       page = currentPage - 1;
     } else if (e === 2) {
@@ -46,7 +46,7 @@ class Pagination extends Component {
         page = currentPage + 1;
       }
     } else if (e === 3) {
-      page = parseInt(this.props.pageCount) - 1;
+      page = parseInt(this.props.pageCount);
     }
     if (this.props.match.url === "/Projects") {
       this.props.getProjects(this.props.searchTerm, page);
@@ -55,9 +55,9 @@ class Pagination extends Component {
     }
   }
   newPagePredefined(e) {
-    var page = 0;
+    var page = 1;
     if (!isNaN(e.target.textContent)) {
-      page = parseInt(e.target.textContent) - 1;
+      page = parseInt(e.target.textContent);
     }
     if (this.props.match.url === "/Projects") {
       this.props.getProjects(this.props.searchTerm, page);
@@ -67,8 +67,8 @@ class Pagination extends Component {
   }
 
   render() {
-    var currentPage = 0;
-    var pageCount = 0;
+    var currentPage = 1;
+    var pageCount = 1;
     if (!isNaN(this.props.page)) {
       currentPage = parseInt(this.props.page);
     }
@@ -80,31 +80,95 @@ class Pagination extends Component {
     var firstPageBtnClass = "";
     var lastPageBtnClass = "";
 
-    if (currentPage < 1) {
+    if (currentPage <= 1) {
       firstPageBtnClass = "disabled-page";
       backPageBtnClass = "disabled-page";
     }
 
-    if (currentPage + 1 >= pageCount) {
+    if (currentPage >= pageCount) {
       forwardPageBtnClass = "disabled-page";
       lastPageBtnClass = "disabled-page";
     }
 
-    var counter = 0;
+    var counter = 1;
     var content = [];
+    var totalPagesReturnedFromBe = this.state.pageCount;
 
-    while (counter < this.state.pageCount) {
+    var calculatedNumberOfPagesThatCanBeShown = pageBtnWidth => {
+      return Math.round(pageBtnWidth / 55) - 5;
+    };
+
+    var pagesToShowOneDirection = numberOfPagesThatCanBeShown => {
+      return Math.round(numberOfPagesThatCanBeShown / 2);
+    };
+
+    var numberOfPagesThatCanBeShown = calculatedNumberOfPagesThatCanBeShown(this.props.width);
+
+    if (numberOfPagesThatCanBeShown >= totalPagesReturnedFromBe) {
+      numberOfPagesThatCanBeShown = totalPagesReturnedFromBe;
+    }
+    var firstPageToShow =
+      currentPage - pagesToShowOneDirection(numberOfPagesThatCanBeShown) > 1
+        ? currentPage - pagesToShowOneDirection(numberOfPagesThatCanBeShown)
+        : 1;
+
+    var lastPageToShow =
+      currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) <= totalPagesReturnedFromBe
+        ? currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown)
+        : totalPagesReturnedFromBe;
+    if (lastPageToShow < numberOfPagesThatCanBeShown) {
+      lastPageToShow = numberOfPagesThatCanBeShown;
+    }
+    console.log(`Can be shown: ${numberOfPagesThatCanBeShown}`);
+    console.log(`FROM BE: ${totalPagesReturnedFromBe}`);
+    console.log(`First page to show: ${firstPageToShow}`);
+    console.log(`Current page: ${currentPage}`);
+    console.log(`Last page to show: ${lastPageToShow}`);
+    console.log(`Pages from current one direction ${pagesToShowOneDirection(numberOfPagesThatCanBeShown)}`);
+    console.log(`-------------------------`);
+
+    counter = firstPageToShow;
+    if (firstPageToShow > 1) {
+      if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
+        counter = totalPagesReturnedFromBe - numberOfPagesThatCanBeShown;
+      } else {
+        counter = firstPageToShow + 1;
+      }
+      content.push(
+        <span key="first" className={`pagination-items--item disabled`}>
+          ...
+        </span>
+      );
+    }
+    if (lastPageToShow <= totalPagesReturnedFromBe) {
+      if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
+        lastPageToShow = totalPagesReturnedFromBe;
+      } else {
+        lastPageToShow = counter + numberOfPagesThatCanBeShown - 1;
+      }
+    }
+    while (counter <= lastPageToShow) {
       content.push(
         <div
           key={counter}
           className={`pagination-items--item ${currentPage === counter ? "active-page" : ""}`}
           onClick={this.newPagePredefined}
         >
-          {counter + 1}
+          {counter}
         </div>
       );
       counter++;
     }
+    var lastPageThatCanBeShown = currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown);
+
+    if (lastPageThatCanBeShown < totalPagesReturnedFromBe && numberOfPagesThatCanBeShown < totalPagesReturnedFromBe) {
+      content.push(
+        <span key="last" className={`pagination-items--item disabled`}>
+          ...
+        </span>
+      );
+    }
+
     return (
       <div className="pagination">
         <div className="pagination-items">

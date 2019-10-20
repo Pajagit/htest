@@ -25,7 +25,10 @@ module.exports = {
         order: [["title", "ASC"], [Office, "id", "ASC"]]
       }).then(devices_obj => {
         var devices = devices_obj.rows;
-        var pages = Math.ceil(devices_obj.count / pageSize);
+        var pages = 1;
+        if (devices_obj.count > 0) {
+          pages = Math.ceil(devices_obj.count / pageSize);
+        }
         page = Number(page);
 
         resolve({ devices, page, pages });

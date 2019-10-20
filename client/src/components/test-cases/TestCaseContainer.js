@@ -20,8 +20,10 @@ class TestCaseContainer extends Component {
       filters: this.props.settings.settings,
       testcases: this.props.testcases.testcases,
       projectId: null,
-      page: 0
+      page: 0,
+      dimensions: null
     };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -42,9 +44,21 @@ class TestCaseContainer extends Component {
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
-    this.props.getTestcases(this.props.match.params.projectId, this.state.settings.settings, 0);
+    this.props.getTestcases(this.props.match.params.projectId, this.state.settings.settings, 1);
+    this.updateWindowDimensions();
+    window.addEventListener("resize", this.updateWindowDimensions);
   }
-
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions);
+  }
+  updateWindowDimensions() {
+    this.setState({
+      dimensions: {
+        width: this.container.offsetWidth,
+        height: this.container.offsetHeight
+      }
+    });
+  }
   render() {
     var projectId = this.props.match.params.projectId;
     var settingsLoading = this.props.settings.loading;
@@ -74,6 +88,7 @@ class TestCaseContainer extends Component {
             page={this.state.page}
             searchTerm={this.state.searchTerm}
             projectId={projectId}
+            width={this.state.dimensions.width}
           />
         );
       }
@@ -108,6 +123,7 @@ class TestCaseContainer extends Component {
             page={this.state.page}
             searchTerm={this.state.searchTerm}
             projectId={projectId}
+            width={this.state.dimensions.width}
           />
         );
       }
@@ -151,7 +167,10 @@ class TestCaseContainer extends Component {
 
     return (
       <div>
-        <div className={`${grid} testcase-container`}>{content}</div> {pagination}
+        <div ref={el => (this.container = el)} className={`${grid} testcase-container`}>
+          {content}
+        </div>
+        {pagination}
       </div>
     );
   }
