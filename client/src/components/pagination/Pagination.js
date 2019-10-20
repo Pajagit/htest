@@ -46,7 +46,7 @@ class Pagination extends Component {
         page = currentPage + 1;
       }
     } else if (e === 3) {
-      page = parseInt(this.props.pageCount) - 1;
+      page = parseInt(this.props.pageCount);
     }
     if (this.props.match.url === "/Projects") {
       this.props.getProjects(this.props.searchTerm, page);
@@ -80,7 +80,7 @@ class Pagination extends Component {
     var firstPageBtnClass = "";
     var lastPageBtnClass = "";
 
-    if (currentPage < 1) {
+    if (currentPage <= 1) {
       firstPageBtnClass = "disabled-page";
       backPageBtnClass = "disabled-page";
     }
@@ -132,7 +132,7 @@ class Pagination extends Component {
       if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
         counter = totalPagesReturnedFromBe - numberOfPagesThatCanBeShown;
       } else {
-        counter = firstPageToShow;
+        counter = firstPageToShow + 1;
       }
       content.push(
         <span key="first" className={`pagination-items--item disabled`}>
@@ -144,7 +144,7 @@ class Pagination extends Component {
       if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
         lastPageToShow = totalPagesReturnedFromBe;
       } else {
-        lastPageToShow = counter + numberOfPagesThatCanBeShown;
+        lastPageToShow = counter + numberOfPagesThatCanBeShown - 1;
       }
     }
     while (counter <= lastPageToShow) {

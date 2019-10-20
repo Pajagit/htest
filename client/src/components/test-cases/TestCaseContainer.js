@@ -123,7 +123,7 @@ class TestCaseContainer extends Component {
             page={this.state.page}
             searchTerm={this.state.searchTerm}
             projectId={projectId}
-            width={this.props.width}
+            width={this.state.dimensions.width}
           />
         );
       }
