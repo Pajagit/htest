@@ -245,6 +245,61 @@ module.exports = {
       });
     });
   },
+  getAllProjects: async function(search_term, user) {
+    return new Promise((resolve, reject) => {
+      var whereStatement = {};
+      if (!user.superadmin) {
+        var userProjectsIds = [];
+        user.projects.forEach(project => {
+          userProjectsIds.push(project.id);
+        });
+        whereStatement.id = {
+          [Op.in]: userProjectsIds
+        };
+      }
+      if (search_term) {
+        whereStatement.title = {
+          [Op.iLike]: "%" + search_term + "%"
+        };
+      }
+      Project.findAndCountAll({
+        attributes: [
+          "id",
+          "title",
+          "description",
+          "started_at",
+          "ended_at",
+          "image_url",
+          "project_manager",
+          "url",
+          "jira_url"
+        ],
+        where: whereStatement,
+        include: [
+          {
+            model: User,
+            attributes: ["id", "first_name", "last_name", "email"],
+            through: {
+              attributes: ["role_id"]
+            },
+            as: "users",
+            required: false
+          }
+        ],
+        order: [["id", "DESC"], [User, "id", "ASC"]]
+      })
+        .then(projects_and_count => {
+          var page = 0;
+          var pages = 0;
+          if (projects_and_count.rows.length > 0) {
+            pages = 1;
+          }
+          var projects = projects_and_count.rows;
+          resolve({ projects, pages, page });
+        })
+        .catch(err => console.log(err));
+    });
+  },
   getProjectById: async function(id) {
     return new Promise((resolve, reject) => {
       Project.findOne({

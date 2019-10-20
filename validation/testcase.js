@@ -129,19 +129,13 @@ module.exports = {
     if (invalid_format_users) {
       errors.users = "User id is not a valid number";
     }
-    if (isEmpty(data.page)) {
-      errors.page = "Page is required";
-    } else {
-      if (isNaN(data.page)) {
-        errors.page = "Page is not a valid number";
-      }
+
+    if (!isEmpty(data.page) && isNaN(data.page)) {
+      errors.page = "Page is not a valid number";
     }
-    if (isEmpty(data.page_size)) {
-      errors.page_size = "Page size is required";
-    } else {
-      if (isNaN(data.page_size)) {
-        errors.page_size = "Page size is not a valid number";
-      }
+
+    if (isEmpty(data.page_size) && isNaN(data.page_size)) {
+      errors.page_size = "Page size is not a valid number";
     }
 
     return { errors, isValid: isEmpty(errors) };

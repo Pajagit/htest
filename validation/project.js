@@ -91,5 +91,21 @@ module.exports = {
       errors,
       isValid: isEmpty(errors)
     };
+  },
+  validatePageAndPageSize: function(data) {
+    var errors = {};
+
+    if (!isEmpty(data.page) && isNaN(data.page)) {
+      errors.page = "Page is not a valid number";
+    }
+
+    if (!isEmpty(data.page_size) && isNaN(data.page_size)) {
+      errors.page_size = "Page size is not a valid number";
+    }
+
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    };
   }
 };

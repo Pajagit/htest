@@ -21,6 +21,7 @@ module.exports = {
       dateToCondition = " ";
       dateFromCondition = " ";
       searchTermCondition = " ";
+      limitOffsetCondition = " ";
 
       if (requestObject.groups.length > 0) {
         requestObject.groups.forEach(group => {
@@ -41,10 +42,12 @@ module.exports = {
       if (requestObject.users.length > 0) {
         userCondition = `and "user_id" in (${requestObject.users})`;
       }
+      if (page >= 0 && pageSize) {
+        limitOffsetCondition = `offset ${page * pageSize} limit ${pageSize}`;
+      }
       sequelize
         .query(
-          `select "id" from "testcases" where "deprecated" = false and "project_id"=${project_id} ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition} order by "created_at" desc offset ${page *
-            pageSize} limit ${pageSize}`,
+          `select "id" from "testcases" where "deprecated" = false and "project_id"=${project_id} ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition} order by "created_at" desc ${limitOffsetCondition}`,
           { type: sequelize.QueryTypes.SELECT }
         )
         .then(testcases => {
@@ -118,8 +121,16 @@ module.exports = {
         if (testcases) {
           testcasesRes = {};
           testcasesRes.testcases = [];
-          testcasesRes.pages = Math.ceil(testCaseIds.count / pageSize);
-          testcasesRes.page = Number(page);
+          if (page >= 0 && pageSize) {
+            testcasesRes.pages = Math.ceil(testCaseIds.count / pageSize);
+            testcasesRes.page = Number(page);
+          } else {
+            if (testCaseIds.count > 0) {
+              testcasesRes.pages = 1;
+              testcasesRes.page = 0;
+            }
+          }
+
           var testcasesObjArray = [];
           testcases.forEach(testcase => {
             var inFilteredGroup = true;

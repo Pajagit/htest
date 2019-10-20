@@ -5,6 +5,7 @@ var RoleService = require("../services/role");
 const validateRouteProjectId = require("../validation/project").validateRouteProjectId;
 const validateProjectInput = require("../validation/project").validateProjectInput;
 const validateSettingsInput = require("../validation/project").validateSettingsInput;
+const validatePageAndPageSize = require("../validation/project").validatePageAndPageSize;
 
 module.exports = {
   deactivateProject: async function(req, res) {
@@ -32,27 +33,22 @@ module.exports = {
     }
   },
   getProjects: async function(req, res) {
-    if (!req.query.page) {
-      res.status(400).json({ page: "Page is required" });
-    } else {
-      if (isNaN(req.query.page)) {
-        res.status(400).json({ page: "Page is not a vallid number" });
-      }
-    }
-    if (!req.query.page_size) {
-      res.status(400).json({ page_size: "Page size is required" });
-    } else {
-      if (isNaN(req.query.page_size)) {
-        res.status(400).json({ page_size: "Page size is not a vallid number" });
-      }
-    }
+    const { errors, isValid } = validatePageAndPageSize(req.params);
 
-    var projects = await ProjectService.getProjects(
-      req.query.search_term,
-      req.user,
-      req.query.page,
-      req.query.page_size
-    );
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    if (req.query.page >= 0 && req.query.page_size) {
+      var projects = await ProjectService.getProjects(
+        req.query.search_term,
+        req.user,
+        req.query.page,
+        req.query.page_size
+      );
+    } else {
+      var projects = await ProjectService.getAllProjects(req.query.search_term, req.user);
+    }
 
     if (projects) {
       return res.status(200).json(projects);
