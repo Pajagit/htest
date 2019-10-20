@@ -128,9 +128,13 @@ class Pagination extends Component {
     console.log(`-------------------------`);
 
     counter = firstPageToShow;
+    var leftReduced = false;
     if (firstPageToShow > 1) {
       if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
         counter = totalPagesReturnedFromBe - numberOfPagesThatCanBeShown;
+        if (counter < 0) {
+          counter = 0;
+        }
       } else {
         counter = firstPageToShow + 1;
       }
@@ -139,6 +143,7 @@ class Pagination extends Component {
           ...
         </span>
       );
+      leftReduced = true;
     }
     if (lastPageToShow <= totalPagesReturnedFromBe) {
       if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
@@ -146,6 +151,9 @@ class Pagination extends Component {
       } else {
         lastPageToShow = counter + numberOfPagesThatCanBeShown - 1;
       }
+    }
+    if (leftReduced) {
+      lastPageToShow = lastPageToShow - 1;
     }
     while (counter <= lastPageToShow) {
       content.push(
