@@ -9,11 +9,14 @@
   &-items {
     display: flex;
     font-size: 1.2rem;
+
     &--item {
       background-color: #ffffff;
       border: 1px solid rgb(243, 243, 243);
-
-      padding: 1rem 1.64rem;
+      text-align: center;
+      width: 4.5rem;
+      height: 4rem;
+      line-height: 4rem;
       cursor: pointer;
       &:not(:last-child) {
         margin-right: 0.2rem;

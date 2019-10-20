@@ -92,8 +92,47 @@ class Pagination extends Component {
 
     var counter = 0;
     var content = [];
+    var totalPagesReturnedFromBe = this.state.pageCount;
+    var totalPages = this.state.pageCount;
+    var canShowAllPages;
+    var numberOfPagesThatCanBeShown = Math.round(this.props.width / 55) - 4;
 
-    while (counter < this.state.pageCount) {
+    if (numberOfPagesThatCanBeShown >= totalPagesReturnedFromBe) {
+      numberOfPagesThatCanBeShown = totalPagesReturnedFromBe;
+    }
+    var firstPageToShow =
+      currentPage - Math.round(numberOfPagesThatCanBeShown / 2) >= 0
+        ? currentPage - Math.round(numberOfPagesThatCanBeShown / 2)
+        : 0;
+
+    var lastPageToShow =
+      currentPage + Math.round(numberOfPagesThatCanBeShown / 2) <= totalPagesReturnedFromBe
+        ? currentPage + Math.round(numberOfPagesThatCanBeShown / 2)
+        : totalPagesReturnedFromBe;
+    if (lastPageToShow < numberOfPagesThatCanBeShown) {
+      lastPageToShow = numberOfPagesThatCanBeShown;
+    }
+    console.log(`Can be shown: ${numberOfPagesThatCanBeShown}`);
+    console.log(`FROM BE: ${totalPagesReturnedFromBe}`);
+    console.log(`First page to show: ${firstPageToShow + 1}`);
+    console.log(`Current page: ${currentPage + 1}`);
+    console.log(`Last page to show: ${lastPageToShow}`);
+    console.log(`-------------------------`);
+
+    counter = firstPageToShow;
+    if (firstPageToShow >= 1) {
+      if (currentPage + Math.round(numberOfPagesThatCanBeShown / 2) >= totalPagesReturnedFromBe) {
+        counter = totalPagesReturnedFromBe - numberOfPagesThatCanBeShown;
+      } else {
+        counter = firstPageToShow + 1;
+      }
+      content.push(
+        <span key="first" className={`pagination-items--item disabled`}>
+          ...
+        </span>
+      );
+    }
+    while (counter < lastPageToShow) {
       content.push(
         <div
           key={counter}
@@ -105,6 +144,16 @@ class Pagination extends Component {
       );
       counter++;
     }
+    var lastPageThatCanBeShown = currentPage + Math.round(numberOfPagesThatCanBeShown / 2);
+
+    if (lastPageThatCanBeShown < totalPagesReturnedFromBe && numberOfPagesThatCanBeShown < totalPagesReturnedFromBe) {
+      content.push(
+        <span key="last" className={`pagination-items--item disabled`}>
+          ...
+        </span>
+      );
+    }
+
     return (
       <div className="pagination">
         <div className="pagination-items">

@@ -116,7 +116,13 @@ class TestCases extends Component {
   }
 
   updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
+    this.setState({ width: window.innerWidth, height: window.innerHeight }, () => {
+      if (this.state.width <= 1400 && !this.state.disabledAlready) {
+        this.disableListView();
+      } else if (this.state.width > 1400 && this.state.disabledAlready) {
+        this.enableListView();
+      }
+    });
   }
   timer = null;
   handleChange = e => {
@@ -328,11 +334,6 @@ class TestCases extends Component {
   }
 
   render() {
-    if (this.state.width <= 1400 && !this.state.disabledAlready) {
-      this.disableListView();
-    } else if (this.state.width > 1400 && this.state.disabledAlready) {
-      this.enableListView();
-    }
     var view_mode;
     var viewOptionGridClass = "";
     var viewOptionListClass = "";
