@@ -59,7 +59,7 @@ class EditUser extends Component {
     var userId = this.props.match.params.userId;
     this.setState({ userId });
     this.props.getUser(userId);
-    this.props.getProjects("", 0);
+    this.props.getProjects();
     this.props.getRoles();
   }
 

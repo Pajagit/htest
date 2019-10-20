@@ -43,7 +43,7 @@ class ProjectSettings extends Component {
   }
 
   componentDidMount() {
-    this.props.getProjects("", 0);
+    this.props.getProjects();
   }
   render() {
     var { projects, loading } = this.props.projects;
