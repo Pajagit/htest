@@ -44,7 +44,7 @@ class TestCaseContainer extends Component {
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
-    this.props.getTestcases(this.props.match.params.projectId, this.state.settings.settings, 0);
+    this.props.getTestcases(this.props.match.params.projectId, this.state.settings.settings, 1);
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
   }

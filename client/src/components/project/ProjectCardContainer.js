@@ -26,7 +26,7 @@ class ProjectCardContainer extends Component {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
       if (nextProps.searchTerm !== prevState.searchTerm && nextProps.searchTerm === "") {
-        nextProps.getProjects("", 0);
+        nextProps.getProjects("", 1);
       }
 
       if (nextProps.projects && nextProps.projects.projects) {
