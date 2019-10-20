@@ -93,21 +93,28 @@ class Pagination extends Component {
     var counter = 0;
     var content = [];
     var totalPagesReturnedFromBe = this.state.pageCount;
-    var totalPages = this.state.pageCount;
-    var canShowAllPages;
-    var numberOfPagesThatCanBeShown = Math.round(this.props.width / 55) - 4;
+
+    var calculatedNumberOfPagesThatCanBeShown = pageBtnWidth => {
+      return Math.round(pageBtnWidth / 55) - 5;
+    };
+
+    var pagesToShowOneDirection = numberOfPagesThatCanBeShown => {
+      return Math.round(numberOfPagesThatCanBeShown / 2);
+    };
+
+    var numberOfPagesThatCanBeShown = calculatedNumberOfPagesThatCanBeShown(this.props.width);
 
     if (numberOfPagesThatCanBeShown >= totalPagesReturnedFromBe) {
       numberOfPagesThatCanBeShown = totalPagesReturnedFromBe;
     }
     var firstPageToShow =
-      currentPage - Math.round(numberOfPagesThatCanBeShown / 2) >= 0
-        ? currentPage - Math.round(numberOfPagesThatCanBeShown / 2)
+      currentPage - pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= 0
+        ? currentPage - pagesToShowOneDirection(numberOfPagesThatCanBeShown)
         : 0;
 
     var lastPageToShow =
-      currentPage + Math.round(numberOfPagesThatCanBeShown / 2) <= totalPagesReturnedFromBe
-        ? currentPage + Math.round(numberOfPagesThatCanBeShown / 2)
+      currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) <= totalPagesReturnedFromBe
+        ? currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown)
         : totalPagesReturnedFromBe;
     if (lastPageToShow < numberOfPagesThatCanBeShown) {
       lastPageToShow = numberOfPagesThatCanBeShown;
@@ -117,20 +124,29 @@ class Pagination extends Component {
     console.log(`First page to show: ${firstPageToShow + 1}`);
     console.log(`Current page: ${currentPage + 1}`);
     console.log(`Last page to show: ${lastPageToShow}`);
+    console.log(`Pages from current one direction ${pagesToShowOneDirection(numberOfPagesThatCanBeShown)}`);
     console.log(`-------------------------`);
 
     counter = firstPageToShow;
     if (firstPageToShow >= 1) {
-      if (currentPage + Math.round(numberOfPagesThatCanBeShown / 2) >= totalPagesReturnedFromBe) {
+      if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
         counter = totalPagesReturnedFromBe - numberOfPagesThatCanBeShown;
       } else {
         counter = firstPageToShow + 1;
+        lastPageToShow = lastPageToShow - 1;
       }
       content.push(
         <span key="first" className={`pagination-items--item disabled`}>
           ...
         </span>
       );
+    }
+    if (lastPageToShow <= totalPagesReturnedFromBe) {
+      if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
+        lastPageToShow = totalPagesReturnedFromBe;
+      } else {
+        lastPageToShow = counter + numberOfPagesThatCanBeShown - 1;
+      }
     }
     while (counter < lastPageToShow) {
       content.push(
@@ -144,7 +160,11 @@ class Pagination extends Component {
       );
       counter++;
     }
-    var lastPageThatCanBeShown = currentPage + Math.round(numberOfPagesThatCanBeShown / 2);
+    var lastPageThatCanBeShown = currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown);
+    // console.log(lastPageThatCanBeShown);
+    // console.log(totalPagesReturnedFromBe);
+    // console.log(numberOfPagesThatCanBeShown);
+    // console.log(totalPagesReturnedFromBe);
 
     if (lastPageThatCanBeShown < totalPagesReturnedFromBe && numberOfPagesThatCanBeShown < totalPagesReturnedFromBe) {
       content.push(
