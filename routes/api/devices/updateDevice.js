@@ -2,11 +2,11 @@ const Router = require("express").Router;
 const passport = require("passport");
 const DeviceController = require("../../../controllers/device");
 
-// @route GET api/devices/
-// @desc all devices route
-// @access public
-module.exports = Router({ mergeParams: true }).get(
-  "/devices",
+// @route PUT api/devices/device/:id
+// @desc Update device
+// @access Private
+module.exports = Router({ mergeParams: true }).put(
+  "/devices/device/:id",
   passport.authenticate("jwt", { session: false }),
-  DeviceController.getDevices
+  DeviceController.updateDevice
 );
