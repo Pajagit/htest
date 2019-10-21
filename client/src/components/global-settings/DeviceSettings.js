@@ -4,9 +4,11 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getDevices } from "../../actions/deviceActions";
+import { getOffices } from "../../actions/officeActions";
 import isEmpty from "../../validation/isEmpty";
 import { superAdminPermissions } from "../../permissions/SuperAdminPermissions";
 
+import SearchDropdown from "../../components/common/SearchDropdown";
 import GlobalPanel from "../global-panel/GlobalPanel";
 import SettingPanel from "../settings-panel/SettingPanel";
 import BtnAnchor from "../common/BtnAnchor";
@@ -20,9 +22,12 @@ class DeviceSettings extends Component {
     this.state = {
       initialRender: true,
       projectId: null,
+      offices: this.props.offices.offices,
+      office: [],
       user: this.props.auth.user,
       errors: {}
     };
+    this.selectOffice = this.selectOffice.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -37,18 +42,37 @@ class DeviceSettings extends Component {
         nextProps.history.push(`/Projects`);
       }
     }
+    if (nextProps.offices && nextProps.offices.offices) {
+      if (nextProps.offices.offices !== prevState.offices) {
+        update.offices = nextProps.offices.offices;
+
+        var offices = nextProps.offices.offices;
+        var i;
+        for (i = 0; i < offices.length; i++) {
+          offices[i].title = offices[i]["city"];
+          delete offices[i].city;
+        }
+        update.officesFormatted = offices;
+      }
+    }
     return Object.keys(update).length ? update : null;
   }
 
   componentDidMount() {
-    this.props.getDevices(1);
+    this.props.getDevices();
+    this.props.getOffices();
+  }
+  selectOffice(value) {
+    this.setState({ office: value }, () => {
+      this.props.getDevices(this.state.office.id);
+    });
   }
   render() {
     var { devices, loading } = this.props.devices;
     var content;
     if (devices === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(devices)) {
+    } else if (!isEmpty(devices.devices)) {
       content = (
         <ListItem
           title={"iPhone 6s"}
@@ -68,8 +92,10 @@ class DeviceSettings extends Component {
           }${" "} ${device.dpi ? "ppi: " + device.dpi : " "} ${" "}${device.udid ? "udid: " + device.udid : " "}`}
         />
       ));
-    } else {
+    } else if (isEmpty(devices.devices) && isEmpty(this.state.office)) {
       content = <div className="testcase-container-no-content">There are no devices added yet</div>;
+    } else if (!isEmpty(this.state.office)) {
+      content = <div className="testcase-container-no-content">There are no devices for selected office</div>;
     }
 
     return (
@@ -84,7 +110,19 @@ class DeviceSettings extends Component {
             canGoBack={false}
             addBtn={<BtnAnchor type={"text"} label="Add Device" className={"a-btn a-btn-primary"} link={`AddDevice`} />}
           />
-          <div className="list-item-container">{content}</div>
+          <div className="list-item-container">
+            <SearchDropdown
+              value={this.state.office}
+              options={this.state.officesFormatted}
+              onChange={this.selectOffice}
+              name={"office_id"}
+              label={""}
+              validationMsg={this.state.errors.office_id}
+              placeholder={"Offices"}
+              multiple={false}
+            />
+            {content}
+          </div>
         </div>
       </div>
     );
@@ -99,10 +137,11 @@ DeviceSettings.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
-  devices: state.devices
+  devices: state.devices,
+  offices: state.offices
 });
 
 export default connect(
   mapStateToProps,
-  { getDevices }
+  { getDevices, getOffices }
 )(withRouter(DeviceSettings));

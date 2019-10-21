@@ -20,7 +20,7 @@ import SearchDropdown from "../../components/common/SearchDropdown";
 import SettingPanel from "../../components/settings-panel/SettingPanel";
 import Header from "../../components/common/Header";
 
-class AddUser extends Component {
+class NewDevice extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,7 @@ class AddUser extends Component {
       title: "",
       resolution: "",
       office: null,
-      ppi: "",
+      dpi: "",
       screen_size: "",
       udid: "",
       retina: false,
@@ -90,7 +90,7 @@ class AddUser extends Component {
     var deviceData = {};
     deviceData.title = this.state.title;
     deviceData.resolution = this.state.resolution;
-    deviceData.ppi = this.state.ppi;
+    deviceData.dpi = this.state.dpi;
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
@@ -110,7 +110,7 @@ class AddUser extends Component {
 
     deviceData.title = this.state.title;
     deviceData.resolution = this.state.resolution;
-    deviceData.ppi = this.state.ppi;
+    deviceData.dpi = this.state.dpi;
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
@@ -197,12 +197,12 @@ class AddUser extends Component {
               />
               <Input
                 type="text"
-                placeholder="Enter Device Ppi Here"
+                placeholder="Enter Device dpi Here"
                 label="Pixels Per Inch"
-                validationMsg={this.state.errors.ppi}
-                value={this.state.ppi}
+                validationMsg={this.state.errors.dpi}
+                value={this.state.dpi}
                 onChange={e => this.onChange(e)}
-                name={"ppi"}
+                name={"dpi"}
                 onKeyDown={this.submitFormOnEnterKey}
               />
               <Input
@@ -240,7 +240,7 @@ class AddUser extends Component {
   }
 }
 
-AddUser.propTypes = {
+NewDevice.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -255,4 +255,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { createDevice, getOffices, clearErrors }
-)(withRouter(AddUser));
+)(withRouter(NewDevice));
