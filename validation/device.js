@@ -17,7 +17,7 @@ module.exports = {
       isValid: isEmpty(errors)
     };
   },
-  validateDeviceInput: function(data) {
+  validateDeviceInput: function(data, isRealDevice) {
     var errors = {};
 
     var titleLimit = 150;
@@ -67,19 +67,13 @@ module.exports = {
       }
     }
 
-    if (isEmpty(data.office_id)) {
-      errors.office_id = "Office is required";
-    } else {
-      if (isNaN(data.office_id)) {
-        errors.office_id = "Office id is not a valid number";
-      }
-    }
-
-    if (isEmpty(data.simulator)) {
-      errors.simulator = "Simulator is required";
-    } else {
-      if (typeof data.simulator !== "boolean") {
-        errors.simulator = "Parameter 'simulator' must have a true or false value";
+    if (isRealDevice) {
+      if (isEmpty(data.office_id)) {
+        errors.office_id = "Office is required";
+      } else {
+        if (isNaN(data.office_id)) {
+          errors.office_id = "Office id is not a valid number";
+        }
       }
     }
 

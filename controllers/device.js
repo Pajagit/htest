@@ -18,6 +18,7 @@ module.exports = {
 
     var whereStatement = {};
     whereStatement.deleted = false;
+    whereStatement.simulator = false;
     if (req.body.offices) {
       if (req.body.offices.length > 0) {
         whereStatement.office_id = {
@@ -39,7 +40,7 @@ module.exports = {
   },
   createDevice: async function(req, res) {
     (async () => {
-      const { errors, isValid } = validateDeviceInput(req.body);
+      const { errors, isValid } = validateDeviceInput(req.body, true);
 
       // Check Validation
       if (!isValid) {
@@ -63,7 +64,7 @@ module.exports = {
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
       }
-      deviceFields.simulator = req.body.simulator;
+      deviceFields.simulator = false;
 
       if (req.body.office_id) {
         var office_exists = await OfficeService.checkIfOfficeExists(req.body.office_id);
@@ -125,7 +126,6 @@ module.exports = {
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
       }
-      deviceFields.simulator = req.body.simulator;
 
       (async () => {
         var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id);
@@ -176,5 +176,75 @@ module.exports = {
     } else {
       return res.status(500).json({ error: "Something went wrong" });
     }
+  },
+  getSimulators: async function(req, res) {
+    const { errors, isValid } = validateGetDevices(req.query);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    var whereStatement = {};
+    whereStatement.deleted = false;
+    whereStatement.simulator = true;
+    if (req.body.offices) {
+      if (req.body.offices.length > 0) {
+        whereStatement.office_id = {
+          [Op.in]: req.body.offices
+        };
+      }
+    }
+
+    if (req.query.page >= 0 && req.query.page_size) {
+      var devices = await DeviceService.getDevicesPaginated(whereStatement, req.query.page, req.query.page_size);
+    } else {
+      var devices = await DeviceService.getAllDevices(whereStatement);
+    }
+    if (devices) {
+      return res.status(200).json(devices);
+    } else {
+      return res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  createSimulator: async function(req, res) {
+    (async () => {
+      const { errors, isValid } = validateDeviceInput(req.body, false);
+
+      // Check Validation
+      if (!isValid) {
+        return res.status(400).json(errors);
+      }
+      var deviceFields = {};
+      deviceFields.title = req.body.title;
+      if (req.body.resolution) {
+        deviceFields.resolution = req.body.resolution;
+      }
+      if (req.body.dpi) {
+        deviceFields.dpi = req.body.dpi;
+      }
+      if (req.body.udid) {
+        deviceFields.udid = req.body.udid;
+      }
+      if (req.body.screen_size) {
+        deviceFields.screen_size = req.body.screen_size;
+      }
+      deviceFields.retina = req.body.retina;
+
+      deviceFields.simulator = true;
+
+      //   var canCreateGroup = await UserService.canCreateEditDeleteGroup(req.user, req.body.project_id);
+      //   if (!canCreateGroup) {
+      //     return res.status(403).json({ message: "Forbidden" });
+      //   }
+
+      var created_device = await DeviceService.createDevice(deviceFields);
+      if (created_device) {
+        var device = await DeviceService.returnCreatedOrUpdatedDevice(created_device);
+        res.json(device);
+      } else {
+        res.status(500).json({ error: "An error occured while creating simulator" });
+      }
+    })();
   }
 };

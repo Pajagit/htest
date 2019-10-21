@@ -12,7 +12,7 @@ module.exports = {
   getDevicesPaginated: async function(whereStatement, page, pageSize) {
     return new Promise((resolve, reject) => {
       Device.findAndCountAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "simulator", "deleted"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
         where: whereStatement,
         include: [
           {
@@ -38,7 +38,7 @@ module.exports = {
   getAllDevices: async function(whereStatement) {
     return new Promise((resolve, reject) => {
       Device.findAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "simulator", "deleted"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
         where: whereStatement,
         include: [
           {
@@ -73,7 +73,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (createdOrUpdatedDevice) {
         Device.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "simulator", "deleted"],
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
           where: {
             id: createdOrUpdatedDevice.id
           },
@@ -150,7 +150,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (id) {
         Device.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "simulator", "deleted"],
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
           where: {
             id: id
           },
