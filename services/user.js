@@ -690,5 +690,60 @@ module.exports = {
         resolve(false);
       }
     });
+  },
+  canCreateUpdateDeleteSimulator: async function(user) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator"];
+
+      var allowed = false;
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role.title)) {
+            allowed = true;
+          }
+        });
+      }
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  },
+  canCreateUpdateDeleteDevice: async function(user) {
+    return new Promise((resolve, reject) => {
+      var allowed = false;
+      if (user.superadmin == true) {
+        allowed = true;
+      }
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  },
+  canGetDeviceAndSimulator: async function(user) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
+
+      var allowed = false;
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role.title)) {
+            allowed = true;
+          }
+        });
+      }
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
   }
 };

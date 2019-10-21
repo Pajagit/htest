@@ -94,12 +94,13 @@ module.exports = {
       }
     });
   },
-  checkIfDeviceExistById: async function(id) {
+  checkIfDeviceExistById: async function(id, isRealDevice) {
     return new Promise((resolve, reject) => {
       Device.findOne({
         where: {
           id: id,
-          deleted: false
+          deleted: false,
+          simulator: !isRealDevice
         }
       }).then(device => {
         if (device) {
@@ -146,13 +147,14 @@ module.exports = {
       });
     });
   },
-  getDeviceById: async function(id) {
+  getDeviceById: async function(id, isRealDevice) {
     return new Promise((resolve, reject) => {
       if (id) {
         Device.findOne({
           attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
           where: {
-            id: id
+            id: id,
+            simulator: !isRealDevice
           },
           include: [
             {
