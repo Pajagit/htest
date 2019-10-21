@@ -8,6 +8,15 @@ module.exports = {
       errors.page = "Page is not a valid number";
     }
 
+    if (isEmpty(data.simulator)) {
+      errors.page = "Simulator is required";
+    } else {
+      var arrayOfSimulatorValues = ["true", "false"];
+      if (!arrayOfSimulatorValues.includes(data.simulator)) {
+        errors.simulator = "Simulator can have one of these values [true, false]";
+      }
+    }
+
     if (!isEmpty(data.page_size) && isNaN(data.page_size)) {
       errors.page_size = "Page size is not a valid number";
     }

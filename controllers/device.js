@@ -18,8 +18,8 @@ module.exports = {
 
     var whereStatement = {};
     whereStatement.deleted = false;
-    whereStatement.simulator = false;
-    if (req.body.offices) {
+    whereStatement.simulator = req.query.simulator;
+    if (req.body.offices && req.query.simulator == "false") {
       if (req.body.offices.length > 0) {
         whereStatement.office_id = {
           [Op.in]: req.body.offices
@@ -173,36 +173,6 @@ module.exports = {
     var device = await DeviceService.getDeviceById(req.params.id);
     if (device) {
       return res.status(200).json(device);
-    } else {
-      return res.status(500).json({ error: "Something went wrong" });
-    }
-  },
-  getSimulators: async function(req, res) {
-    const { errors, isValid } = validateGetDevices(req.query);
-
-    // Check Validation
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
-    var whereStatement = {};
-    whereStatement.deleted = false;
-    whereStatement.simulator = true;
-    if (req.body.offices) {
-      if (req.body.offices.length > 0) {
-        whereStatement.office_id = {
-          [Op.in]: req.body.offices
-        };
-      }
-    }
-
-    if (req.query.page >= 0 && req.query.page_size) {
-      var devices = await DeviceService.getDevicesPaginated(whereStatement, req.query.page, req.query.page_size);
-    } else {
-      var devices = await DeviceService.getAllDevices(whereStatement);
-    }
-    if (devices) {
-      return res.status(200).json(devices);
     } else {
       return res.status(500).json({ error: "Something went wrong" });
     }
