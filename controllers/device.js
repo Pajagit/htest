@@ -1,5 +1,9 @@
-var DeviceService = require("../services/device");
-var OfficeService = require("../services/office");
+const Sequelize = require("sequelize");
+const pgURI = require("../config/keys").postgresURI;
+const sequelize = new Sequelize(pgURI);
+const Op = Sequelize.Op;
+const DeviceService = require("../services/device");
+const OfficeService = require("../services/office");
 const validateGetDevices = require("../validation/device").validateGetDevices;
 const validateDeviceInput = require("../validation/device").validateDeviceInput;
 
@@ -14,8 +18,12 @@ module.exports = {
 
     var whereStatement = {};
     whereStatement.deleted = false;
-    if (req.query.office_id >= 0) {
-      whereStatement.office_id = req.query.office_id;
+    if (req.body.offices) {
+      if (req.body.offices.length > 0) {
+        whereStatement.office_id = {
+          [Op.in]: req.body.offices
+        };
+      }
     }
 
     if (req.query.page >= 0 && req.query.page_size) {

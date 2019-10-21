@@ -12,10 +12,6 @@ module.exports = {
       errors.page_size = "Page size is not a valid number";
     }
 
-    if (data.office_id && isNaN(data.office_id)) {
-      errors.office_id = "Office id is not valid number";
-    }
-
     return {
       errors,
       isValid: isEmpty(errors)
