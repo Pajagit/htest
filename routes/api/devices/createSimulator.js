@@ -2,11 +2,11 @@ const Router = require("express").Router;
 const passport = require("passport");
 const DeviceController = require("../../../controllers/device");
 
-// @route POST api/devices/
-// @desc all devices route
-// @access public
+// @route POST api/devices/simulator
+// @desc Create new simulator
+// @access Private
 module.exports = Router({ mergeParams: true }).post(
-  "/devices",
+  "/devices/simulator",
   passport.authenticate("jwt", { session: false }),
-  DeviceController.getDevices
+  DeviceController.createSimulator
 );
