@@ -16,9 +16,10 @@ class TestCaseContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settings: {},
+      settings: this.props.settings.settings,
       filters: this.props.settings.settings,
       testcases: this.props.testcases.testcases,
+      initialRender: true,
       projectId: null,
       page: 0,
       dimensions: null
@@ -29,10 +30,13 @@ class TestCaseContainer extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.settings && nextProps.settings.settings) {
-      if (nextProps.settings.settings !== prevState.filters) {
-        update.filters = nextProps.settings.settings;
+      if (nextProps.settings.settings !== prevState.settings) {
+        update.settings = nextProps.settings.settings;
+        if (prevState.initialRender) {
+          update.initialRender = false;
+          nextProps.getTestcases(nextProps.match.params.projectId, nextProps.settings.settings, 1);
+        }
       }
-      update.settings = nextProps.settings;
     }
 
     if (nextProps.testcases && nextProps.testcases.testcases) {
@@ -44,7 +48,6 @@ class TestCaseContainer extends Component {
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
-    this.props.getTestcases(this.props.match.params.projectId, this.state.settings.settings, 1);
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
   }
@@ -64,7 +67,6 @@ class TestCaseContainer extends Component {
     var settingsLoading = this.props.settings.loading;
     var testcases = this.props.testcases;
     var { loading } = this.props.testcases;
-
     var pageCount = null;
     var showPagination = false;
     if (testcases.testcases) {
@@ -77,9 +79,9 @@ class TestCaseContainer extends Component {
     let content;
     let grid = "";
     var pagination = "";
-    if (testcases.testcases === null || loading || this.state.filters === null || settingsLoading) {
+    if (testcases.testcases === null || loading || this.state.settings === null || settingsLoading) {
       content = <Spinner />;
-    } else if (testcases.testcases.testcases.length > 0 && this.state.filters.view_mode === 1) {
+    } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 1) {
       testcases = this.props.testcases.testcases;
       if (showPagination) {
         pagination = (
@@ -113,7 +115,7 @@ class TestCaseContainer extends Component {
             ></PortraitTestCase>
           </React.Fragment>
         ));
-    } else if (testcases.testcases.testcases.length > 0 && this.state.filters.view_mode === 2) {
+    } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 2) {
       testcases = this.props.testcases.testcases;
       testcases = this.props.testcases.testcases;
       if (showPagination) {

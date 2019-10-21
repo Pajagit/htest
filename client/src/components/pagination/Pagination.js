@@ -91,7 +91,7 @@ class Pagination extends Component {
       pagesToRender = apiReturnedPages;
     }
 
-    var firstPageToRender = currentPage - widthAllowedPages / 2;
+    var firstPageToRender = currentPage - Math.round(widthAllowedPages / 2);
 
     if (firstPageToRender > apiReturnedPages - pagesToRender) {
       firstPageToRender = apiReturnedPages - pagesToRender;
@@ -102,21 +102,7 @@ class Pagination extends Component {
     if (firstPageToRender < 1) {
       firstPageToRender = 1;
     }
-    var lastPageToRender =
-      currentPage + widthAllowedPages / 2 < apiReturnedPages ? currentPage + widthAllowedPages / 2 : apiReturnedPages;
-    if (lastPageToRender < pagesToRender) {
-      lastPageToRender = pagesToRender;
-    }
 
-    if (lastPageToRender > apiReturnedPages) {
-      lastPageToRender = apiReturnedPages;
-    }
-
-    var lastPageReduced = false;
-    if (calculatedNumberOfPagesOneDirection(pagesToRender) < currentPage) {
-      lastPageToRender = lastPageToRender - 1;
-      lastPageReduced = true;
-    }
     var backPageBtnClass = "";
     var forwardPageBtnClass = "";
     var firstPageBtnClass = "";
@@ -134,33 +120,26 @@ class Pagination extends Component {
 
     var content = [];
 
-    var counter = firstPageToRender;
+    var pageIndex = firstPageToRender;
 
-    if (lastPageReduced && currentPage + calculatedNumberOfPagesOneDirection(pagesToRender) > apiReturnedPages) {
-      lastPageToRender = lastPageToRender + 1;
-      counter = counter + 1;
+    if (apiReturnedPages > pagesToRender) {
+      pagesToRender = pagesToRender + 1;
     }
-    while (counter <= lastPageToRender) {
+    var pageCounter = pagesToRender;
+
+    while (pageCounter > 0) {
       content.push(
         <div
-          key={counter}
-          className={`pagination-items--item ${currentPage === counter ? "active-page" : ""}`}
+          key={pageIndex}
+          className={`pagination-items--item ${currentPage === pageIndex ? "active-page" : ""}`}
           onClick={this.newPagePredefined}
         >
-          {counter}
+          {pageIndex}
         </div>
       );
-      counter++;
+      pageIndex++;
+      pageCounter--;
     }
-
-    console.log(`Can be shown: ${pagesToRender}`);
-    console.log(`FROM BE: ${apiReturnedPages}`);
-    console.log(`First page to render: ${firstPageToRender}`);
-    console.log(`Current page: ${currentPage}`);
-    console.log(`Last page to render: ${lastPageToRender}`);
-    console.log(`Pages from current page in one direction ${calculatedNumberOfPagesOneDirection(pagesToRender)}`);
-    console.log(`Width calculcated pages allowed ${calculatedNumberOfPagesThatCanBeShown(this.props.width)}`);
-    console.log(`-------------------------`);
 
     return (
       <div className="pagination">
