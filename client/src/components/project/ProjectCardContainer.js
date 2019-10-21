@@ -79,7 +79,7 @@ class ProjectCardContainer extends Component {
       projects = this.state.projects.projects;
       loading = false;
     }
-    if (projects.length > 0 && !loading) {
+    if (projects.length > 0 && !loading && this.state.dimensions) {
       if (showPagination) {
         pagination = (
           <Pagination

@@ -68,12 +68,54 @@ class Pagination extends Component {
 
   render() {
     var currentPage = 1;
-    var pageCount = 1;
+    var apiReturnedPages = 1;
+    var pagesToRender = 0;
+    var calculatedNumberOfPagesThatCanBeShown = pageBtnWidth => {
+      return Math.round(pageBtnWidth / 55 - 5);
+    };
+
+    var calculatedNumberOfPagesOneDirection = numberOfPagesThatCanBeShown => {
+      return Math.round(numberOfPagesThatCanBeShown / 2);
+    };
+    var widthAllowedPages = calculatedNumberOfPagesThatCanBeShown(this.props.width);
     if (!isNaN(this.props.page)) {
       currentPage = parseInt(this.props.page);
     }
     if (!isNaN(this.state.pageCount)) {
-      pageCount = parseInt(this.state.pageCount);
+      apiReturnedPages = parseInt(this.state.pageCount);
+    }
+
+    if (widthAllowedPages < apiReturnedPages) {
+      pagesToRender = widthAllowedPages;
+    } else {
+      pagesToRender = apiReturnedPages;
+    }
+
+    var firstPageToRender = currentPage - widthAllowedPages / 2;
+
+    if (firstPageToRender > apiReturnedPages - pagesToRender) {
+      firstPageToRender = apiReturnedPages - pagesToRender;
+    }
+    if (currentPage + calculatedNumberOfPagesOneDirection(pagesToRender) > apiReturnedPages) {
+      firstPageToRender = apiReturnedPages - calculatedNumberOfPagesThatCanBeShown(this.props.width);
+    }
+    if (firstPageToRender < 1) {
+      firstPageToRender = 1;
+    }
+    var lastPageToRender =
+      currentPage + widthAllowedPages / 2 < apiReturnedPages ? currentPage + widthAllowedPages / 2 : apiReturnedPages;
+    if (lastPageToRender < pagesToRender) {
+      lastPageToRender = pagesToRender;
+    }
+
+    if (lastPageToRender > apiReturnedPages) {
+      lastPageToRender = apiReturnedPages;
+    }
+
+    var lastPageReduced = false;
+    if (calculatedNumberOfPagesOneDirection(pagesToRender) < currentPage) {
+      lastPageToRender = lastPageToRender - 1;
+      lastPageReduced = true;
     }
     var backPageBtnClass = "";
     var forwardPageBtnClass = "";
@@ -85,77 +127,20 @@ class Pagination extends Component {
       backPageBtnClass = "disabled-page";
     }
 
-    if (currentPage >= pageCount) {
+    if (currentPage >= apiReturnedPages) {
       forwardPageBtnClass = "disabled-page";
       lastPageBtnClass = "disabled-page";
     }
 
-    var counter = 1;
     var content = [];
-    var totalPagesReturnedFromBe = this.state.pageCount;
 
-    var calculatedNumberOfPagesThatCanBeShown = pageBtnWidth => {
-      return Math.round(pageBtnWidth / 55) - 5;
-    };
+    var counter = firstPageToRender;
 
-    var pagesToShowOneDirection = numberOfPagesThatCanBeShown => {
-      return Math.round(numberOfPagesThatCanBeShown / 2);
-    };
-
-    var numberOfPagesThatCanBeShown = calculatedNumberOfPagesThatCanBeShown(this.props.width);
-
-    if (numberOfPagesThatCanBeShown >= totalPagesReturnedFromBe) {
-      numberOfPagesThatCanBeShown = totalPagesReturnedFromBe;
+    if (lastPageReduced && currentPage + calculatedNumberOfPagesOneDirection(pagesToRender) > apiReturnedPages) {
+      lastPageToRender = lastPageToRender + 1;
+      counter = counter + 1;
     }
-    var firstPageToShow =
-      currentPage - pagesToShowOneDirection(numberOfPagesThatCanBeShown) > 1
-        ? currentPage - pagesToShowOneDirection(numberOfPagesThatCanBeShown)
-        : 1;
-
-    var lastPageToShow =
-      currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) <= totalPagesReturnedFromBe
-        ? currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown)
-        : totalPagesReturnedFromBe;
-    if (lastPageToShow < numberOfPagesThatCanBeShown) {
-      lastPageToShow = numberOfPagesThatCanBeShown;
-    }
-    console.log(`Can be shown: ${numberOfPagesThatCanBeShown}`);
-    console.log(`FROM BE: ${totalPagesReturnedFromBe}`);
-    console.log(`First page to show: ${firstPageToShow}`);
-    console.log(`Current page: ${currentPage}`);
-    console.log(`Last page to show: ${lastPageToShow}`);
-    console.log(`Pages from current one direction ${pagesToShowOneDirection(numberOfPagesThatCanBeShown)}`);
-    console.log(`-------------------------`);
-
-    counter = firstPageToShow;
-    var leftReduced = false;
-    if (firstPageToShow > 1) {
-      if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
-        counter = totalPagesReturnedFromBe - numberOfPagesThatCanBeShown;
-        if (counter < 0) {
-          counter = 0;
-        }
-      } else {
-        counter = firstPageToShow + 1;
-      }
-      content.push(
-        <span key="first" className={`pagination-items--item disabled`}>
-          ...
-        </span>
-      );
-      leftReduced = true;
-    }
-    if (lastPageToShow <= totalPagesReturnedFromBe) {
-      if (currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown) >= totalPagesReturnedFromBe) {
-        lastPageToShow = totalPagesReturnedFromBe;
-      } else {
-        lastPageToShow = counter + numberOfPagesThatCanBeShown - 1;
-      }
-    }
-    if (leftReduced) {
-      lastPageToShow = lastPageToShow - 1;
-    }
-    while (counter <= lastPageToShow) {
+    while (counter <= lastPageToRender) {
       content.push(
         <div
           key={counter}
@@ -167,15 +152,15 @@ class Pagination extends Component {
       );
       counter++;
     }
-    var lastPageThatCanBeShown = currentPage + pagesToShowOneDirection(numberOfPagesThatCanBeShown);
 
-    if (lastPageThatCanBeShown < totalPagesReturnedFromBe && numberOfPagesThatCanBeShown < totalPagesReturnedFromBe) {
-      content.push(
-        <span key="last" className={`pagination-items--item disabled`}>
-          ...
-        </span>
-      );
-    }
+    console.log(`Can be shown: ${pagesToRender}`);
+    console.log(`FROM BE: ${apiReturnedPages}`);
+    console.log(`First page to render: ${firstPageToRender}`);
+    console.log(`Current page: ${currentPage}`);
+    console.log(`Last page to render: ${lastPageToRender}`);
+    console.log(`Pages from current page in one direction ${calculatedNumberOfPagesOneDirection(pagesToRender)}`);
+    console.log(`Width calculcated pages allowed ${calculatedNumberOfPagesThatCanBeShown(this.props.width)}`);
+    console.log(`-------------------------`);
 
     return (
       <div className="pagination">
