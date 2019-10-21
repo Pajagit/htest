@@ -30,6 +30,10 @@ class ProjectCardContainer extends Component {
       if (nextProps.searchTerm !== prevState.searchTerm && nextProps.searchTerm === "") {
         nextProps.getProjects("", 1);
       }
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = nextProps.auth.user;
+        nextProps.getProjects("", 1);
+      }
 
       if (nextProps.projects && nextProps.projects.projects) {
         update.projects = nextProps.projects.projects;
