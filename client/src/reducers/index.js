@@ -8,6 +8,8 @@ import userReducer from "./userReducer";
 import projectReducer from "./projectReducer";
 import roleReducer from "./roleReducer";
 import settingReducer from "./settingReducer";
+import deviceReducer from "./deviceReducer";
+import officeReducer from "./officeReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -17,5 +19,7 @@ export default combineReducers({
   users: userReducer,
   projects: projectReducer,
   roles: roleReducer,
-  settings: settingReducer
+  settings: settingReducer,
+  devices: deviceReducer,
+  offices: officeReducer
 });

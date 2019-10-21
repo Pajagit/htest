@@ -21,6 +21,7 @@ class ProjectCardContainer extends Component {
       dimensions: null,
       errors: {}
     };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
