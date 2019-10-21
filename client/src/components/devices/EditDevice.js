@@ -234,7 +234,7 @@ class EditDevice extends Component {
             <div className="flex-column-left mt-4">
               <Btn
                 className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-                label="Add Device"
+                label="Edit Device"
                 type="text"
                 onClick={e => this.submitForm(e)}
               />
