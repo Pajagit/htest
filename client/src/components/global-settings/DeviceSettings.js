@@ -121,6 +121,7 @@ class DeviceSettings extends Component {
               label={""}
               validationMsg={this.state.errors.office_id}
               placeholder={"Offices"}
+              className={"max-300"}
               multiple={true}
             />
             {content}

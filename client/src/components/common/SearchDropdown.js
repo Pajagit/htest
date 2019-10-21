@@ -30,6 +30,10 @@ function SearchDropdown({
     disabledDropdownSelect = "disabled-light";
     value = [{ id: 0, title: `No available ${placeholder.toLowerCase()}` }];
   }
+  var customClass = "";
+  if (className) {
+    customClass = className;
+  }
   return (
     <div className="form-element">
       <div className="form-element-item">
@@ -37,7 +41,7 @@ function SearchDropdown({
       </div>
 
       <div className={`form-element-item ${disabledDropdownSelect}`}>
-        <div className="select-dropdown">
+        <div className={`select-dropdown ${customClass}`}>
           <div className="select-dropdown--icon">
             <i className="fas fa-search"></i>
           </div>
