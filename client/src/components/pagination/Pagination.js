@@ -71,7 +71,7 @@ class Pagination extends Component {
     var apiReturnedPages = 1;
     var pagesToRender = 0;
     var calculatedNumberOfPagesThatCanBeShown = pageBtnWidth => {
-      return Math.round(pageBtnWidth / 55 - 5);
+      return Math.round(pageBtnWidth / 53 - 5);
     };
 
     var calculatedNumberOfPagesOneDirection = numberOfPagesThatCanBeShown => {
