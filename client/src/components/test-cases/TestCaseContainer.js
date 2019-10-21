@@ -152,10 +152,10 @@ class TestCaseContainer extends Component {
         ));
     } else {
       if (
-        !isEmpty(this.state.settings && this.state.settings.settings.users) ||
-        !isEmpty(this.state.settings && this.state.settings.settings.groups) ||
-        (this.state.settings && this.state.settings.settings.date_from !== null) ||
-        (this.state.settings && this.state.settings.settings.date_to !== null)
+        !isEmpty(this.state.settings && this.state.settings.users) ||
+        !isEmpty(this.state.settings && this.state.settings.groups) ||
+        (this.state.settings && this.state.settings.date_from !== null) ||
+        (this.state.settings && this.state.settings.date_to !== null)
       ) {
         content = (
           <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>

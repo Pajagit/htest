@@ -35,6 +35,7 @@ import TestSetup from "./components/test-setup/TestSetup";
 import EditTestCase from "./components/test-cases/EditTestCase";
 import Notifications from "./components/notifications/Notifications";
 import GlobalStatistics from "./components/statistics/GlobalStatistics";
+import NewDevice from "./components/devices/NewDevice";
 import { ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "./sass/main.scss";
@@ -143,6 +144,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/TestSetup" component={TestSetup} />
           <PrivateRoute exact path="/Notifications" component={Notifications} />
           <PrivateRoute exact path="/Statistics" component={GlobalStatistics} />
+          <PrivateRoute exact path="/AddDevice" component={NewDevice} />
         </div>
       </Router>
     </Provider>
