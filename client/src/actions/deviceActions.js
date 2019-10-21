@@ -3,17 +3,12 @@ import axios from "axios";
 import { GET_DEVICES, GET_DEVICE, DEVICE_LOADING, GET_ERRORS } from "./types";
 
 // Get All Devices
-export const getDevices = (officeId, pageSent, pageSizeSent) => dispatch => {
+export const getDevices = (offices, pageSent, pageSizeSent) => dispatch => {
   dispatch(deviceLoading());
   var page = pageSent === undefined ? 1 : pageSent;
   var size = pageSizeSent === undefined ? 100 : pageSizeSent;
-
-  var url = `api/devices?page=${page}&page_size=${size}`;
-  if (officeId) {
-    url = `api/devices?office_id=${officeId}&page=${page}&page_size=${size}`;
-  }
   axios
-    .get(url)
+    .post(`api/devices?page=${page}&page_size=${size}&simulator=false`, offices)
     .then(res =>
       dispatch({
         type: GET_DEVICES,

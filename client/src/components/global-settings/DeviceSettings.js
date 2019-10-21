@@ -7,6 +7,7 @@ import { getDevices } from "../../actions/deviceActions";
 import { getOffices } from "../../actions/officeActions";
 import isEmpty from "../../validation/isEmpty";
 import { superAdminPermissions } from "../../permissions/SuperAdminPermissions";
+import getIdsFromObjArray from "../../utility/getIdsFromObjArray";
 
 import SearchDropdown from "../../components/common/SearchDropdown";
 import GlobalPanel from "../global-panel/GlobalPanel";
@@ -64,7 +65,8 @@ class DeviceSettings extends Component {
   }
   selectOffice(value) {
     this.setState({ office: value }, () => {
-      this.props.getDevices(this.state.office.id);
+      var officesIds = getIdsFromObjArray(this.state.office);
+      this.props.getDevices({ offices: officesIds });
     });
   }
   render() {
@@ -119,7 +121,7 @@ class DeviceSettings extends Component {
               label={""}
               validationMsg={this.state.errors.office_id}
               placeholder={"Offices"}
-              multiple={false}
+              multiple={true}
             />
             {content}
           </div>
