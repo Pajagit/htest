@@ -142,7 +142,7 @@ class TestCase extends Component {
           <div className="testcase-details--header">
             <div className="testcase-details-container-top">
               <div className="testcase-details-header">
-                <div className="testcase-details-header--title">Test case name</div>
+                <div className="testcase-details-header--title">Test Case Title</div>
                 <div className="testcase-details-header--value">{testcase.title}</div>
               </div>
               {editBtn}
