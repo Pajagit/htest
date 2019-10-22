@@ -86,9 +86,7 @@ class NewTestCase extends Component {
   componentDidMount() {
     var projectId = this.props.match.params.projectId;
     this.setState({ projectId });
-    if (this.state.isValid) {
-      this.props.getGroups(projectId);
-    }
+    this.props.getGroups(projectId);
   }
   checkValidation() {
     var formData = {};
@@ -203,7 +201,9 @@ class NewTestCase extends Component {
     }
 
     this.setState({ selectedGroupsObjects: newArray }, () => {
-      this.checkValidation();
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
     });
   }
 
