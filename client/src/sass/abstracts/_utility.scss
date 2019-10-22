@@ -81,8 +81,13 @@ $lines-to-show: 6;
   -ms-user-select: none;
   user-select: none;
 }
+::selection {
+  background: $color-primary;
+  color: white;
+}
 ::-moz-selection {
-  background: transparent;
+  background: $color-primary;
+  color: white;
 }
 
 .clickable {

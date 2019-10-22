@@ -1,8 +1,10 @@
 .datepicker::selection {
   background: transparent; /* WebKit/Blink Browsers */
+  color: #858585 !important;
 }
 .datepicker::-moz-selection {
   background: transparent; /* Gecko Browsers */
+  color: #858585 !important;
 }
 .react-daypicker-root {
   display: inline-block;

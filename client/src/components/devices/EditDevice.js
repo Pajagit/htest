@@ -61,11 +61,11 @@ class EditDevice extends Component {
         update.initialRender = false;
 
         update.title = device.title;
-        update.resolution = device.resolution;
+        update.resolution = device.resolution ? device.resolution : "";
         update.dpi = device.dpi ? device.dpi : "";
-        update.udid = device.udid;
+        update.udid = device.udid ? device.udid : "";
         update.retina = device.retina;
-        update.screen_size = device.screen_size;
+        update.screen_size = device.screen_size ? device.screen_size : "";
         var formatedOffice = device.office;
         formatedOffice.title = formatedOffice["city"];
         delete formatedOffice.city;
