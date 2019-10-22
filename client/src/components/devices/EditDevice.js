@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getDevice, editDevice } from "../../actions/deviceActions";
+import { getDevice, editDevice, removeDevice } from "../../actions/deviceActions";
 import { getOffices } from "../../actions/officeActions";
 import { superAdminPermissions } from "../../permissions/SuperAdminPermissions";
 import Input from "../../components/common/Input";
@@ -20,6 +20,7 @@ import Switch from "../common/Switch";
 import GlobalPanel from "../../components/global-panel/GlobalPanel";
 import SearchDropdown from "../../components/common/SearchDropdown";
 import SettingPanel from "../../components/settings-panel/SettingPanel";
+import Confirm from "../../components/common/Confirm";
 import Header from "../../components/common/Header";
 
 class EditDevice extends Component {
@@ -147,6 +148,25 @@ class EditDevice extends Component {
     }
   }
 
+  confirmActivation = e => {
+    this.props.removeDevice(this.props.match.params.deviceId, res => {
+      if (res.status === 200) {
+        successToast("Device removed successfully");
+        this.props.history.push(`/DeviceSettings`);
+      } else {
+        failToast("Something went wrong with removing group");
+      }
+    });
+  };
+  confirmModal = () => {
+    var reject = "No";
+    var title = "Remove this device?";
+    var msg = "You will not be able to use it in your reports anymore";
+    var confirm = "Remove";
+
+    Confirm(title, msg, reject, confirm, e => this.confirmActivation());
+  };
+
   render() {
     var content;
     var { device, loading } = this.props.devices;
@@ -159,7 +179,11 @@ class EditDevice extends Component {
           <div className="header">
             <div className="header--title">Device Information </div>
             <div className="header--buttons">
-              <div className="header--buttons--primary"></div>
+              <div className="header--buttons--primary">
+                <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
+                  <i className="fas fa-trash-alt"></i>
+                </div>
+              </div>
               <div className="header--buttons--secondary"></div>
             </div>
           </div>
@@ -279,5 +303,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getDevice, editDevice, getOffices, clearErrors }
+  { getDevice, editDevice, removeDevice, getOffices, clearErrors }
 )(withRouter(EditDevice));
