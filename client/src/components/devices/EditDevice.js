@@ -161,7 +161,7 @@ class EditDevice extends Component {
   confirmModal = () => {
     var reject = "No";
     var title = "Remove this device?";
-    var msg = "You will not be able to use it in your reports anymore";
+    var msg = "Users will not be able to use it on their projects anymore";
     var confirm = "Remove";
 
     Confirm(title, msg, reject, confirm, e => this.confirmActivation());
