@@ -69,6 +69,19 @@ export const editDevice = (device_id, deviceData, callback) => dispatch => {
     );
 };
 
+// Remove Device by device_id
+export const removeDevice = (device_id, callback) => dispatch => {
+  axios
+    .delete(`/api/devices/device/${device_id}`)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Device loading
 export const deviceLoading = () => {
   return {
