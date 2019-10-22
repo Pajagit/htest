@@ -90,10 +90,53 @@ class TestCase extends Component {
         </div>
       );
     }
+    var precondition = "";
+    var links = "";
+    var uploaded_files = "";
 
     if (testcase === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(testcase)) {
+      if (testcase.preconditions) {
+        precondition = (
+          <div className="testcase-details-item">
+            <div className="testcase-details-item--title">Preconditions</div>
+            <div className="testcase-details-item--value">{testcase.preconditions}</div>
+          </div>
+        );
+      }
+      if (!isEmpty(testcase.links)) {
+        links = (
+          <div className="testcase-details-item">
+            <div className="testcase-details-item--title">Links</div>
+            {testcase.links.map((link, index) => (
+              <span key={index}>
+                <div className="testcase-details-item--value">
+                  <a href={link.value} target="_blank" rel="noopener noreferrer">
+                    <span className="mr-1">{link.value}</span>{" "}
+                    <img className="testcase-details-item--value-img" src={openExternalBtn} alt="External link" />
+                  </a>
+                </div>
+              </span>
+            ))}
+          </div>
+        );
+      }
+      if (!isEmpty(testcase.uploaded_files)) {
+        uploaded_files = (
+          <div className="testcase-details-item">
+            <div className="testcase-details-item--title">Uploaded files</div>
+            {testcase.uploaded_files.map((file, index) => (
+              <span key={index}>
+                <div className="testcase-details-item--value">
+                  <span className="mr-1">{file.path}</span> <i className="fas fa-link"></i>
+                </div>
+              </span>
+            ))}
+          </div>
+        );
+      }
+
       content = (
         <div className="testcase-details">
           <div className="testcase-details--header">
@@ -138,33 +181,9 @@ class TestCase extends Component {
                   <br />
                 </div>
               </div>
-              <div className="testcase-details-item">
-                <div className="testcase-details-item--title">Preconditions</div>
-                <div className="testcase-details-item--value">{testcase.preconditions}</div>
-              </div>
-              <div className="testcase-details-item">
-                <div className="testcase-details-item--title">Links</div>
-                {testcase.links.map((link, index) => (
-                  <span key={index}>
-                    <div className="testcase-details-item--value">
-                      <a href={link.value} target="_blank" rel="noopener noreferrer">
-                        <span className="mr-1">{link.value}</span>{" "}
-                        <img className="testcase-details-item--value-img" src={openExternalBtn} alt="External link" />
-                      </a>
-                    </div>
-                  </span>
-                ))}
-              </div>
-              <div className="testcase-details-item">
-                <div className="testcase-details-item--title">Uploaded files</div>
-                {testcase.uploaded_files.map((file, index) => (
-                  <span key={index}>
-                    <div className="testcase-details-item--value">
-                      <span className="mr-1">{file.path}</span> <i className="fas fa-link"></i>
-                    </div>
-                  </span>
-                ))}
-              </div>
+              {precondition}
+              {links}
+              {uploaded_files}
               {actionBtns}
             </div>
           </div>
