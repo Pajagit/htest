@@ -25,6 +25,7 @@ class DeviceSettings extends Component {
       projectId: null,
       offices: this.props.offices.offices,
       office: [],
+      officesFormatted: [],
       user: this.props.auth.user,
       errors: {}
     };
@@ -75,14 +76,6 @@ class DeviceSettings extends Component {
     if (devices === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(devices.devices)) {
-      content = (
-        <ListItem
-          title={"iPhone 6s"}
-          img={""}
-          list={"10.2 Retina, 4.7” 1334x750 - 326ppi 06f111c45fce3e4b5d"}
-          msg={"Nis"}
-        />
-      );
       content = devices.devices.map((device, index) => (
         <ListItem
           key={index}
