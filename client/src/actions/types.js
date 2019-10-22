@@ -31,4 +31,8 @@ export const GET_DEVICES = "GET_DEVICES";
 export const GET_DEVICE = "GET_DEVICE";
 export const DEVICE_LOADING = "DEVICE_LOADING";
 
+export const GET_SIMULATORS = "GET_SIMULATORS";
+export const GET_SIMULATOR = "GET_SIMULATOR";
+export const SIMULATOR_LOADING = "SIMULATOR_LOADING";
+
 export const GET_OFFICES = "GET_OFFICES";

@@ -9,6 +9,7 @@ import projectReducer from "./projectReducer";
 import roleReducer from "./roleReducer";
 import settingReducer from "./settingReducer";
 import deviceReducer from "./deviceReducer";
+import simulatorReducer from "./simulatorReducer";
 import officeReducer from "./officeReducer";
 
 export default combineReducers({
@@ -21,5 +22,6 @@ export default combineReducers({
   roles: roleReducer,
   settings: settingReducer,
   devices: deviceReducer,
+  simulators: simulatorReducer,
   offices: officeReducer
 });
