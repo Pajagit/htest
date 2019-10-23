@@ -2,7 +2,7 @@ import React from "react";
 import isEmpty from "../../validation/isEmpty";
 import { Link } from "react-router-dom";
 
-function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn, link }) {
+function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn, link, btnOne }) {
   if (!isEmpty(img)) {
     var imageContainer = (
       <div className="list-item--image">
@@ -22,7 +22,7 @@ function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn
 
             <div className="list-item--text--msg">{msg}</div>
           </div>
-          <div className="list-item--buttons"></div>
+          <div className="list-item--buttons">{btnOne}</div>
         </div>
       </Link>
     );
@@ -36,7 +36,7 @@ function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn
 
           <div className="list-item--text--msg">{msg}</div>
         </div>
-        <div className="list-item--buttons"></div>
+        <div className="list-item--buttons">{btnOne}</div>
       </div>
     );
   }

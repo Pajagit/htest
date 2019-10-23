@@ -10,9 +10,11 @@ import { getSimulators } from "../../../../actions/simulatorActions";
 import getIdsFromObjArray from "../../../../utility/getIdsFromObjArray";
 import isEmpty from "../../../../validation/isEmpty";
 
+// import Checkbox from "../../../../components/common/Checkbox";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
-import ListItem from "../../../../components/lists/ListItem";
+// import ListItem from "../../../../components/lists/ListItem";
+import PortraitDevice from "../../../../components/common/PortraitDevice";
 import BtnAnchor from "../../../../components/common/BtnAnchor";
 import SearchDropdown from "../../../../components/common/SearchDropdown";
 import Switch from "../../../../components/common/Switch";
@@ -101,14 +103,18 @@ class Devices extends Component {
       content = <Spinner />;
     } else if (!isEmpty(devices.devices)) {
       content = devices.devices.map((device, index) => (
-        <ListItem
+        <PortraitDevice
           key={index}
           title={device.title}
-          msg={device.office ? device.office.city : ""}
-          link={link ? link + device.id : ""}
-          list={`${device.retina ? "Retina" : ""}${" "} ${device.screen_size ? device.screen_size : " "}${" "} ${
-            device.resolution ? device.resolution : " "
-          }${" "} ${device.dpi ? "ppi: " + device.dpi : " "} ${" "}${device.udid ? "udid: " + device.udid : " "}`}
+          office={device.office ? device.office.city : ""}
+          udid={device.udid}
+          resolution={device.resolution}
+          dpi={device.dpi}
+          screen_size={device.screen_size}
+          retina={device.retina}
+          type={this.state.deviceType}
+          id={device.id}
+          projectId={this.props.match.params.projectId}
         />
       ));
     } else if (isEmpty(devices.devices) && isEmpty(this.state.office)) {
@@ -132,7 +138,6 @@ class Devices extends Component {
           label={""}
           validationMsg={this.state.errors.office_id}
           placeholder={"Offices"}
-          className={"max-300"}
           multiple={true}
         />
       );
@@ -172,9 +177,10 @@ class Devices extends Component {
                 <div className="header--buttons--secondary clickable"></div>
               </div>
             </div>
-            {officeFilter}
-            {content}
           </div>
+          <div className="testcase-grid">{officeFilter}</div>
+
+          <div className="testcase-grid testcase-container">{content}</div>
         </div>
       </div>
     );
