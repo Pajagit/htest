@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { GET_DEVICE, GET_DEVICES, SIMULATOR_LOADING } from "./types";
+import { GET_DEVICE, GET_DEVICES, SIMULATOR_LOADING, GET_ERRORS } from "./types";
 
 // Get All Simulators
 export const getSimulators = (pageSent, pageSizeSent) => dispatch => {
@@ -56,18 +56,18 @@ export const getSimulator = device_id => dispatch => {
 //     );
 // };
 
-// // Edit Simulator by device_id
-// export const editSimulator = (device_id, simulatorData, callback) => dispatch => {
-//   axios
-//     .put(`/api/devices/simulator/${device_id}`, simulatorData)
-//     .then(res => callback(res))
-//     .catch(err =>
-//       dispatch({
-//         type: GET_ERRORS,
-//         payload: err.response.data
-//       })
-//     );
-// };
+// Edit Simulator by device_id
+export const editSimulator = (device_id, simulatorData, callback) => dispatch => {
+  axios
+    .put(`/api/devices/simulator/${device_id}`, simulatorData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 // // Remove Simulator by device_id
 // export const removeDevice = (device_id, callback) => dispatch => {

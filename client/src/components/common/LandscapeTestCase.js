@@ -1,7 +1,6 @@
 import React from "react";
 import AddReportBtn from "./AddReportBtn";
 import moment from "moment";
-// import { Link } from "react-router-dom";
 
 function LandscapeTestCase({ title, tags, author, date, description, id, projectId, onClick }) {
   return (

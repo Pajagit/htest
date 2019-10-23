@@ -12,13 +12,13 @@ import NewTestCase from "./pages/project/test-cases/NewTestCase";
 import TestCases from "./pages/project/test-cases/TestCases";
 import Reports from "./pages/project/reports/Reports";
 import Statistics from "./pages/project/statistics/Statistics";
-// import ProjectSettingsPage from "./components/project-settings/ProjectSettings";
 import Landing from "./pages/Landing";
 import Projects from "./pages/global/projects/Projects";
 import EditProject from "./pages/global/global-settings/projects/EditProject";
 import NewProject from "./pages/global/global-settings/projects/NewProject";
 import UserSettings from "./pages/global/global-settings/UserSettings";
 import AddUser from "./pages/global/global-settings/users/AddUser";
+import EditSimulator from "./pages/project/settings/devices/EditSimulator";
 import EditUser from "./pages/global/global-settings/users/EditUser";
 import ProjectSettings from "./pages/global/global-settings/ProjectSettings";
 import DeviceSettings from "./pages/global/global-settings/DeviceSettings";
@@ -147,6 +147,7 @@ function App() {
           <PrivateRoute exact path="/Statistics" component={GlobalStatistics} />
           <PrivateRoute exact path="/AddDevice" component={NewDevice} />
           <PrivateRoute exact path="/EditDevice/:deviceId" component={EditDevice} />
+          <PrivateRoute exact path="/:projectId/EditSimulator/:simulatorId" component={EditSimulator} />
         </div>
       </Router>
     </Provider>
