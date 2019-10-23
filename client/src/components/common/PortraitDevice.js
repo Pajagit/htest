@@ -4,12 +4,15 @@ import { Link } from "react-router-dom";
 
 function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId }) {
   var link = "";
+  var udidValue = "";
   if (simulator) {
     link = (
       <Link to={`/${projectId}/EditSimulator/${id}`}>
         <i className="fas fa-pen"></i>
       </Link>
     );
+  } else {
+    udidValue = <div className="portrait-device-bottom-container--item">UDID: {udid}</div>;
   }
   return (
     <div className="portrait-device">
@@ -27,8 +30,8 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
         <div className="portrait-device-bottom-container">
           <div className="portrait-device-bottom-container--item">Resolution: {resolution}</div>
           <div className="portrait-device-bottom-container--item">DPI: {dpi}</div>
-          <div className="portrait-device-bottom-container--item">UDID: {udid}</div>
           <div className="portrait-device-bottom-container--item">Size: {screen_size}</div>
+          {udidValue}
           <div className="portrait-device-bottom-container--item">OS: 10.1</div>
           <div className="portrait-device-bottom-container--item">Retina: {retina ? "Yes" : "No"}</div>
           <div className="portrait-device-bottom-container--button">
