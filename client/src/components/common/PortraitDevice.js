@@ -1,14 +1,12 @@
 import React from "react";
 import Checkbox from "./Checkbox";
 import { Link } from "react-router-dom";
-import moment from "moment";
 
-function PortraitDevice({ title, udid, resolution, office, dpi, id, type, retina, screen_size, projectId }) {
+function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId }) {
   var link = "";
-  if (type) {
+  if (simulator) {
     link = (
       <Link to={`/${projectId}/EditSimulator/${id}`}>
-        {" "}
         <i className="fas fa-pen"></i>
       </Link>
     );

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { GET_DEVICE, GET_DEVICES, SIMULATOR_LOADING, GET_ERRORS } from "./types";
+import { GET_DEVICE, GET_DEVICES, DEVICE_LOADING, GET_ERRORS } from "./types";
 
 // Get All Simulators
 export const getSimulators = (pageSent, pageSizeSent) => dispatch => {
@@ -42,19 +42,19 @@ export const getSimulator = device_id => dispatch => {
     );
 };
 
-// // Create Simulator
-// export const createSimulator = (simulatorData, callback) => dispatch => {
-//   dispatch(simulatorLoading());
-//   axios
-//     .post(`/api/devices/simulator`, simulatorData)
-//     .then(res => callback(res))
-//     .catch(err =>
-//       dispatch({
-//         type: GET_ERRORS,
-//         payload: err.response.data
-//       })
-//     );
-// };
+// Create Simulator
+export const createSimulator = (simulatorData, callback) => dispatch => {
+  dispatch(simulatorLoading());
+  axios
+    .post(`/api/devices/simulator`, simulatorData)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 // Edit Simulator by device_id
 export const editSimulator = (device_id, simulatorData, callback) => dispatch => {
@@ -69,22 +69,22 @@ export const editSimulator = (device_id, simulatorData, callback) => dispatch =>
     );
 };
 
-// // Remove Simulator by device_id
-// export const removeDevice = (device_id, callback) => dispatch => {
-//   axios
-//     .delete(`/api/devices/simulator/${device_id}`)
-//     .then(res => callback(res))
-//     .catch(err =>
-//       dispatch({
-//         type: GET_ERRORS,
-//         payload: err.response.data
-//       })
-//     );
-// };
+// Remove Simulator by device_id
+export const removeSimulator = (device_id, callback) => dispatch => {
+  axios
+    .delete(`/api/devices/simulator/${device_id}`)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 // Simulator loading
 export const simulatorLoading = () => {
   return {
-    type: SIMULATOR_LOADING
+    type: DEVICE_LOADING
   };
 };

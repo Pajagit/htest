@@ -3,17 +3,18 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getDevices, clearDevices } from "../../../../actions/deviceActions";
+import { getDevices } from "../../../../actions/deviceActions";
 import { projectAdminPermissions } from "../../../../permissions/ProjectRolePermissions";
 import { getOffices } from "../../../../actions/officeActions";
 import { getSimulators } from "../../../../actions/simulatorActions";
+import { clearDevices } from "../../../../actions/deviceActions";
 import getIdsFromObjArray from "../../../../utility/getIdsFromObjArray";
 import isEmpty from "../../../../validation/isEmpty";
 
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import PortraitDevice from "../../../../components/common/PortraitDevice";
-import SearchDropdown from "../../../../components/common/SearchDropdown";
+import BtnAnchor from "../../../../components/common/BtnAnchor";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
 
@@ -49,25 +50,12 @@ class Devices extends Component {
         nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
       }
     }
-    if (nextProps.offices && nextProps.offices.offices) {
-      if (nextProps.offices.offices !== prevState.offices) {
-        update.offices = nextProps.offices.offices;
 
-        var offices = nextProps.offices.offices;
-        var i;
-        for (i = 0; i < offices.length; i++) {
-          offices[i].title = offices[i]["city"];
-          delete offices[i].city;
-        }
-        update.officesFormatted = offices;
-      }
-    }
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
-    this.props.getDevices();
-    this.props.getOffices();
+    this.props.getSimulators();
   }
 
   selectOffice(value) {
@@ -93,15 +81,13 @@ class Devices extends Component {
           dpi={device.dpi}
           screen_size={device.screen_size}
           retina={device.retina}
-          type={this.state.deviceType}
+          simulator={true}
           id={device.id}
           projectId={this.props.match.params.projectId}
         />
       ));
     } else if (isEmpty(devices.devices) && isEmpty(this.state.office)) {
-      content = <div className="testcase-container-no-content">There are no devices added yet</div>;
-    } else if (!isEmpty(this.state.office)) {
-      content = <div className="testcase-container-no-content">There are no devices for selected office</div>;
+      content = <div className="testcase-container-no-content">There are no simulators added yet</div>;
     }
 
     return (
@@ -111,23 +97,19 @@ class Devices extends Component {
         <div className="main-content main-content-grid">
           <Header
             icon={<i className="fas fa-tablet-alt"></i>}
-            title={"Devices"}
+            title={"Simulators"}
             history={this.props}
             canGoBack={false}
+            addBtn={
+              <BtnAnchor
+                type={"text"}
+                label="Add Simulator"
+                disabled={true}
+                className={"a-btn a-btn-primary"}
+                link={`/${this.state.projectId}/NewSimulator`}
+              />
+            }
           />
-          <div className="testcase-grid">
-            <SearchDropdown
-              value={this.state.office}
-              options={this.state.officesFormatted}
-              onChange={this.selectOffice}
-              name={"office_id"}
-              label={""}
-              validationMsg={this.state.errors.office_id}
-              placeholder={"Offices"}
-              multiple={true}
-            />
-          </div>
-
           <div className="testcase-grid testcase-container">{content}</div>
         </div>
       </div>
