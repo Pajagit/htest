@@ -35,7 +35,7 @@ function SearchDropdown({
     customClass = className;
   }
   return (
-    <div className="form-element">
+    <div className="form-element noselect">
       <div className="form-element-item">
         <FormElementTitle label={label} validationMsg={validationMsg} />
       </div>
