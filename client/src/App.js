@@ -8,35 +8,35 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import PrivateRoute from "./components/common/PrivateRoute";
 import setAuthToken from "./actions/setAuthToken";
 import store from "./store";
-import NewTestCase from "./components/test-cases/NewTestCase";
-import TestCases from "./components/test-cases/TestCases";
-import Reports from "./components/reports/Reports";
-import Statistics from "./components/statistics/Statistics";
-import ProjectSettingsPage from "./components/project-settings/ProjectSettings";
+import NewTestCase from "./pages/project/test-cases/NewTestCase";
+import TestCases from "./pages/project/test-cases/TestCases";
+import Reports from "./pages/project/reports/Reports";
+import Statistics from "./pages/project/statistics/Statistics";
+// import ProjectSettingsPage from "./components/project-settings/ProjectSettings";
 import Landing from "./pages/Landing";
-import Projects from "./components/project/Projects";
-import EditProject from "./components/project/EditProject";
-import NewProject from "./components/project/NewProject";
-import UserSettings from "./components/global-settings/UserSettings";
-import AddUser from "./components/users/AddUser";
-import EditUser from "./components/users/EditUser";
-import ProjectSettings from "./components/global-settings/ProjectSettings";
-import DeviceSettings from "./components/global-settings/DeviceSettings";
-import TestCase from "./components/test-cases/TestCase";
-import NewGroup from "./components/groups/NewGroup";
-import EditGroup from "./components/groups/EditGroup";
-import Groups from "./components/groups/Groups";
-import ProjectInfo from "./components/project/ProjectInfo";
-import Devices from "./components/devices/Devices";
-import Browsers from "./components/browsers/Browsers";
-import Versions from "./components/versions/Versions";
-import Environments from "./components/environments/Environments";
-import TestSetup from "./components/test-setup/TestSetup";
-import EditTestCase from "./components/test-cases/EditTestCase";
-import Notifications from "./components/notifications/Notifications";
-import GlobalStatistics from "./components/statistics/GlobalStatistics";
-import NewDevice from "./components/devices/NewDevice";
-import EditDevice from "./components/devices/EditDevice";
+import Projects from "./pages/global/projects/Projects";
+import EditProject from "./pages/global/global-settings/projects/EditProject";
+import NewProject from "./pages/global/global-settings/projects/NewProject";
+import UserSettings from "./pages/global/global-settings/UserSettings";
+import AddUser from "./pages/global/global-settings/users/AddUser";
+import EditUser from "./pages/global/global-settings/users/EditUser";
+import ProjectSettings from "./pages/global/global-settings/ProjectSettings";
+import DeviceSettings from "./pages/global/global-settings/DeviceSettings";
+import TestCase from "./pages/project/test-cases/TestCase";
+import NewGroup from "./pages/project/settings/groups/NewGroup";
+import EditGroup from "./pages/project/settings/groups/EditGroup";
+import Groups from "./pages/project/settings/groups/Groups";
+import ProjectInfo from "./pages/project/settings/ProjectInfo";
+import Devices from "./pages/project/settings/devices/Devices";
+import Browsers from "./pages/project/settings/browsers/Browsers";
+import Versions from "./pages/project/settings/versions/Versions";
+import Environments from "./pages/project/settings/environments/Environments";
+import TestSetup from "./pages/project/settings/test-setup/TestSetup";
+import EditTestCase from "./pages/project/test-cases/EditTestCase";
+import Notifications from "./pages/global/notifications/Notifications";
+import GlobalStatistics from "./pages/global/statistics/GlobalStatistics";
+import NewDevice from "./pages/global/global-settings/devices/NewDevice";
+import EditDevice from "./pages/global/global-settings/devices/EditDevice";
 import { ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "./sass/main.scss";
@@ -127,7 +127,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/TestCases" component={TestCases} />
           <PrivateRoute exact path="/:projectId/Reports" component={Reports} />
           <PrivateRoute exact path="/:projectId/Statistics" component={Statistics} />
-          <PrivateRoute exact path="/:projectId/Settings" component={ProjectSettingsPage} />
+          {/* <PrivateRoute exact path="/:projectId/Settings" component={ProjectSettingsPage} /> */}
           <PrivateRoute exact path="/UserSettings" component={UserSettings} />
           <PrivateRoute exact path="/AddUser" component={AddUser} />
           <PrivateRoute exact path="/ProjectSettings" component={ProjectSettings} />

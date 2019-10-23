@@ -10,9 +10,24 @@ function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn
       </div>
     );
   }
+  var content = "";
+  if (link) {
+    content = (
+      <Link to={link}>
+        <div className="list-item">
+          {imageContainer}
+          <div className="list-item--text">
+            <div className="list-item--text--title">{title}</div>
+            <div className="list-item--text--list">{list}</div>
 
-  return (
-    <Link to={link}>
+            <div className="list-item--text--msg">{msg}</div>
+          </div>
+          <div className="list-item--buttons"></div>
+        </div>
+      </Link>
+    );
+  } else {
+    content = (
       <div className="list-item">
         {imageContainer}
         <div className="list-item--text">
@@ -23,7 +38,9 @@ function ListItem({ img, title, list, msg, activationOnClick, isActive, loggedIn
         </div>
         <div className="list-item--buttons"></div>
       </div>
-    </Link>
-  );
+    );
+  }
+
+  return <div>{content}</div>;
 }
 export default ListItem;
