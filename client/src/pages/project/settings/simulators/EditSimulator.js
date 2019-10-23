@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getSimulator, editSimulator } from "../../../../actions/simulatorActions";
+import { getSimulator, editSimulator, removeSimulator } from "../../../../actions/simulatorActions";
 import { getOffices } from "../../../../actions/officeActions";
 import { superAdminPermissions } from "../../../../permissions/SuperAdminPermissions";
 import Input from "../../../../components/common/Input";
@@ -18,7 +18,6 @@ import isEmpty from "../../../../validation/isEmpty";
 import Spinner from "../../../../components/common/Spinner";
 import Switch from "../../../../components/common/Switch";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
-import SearchDropdown from "../../../../components/common/SearchDropdown";
 import SettingPanel from "../../../../components/settings-panel/SettingPanel";
 import Confirm from "../../../../components/common/Confirm";
 import Header from "../../../../components/common/Header";
@@ -43,7 +42,6 @@ class EditSimulator extends Component {
     this.selectOffice = this.selectOffice.bind(this);
   }
   componentDidMount() {
-    this.props.getOffices();
     this.props.getSimulator(this.props.match.params.simulatorId);
   }
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -128,14 +126,13 @@ class EditSimulator extends Component {
     deviceData.screen_size = this.state.screen_size;
     deviceData.simulator = true;
     const { errors, isValid } = SimulatorValidation(deviceData);
-    console.log(errors);
     if (isValid) {
       this.props.editSimulator(this.props.match.params.simulatorId, deviceData, res => {
         if (res.status === 200) {
-          successToast("Device edited successfully");
-          this.props.history.push(`/${this.props.match.params.projectId}/Devices`);
+          successToast("Simulator edited successfully");
+          this.props.history.push(`/${this.props.match.params.projectId}/Simulators`);
         } else {
-          failToast("Editing device failed");
+          failToast("Editing simulator failed");
           this.props.history.push(
             `${this.props.match.params.projectId}/EditSimulator${this.props.match.params.simulatorId}`
           );
@@ -147,10 +144,10 @@ class EditSimulator extends Component {
   }
 
   confirmActivation = e => {
-    this.props.removeDevice(this.props.match.params.simulatorId, res => {
+    this.props.removeSimulator(this.props.match.params.simulatorId, res => {
       if (res.status === 200) {
-        successToast("Device removed successfully");
-        this.props.history.push(`/DeviceSettings`);
+        successToast("Simulator removed successfully");
+        this.props.history.push(`/${this.props.match.params.projectId}/Simulators`);
       } else {
         failToast("Something went wrong with removing group");
       }
@@ -158,7 +155,7 @@ class EditSimulator extends Component {
   };
   confirmModal = () => {
     var reject = "No";
-    var title = "Remove this device?";
+    var title = "Remove this simulator?";
     var msg = "Users will not be able to use it on their projects anymore";
     var confirm = "Remove";
 
@@ -175,7 +172,7 @@ class EditSimulator extends Component {
       content = (
         <div className="main-content--content">
           <div className="header">
-            <div className="header--title">Device Information </div>
+            <div className="header--title">Simulator Information </div>
             <div className="header--buttons">
               <div className="header--buttons--primary">
                 <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
@@ -226,16 +223,6 @@ class EditSimulator extends Component {
               name={"dpi"}
               onKeyDown={this.submitFormOnEnterKey}
             />
-            <Input
-              type="text"
-              placeholder="Enter Device Udid Here"
-              label="Unique Device Identifier"
-              validationMsg={this.state.errors.udid}
-              value={this.state.udid}
-              onChange={e => this.onChange(e)}
-              name={"udid"}
-              onKeyDown={this.submitFormOnEnterKey}
-            />
 
             <Switch
               label={"Retina"}
@@ -251,7 +238,7 @@ class EditSimulator extends Component {
                 onClick={e => this.submitForm(e)}
               />
 
-              <UnderlineAnchor link={`/DeviceSettings`} value={"Cancel"} />
+              <UnderlineAnchor link={`/${this.props.match.params.projectId}/Simulators`} value={"Cancel"} />
             </div>
           </div>
         </div>
@@ -264,10 +251,10 @@ class EditSimulator extends Component {
         <div className="main-content main-content-grid">
           <Header
             icon={<i className="fas fa-arrow-left"></i>}
-            title={"Back To Device Settings"}
+            title={"Back To Simulators"}
             history={this.props}
             canGoBack={true}
-            link={`/${this.props.match.params.projectId}/Devices`}
+            link={`/${this.props.match.params.projectId}/Simulators`}
           />
 
           {content}
@@ -291,5 +278,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getSimulator, editSimulator, getOffices, clearErrors }
+  { getSimulator, editSimulator, removeSimulator, getOffices, clearErrors }
 )(withRouter(EditSimulator));

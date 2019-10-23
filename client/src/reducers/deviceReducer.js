@@ -1,4 +1,4 @@
-import { GET_DEVICE, GET_DEVICES, DEVICE_LOADING } from "../actions/types";
+import { GET_DEVICE, GET_DEVICES, DEVICE_LOADING, CLEAR_DEVICES } from "../actions/types";
 
 const initialState = {
   device: null,
@@ -25,6 +25,8 @@ export default function(state = initialState, action) {
         devices: action.payload,
         loading: false
       };
+    case CLEAR_DEVICES:
+      return initialState;
 
     default:
       return state;

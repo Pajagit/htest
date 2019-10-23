@@ -88,6 +88,7 @@ class ProjectPanel extends Component {
             },
             { title: "GROUPS", link: `/${projectId}/Groups`, icon: <i className="fas fa-object-group"></i> },
             { title: "DEVICES", link: `/${projectId}/Devices`, icon: <i className="fas fa-tablet-alt"></i> },
+            { title: "SIMULATORS", link: `/${projectId}/Simulators`, icon: <i className="fas fa-tablet-alt"></i> },
             { title: "BROWSERS", link: `/${projectId}/Browsers`, icon: <i className="far fa-window-maximize"></i> },
             { title: "VERSIONS", link: `/${projectId}/Versions`, icon: <i className="fas fa-code-branch"></i> },
             { title: "ENVIRONMENTS", link: `/${projectId}/Environments`, icon: <i className="fab fa-dev"></i> },

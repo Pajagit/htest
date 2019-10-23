@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { GET_DEVICES, GET_DEVICE, DEVICE_LOADING, GET_ERRORS } from "./types";
+import { GET_DEVICES, GET_DEVICE, DEVICE_LOADING, GET_ERRORS, CLEAR_DEVICES } from "./types";
 
 // Get All Devices
 export const getDevices = (offices, pageSent, pageSizeSent, simulator) => dispatch => {
@@ -62,6 +62,7 @@ export const createDevice = (deviceData, callback) => dispatch => {
 
 // Edit Device by device_id
 export const editDevice = (device_id, deviceData, callback) => dispatch => {
+  dispatch(deviceLoading());
   axios
     .put(`/api/devices/device/${device_id}`, deviceData)
     .then(res => callback(res))
@@ -91,4 +92,11 @@ export const deviceLoading = () => {
   return {
     type: DEVICE_LOADING
   };
+};
+
+export const clearDevices = () => dispatch => {
+  dispatch({
+    type: CLEAR_DEVICES,
+    payload: {}
+  });
 };
