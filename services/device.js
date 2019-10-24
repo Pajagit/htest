@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const User = require("../models/user");
 const Device = require("../models/device");
 const Office = require("../models/office");
+const OperatingSystem = require("../models/operatingsistem");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -19,6 +20,12 @@ module.exports = {
             model: Office,
             attributes: ["id", "city"],
             required: false
+          },
+          {
+            model: OperatingSystem,
+            as: "operating_system",
+            attributes: ["id", "title", "version"],
+            required: true
           }
         ],
         ...paginate({ page, pageSize }),
@@ -45,6 +52,12 @@ module.exports = {
             model: Office,
             attributes: ["id", "city"],
             required: false
+          },
+          {
+            model: OperatingSystem,
+            as: "operating_system",
+            attributes: ["id", "title", "version"],
+            required: true
           }
         ],
         order: [["title", "ASC"], [Office, "id", "ASC"]]
@@ -81,6 +94,12 @@ module.exports = {
             {
               model: Office,
               attributes: ["id", "city"],
+              required: false
+            },
+            {
+              model: OperatingSystem,
+              as: "operating_system",
+              attributes: ["id", "title", "version"],
               required: false
             }
           ]
@@ -161,6 +180,12 @@ module.exports = {
               model: Office,
               attributes: ["id", "city"],
               required: false
+            },
+            {
+              model: OperatingSystem,
+              as: "operating_system",
+              attributes: ["id", "title", "version"],
+              required: true
             }
           ]
         }).then(device => {

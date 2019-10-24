@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const DeviceService = require("../services/device");
 const OfficeService = require("../services/office");
 const UserService = require("../services/user");
+const OSService = require("../services/os");
 const validateGetDevices = require("../validation/device").validateGetDevices;
 const validateDeviceInput = require("../validation/device").validateDeviceInput;
 
@@ -70,6 +71,12 @@ module.exports = {
         deviceFields.screen_size = req.body.screen_size;
       }
       deviceFields.retina = req.body.retina;
+      deviceFields.operating_system_id = req.body.operating_system_id;
+      var checkIfOsExists = await OSService.checkIfOsExists(req.body.operating_system_id);
+      if (!checkIfOsExists) {
+        return res.status(400).json({ error: "Operating system doesn't exist" });
+      }
+
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
       }
@@ -127,6 +134,12 @@ module.exports = {
         deviceFields.screen_size = req.body.screen_size;
       }
       deviceFields.retina = req.body.retina;
+      deviceFields.operating_system_id = req.body.operating_system_id;
+
+      var checkIfOsExists = await OSService.checkIfOsExists(req.body.operating_system_id);
+      if (!checkIfOsExists) {
+        return res.status(400).json({ error: "Operating system doesn't exist" });
+      }
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
       }
@@ -197,6 +210,12 @@ module.exports = {
       if (req.body.resolution) {
         deviceFields.resolution = req.body.resolution;
       }
+      deviceFields.operating_system_id = req.body.operating_system_id;
+
+      var checkIfOsExists = await OSService.checkIfOsExists(req.body.operating_system_id);
+      if (!checkIfOsExists) {
+        return res.status(400).json({ error: "Operating system doesn't exist" });
+      }
       if (req.body.dpi) {
         deviceFields.dpi = req.body.dpi;
       }
@@ -240,6 +259,12 @@ module.exports = {
       }
       if (req.body.dpi) {
         deviceFields.dpi = req.body.dpi;
+      }
+      deviceFields.operating_system_id = req.body.operating_system_id;
+
+      var checkIfOsExists = await OSService.checkIfOsExists(req.body.operating_system_id);
+      if (!checkIfOsExists) {
+        return res.status(400).json({ error: "Operating system doesn't exist" });
       }
       if (req.body.udid) {
         deviceFields.udid = req.body.udid;

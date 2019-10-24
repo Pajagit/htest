@@ -3,6 +3,7 @@ const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 const Office = require("./office");
+const OperatingSystem = require("./operatingsistem");
 const Device = sequelize.define(
   "devices",
   {
@@ -45,6 +46,15 @@ const Device = sequelize.define(
       },
       require: false
     },
+    operating_system_id: {
+      type: Sequelize.INTEGER,
+      foreignKey: true,
+      references: {
+        model: "operatingsystems",
+        key: "id"
+      },
+      require: true
+    },
     simulator: {
       type: Sequelize.BOOLEAN,
       require: true
@@ -71,6 +81,12 @@ const Device = sequelize.define(
 Device.belongsTo(Office, {
   foreignKey: "office_id",
   targetKey: "id"
+});
+
+Device.belongsTo(OperatingSystem, {
+  foreignKey: "operating_system_id",
+  targetKey: "id",
+  as: "operating_system"
 });
 
 module.exports = Device;
