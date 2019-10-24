@@ -1,5 +1,6 @@
 import React from "react";
 import Checkbox from "./Checkbox";
+import Tag from "./Tag";
 import { Link } from "react-router-dom";
 
 function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId }) {
@@ -12,8 +13,24 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
       </Link>
     );
   } else {
-    udidValue = <div className="portrait-device-bottom-container--item">UDID: {udid}</div>;
+    udidValue = (
+      <div className="portrait-device-bottom-container--item">
+        <div className="portrait-device-bottom-container--item-title">UDID:</div>
+        <div className="portrait-device-bottom-container--item-value"> {udid}</div>
+      </div>
+    );
   }
+  var color = "";
+  if (office === "Nis") {
+    color = "VERDIGRIS";
+  } else if (office === "Belgrade") {
+    color = "MEDIUM_SEA_GREEN";
+  } else if (office === "Novi Sad") {
+    color = "PALE_COPPER";
+  } else if (office === "Banja Luka") {
+    color = "FUZZY_WUZZY";
+  }
+
   return (
     <div className="portrait-device">
       <div className="portrait-device-top">
@@ -22,18 +39,35 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
             {title}
             <div className="portrait-device-top-container--title-btn">{link}</div>
           </div>
-          <div className="portrait-device-top-container--author">{office}</div>
+          <div className="portrait-device-top-container--tags">
+            <Tag title={office} color={color} isRemovable={false} />
+          </div>
         </div>
       </div>
 
       <div className="portrait-device-bottom">
         <div className="portrait-device-bottom-container">
-          <div className="portrait-device-bottom-container--item">Resolution: {resolution}</div>
-          <div className="portrait-device-bottom-container--item">DPI: {dpi}</div>
-          <div className="portrait-device-bottom-container--item">Size: {screen_size}</div>
+          <div className="portrait-device-bottom-container--item">
+            <div className="portrait-device-bottom-container--item-title"> Resolution: </div>
+            <div className="portrait-device-bottom-container--item-value">{resolution}</div>
+          </div>
+          <div className="portrait-device-bottom-container--item">
+            <div className="portrait-device-bottom-container--item-title">DPI:</div>
+            <div className="portrait-device-bottom-container--item-value">{dpi}</div>
+          </div>
+          <div className="portrait-device-bottom-container--item">
+            <div className="portrait-device-bottom-container--item-title">Size:</div>
+            <div className="portrait-device-bottom-container--item-value">{screen_size}</div>
+          </div>
           {udidValue}
-          <div className="portrait-device-bottom-container--item">OS: 10.1</div>
-          <div className="portrait-device-bottom-container--item">Retina: {retina ? "Yes" : "No"}</div>
+          <div className="portrait-device-bottom-container--item">
+            <div className="portrait-device-bottom-container--item-title">OS:</div>
+            <div className="portrait-device-bottom-container--item-value">10.1</div>
+          </div>
+          <div className="portrait-device-bottom-container--item">
+            <div className="portrait-device-bottom-container--item-title">Retina:</div>
+            <div className="portrait-device-bottom-container--item-value">{retina ? "Yes" : "No"}</div>
+          </div>
           <div className="portrait-device-bottom-container--button">
             <Checkbox label={"Used on project"} />
           </div>
