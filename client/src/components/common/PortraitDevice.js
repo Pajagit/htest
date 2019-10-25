@@ -3,7 +3,7 @@ import Checkbox from "./Checkbox";
 import Tag from "./Tag";
 import { Link } from "react-router-dom";
 
-function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId }) {
+function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId, os }) {
   var link = "";
   var udidValue = "";
   if (simulator) {
@@ -62,7 +62,7 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
           {udidValue}
           <div className="portrait-device-bottom-container--item">
             <div className="portrait-device-bottom-container--item-title">OS:</div>
-            <div className="portrait-device-bottom-container--item-value">10.1</div>
+            <div className="portrait-device-bottom-container--item-value">{os}</div>
           </div>
           <div className="portrait-device-bottom-container--item">
             <div className="portrait-device-bottom-container--item-title">Retina:</div>
