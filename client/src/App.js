@@ -64,6 +64,7 @@ import Versions from "./pages/project/settings/versions/Versions";
 import NewVersion from "./pages/project/settings/versions/NewVersion";
 // ENVIRONMENTS
 import Environments from "./pages/project/settings/environments/Environments";
+import NewEnvironment from "./pages/project/settings/environments/NewEnvironment";
 // TEST SETUP
 import TestSetup from "./pages/project/settings/test-setup/TestSetup";
 
@@ -179,6 +180,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/NewSimulator" component={NewSimulator} />
           <PrivateRoute exact path="/:projectId/NewBrowser" component={NewBrowser} />
           <PrivateRoute exact path="/:projectId/NewVersion" component={NewVersion} />
+          <PrivateRoute exact path="/:projectId/NewEnvironment" component={NewEnvironment} />
         </div>
       </Router>
     </Provider>
