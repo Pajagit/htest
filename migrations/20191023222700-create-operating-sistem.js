@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("operatingsystems", {
+    return queryInterface.createTable("mobileos", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,14 +11,10 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
         allowNull: false
-      },
-      version: {
-        type: Sequelize.STRING,
-        allowNull: false
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("operatingsystems");
+    return queryInterface.dropTable("mobileos");
   }
 };

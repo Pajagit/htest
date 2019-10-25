@@ -71,11 +71,7 @@ module.exports = {
         deviceFields.screen_size = req.body.screen_size;
       }
       deviceFields.retina = req.body.retina;
-      deviceFields.operating_system_id = req.body.operating_system_id;
-      var checkIfOsExists = await OSService.checkIfOsExists(req.body.operating_system_id);
-      if (!checkIfOsExists) {
-        return res.status(400).json({ error: "Operating system doesn't exist" });
-      }
+      deviceFields.os = req.body.os;
 
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
@@ -134,12 +130,8 @@ module.exports = {
         deviceFields.screen_size = req.body.screen_size;
       }
       deviceFields.retina = req.body.retina;
-      deviceFields.operating_system_id = req.body.operating_system_id;
+      deviceFields.os = req.body.os;
 
-      var checkIfOsExists = await OSService.checkIfOsExists(req.body.operating_system_id);
-      if (!checkIfOsExists) {
-        return res.status(400).json({ error: "Operating system doesn't exist" });
-      }
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
       }
@@ -210,12 +202,9 @@ module.exports = {
       if (req.body.resolution) {
         deviceFields.resolution = req.body.resolution;
       }
-      deviceFields.operating_system_id = req.body.operating_system_id;
+      deviceFields.os = req.body.os;
 
-      var checkIfOsExists = await OSService.checkIfOsExists(req.body.operating_system_id);
-      if (!checkIfOsExists) {
-        return res.status(400).json({ error: "Operating system doesn't exist" });
-      }
+     
       if (req.body.dpi) {
         deviceFields.dpi = req.body.dpi;
       }
@@ -260,12 +249,8 @@ module.exports = {
       if (req.body.dpi) {
         deviceFields.dpi = req.body.dpi;
       }
-      deviceFields.operating_system_id = req.body.operating_system_id;
+      deviceFields.os = req.body.os;
 
-      var checkIfOsExists = await OSService.checkIfOsExists(req.body.operating_system_id);
-      if (!checkIfOsExists) {
-        return res.status(400).json({ error: "Operating system doesn't exist" });
-      }
       if (req.body.udid) {
         deviceFields.udid = req.body.udid;
       }

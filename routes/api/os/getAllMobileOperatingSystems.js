@@ -2,11 +2,11 @@ const Router = require("express").Router;
 const passport = require("passport");
 const OperatingSystemController = require("../../../controllers/os");
 
-// @route GET api/operatingsystems
-// @desc all operating systems route
+// @route GET api/mobileoperatingsystems
+// @desc all mobile operating systems route
 // @access public
 module.exports = Router({ mergeParams: true }).get(
-  "/operatingsystems",
+  "/mobileoperatingsystems",
   passport.authenticate("jwt", { session: false }),
-  OperatingSystemController.getOperatingSystems
+  OperatingSystemController.getMobileOperatingSystems
 );

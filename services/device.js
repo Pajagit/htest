@@ -5,7 +5,6 @@ const Op = Sequelize.Op;
 const User = require("../models/user");
 const Device = require("../models/device");
 const Office = require("../models/office");
-const OperatingSystem = require("../models/operatingsistem");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -13,19 +12,13 @@ module.exports = {
   getDevicesPaginated: async function(whereStatement, page, pageSize) {
     return new Promise((resolve, reject) => {
       Device.findAndCountAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
         where: whereStatement,
         include: [
           {
             model: Office,
             attributes: ["id", "city"],
             required: false
-          },
-          {
-            model: OperatingSystem,
-            as: "operating_system",
-            attributes: ["id", "title", "version"],
-            required: true
           }
         ],
         ...paginate({ page, pageSize }),
@@ -45,19 +38,13 @@ module.exports = {
   getAllDevices: async function(whereStatement) {
     return new Promise((resolve, reject) => {
       Device.findAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
         where: whereStatement,
         include: [
           {
             model: Office,
             attributes: ["id", "city"],
             required: false
-          },
-          {
-            model: OperatingSystem,
-            as: "operating_system",
-            attributes: ["id", "title", "version"],
-            required: true
           }
         ],
         order: [["title", "ASC"], [Office, "id", "ASC"]]
@@ -86,7 +73,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (createdOrUpdatedDevice) {
         Device.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
           where: {
             id: createdOrUpdatedDevice.id
           },
@@ -94,12 +81,6 @@ module.exports = {
             {
               model: Office,
               attributes: ["id", "city"],
-              required: false
-            },
-            {
-              model: OperatingSystem,
-              as: "operating_system",
-              attributes: ["id", "title", "version"],
               required: false
             }
           ]
@@ -170,7 +151,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (id) {
         Device.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted"],
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
           where: {
             id: id,
             simulator: !isRealDevice
@@ -180,12 +161,6 @@ module.exports = {
               model: Office,
               attributes: ["id", "city"],
               required: false
-            },
-            {
-              model: OperatingSystem,
-              as: "operating_system",
-              attributes: ["id", "title", "version"],
-              required: true
             }
           ]
         }).then(device => {

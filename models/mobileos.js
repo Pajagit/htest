@@ -2,8 +2,8 @@
 const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
-const OperatingSystem = sequelize.define(
-  "operatingsystems",
+const MobileOS = sequelize.define(
+  "mobileos",
   {
     id: {
       require: true,
@@ -14,10 +14,6 @@ const OperatingSystem = sequelize.define(
     title: {
       type: Sequelize.STRING,
       require: true
-    },
-    version: {
-      type: Sequelize.STRING,
-      require: false
     }
   },
   {
@@ -25,4 +21,4 @@ const OperatingSystem = sequelize.define(
   }
 );
 
-module.exports = OperatingSystem;
+module.exports = MobileOS;

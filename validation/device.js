@@ -51,12 +51,8 @@ module.exports = {
         errors.title = `Title can not be more than ${titleLimit} long (${data.title.length})`;
       }
     }
-    if (isEmpty(data.operating_system_id)) {
-      errors.operating_system_id = "Operating system id required";
-    } else {
-      if (isNaN(data.operating_system_id)) {
-        errors.operating_system_id = "Operating system id is not a valid number";
-      }
+    if (isEmpty(data.os)) {
+      errors.os = "Operating system id required";
     }
 
     if (!isEmpty(data.resolution) && data.resolution.length > resolutionLimit) {

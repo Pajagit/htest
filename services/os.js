@@ -3,13 +3,13 @@ const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 const Op = Sequelize.Op;
 const User = require("../models/user");
-const OperatingSystem = require("../models/operatingsistem");
+const MobileOS = require("../models/mobileos");
 const paginate = require("../utils/pagination").paginate;
 
 module.exports = {
-  getOperatingSystemsPaginated: async function(page, pageSize) {
+  getMobileOperatingSystemsPaginated: async function(page, pageSize) {
     return new Promise((resolve, reject) => {
-      OperatingSystem.findAndCountAll({
+      MobileOS.findAndCountAll({
         order: [["title", "ASC"]],
         ...paginate({ page, pageSize })
       }).then(operatingsystems => {
@@ -26,9 +26,9 @@ module.exports = {
       });
     });
   },
-  getOperatingSystems: async function() {
+  getMobileOperatingSystems: async function() {
     return new Promise((resolve, reject) => {
-      OperatingSystem.findAll({
+      MobileOS.findAll({
         order: [["title", "ASC"]]
       }).then(operatingsystems => {
         if (operatingsystems) {
@@ -43,7 +43,7 @@ module.exports = {
   },
   checkIfOsExists: async function(id) {
     return new Promise((resolve, reject) => {
-      OperatingSystem.findOne({
+      MobileOS.findOne({
         where: {
           id: id
         }
