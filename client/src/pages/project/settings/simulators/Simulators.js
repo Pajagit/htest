@@ -5,10 +5,8 @@ import { withRouter } from "react-router-dom";
 
 import { getDevices } from "../../../../actions/deviceActions";
 import { projectAdminPermissions } from "../../../../permissions/ProjectRolePermissions";
-import { getOffices } from "../../../../actions/officeActions";
 import { getSimulators } from "../../../../actions/simulatorActions";
 import { clearDevices } from "../../../../actions/deviceActions";
-import getIdsFromObjArray from "../../../../utility/getIdsFromObjArray";
 import isEmpty from "../../../../validation/isEmpty";
 
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -24,14 +22,9 @@ class Devices extends Component {
     this.state = {
       initialRender: true,
       projectId: null,
-      offices: this.props.offices.offices,
-      office: [],
-      officesFormatted: [],
-      deviceType: false,
       user: this.props.auth.user,
       errors: {}
     };
-    this.selectOffice = this.selectOffice.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -58,12 +51,6 @@ class Devices extends Component {
     this.props.getSimulators();
   }
 
-  selectOffice(value) {
-    this.setState({ office: value }, () => {
-      var officesIds = getIdsFromObjArray(this.state.office);
-      this.props.getDevices({ offices: officesIds });
-    });
-  }
   render() {
     var { devices, loading } = this.props.devices;
     var content;
@@ -124,12 +111,11 @@ Devices.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  offices: state.offices,
   devices: state.devices,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
-  { getOffices, getSimulators, clearDevices, getDevices }
+  { getSimulators, clearDevices, getDevices }
 )(withRouter(Devices));

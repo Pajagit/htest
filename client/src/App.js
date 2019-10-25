@@ -58,8 +58,10 @@ import NewSimulator from "./pages/project/settings/simulators/NewSimulator";
 import EditSimulator from "./pages/project/settings/simulators/EditSimulator";
 // BROWSERS
 import Browsers from "./pages/project/settings/browsers/Browsers";
+import NewBrowser from "./pages/project/settings/browsers/NewBrowser";
 // VERSIONS
 import Versions from "./pages/project/settings/versions/Versions";
+import NewVersion from "./pages/project/settings/versions/NewVersion";
 // ENVIRONMENTS
 import Environments from "./pages/project/settings/environments/Environments";
 // TEST SETUP
@@ -175,6 +177,8 @@ function App() {
           <PrivateRoute exact path="/EditDevice/:deviceId" component={EditDevice} />
           <PrivateRoute exact path="/:projectId/EditSimulator/:simulatorId" component={EditSimulator} />
           <PrivateRoute exact path="/:projectId/NewSimulator" component={NewSimulator} />
+          <PrivateRoute exact path="/:projectId/NewBrowser" component={NewBrowser} />
+          <PrivateRoute exact path="/:projectId/NewVersion" component={NewVersion} />
         </div>
       </Router>
     </Provider>
