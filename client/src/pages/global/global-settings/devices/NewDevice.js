@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { createDevice } from "../../../../actions/deviceActions";
+import { getMobileOs } from "../../../../actions/mobileOsActions";
 import { getOffices } from "../../../../actions/officeActions";
 import { superAdminPermissions } from "../../../../permissions/SuperAdminPermissions";
 import Input from "../../../../components/common/Input";
@@ -13,8 +14,10 @@ import DeviceValidation from "../../../../validation/DeviceValidation";
 import successToast from "../../../../toast/successToast";
 import failToast from "../../../../toast/failToast";
 import { clearErrors } from "../../../../actions/errorsActions";
+import isEmpty from "../../../../validation/isEmpty";
 
 import Switch from "../../../../components/common/Switch";
+import Spinner from "../../../../components/common/Spinner";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import SearchDropdown from "../../../../components/common/SearchDropdown";
 import SettingPanel from "../../../../components/settings-panel/SettingPanel";
@@ -27,11 +30,12 @@ class NewDevice extends Component {
       initialRender: true,
       submitPressed: false,
       offices: this.props.offices.offices,
+      mobileOSs: this.props.mobileOSs,
       officesFormatted: [],
       title: "",
       resolution: "",
       office: null,
-      operating_system: [],
+      os: [],
       dpi: "",
       screen_size: "",
       udid: "",
@@ -66,12 +70,20 @@ class NewDevice extends Component {
         update.officesFormatted = offices;
       }
     }
+    if (nextProps.mobileOSs && nextProps.mobileOSs.mobileOSs) {
+      if (nextProps.mobileOSs.mobileOSs !== prevState.mobileOSs) {
+        update.mobileOSs = nextProps.mobileOSs.mobileOSs;
+        var mobileOSs = nextProps.mobileOSs.mobileOSs.operating_systems;
+        update.mobileOSs = mobileOSs;
+      }
+    }
 
     return Object.keys(update).length ? update : null;
   }
 
   componentDidMount() {
     this.props.getOffices();
+    this.props.getMobileOs();
   }
   selectOffice(value) {
     this.setState({ office: value }, () => {
@@ -81,7 +93,7 @@ class NewDevice extends Component {
     });
   }
   selectOs(value) {
-    this.setState({ operating_system: value }, () => {
+    this.setState({ os: value }, () => {
       if (this.state.submitPressed) {
         this.checkValidation();
       }
@@ -103,6 +115,7 @@ class NewDevice extends Component {
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
+    deviceData.os = this.state.os.title;
     deviceData.simulator = false;
     deviceData.office_id = this.state.office ? this.state.office.id : null;
 
@@ -123,11 +136,10 @@ class NewDevice extends Component {
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
+    deviceData.os = this.state.os.title;
     deviceData.simulator = false;
     deviceData.office_id = this.state.office ? this.state.office.id : null;
-    deviceData.operating_system = this.state.operating_system.title;
     const { errors, isValid } = DeviceValidation(deviceData);
-
     if (isValid) {
       this.props.createDevice(deviceData, res => {
         if (res.status === 200) {
@@ -144,498 +156,102 @@ class NewDevice extends Component {
   }
 
   render() {
-    var operatingSystems = [
-      {
-        id: "iOS 13.1.3",
-        title: "iOS 13.1.3"
-      },
-      {
-        id: "iOS 13.1.2",
-        title: "iOS 13.1.2"
-      },
-      {
-        id: "iOS 13.1.1",
-        title: "iOS 13.1.1"
-      },
-      {
-        id: "iOS 13.1.0",
-        title: "iOS 13.1.0"
-      },
-      {
-        id: "iOS 13.0.0",
-        title: "iOS 13.0.0"
-      },
-      {
-        id: "iOS 12.4.2",
-        title: "iOS 12.4.2"
-      },
-      {
-        id: "iOS 12.4.1",
-        title: "iOS 12.4.1"
-      },
-      {
-        id: "iOS 12.4.0",
-        title: "iOS 12.4.0"
-      },
-      {
-        id: "iOS 12.3.2",
-        title: "iOS 12.3.2"
-      },
-      {
-        id: "iOS 12.3.1",
-        title: "iOS 12.3.1"
-      },
-      {
-        id: "iOS 12.3.0",
-        title: "iOS 12.3.0"
-      },
-      {
-        id: "iOS 12.2.0",
-        title: "iOS 12.2.0"
-      },
-      {
-        id: "iOS 12.1.4",
-        title: "iOS 12.1.4"
-      },
-      {
-        id: "iOS 12.1.3",
-        title: "iOS 12.1.3"
-      },
-      {
-        id: "iOS 12.1.2",
-        title: "iOS 12.1.2"
-      },
-      {
-        id: "iOS 12.1.1",
-        title: "iOS 12.1.1"
-      },
-      {
-        id: "iOS 12.1.0",
-        title: "iOS 12.1.0"
-      },
-      {
-        id: "iOS 12.0.1",
-        title: "iOS 12.0.1"
-      },
-      {
-        id: "iOS 12.0.0",
-        title: "iOS 12.0.0"
-      },
-      {
-        id: "iOS 11.4.1",
-        title: "iOS 11.4.1"
-      },
-      {
-        id: "iOS 11.4.0",
-        title: "iOS 11.4.0"
-      },
-      {
-        id: "iOS 11.3.1",
-        title: "iOS 11.3.1"
-      },
-      {
-        id: "iOS 11.3.0",
-        title: "iOS 11.3.0"
-      },
-      {
-        id: "iOS 11.2.6",
-        title: "iOS 11.2.6"
-      },
-      {
-        id: "iOS 11.2.5",
-        title: "iOS 11.2.5"
-      },
-      {
-        id: "iOS 11.2.4",
-        title: "iOS 11.2.4"
-      },
-      {
-        id: "iOS 11.2.3",
-        title: "iOS 11.2.3"
-      },
-      {
-        id: "iOS 11.2.2",
-        title: "iOS 11.2.2"
-      },
-      {
-        id: "iOS 11.2.1",
-        title: "iOS 11.2.1"
-      },
-      {
-        id: "iOS 11.2.0",
-        title: "iOS 11.2.0"
-      },
-      {
-        id: "iOS 11.1.2",
-        title: "iOS 11.1.2"
-      },
-      {
-        id: "iOS 11.1.1",
-        title: "iOS 11.1.1"
-      },
-      {
-        id: "iOS 11.1.0",
-        title: "iOS 11.1.0"
-      },
-      {
-        id: "iOS 11.0.3",
-        title: "iOS 11.0.3"
-      },
-      {
-        id: "iOS 11.0.2",
-        title: "iOS 11.0.2"
-      },
-      {
-        id: "iOS 11.0.1",
-        title: "iOS 11.0.1"
-      },
-      {
-        id: "iOS 11.0.0",
-        title: "iOS 11.0.0"
-      },
-      {
-        id: "iOS 10.3.4",
-        title: "iOS 10.3.4"
-      },
-      {
-        id: "iOS 10.3.3",
-        title: "iOS 10.3.3"
-      },
-      {
-        id: "iOS 10.3.2",
-        title: "iOS 10.3.2"
-      },
-      {
-        id: "iOS 10.3.1",
-        title: "iOS 10.3.1"
-      },
-      {
-        id: "iOS 10.3.0",
-        title: "iOS 10.3.0"
-      },
-      {
-        id: "iOS 10.2.1",
-        title: "iOS 10.2.1"
-      },
-      {
-        id: "iOS 10.2.0",
-        title: "iOS 10.2.0"
-      },
-      {
-        id: "iOS 10.1.1",
-        title: "iOS 10.1.1"
-      },
-      {
-        id: "iOS 10.1.0",
-        title: "iOS 10.1.0"
-      },
-      {
-        id: "iOS 10.0.3",
-        title: "iOS 10.0.3"
-      },
-      {
-        id: "iOS 10.0.2",
-        title: "iOS 10.0.2"
-      },
-      {
-        id: "iOS 10.0.1",
-        title: "iOS 10.0.1"
-      },
-      {
-        id: "iOS 10.0.0",
-        title: "iOS 10.0.0"
-      },
-      {
-        id: "iOS 9.3.6",
-        title: "iOS 9.3.6"
-      },
-      {
-        id: "iOS 9.3.5",
-        title: "iOS 9.3.5"
-      },
-      {
-        id: "iOS 9.3.4",
-        title: "iOS 9.3.4"
-      },
-      {
-        id: "iOS 9.3.3",
-        title: "iOS 9.3.3"
-      },
-      {
-        id: "iOS 9.3.2",
-        title: "iOS 9.3.2"
-      },
-      {
-        id: "iOS 9.3.1",
-        title: "iOS 9.3.1"
-      },
-      {
-        id: "iOS 9.3.0",
-        title: "iOS 9.3.0"
-      },
-      {
-        id: "iOS 9.2.1",
-        title: "iOS 9.2.1"
-      },
-      {
-        id: "iOS 9.2.0",
-        title: "iOS 9.2.0"
-      },
-      {
-        id: "iOS 9.1.0",
-        title: "iOS 9.1.0"
-      },
-      {
-        id: "iOS 9.0.2",
-        title: "iOS 9.0.2"
-      },
-      {
-        id: "iOS 9.0.1",
-        title: "iOS 9.0.1"
-      },
-      {
-        id: "iOS 9.0.0",
-        title: "iOS 9.0.0"
-      },
-      {
-        id: "iOS 8.4.1",
-        title: "iOS 8.4.1"
-      },
-      {
-        id: "iOS 8.4.0",
-        title: "iOS 8.4.0"
-      },
-      {
-        id: "iOS 8.3.0",
-        title: "iOS 8.3.0"
-      },
-      {
-        id: "iOS 8.2.0",
-        title: "iOS 8.2.0"
-      },
-      {
-        id: "iOS 8.1.3",
-        title: "iOS 8.1.3"
-      },
-      {
-        id: "iOS 8.1.2",
-        title: "iOS 8.1.2"
-      },
-      {
-        id: "iOS 8.1.1",
-        title: "iOS 8.1.1"
-      },
-      {
-        id: "iOS 8.1.0",
-        title: "iOS 8.1.0"
-      },
+    var content;
+    var { mobileOSs, loading } = this.props.mobileOSs;
+    if (isEmpty(mobileOSs) || loading) {
+      content = <Spinner />;
+    } else {
+      content = (
+        <div>
+          <Input
+            type="text"
+            placeholder="Enter Device Title Here"
+            label="Title*"
+            validationMsg={[this.state.errors.title, this.props.errors.error]}
+            value={this.state.title}
+            onChange={e => this.onChange(e)}
+            name={"title"}
+            onKeyDown={this.submitFormOnEnterKey}
+          />
+          <SearchDropdown
+            value={this.state.office}
+            options={this.state.officesFormatted}
+            onChange={this.selectOffice}
+            name={"office_id"}
+            label={"Office*"}
+            validationMsg={this.state.errors.office_id}
+            placeholder={"Offices"}
+            multiple={false}
+          />
+          <SearchDropdown
+            value={this.state.os}
+            options={this.state.mobileOSs}
+            onChange={this.selectOs}
+            name={"operating_system"}
+            label={"Operating System*"}
+            placeholder={"Operating Systems"}
+            multiple={false}
+          />
+          <Input
+            type="text"
+            placeholder="Enter Device Resolution Here"
+            label="Resolution"
+            validationMsg={this.state.errors.resolution}
+            value={this.state.resolution}
+            onChange={e => this.onChange(e)}
+            name={"resolution"}
+            onKeyDown={this.submitFormOnEnterKey}
+          />
+          <Input
+            type="text"
+            placeholder="Enter Device Screen Size Here"
+            label="Screen Size"
+            validationMsg={this.state.errors.screen_size}
+            value={this.state.screen_size}
+            onChange={e => this.onChange(e)}
+            name={"screen_size"}
+            onKeyDown={this.submitFormOnEnterKey}
+          />
+          <Input
+            type="text"
+            placeholder="Enter Device dpi Here"
+            label="Pixels Per Inch"
+            validationMsg={this.state.errors.dpi}
+            value={this.state.dpi}
+            onChange={e => this.onChange(e)}
+            name={"dpi"}
+            onKeyDown={this.submitFormOnEnterKey}
+          />
+          <Input
+            type="text"
+            placeholder="Enter Device Udid Here"
+            label="Unique Device Identifier"
+            validationMsg={this.state.errors.udid}
+            value={this.state.udid}
+            onChange={e => this.onChange(e)}
+            name={"udid"}
+            onKeyDown={this.submitFormOnEnterKey}
+          />
 
-      {
-        id: "iOS 8.0.2",
-        title: "iOS 8.0.2"
-      },
-      {
-        id: "iOS 8.0.1",
-        title: "iOS 8.0.1"
-      },
-      {
-        id: "iOS 8.0.0",
-        title: "iOS 8.0.0"
-      },
-      {
-        id: "iOS 7.1.2",
-        title: "iOS 7.1.2"
-      },
-      {
-        id: "iOS 7.1.1",
-        title: "iOS 7.1.1"
-      },
-      {
-        id: "iOS 7.1.0",
-        title: "iOS 7.1.0"
-      },
-      {
-        id: "iOS 7.0.6",
-        title: "iOS 7.0.6"
-      },
-      {
-        id: "iOS 7.0.5",
-        title: "iOS 7.0.5"
-      },
-      {
-        id: "iOS 7.0.4",
-        title: "iOS 7.0.4"
-      },
-      {
-        id: "iOS 7.0.3",
-        title: "iOS 7.0.3"
-      },
-      {
-        id: "iOS 7.0.2",
-        title: "iOS 7.0.2"
-      },
-      {
-        id: "iOS 7.0.1",
-        title: "iOS 7.0.1"
-      },
-      {
-        id: "iOS 7.0.0",
-        title: "iOS 7.0.0"
-      },
-      {
-        id: "iOS 6.1.5",
-        title: "iOS 6.1.5"
-      },
-      {
-        id: "iOS 6.1.4",
-        title: "iOS 6.1.4"
-      },
-      {
-        id: "iOS 6.1.3",
-        title: "iOS 6.1.3"
-      },
-      {
-        id: "iOS 6.1.2",
-        title: "iOS 6.1.2"
-      },
-      {
-        id: "iOS 6.1.1",
-        title: "iOS 6.1.1"
-      },
-      {
-        id: "iOS 6.1.0",
-        title: "iOS 6.1.0"
-      },
-      {
-        id: "iOS 6.0.2",
-        title: "iOS 6.0.2"
-      },
-      {
-        id: "iOS 6.0.1",
-        title: "iOS 6.0.1"
-      },
-      {
-        id: "iOS 6.0.0",
-        title: "iOS 6.0.0"
-      },
-      {
-        id: "iOS 5.1.1",
-        title: "iOS 5.1.1"
-      },
-      {
-        id: "iOS 5.1.0",
-        title: "iOS 5.1.0"
-      },
-      {
-        id: "iOS 5.0.1",
-        title: "iOS 5.0.1"
-      },
-      {
-        id: "iOS 5.0.0",
-        title: "iOS 5.0.0"
-      },
-      {
-        id: "iOS 4.3.5",
-        title: "iOS 4.3.5"
-      },
-      {
-        id: "iOS 4.3.4",
-        title: "iOS 4.3.4"
-      },
-      {
-        id: "iOS 4.3.3",
-        title: "iOS 4.3.3"
-      },
-      {
-        id: "iOS 4.3.2",
-        title: "iOS 4.3.2"
-      },
-      {
-        id: "iOS 4.3.1",
-        title: "iOS 4.3.1"
-      },
-      {
-        id: "iOS 4.3.0",
-        title: "iOS 4.3.0"
-      },
-      {
-        id: "iOS 4.2.9",
-        title: "iOS 4.2.9"
-      },
-      {
-        id: "iOS 4.2.8",
-        title: "iOS 4.2.8"
-      },
-      {
-        id: "iOS 4.2.7",
-        title: "iOS 4.2.7"
-      },
-      {
-        id: "iOS 4.2.6",
-        title: "iOS 4.2.6"
-      },
-      {
-        id: "iOS 4.2.5",
-        title: "iOS 4.2.5"
-      },
-      {
-        id: "iOS 4.2.10",
-        title: "iOS 4.2.10"
-      },
-      {
-        id: "iOS 4.2.1",
-        title: "iOS 4.2.1"
-      },
-      {
-        id: "iOS 4.1.0",
-        title: "iOS 4.1.0"
-      },
-      {
-        id: "iOS 4.0.2",
-        title: "iOS 4.0.2"
-      },
-      {
-        id: "iOS 4.0.1",
-        title: "iOS 4.0.1"
-      },
-      {
-        id: "iOS 4.0.0",
-        title: "iOS 4.0.0"
-      },
-      { id: "Android 10.0.0", title: "Android 10.0.0" },
-      { id: "Pie 9.0.0", title: "Pie 9.0.0" },
-      { id: "Oreo 8.1.0", title: "Oreo 8.1.0" },
-      { id: "Oreo 8.0.0", title: "Oreo 8.0.0" },
-      { id: "Nougat 7.1.2", title: "Nougat 7.1.2" },
-      { id: "Nougat 7.1.1", title: "Nougat 7.1.1" },
-      { id: "Nougat 7.1.0", title: "Nougat 7.1.0" },
-      { id: "Nougat 7.0.0", title: "Nougat 7.0.0" },
-      { id: "Marshmallow 6.0.1", title: "Marshmallow 6.0.1" },
-      { id: "Marshmallow 6.0.0", title: "Marshmallow 6.0.0" },
-      { id: "Lollipop 5.1.1", title: "Lollipop 5.1.1" },
-      { id: "Lollipop 5.1.0", title: "Lollipop 5.1.0" },
-      { id: "Lollipop 5.0.2", title: "Lollipop 5.0.2" },
-      { id: "Lollipop 5.0.1", title: "Lollipop 5.0.1" },
-      { id: "Lollipop 5.0.0", title: "Lollipop 5.0.0" },
-      { id: "KitKat 4.4.4", title: "KitKat 4.4.4" },
-      { id: "KitKat 4.4.3", title: "KitKat 4.4.3" },
-      { id: "KitKat 4.4.2", title: "KitKat 4.4.2" },
-      { id: "KitKat 4.4.1", title: "KitKat 4.4.1" },
-      { id: "KitKat 4.4.0", title: "KitKat 4.4.0" },
-      { id: "Jelly Bean 4.3.1", title: "Jelly Bean 4.3.1" },
-      { id: "Jelly Bean 4.3.0", title: "Jelly Bean 4.3.0" },
-      { id: "Jelly Bean 4.2.2", title: "Jelly Bean 4.2.2" },
-      { id: "Jelly Bean 4.2.1", title: "Jelly Bean 4.2.1" },
-      { id: "Jelly Bean 4.2.0", title: "Jelly Bean 4.2.0" },
-      { id: "Jelly Bean 4.1.2", title: "Jelly Bean 4.1.2" },
-      { id: "Jelly Bean 4.1.1", title: "Jelly Bean 4.1.1" },
-      { id: "Jelly Bean 4.1.0", title: "Jelly Bean 4.1.0" },
-      { id: "Ice Cream Sandwitch 4.0.4", title: "Ice Cream Sandwitch 4.0.4" },
-      { id: "Ice Cream Sandwitch 4.0.3", title: "Ice Cream Sandwitch 4.0.3" },
-      { id: "Ice Cream Sandwitch 4.0.2", title: "Ice Cream Sandwitch 4.0.2" },
-      { id: "Ice Cream Sandwitch 4.0.1", title: "Ice Cream Sandwitch 4.0.1" },
-      { id: "Ice Cream Sandwitch 4.0.0", title: "Ice Cream Sandwitch 4.0.0" }
-    ];
+          <Switch
+            label={"Retina"}
+            value={this.state.retina}
+            onClick={e => this.setState({ retina: !this.state.retina })}
+            name={"retina"}
+          />
+          <div className="flex-column-left mt-4">
+            <Btn
+              className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
+              label="Add Device"
+              type="text"
+              onClick={e => this.submitForm(e)}
+            />
+
+            <UnderlineAnchor link={`/DeviceSettings`} value={"Cancel"} />
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -656,94 +272,7 @@ class NewDevice extends Component {
                 <div className="header--buttons--secondary"></div>
               </div>
             </div>
-            <div>
-              <Input
-                type="text"
-                placeholder="Enter Device Title Here"
-                label="Title*"
-                validationMsg={[this.state.errors.title, this.props.errors.error]}
-                value={this.state.title}
-                onChange={e => this.onChange(e)}
-                name={"title"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
-              <SearchDropdown
-                value={this.state.office}
-                options={this.state.officesFormatted}
-                onChange={this.selectOffice}
-                name={"office_id"}
-                label={"Office*"}
-                validationMsg={this.state.errors.office_id}
-                placeholder={"Offices"}
-                multiple={false}
-              />
-              <SearchDropdown
-                value={this.state.operating_system}
-                options={operatingSystems}
-                onChange={this.selectOs}
-                name={"operating_system"}
-                label={"Operating System*"}
-                placeholder={"Operating Systems"}
-                multiple={false}
-              />
-              <Input
-                type="text"
-                placeholder="Enter Device Resolution Here"
-                label="Resolution"
-                validationMsg={this.state.errors.resolution}
-                value={this.state.resolution}
-                onChange={e => this.onChange(e)}
-                name={"resolution"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
-              <Input
-                type="text"
-                placeholder="Enter Device Screen Size Here"
-                label="Screen Size"
-                validationMsg={this.state.errors.screen_size}
-                value={this.state.screen_size}
-                onChange={e => this.onChange(e)}
-                name={"screen_size"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
-              <Input
-                type="text"
-                placeholder="Enter Device dpi Here"
-                label="Pixels Per Inch"
-                validationMsg={this.state.errors.dpi}
-                value={this.state.dpi}
-                onChange={e => this.onChange(e)}
-                name={"dpi"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
-              <Input
-                type="text"
-                placeholder="Enter Device Udid Here"
-                label="Unique Device Identifier"
-                validationMsg={this.state.errors.udid}
-                value={this.state.udid}
-                onChange={e => this.onChange(e)}
-                name={"udid"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
-
-              <Switch
-                label={"Retina"}
-                value={this.state.retina}
-                onClick={e => this.setState({ retina: !this.state.retina })}
-                name={"retina"}
-              />
-              <div className="flex-column-left mt-4">
-                <Btn
-                  className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-                  label="Add Device"
-                  type="text"
-                  onClick={e => this.submitForm(e)}
-                />
-
-                <UnderlineAnchor link={`/DeviceSettings`} value={"Cancel"} />
-              </div>
-            </div>
+            {content}
           </div>
         </div>
       </div>
@@ -760,10 +289,11 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   devices: state.devices,
-  offices: state.offices
+  offices: state.offices,
+  mobileOSs: state.mobileOSs
 });
 
 export default connect(
   mapStateToProps,
-  { createDevice, getOffices, clearErrors }
+  { createDevice, getOffices, clearErrors, getMobileOs }
 )(withRouter(NewDevice));

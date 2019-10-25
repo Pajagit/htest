@@ -82,7 +82,7 @@ class Groups extends Component {
               />
             }
           />
-          <div className="list-item-container">{content}</div>
+          <div className="testcase-grid testcase-container">{content}</div>
         </div>
       </div>
     );

@@ -68,6 +68,10 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
             <div className="portrait-device-bottom-container--item-title">Retina:</div>
             <div className="portrait-device-bottom-container--item-value">{retina ? "Yes" : "No"}</div>
           </div>
+          <div className="portrait-device-bottom-container--item">
+            <div className="portrait-device-bottom-container--item-title"></div>
+            <div className="portrait-device-bottom-container--item-value"></div>
+          </div>
           <div className="portrait-device-bottom-container--button">
             <Checkbox label={"Used on project"} />
           </div>

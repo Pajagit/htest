@@ -11,6 +11,7 @@ import settingReducer from "./settingReducer";
 import deviceReducer from "./deviceReducer";
 import simulatorReducer from "./simulatorReducer";
 import officeReducer from "./officeReducer";
+import mobileOsReducer from "./mobileOsReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -23,5 +24,6 @@ export default combineReducers({
   settings: settingReducer,
   devices: deviceReducer,
   simulators: simulatorReducer,
-  offices: officeReducer
+  offices: officeReducer,
+  mobileOSs: mobileOsReducer
 });
