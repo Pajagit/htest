@@ -32,6 +32,10 @@ const Device = sequelize.define(
       type: Sequelize.STRING,
       require: false
     },
+    os: {
+      type: Sequelize.STRING,
+      require: true
+    },
     retina: {
       type: Sequelize.BOOLEAN,
       require: false

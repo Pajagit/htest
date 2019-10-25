@@ -51,6 +51,9 @@ module.exports = {
         errors.title = `Title can not be more than ${titleLimit} long (${data.title.length})`;
       }
     }
+    if (isEmpty(data.os)) {
+      errors.os = "Operating system id required";
+    }
 
     if (!isEmpty(data.resolution) && data.resolution.length > resolutionLimit) {
       errors.resolution = `Resolution can not be more than ${resolutionLimit} long (${data.resolution.length})`;

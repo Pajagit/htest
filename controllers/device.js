@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const DeviceService = require("../services/device");
 const OfficeService = require("../services/office");
 const UserService = require("../services/user");
+const OSService = require("../services/os");
 const validateGetDevices = require("../validation/device").validateGetDevices;
 const validateDeviceInput = require("../validation/device").validateDeviceInput;
 
@@ -70,6 +71,8 @@ module.exports = {
         deviceFields.screen_size = req.body.screen_size;
       }
       deviceFields.retina = req.body.retina;
+      deviceFields.os = req.body.os;
+
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
       }
@@ -127,6 +130,8 @@ module.exports = {
         deviceFields.screen_size = req.body.screen_size;
       }
       deviceFields.retina = req.body.retina;
+      deviceFields.os = req.body.os;
+
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
       }
@@ -197,6 +202,9 @@ module.exports = {
       if (req.body.resolution) {
         deviceFields.resolution = req.body.resolution;
       }
+      deviceFields.os = req.body.os;
+
+     
       if (req.body.dpi) {
         deviceFields.dpi = req.body.dpi;
       }
@@ -241,6 +249,8 @@ module.exports = {
       if (req.body.dpi) {
         deviceFields.dpi = req.body.dpi;
       }
+      deviceFields.os = req.body.os;
+
       if (req.body.udid) {
         deviceFields.udid = req.body.udid;
       }
