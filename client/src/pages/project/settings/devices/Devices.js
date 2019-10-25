@@ -92,6 +92,7 @@ class Devices extends Component {
           resolution={device.resolution}
           dpi={device.dpi}
           screen_size={device.screen_size}
+          os={device.os}
           retina={device.retina}
           type={this.state.deviceType}
           id={device.id}
