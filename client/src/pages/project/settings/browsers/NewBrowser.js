@@ -14,7 +14,6 @@ import successToast from "../../../../toast/successToast";
 import failToast from "../../../../toast/failToast";
 import { clearErrors } from "../../../../actions/errorsActions";
 
-import Switch from "../../../../components/common/Switch";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import Header from "../../../../components/common/Header";

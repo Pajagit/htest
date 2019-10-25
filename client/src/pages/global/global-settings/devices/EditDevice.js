@@ -13,6 +13,7 @@ import DeviceValidation from "../../../../validation/DeviceValidation";
 import successToast from "../../../../toast/successToast";
 import failToast from "../../../../toast/failToast";
 import { clearErrors } from "../../../../actions/errorsActions";
+import { getMobileOs } from "../../../../actions/mobileOsActions";
 import isEmpty from "../../../../validation/isEmpty";
 
 import Spinner from "../../../../components/common/Spinner";
@@ -31,20 +32,24 @@ class EditDevice extends Component {
       offices: this.props.offices.offices,
       office: [],
       device: this.props.devices.device,
+      mobileOSs: [],
       officesFormatted: [],
       title: "",
       resolution: "",
       dpi: "",
+      os: [],
       screen_size: "",
       udid: "",
       retina: false,
       errors: {}
     };
     this.selectOffice = this.selectOffice.bind(this);
+    this.selectOs = this.selectOs.bind(this);
   }
   componentDidMount() {
     this.props.getOffices();
     this.props.getDevice(this.props.match.params.deviceId);
+    this.props.getMobileOs();
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
@@ -71,6 +76,7 @@ class EditDevice extends Component {
         formatedOffice.title = formatedOffice["city"];
         delete formatedOffice.city;
         update.office = formatedOffice;
+        update.os = { id: device.os, title: device.os };
       }
     }
 
@@ -85,6 +91,15 @@ class EditDevice extends Component {
           delete offices[i].city;
         }
         update.officesFormatted = offices;
+      }
+    }
+    if (nextProps.mobileOSs && nextProps.mobileOSs.mobileOSs) {
+      if (nextProps.mobileOSs.mobileOSs !== prevState.mobileOSs) {
+        update.mobileOSs = nextProps.mobileOSs.mobileOSs;
+
+        var mobileOSs = nextProps.mobileOSs.mobileOSs.operating_systems;
+
+        update.mobileOSs = mobileOSs;
       }
     }
 
@@ -110,6 +125,7 @@ class EditDevice extends Component {
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
+    deviceData.os = this.state.os.title;
     deviceData.simulator = false;
     deviceData.office_id = this.state.office ? this.state.office.id : null;
 
@@ -129,6 +145,7 @@ class EditDevice extends Component {
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
+    deviceData.os = this.state.os.title;
     deviceData.simulator = false;
     deviceData.office_id = this.state.office ? this.state.office.id : null;
     const { errors, isValid } = DeviceValidation(deviceData);
@@ -167,10 +184,15 @@ class EditDevice extends Component {
     Confirm(title, msg, reject, confirm, e => this.confirmActivation());
   };
 
+  selectOs(value) {
+    this.setState({ os: value }, () => {
+      this.checkValidation();
+    });
+  }
+
   render() {
     var content;
     var { device, loading } = this.props.devices;
-
     if (isEmpty(device) || loading) {
       content = <Spinner />;
     } else {
@@ -206,6 +228,15 @@ class EditDevice extends Component {
               label={"Office*"}
               validationMsg={this.state.errors.office_id}
               placeholder={"Offices"}
+              multiple={false}
+            />
+            <SearchDropdown
+              value={this.state.os}
+              options={this.state.mobileOSs}
+              onChange={this.selectOs}
+              name={"operating_system"}
+              label={"Operating System*"}
+              placeholder={"Operating Systems"}
               multiple={false}
             />
             <Input
@@ -298,10 +329,11 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   devices: state.devices,
-  offices: state.offices
+  offices: state.offices,
+  mobileOSs: state.mobileOSs
 });
 
 export default connect(
   mapStateToProps,
-  { getDevice, editDevice, removeDevice, getOffices, clearErrors }
+  { getDevice, editDevice, removeDevice, getOffices, getMobileOs, clearErrors }
 )(withRouter(EditDevice));

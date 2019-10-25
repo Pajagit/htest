@@ -1,6 +1,5 @@
 import React from "react";
 import Checkbox from "./Checkbox";
-import Tag from "./Tag";
 import { Link } from "react-router-dom";
 
 function PortraitBrowser({ title, version, resolution, projectId, id }) {

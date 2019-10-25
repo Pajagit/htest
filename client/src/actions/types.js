@@ -37,3 +37,5 @@ export const GET_SIMULATOR = "GET_SIMULATOR";
 export const SIMULATOR_LOADING = "SIMULATOR_LOADING";
 
 export const GET_OFFICES = "GET_OFFICES";
+
+export const GET_MOBILE_OS = "GET_MOBILE_OS";
