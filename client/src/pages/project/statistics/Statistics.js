@@ -5,14 +5,16 @@ import ProjectPanel from "../../../components/project-panel/ProjectPanel";
 import Header from "../../../components/common/Header";
 import Chart from "../../../components/common/Chart";
 
-export default class Reports extends Component {
+export default class Statistics extends Component {
   constructor(props) {
     super(props);
     this.state = {
       // ALL TCs
       allTCOptions: {
         colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
-
+        legend: {
+          show: false
+        },
         chart: {
           id: "bar",
           height: 900,
@@ -42,25 +44,28 @@ export default class Reports extends Component {
       ],
       // MOST ACTIVE
       mostActiveOptions: {
+        plotOptions: {
+          pie: {
+            donut: {
+              size: "50%"
+            }
+          }
+        },
         legend: {
           position: "bottom"
         },
-        dropShadow: true,
-        chart: {
-          id: "bar",
-          height: "400px",
-          zoom: {
-            enabled: false
-          }
-        },
-        labels: ["Login", "Change Password", "Single Voyage Report", "Missing Reports"]
+
+        labels: ["Single Voyage Report", "Missing Reports", "Upload Image", "Login", "Change Password"]
       },
 
-      mostActiveSeries: [55, 44, 33, 13],
+      mostActiveSeries: [55, 44, 33, 13, 22],
 
       // MOST FAILED TC
       mostFailedTCOptions: {
         colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        legend: {
+          show: false
+        },
         chart: {
           id: "bar",
           height: "600px",
@@ -90,6 +95,9 @@ export default class Reports extends Component {
       // MOST FAILED VERSION
       mostFailedVersionOptions: {
         colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        legend: {
+          show: false
+        },
         chart: {
           id: "bar",
           zoom: {
@@ -176,7 +184,7 @@ export default class Reports extends Component {
                     options={this.state.mostActiveOptions}
                     series={this.state.mostActiveSeries}
                     type="donut"
-                    width="100%"
+                    // width="100%"
                     legend={this.state.legend1}
                   />
                 </div>

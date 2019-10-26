@@ -2,28 +2,42 @@
   padding-left: 3.8rem;
   padding-right: 3.8rem;
   padding-top: 2.4rem;
+  padding-bottom: 2.4rem;
 
-  width: 100%;
+  //   width: 100%;
   &-top {
+    padding: 2rem 3rem;
+    @media only screen and (max-width: $bp-600) {
+      padding: 1rem 0.5rem;
+    }
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-
+    background-color: white;
+    box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
     &-left {
       width: 65%;
       @media only screen and (max-width: $bp-1600) {
-        width: 100%;
+        width: 96%;
+      }
+      @media only screen and (max-width: $bp-800) {
+        width: 95%;
+      }
+      @media only screen and (max-width: $bp-600) {
+        width: 93%;
+      }
+      @media only screen and (max-width: $bp-400) {
+        width: 92%;
       }
       &-title {
         margin-bottom: 2rem;
         color: #2b3037;
-        font-size: 20px;
+        font-size: 2rem;
         letter-spacing: -0.6px;
       }
     }
     &-right {
-      display: flex;
-      flex-wrap: wrap;
+      padding: 0 2rem;
       width: 35%;
       @media only screen and (max-width: $bp-1600) {
         width: 100%;
@@ -33,24 +47,28 @@
         margin-bottom: 2rem;
         color: #2b3037;
         font-family: "IBM Plex Sans";
-        font-size: 20px;
+        font-size: 2rem;
         letter-spacing: -0.6px;
-        line-height: 40px;
+        line-height: 4rem;
       }
       &-chart {
         width: 100%;
-        margin-left: auto;
-        margin-right: auto;
+
+        // margin-left: auto;
+        // margin-right: auto;
       }
     }
   }
   &-bottom {
+    padding: 2rem 3rem;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    background-color: white;
+    box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
 
     &-left {
-      width: 50%;
+      width: 49%;
       @media only screen and (max-width: $bp-1600) {
         width: 100%;
       }
@@ -58,13 +76,13 @@
         // margin-left: 2rem;
         color: #2b3037;
         font-family: "IBM Plex Sans";
-        font-size: 20px;
+        font-size: 2rem;
         letter-spacing: -0.6px;
-        line-height: 40px;
+        line-height: 4rem;
       }
     }
     &-right {
-      width: 50%;
+      width: 49%;
       @media only screen and (max-width: $bp-1600) {
         width: 100%;
       }
@@ -72,9 +90,9 @@
         // margin-left: 2rem;
         color: #2b3037;
         font-family: "IBM Plex Sans";
-        font-size: 20px;
+        font-size: 2rem;
         letter-spacing: -0.6px;
-        line-height: 40px;
+        line-height: 4rem;
       }
     }
   }
@@ -87,8 +105,25 @@
   color: rgba(0, 0, 0, 0.85) !important;
 }
 
-.apexcharts-tooltip .apexcharts-tooltip-series-group.active .apexcharts-markers {
-  background: rgba(10, 5, 31, 0.85) !important;
+// .apexcharts-tooltip .apexcharts-tooltip-series-group.active .apexcharts-markers {
+//   background: rgba(10, 5, 31, 0.85) !important;
+// }
+.apexcharts-legend {
+  display: inline-block !important;
+  overflow: auto;
+  //   padding: 1rem 1rem;
+}
+
+.apexcharts-legend-marker {
+  border-radius: 0 !important;
+  margin-bottom: 1rem;
+}
+.apexcharts-legend-text {
+  margin-bottom: 1rem;
+}
+
+.apexcharts-legend-text {
+  font-size: 1.6rem !important;
 }
 
 .stats-grid {
@@ -110,35 +145,35 @@
     &-1 {
       padding: 1.6rem 2.5rem;
       border: 1px solid #d9d9d9;
-      border-bottom: 5px solid rgb(165, 146, 255);
+      border-bottom: 0.5rem solid rgb(165, 146, 255);
       &-title {
-        height: 23px;
-        width: 180.88px;
+        height: 2.3rem;
+        width: 18rem;
         color: #69737d;
         font-family: "IBM Plex Sans";
-        font-size: 18px;
-        line-height: 23px;
+        font-size: 1.8rem;
+        line-height: 2.3rem;
         margin-bottom: 1.2rem;
       }
       &-count {
-        height: 34px;
-        width: 180.88px;
+        height: 3.4rem;
+        width: 18rem;
         color: #2b3037;
         font-family: Roboto;
-        font-size: 24px;
+        font-size: 2.4rem;
         font-weight: bold;
         letter-spacing: -0.9px;
-        line-height: 34px;
+        line-height: 3.4rem;
       }
       &-percentage {
-        height: 26px;
-        width: 180.88px;
+        height: 2.6rem;
+        width: 18rem;
         color: #9b9b9b;
         font-family: Roboto;
-        font-size: 16px;
+        font-size: 1.6rem;
         font-weight: bold;
         letter-spacing: -0.3px;
-        line-height: 26px;
+        line-height: 2.6rem;
       }
     }
     &-2 {
@@ -146,33 +181,33 @@
       border: 1px solid #d9d9d9;
       border-bottom: 5px solid $color-primary;
       &-title {
-        height: 23px;
-        width: 180.88px;
+        height: 2.3rem;
+        width: 18rem;
         color: #69737d;
         font-family: "IBM Plex Sans";
-        font-size: 18px;
-        line-height: 23px;
+        font-size: 1.8rem;
+        line-height: 2.3rem;
         margin-bottom: 1.2rem;
       }
       &-count {
-        height: 34px;
-        width: 180.88px;
+        height: 3.4rem;
+        width: 18rem;
         color: #2b3037;
         font-family: Roboto;
-        font-size: 24px;
+        font-size: 2.4rem;
         font-weight: bold;
         letter-spacing: -0.9px;
-        line-height: 34px;
+        line-height: 3.4rem;
       }
       &-percentage {
-        height: 26px;
-        width: 180.88px;
+        height: 2.6rem;
+        width: 18rem;
         color: #9b9b9b;
         font-family: Roboto;
-        font-size: 16px;
+        font-size: 1.6rem;
         font-weight: bold;
         letter-spacing: -0.3px;
-        line-height: 26px;
+        line-height: 2.6rem;
       }
     }
     &-3 {
@@ -180,33 +215,33 @@
       border: 1px solid #d9d9d9;
       border-bottom: 5px solid rgb(0, 227, 150);
       &-title {
-        height: 23px;
-        width: 180.88px;
+        height: 2.3rem;
+        width: 18rem;
         color: #69737d;
         font-family: "IBM Plex Sans";
-        font-size: 18px;
-        line-height: 23px;
+        font-size: 1.8rem;
+        line-height: 2.3rem;
         margin-bottom: 1.2rem;
       }
       &-count {
-        height: 34px;
-        width: 180.88px;
+        height: 3.4rem;
+        width: 18rem;
         color: #2b3037;
         font-family: Roboto;
-        font-size: 24px;
+        font-size: 2.4rem;
         font-weight: bold;
         letter-spacing: -0.9px;
-        line-height: 34px;
+        line-height: 3.4rem;
       }
       &-percentage {
-        height: 26px;
-        width: 180.88px;
+        height: 2.6rem;
+        width: 18rem;
         color: #9b9b9b;
         font-family: Roboto;
-        font-size: 16px;
+        font-size: 1.6rem;
         font-weight: bold;
         letter-spacing: -0.3px;
-        line-height: 26px;
+        line-height: 2.6rem;
       }
     }
     &-4 {
@@ -214,33 +249,33 @@
       border: 1px solid #d9d9d9;
       border-bottom: 5px solid rgb(255, 69, 96);
       &-title {
-        height: 23px;
-        width: 180.88px;
+        height: 2.3rem;
+        width: 18rem;
         color: #69737d;
         font-family: "IBM Plex Sans";
-        font-size: 18px;
-        line-height: 23px;
+        font-size: 1.8rem;
+        line-height: 2.3rem;
         margin-bottom: 1.2rem;
       }
       &-count {
-        height: 34px;
-        width: 180.88px;
+        height: 3.4rem;
+        width: 18rem;
         color: #2b3037;
         font-family: Roboto;
-        font-size: 24px;
+        font-size: 2.4rem;
         font-weight: bold;
         letter-spacing: -0.9px;
-        line-height: 34px;
+        line-height: 3.4rem;
       }
       &-percentage {
-        height: 26px;
-        width: 180.88px;
+        height: 2.6rem;
+        width: 18rem;
         color: #9b9b9b;
         font-family: Roboto;
-        font-size: 16px;
+        font-size: 1.6rem;
         font-weight: bold;
         letter-spacing: -0.3px;
-        line-height: 26px;
+        line-height: 2.6rem;
       }
     }
   }
