@@ -45,7 +45,8 @@ import Reports from "./pages/project/reports/Reports";
 import Statistics from "./pages/project/statistics/Statistics";
 // ---STATISTICS---
 // PROJECT INFO
-import ProjectInfo from "./pages/project/settings/ProjectInfo";
+import ProjectInfo from "./pages/project/settings/project/ProjectInfo";
+import ProjectSetting from "./pages/project/settings/project/ProjectSetting";
 // GROUPS
 import Groups from "./pages/project/settings/groups/Groups";
 import NewGroup from "./pages/project/settings/groups/NewGroup";
@@ -59,6 +60,7 @@ import EditSimulator from "./pages/project/settings/simulators/EditSimulator";
 // BROWSERS
 import Browsers from "./pages/project/settings/browsers/Browsers";
 import NewBrowser from "./pages/project/settings/browsers/NewBrowser";
+import EditBrowser from "./pages/project/settings/browsers/EditBrowser";
 // VERSIONS
 import Versions from "./pages/project/settings/versions/Versions";
 import NewVersion from "./pages/project/settings/versions/NewVersion";
@@ -150,6 +152,7 @@ function App() {
           <Route exact path="/" component={Landing} />
           <PrivateRoute exact path="/Projects" component={Projects} />
           <PrivateRoute exact path="/:projectId/ProjectInfo" component={ProjectInfo} />
+          <PrivateRoute exact path="/:projectId/ProjectSetting" component={ProjectSetting} />
           <PrivateRoute exact path="/:projectId/TestCase/:testcaseId" component={TestCase} />
           <PrivateRoute exact path="/:projectId/CreateTestCase" component={NewTestCase} />
           <PrivateRoute exact path="/:projectId/EditTestCase/:testcaseId" component={EditTestCase} />
@@ -179,6 +182,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/EditSimulator/:simulatorId" component={EditSimulator} />
           <PrivateRoute exact path="/:projectId/NewSimulator" component={NewSimulator} />
           <PrivateRoute exact path="/:projectId/NewBrowser" component={NewBrowser} />
+          <PrivateRoute exact path="/:projectId/EditBrowser/:browserId" component={EditBrowser} />
           <PrivateRoute exact path="/:projectId/NewVersion" component={NewVersion} />
           <PrivateRoute exact path="/:projectId/NewEnvironment" component={NewEnvironment} />
         </div>

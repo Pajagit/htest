@@ -3,108 +3,90 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { createSimulator } from "../../../../actions/simulatorActions";
-import { getOffices } from "../../../../actions/officeActions";
-import { superAdminPermissions } from "../../../../permissions/SuperAdminPermissions";
-import Input from "../../../../components/common/Input";
-import Btn from "../../../../components/common/Btn";
-import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
-import SimulatorValidation from "../../../../validation/SimulatorValidation";
-import successToast from "../../../../toast/successToast";
-import failToast from "../../../../toast/failToast";
+import BrowserValidation from "../../../../validation/BrowserValidation";
+import { createNewGroupPermission } from "../../../../permissions/GroupPermissions";
 import { clearErrors } from "../../../../actions/errorsActions";
-
+import Btn from "../../../../components/common/Btn";
+import Input from "../../../../components/common/Input";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import Header from "../../../../components/common/Header";
+import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
+import { createBrowser } from "../../../../actions/browserActions";
+import successToast from "../../../../toast/successToast";
+import failToast from "../../../../toast/failToast";
 
 class NewBrowser extends Component {
   constructor(props) {
     super(props);
     this.state = {
       initialRender: true,
-      submitPressed: false,
-      officesFormatted: [],
+      projectId: null,
       title: "",
-      resolution: "",
-      office: null,
-      dpi: "",
-      screen_size: "",
-      udid: "",
-      retina: false,
+      user: this.props.auth.user,
+      screen_resolution: "",
+      version: "",
+      submitPressed: false,
       errors: {}
     };
-    this.selectOffice = this.selectOffice.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-
+    var { user } = nextProps.auth;
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = superAdminPermissions(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
-    }
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = user;
+      }
+      var { isValid } = createNewGroupPermission(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
 
-    if (!isValid) {
-      nextProps.history.push(`/DeviceSettings`);
+      if (!isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/Groups`);
+      }
     }
-
     return Object.keys(update).length ? update : null;
   }
 
-  selectOffice(value) {
-    this.setState({ office: value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
-    });
+  componentDidMount() {
+    this.setState({ projectId: this.props.match.params.projectId });
   }
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
-    });
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
   checkValidation() {
-    var deviceData = {};
-    deviceData.title = this.state.title;
-    deviceData.resolution = this.state.resolution;
-    deviceData.dpi = this.state.dpi;
-    deviceData.udid = this.state.udid;
-    deviceData.retina = this.state.retina;
-    deviceData.screen_size = this.state.screen_size;
-    deviceData.simulator = false;
-    deviceData.office_id = this.state.office ? this.state.office.id : null;
+    var formData = {};
 
-    const { errors } = SimulatorValidation(deviceData);
+    formData.title = this.state.title;
+    formData.screen_resolution = this.state.screen_resolution;
+    formData.version = this.state.version;
+
+    const { errors } = BrowserValidation(formData);
+
     this.setState({ errors });
   }
 
   submitForm(e) {
-    e.preventDefault();
     this.setState({ submitPressed: true });
     this.props.clearErrors();
-    this.setState({ errors: {} });
-    var deviceData = {};
-
-    deviceData.title = this.state.title;
-    deviceData.resolution = this.state.resolution;
-    deviceData.dpi = this.state.dpi;
-    deviceData.udid = this.state.udid;
-    deviceData.retina = this.state.retina;
-    deviceData.screen_size = this.state.screen_size;
-    deviceData.simulator = true;
-    const { errors, isValid } = SimulatorValidation(deviceData);
+    var browserData = {};
+    browserData.title = this.state.title;
+    browserData.screen_resolution = this.state.screen_resolution;
+    browserData.version = this.state.version;
+    const { errors, isValid } = BrowserValidation(browserData);
 
     if (isValid) {
-      this.props.createSimulator(deviceData, res => {
+      this.props.createBrowser(browserData, res => {
         if (res.status === 200) {
-          successToast("Simulator added successfully");
-          this.props.history.push(`/${this.props.match.params.projectId}/Simulators`);
+          this.props.history.push(`/${this.state.projectId}/Browsers`);
+
+          successToast("Browser successfully created");
         } else {
-          failToast("Adding simulator failed");
-          this.props.history.push(`/${this.props.match.params.projectId}/NewBrowser`);
+          failToast("Browser creating failed");
         }
       });
     } else {
@@ -112,7 +94,63 @@ class NewBrowser extends Component {
     }
   }
 
+  onChange(e) {
+    this.props.clearErrors();
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
+  }
+
   render() {
+    var content;
+    var projectId = this.props.match.params.projectId;
+    content = (
+      <div className="main-content--content">
+        <Input
+          type="text"
+          placeholder="Enter Browser Title Here"
+          label="Title*"
+          validationMsg={[this.state.errors.title, this.props.errors.title]}
+          value={this.state.title}
+          onChange={e => this.onChange(e)}
+          name={"title"}
+          onKeyDown={this.submitFormOnEnterKey}
+        />
+        <Input
+          type="text"
+          placeholder="Enter Browser Version Here"
+          label="Version"
+          validationMsg={[this.state.errors.version, this.props.errors.version]}
+          value={this.state.version}
+          onChange={e => this.onChange(e)}
+          name={"version"}
+          onKeyDown={this.submitFormOnEnterKey}
+        />
+        <Input
+          type="text"
+          placeholder="Enter Browser Resolution Here"
+          label="Resolution"
+          validationMsg={[this.state.errors.screen_resolution, this.props.errors.screen_resolution]}
+          value={this.state.screen_resolution}
+          onChange={e => this.onChange(e)}
+          name={"screen_resolution"}
+          onKeyDown={this.submitFormOnEnterKey}
+        />
+        <div className="flex-column-left mt-4">
+          <Btn
+            className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
+            label="Save Group"
+            type="text"
+            onClick={e => this.submitForm(e)}
+          />
+
+          <UnderlineAnchor link={`/${projectId}/Browsers`} value={"Cancel"} />
+        </div>
+      </div>
+    );
+
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -120,62 +158,12 @@ class NewBrowser extends Component {
         <div className="main-content main-content-grid">
           <Header
             icon={<i className="fas fa-arrow-left"></i>}
-            title={"Back To Browser Settings"}
+            title={"Back to All Browsers"}
             history={this.props}
+            link={`/${projectId}/Browsers`}
             canGoBack={true}
-            link={`/${this.props.match.params.projectId}/Browsers`}
           />
-          <div className="main-content--content">
-            <div className="header">
-              <div className="header--title">Browser Information </div>
-              <div className="header--buttons">
-                <div className="header--buttons--primary"></div>
-                <div className="header--buttons--secondary"></div>
-              </div>
-            </div>
-            <div>
-              <Input
-                type="text"
-                placeholder="Enter Browser Title Here"
-                label="Title*"
-                validationMsg={[this.state.errors.title, this.props.errors.error]}
-                value={this.state.title}
-                onChange={e => this.onChange(e)}
-                name={"title"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
-              <Input
-                type="text"
-                placeholder="Enter Browser Resolution Here"
-                label="Resolution"
-                validationMsg={this.state.errors.resolution}
-                value={this.state.resolution}
-                onChange={e => this.onChange(e)}
-                name={"resolution"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
-              <Input
-                type="text"
-                placeholder="Enter Browser Version Here"
-                label="Version"
-                validationMsg={this.state.errors.screen_size}
-                value={this.state.screen_size}
-                onChange={e => this.onChange(e)}
-                name={"screen_size"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
-              <div className="flex-column-left mt-4">
-                <Btn
-                  className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-                  label="Add Browser"
-                  type="text"
-                  onClick={e => this.submitForm(e)}
-                />
-
-                <UnderlineAnchor link={`/${this.props.match.params.projectId}/Browsers`} value={"Cancel"} />
-              </div>
-            </div>
-          </div>
+          {content}
         </div>
       </div>
     );
@@ -183,17 +171,17 @@ class NewBrowser extends Component {
 }
 
 NewBrowser.propTypes = {
-  auth: PropTypes.object.isRequired,
+  browsers: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth,
+  browsers: state.browsers,
   errors: state.errors,
-  devices: state.devices
+  auth: state.auth
 });
 
 export default connect(
   mapStateToProps,
-  { createSimulator, getOffices, clearErrors }
+  { createBrowser, clearErrors }
 )(withRouter(NewBrowser));

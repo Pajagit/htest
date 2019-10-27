@@ -14,6 +14,7 @@ const DeviceValidation = data => {
   data.udid = !isEmpty(data.udid) ? data.udid : "";
   data.screen_size = !isEmpty(data.screen_size) ? data.screen_size : "";
   data.office_id = !isEmpty(data.office_id) ? data.office_id : "";
+  data.os = !isEmpty(data.os) ? data.os : "";
 
   if (isEmpty(data.title)) {
     errors.title = "Title required";
@@ -53,6 +54,9 @@ const DeviceValidation = data => {
     if (isNaN(data.office_id)) {
       errors.office_id = "Office id is not a valid number";
     }
+  }
+  if (isEmpty(data.os)) {
+    errors.os = "Operation System is required";
   }
 
   if (isEmpty(data.simulator)) {

@@ -151,7 +151,9 @@ class NewDevice extends Component {
         }
       });
     } else {
-      this.setState({ errors });
+      this.setState({ errors }, () => {
+        console.log(this.state.errors);
+      });
     }
   }
 
@@ -189,6 +191,7 @@ class NewDevice extends Component {
             onChange={this.selectOs}
             name={"operating_system"}
             label={"Operating System*"}
+            validationMsg={[this.state.errors.os, this.props.errors.os]}
             placeholder={"Operating Systems"}
             multiple={false}
           />
