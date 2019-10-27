@@ -80,7 +80,7 @@ class DeviceSettings extends Component {
         <ListItem
           key={index}
           title={device.title}
-          msg={device.office.city}
+          msg={device.office && device.office.city}
           link={`/EditDevice/${device.id}`}
           list={`${device.retina ? "Retina" : ""}${" "} ${device.screen_size ? device.screen_size : " "}${" "} ${
             device.resolution ? device.resolution : " "

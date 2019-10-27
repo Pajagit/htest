@@ -7,6 +7,7 @@
   color: #858585 !important;
 }
 .react-daypicker-root {
+  z-index: 9999;
   display: inline-block;
   position: absolute;
   border: 1px solid #d1d1d1 !important;
@@ -15,7 +16,6 @@
   top: 6.3rem;
   padding: 1rem;
   background-color: #ffffff;
-  z-index: 100;
 
   & > .header {
     justify-content: space-around !important;
@@ -26,7 +26,7 @@
       cursor: pointer;
     }
   }
-  width: 100%;
+  width: 100% !important;
   & > table {
     width: 100%;
     font-size: 1.2rem;
