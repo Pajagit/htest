@@ -1,0 +1,53 @@
+.report-status {
+  &-blocked {
+    padding: 0.3rem 0.6rem;
+    display: flex;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.45px;
+    line-height: 15px;
+    border-radius: 4px;
+    background-color: #e7e7e7;
+    &-title {
+      color: black;
+      margin-right: 0.5rem;
+    }
+    &-value {
+      color: black;
+    }
+  }
+  &-failed {
+    padding: 0.3rem 0.6rem;
+    display: flex;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.45px;
+    line-height: 15px;
+    border-radius: 4px;
+    background-color: #fff0f0;
+    &-title {
+      color: red;
+      margin-right: 0.5rem;
+    }
+    &-value {
+      color: red;
+    }
+  }
+  &-passed {
+    padding: 0.3rem 0.6rem;
+    display: flex;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.45px;
+    line-height: 15px;
+    border-radius: 4px;
+    background-color: #f1ffee;
+    &-title {
+      color: rgb(4, 88, 4);
+      margin-right: 0.5rem;
+    }
+    &-value {
+      color: green;
+    }
+  }
+}
