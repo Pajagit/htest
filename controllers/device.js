@@ -139,7 +139,7 @@ module.exports = {
       (async () => {
         var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, true);
         if (!deviceExists) {
-          return res.status(403).json({ error: "Device doesn't exist" });
+          return res.status(404).json({ error: "Device doesn't exist" });
         }
 
         var updatedDevice = await DeviceService.updateDevice(req.params.id, deviceFields);
@@ -204,7 +204,6 @@ module.exports = {
       }
       deviceFields.os = req.body.os;
 
-     
       if (req.body.dpi) {
         deviceFields.dpi = req.body.dpi;
       }
