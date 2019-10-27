@@ -3,10 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getDevices } from "../../../../actions/deviceActions";
+import { getBrowsers } from "../../../../actions/browserActions";
 import { projectAdminPermissions } from "../../../../permissions/ProjectRolePermissions";
-import { getSimulators } from "../../../../actions/simulatorActions";
-import { clearDevices } from "../../../../actions/deviceActions";
 import isEmpty from "../../../../validation/isEmpty";
 
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -48,36 +46,27 @@ class Browsers extends Component {
   }
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
-    // this.props.getSimulators();
+    this.props.getBrowsers();
   }
 
   render() {
-    // var { devices, loading } = this.props.devices;
-    var browsers = [
-      { id: 1, title: "Chrome", version: "11.5", resolution: "1920x1080" },
-      { id: 2, title: "Internet Explorer", version: "10.2", resolution: "1920x1080" },
-      { id: 1, title: "Chrome", version: "11.5", resolution: "1920x1080" },
-      { id: 2, title: "Internet Explorer", version: "10.2", resolution: "1920x1080" },
-      { id: 1, title: "Chrome", version: "11.5", resolution: "1920x1080" },
-      { id: 2, title: "Internet Explorer", version: "10.2", resolution: "1920x1080" },
-      { id: 1, title: "Chrome", version: "11.5", resolution: "1920x1080" },
-      { id: 2, title: "Internet Explorer", version: "10.2", resolution: "1920x1080" }
-    ];
+    var { browsers, loading } = this.props.browsers;
+    var browsersContainer;
     var content;
-
-    if (browsers === null) {
+    if ((browsers && browsers.browsers === null) || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(browsers)) {
-      content = browsers.map((browser, index) => (
+    } else if (!isEmpty(browsers && browsers.browsers)) {
+      browsersContainer = browsers.browsers.map((browser, index) => (
         <PortraitBrowser
           key={index}
           title={browser.title}
-          resolution={browser.resolution}
+          resolution={browser.screen_resolution}
           version={browser.version}
           id={browser.id}
           projectId={this.props.match.params.projectId}
         />
       ));
+      content = <div className="testcase-grid testcase-container">{browsersContainer}</div>;
     } else if (isEmpty(browsers)) {
       content = <div className="testcase-container-no-content">There are no browsers added yet</div>;
     }
@@ -102,7 +91,7 @@ class Browsers extends Component {
               />
             }
           />
-          <div className="testcase-grid testcase-container">{content}</div>
+          {content}
         </div>
       </div>
     );
@@ -116,11 +105,11 @@ Browsers.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  // browsers: state.browsers,
+  browsers: state.browsers,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
-  { getSimulators, clearDevices, getDevices }
+  { getBrowsers }
 )(withRouter(Browsers));

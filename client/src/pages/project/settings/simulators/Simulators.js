@@ -54,11 +54,12 @@ class Devices extends Component {
   render() {
     var { devices, loading } = this.props.devices;
     var content;
+    var simulatorContainer;
 
     if (devices === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(devices.devices)) {
-      content = devices.devices.map((device, index) => (
+      simulatorContainer = devices.devices.map((device, index) => (
         <PortraitDevice
           key={index}
           title={device.title}
@@ -73,6 +74,7 @@ class Devices extends Component {
           projectId={this.props.match.params.projectId}
         />
       ));
+      content = <div className="testcase-grid testcase-container">{simulatorContainer}</div>;
     } else if (isEmpty(devices.devices) && isEmpty(this.state.office)) {
       content = <div className="testcase-container-no-content">There are no simulators added yet</div>;
     }
@@ -97,7 +99,7 @@ class Devices extends Component {
               />
             }
           />
-          <div className="testcase-grid testcase-container">{content}</div>
+          {content}
         </div>
       </div>
     );

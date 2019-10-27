@@ -62,7 +62,9 @@
 .testcase-container {
   padding-bottom: 3rem;
   margin-bottom: 5rem;
+
   &-no-content {
+    padding: 3.8rem;
     font-size: 1.8rem;
     font-style: italic;
   }

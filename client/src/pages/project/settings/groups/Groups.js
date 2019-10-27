@@ -53,12 +53,14 @@ class Groups extends Component {
     var projectId = this.props.match.params.projectId;
 
     var content;
+    var groupContainer;
     if (groups === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(groups)) {
-      content = groups.map((group, index) => (
+      groupContainer = groups.map((group, index) => (
         <ListItem key={index} title={group.title} link={`/${projectId}/EditGroup/${group.id}`} />
       ));
+      content = <div className="testcase-grid testcase-container">{groupContainer}</div>;
     } else {
       content = <div className="testcase-container-no-content">There are no groups created yet</div>;
     }
@@ -82,7 +84,7 @@ class Groups extends Component {
               />
             }
           />
-          <div className="testcase-grid testcase-container">{content}</div>
+          {content}
         </div>
       </div>
     );
