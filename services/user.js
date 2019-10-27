@@ -766,5 +766,47 @@ module.exports = {
         resolve(false);
       }
     });
+  },
+  canGetBrowsers: async function(user) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
+
+      var allowed = false;
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role.title)) {
+            allowed = true;
+          }
+        });
+      }
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  },
+  canCreateEditBrowsers: async function(user) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator"];
+
+      var allowed = false;
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (allowedRoles.includes(project.role.title)) {
+            allowed = true;
+          }
+        });
+      }
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
   }
 };
