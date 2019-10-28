@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getSimulator, editSimulator, removeSimulator } from "../../../../actions/simulatorActions";
+import { getMobileOs } from "../../../../actions/mobileOsActions";
 import { getOffices } from "../../../../actions/officeActions";
 import { superAdminPermissions } from "../../../../permissions/SuperAdminPermissions";
 import Input from "../../../../components/common/Input";
@@ -15,6 +16,7 @@ import failToast from "../../../../toast/failToast";
 import { clearErrors } from "../../../../actions/errorsActions";
 import isEmpty from "../../../../validation/isEmpty";
 
+import SearchDropdown from "../../../../components/common/SearchDropdown";
 import Spinner from "../../../../components/common/Spinner";
 import Switch from "../../../../components/common/Switch";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -39,10 +41,11 @@ class EditSimulator extends Component {
       retina: false,
       errors: {}
     };
-    this.selectOffice = this.selectOffice.bind(this);
+    this.selectOs = this.selectOs.bind(this);
   }
   componentDidMount() {
     this.props.getSimulator(this.props.match.params.simulatorId);
+    this.props.getMobileOs();
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
@@ -65,6 +68,7 @@ class EditSimulator extends Component {
         update.udid = device.udid ? device.udid : "";
         update.retina = device.retina;
         update.screen_size = device.screen_size ? device.screen_size : "";
+        update.os = { id: device.os, title: device.os };
       }
     }
 
@@ -81,15 +85,19 @@ class EditSimulator extends Component {
         update.officesFormatted = offices;
       }
     }
+    if (nextProps.mobileOSs && nextProps.mobileOSs.mobileOSs) {
+      if (nextProps.mobileOSs.mobileOSs !== prevState.mobileOSs) {
+        update.mobileOSs = nextProps.mobileOSs.mobileOSs;
+
+        var mobileOSs = nextProps.mobileOSs.mobileOSs.operating_systems;
+
+        update.mobileOSs = mobileOSs;
+      }
+    }
 
     return Object.keys(update).length ? update : null;
   }
 
-  selectOffice(value) {
-    this.setState({ office: value }, () => {
-      this.checkValidation();
-    });
-  }
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value }, () => {
       this.checkValidation();
@@ -106,6 +114,7 @@ class EditSimulator extends Component {
     deviceData.screen_size = this.state.screen_size;
     deviceData.simulator = false;
     deviceData.office_id = this.state.office ? this.state.office.id : null;
+    deviceData.os = this.state.os.title;
     deviceData.simulator = true;
 
     const { errors } = SimulatorValidation(deviceData);
@@ -124,6 +133,7 @@ class EditSimulator extends Component {
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
+    deviceData.os = this.state.os.title;
     deviceData.simulator = true;
     const { errors, isValid } = SimulatorValidation(deviceData);
     if (isValid) {
@@ -161,7 +171,11 @@ class EditSimulator extends Component {
 
     Confirm(title, msg, reject, confirm, e => this.confirmActivation());
   };
-
+  selectOs(value) {
+    this.setState({ os: value }, () => {
+      this.checkValidation();
+    });
+  }
   render() {
     var content;
     var { device, loading } = this.props.devices;
@@ -192,6 +206,16 @@ class EditSimulator extends Component {
               onChange={e => this.onChange(e)}
               name={"title"}
               onKeyDown={this.submitFormOnEnterKey}
+            />
+            <SearchDropdown
+              value={this.state.os}
+              options={this.state.mobileOSs}
+              onChange={this.selectOs}
+              name={"operating_system"}
+              label={"Operating System*"}
+              validationMsg={[this.state.errors.os, this.props.errors.os]}
+              placeholder={"Operating Systems"}
+              multiple={false}
             />
             <Input
               type="text"
@@ -273,10 +297,11 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   devices: state.devices,
-  offices: state.offices
+  offices: state.offices,
+  mobileOSs: state.mobileOSs
 });
 
 export default connect(
   mapStateToProps,
-  { getSimulator, editSimulator, removeSimulator, getOffices, clearErrors }
+  { getSimulator, editSimulator, getMobileOs, removeSimulator, getOffices, clearErrors }
 )(withRouter(EditSimulator));

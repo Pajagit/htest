@@ -46,7 +46,7 @@ class Browsers extends Component {
   }
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
-    this.props.getBrowsers();
+    this.props.getBrowsers(this.props.match.params.projectId);
   }
 
   render() {

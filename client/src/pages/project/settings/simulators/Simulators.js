@@ -67,6 +67,7 @@ class Devices extends Component {
           udid={device.udid}
           resolution={device.resolution}
           dpi={device.dpi}
+          os={device.os}
           screen_size={device.screen_size}
           retina={device.retina}
           simulator={true}

@@ -14,6 +14,7 @@ const SimulatorValidation = data => {
   data.udid = !isEmpty(data.udid) ? data.udid : "";
   data.screen_size = !isEmpty(data.screen_size) ? data.screen_size : "";
   data.office_id = !isEmpty(data.office_id) ? data.office_id : "";
+  data.os = !isEmpty(data.os) ? data.os : "";
 
   if (isEmpty(data.title)) {
     errors.title = "Title required";
@@ -53,6 +54,9 @@ const SimulatorValidation = data => {
     if (typeof data.simulator !== "boolean") {
       errors.simulator = "Parameter 'simulator' must have a true or false value";
     }
+  }
+  if (isEmpty(data.os)) {
+    errors.os = "Operation System is required";
   }
 
   return {

@@ -53,8 +53,8 @@ class EditBrowser extends Component {
         if (prevState.initialRender) {
           update.initialRender = false;
           update.title = browser.title;
-          update.screen_resolution = browser.screen_resolution;
-          update.version = browser.version;
+          update.screen_resolution = browser.screen_resolution ? browser.screen_resolution : "";
+          update.version = browser.version ? browser.version : "";
         }
       }
     }

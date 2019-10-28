@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { createSimulator } from "../../../../actions/simulatorActions";
+import { getMobileOs } from "../../../../actions/mobileOsActions";
 import { getOffices } from "../../../../actions/officeActions";
 import { superAdminPermissions } from "../../../../permissions/SuperAdminPermissions";
 import Input from "../../../../components/common/Input";
@@ -14,6 +15,7 @@ import successToast from "../../../../toast/successToast";
 import failToast from "../../../../toast/failToast";
 import { clearErrors } from "../../../../actions/errorsActions";
 
+import SearchDropdown from "../../../../components/common/SearchDropdown";
 import Switch from "../../../../components/common/Switch";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
@@ -30,12 +32,13 @@ class NewSimulator extends Component {
       resolution: "",
       office: null,
       dpi: "",
+      os: [],
       screen_size: "",
       udid: "",
       retina: false,
       errors: {}
     };
-    this.selectOffice = this.selectOffice.bind(this);
+    this.selectOs = this.selectOs.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -48,19 +51,29 @@ class NewSimulator extends Component {
     if (!isValid) {
       nextProps.history.push(`/DeviceSettings`);
     }
+    if (nextProps.mobileOSs && nextProps.mobileOSs.mobileOSs) {
+      if (nextProps.mobileOSs.mobileOSs !== prevState.mobileOSs) {
+        update.mobileOSs = nextProps.mobileOSs.mobileOSs;
+        var mobileOSs = nextProps.mobileOSs.mobileOSs.operating_systems;
+        update.mobileOSs = mobileOSs;
+      }
+    }
 
     return Object.keys(update).length ? update : null;
   }
+  componentDidMount() {
+    this.props.getMobileOs();
+  }
 
-  selectOffice(value) {
-    this.setState({ office: value }, () => {
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value }, () => {
       if (this.state.submitPressed) {
         this.checkValidation();
       }
     });
   }
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value }, () => {
+  selectOs(value) {
+    this.setState({ os: value }, () => {
       if (this.state.submitPressed) {
         this.checkValidation();
       }
@@ -76,6 +89,7 @@ class NewSimulator extends Component {
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
     deviceData.simulator = false;
+    deviceData.os = this.state.os.title;
     deviceData.office_id = this.state.office ? this.state.office.id : null;
 
     const { errors } = SimulatorValidation(deviceData);
@@ -96,6 +110,8 @@ class NewSimulator extends Component {
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
     deviceData.simulator = true;
+    deviceData.os = this.state.os.title;
+
     const { errors, isValid } = SimulatorValidation(deviceData);
 
     if (isValid) {
@@ -145,6 +161,16 @@ class NewSimulator extends Component {
                 name={"title"}
                 onKeyDown={this.submitFormOnEnterKey}
               />
+              <SearchDropdown
+                value={this.state.os}
+                options={this.state.mobileOSs}
+                onChange={this.selectOs}
+                name={"operating_system"}
+                label={"Operating System*"}
+                validationMsg={[this.state.errors.os, this.props.errors.os]}
+                placeholder={"Operating Systems"}
+                multiple={false}
+              />
               <Input
                 type="text"
                 placeholder="Enter Device Resolution Here"
@@ -155,6 +181,7 @@ class NewSimulator extends Component {
                 name={"resolution"}
                 onKeyDown={this.submitFormOnEnterKey}
               />
+
               <Input
                 type="text"
                 placeholder="Enter Device Screen Size Here"
@@ -175,17 +202,6 @@ class NewSimulator extends Component {
                 name={"dpi"}
                 onKeyDown={this.submitFormOnEnterKey}
               />
-              {/* <Input
-                type="text"
-                placeholder="Enter Device Udid Here"
-                label="Unique Device Identifier"
-                validationMsg={this.state.errors.udid}
-                value={this.state.udid}
-                onChange={e => this.onChange(e)}
-                name={"udid"}
-                onKeyDown={this.submitFormOnEnterKey}
-              /> */}
-
               <Switch
                 label={"Retina"}
                 value={this.state.retina}
@@ -218,10 +234,11 @@ NewSimulator.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
-  devices: state.devices
+  devices: state.devices,
+  mobileOSs: state.mobileOSs
 });
 
 export default connect(
   mapStateToProps,
-  { createSimulator, getOffices, clearErrors }
+  { createSimulator, getOffices, getMobileOs, clearErrors }
 )(withRouter(NewSimulator));
