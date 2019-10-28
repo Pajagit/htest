@@ -22,6 +22,9 @@
   }
   &-item {
     margin-bottom: 2.4rem;
+    & > img {
+      max-width: 25rem;
+    }
     &--title {
       margin-bottom: 1rem;
       color: #9b9b9b;

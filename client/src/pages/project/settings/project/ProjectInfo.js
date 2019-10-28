@@ -150,6 +150,9 @@ class ProjectInfo extends Component {
           <div className="testcase-details--body">
             <div className="testcase-details-container-bottom">
               <div className="testcase-details-item">
+                <img src={project.image_url} alt="project" />
+              </div>
+              <div className="testcase-details-item">
                 <div className="testcase-details-item--title">Description</div>
                 <div className="testcase-details-item--value">{project.description}</div>
               </div>
