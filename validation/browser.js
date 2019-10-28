@@ -11,13 +11,20 @@ module.exports = {
     if (!isEmpty(data.page_size) && isNaN(data.page_size)) {
       errors.page_size = "Page size is not a valid number";
     }
+    if (isEmpty(data.project_id)) {
+      errors.project_id = "Project id is required";
+    } else {
+      if (isNaN(data.project_id)) {
+        errors.project_id = "Project id is not a valid number";
+      }
+    }
 
     return {
       errors,
       isValid: isEmpty(errors)
     };
   },
-  validateBrowserInput: function(data) {
+  validateBrowserInput: function(data, create_browser) {
     var errors = {};
 
     var titleLimit = 150;
@@ -35,6 +42,15 @@ module.exports = {
         errors.title = `Title can not be more than ${titleLimit} long (${data.title.length})`;
       }
     }
+    if (create_browser) {
+      if (isEmpty(data.project_id)) {
+        errors.project_id = "Project id is required";
+      } else {
+        if (isNaN(data.project_id)) {
+          errors.project_id = "Project id is not a valid number";
+        }
+      }
+    }
 
     if (!isEmpty(data.version) && data.version.length > versionLimit) {
       errors.version = `Version can not be more than ${versionLimit} long (${data.version.length})`;
@@ -42,6 +58,11 @@ module.exports = {
 
     if (!isEmpty(data.screen_resolution) && data.screen_resolution.length > screenResolutionLimit) {
       errors.screen_resolution = `Screen resolution can not be more than ${screenResolutionLimit} long (${data.screen_resolution.length})`;
+    }
+    if (!isEmpty(data.used)) {
+      if (typeof data.used !== "boolean") {
+        errors.used = "Parameter 'used' must have a true or false value";
+      }
     }
 
     return {
