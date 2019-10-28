@@ -77,6 +77,7 @@ class NewBrowser extends Component {
     browserData.title = this.state.title;
     browserData.screen_resolution = this.state.screen_resolution;
     browserData.version = this.state.version;
+    browserData.project_id = this.props.match.params.projectId;
     const { errors, isValid } = BrowserValidation(browserData);
 
     if (isValid) {

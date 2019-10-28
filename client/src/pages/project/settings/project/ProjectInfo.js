@@ -6,11 +6,8 @@ import { Link } from "react-router-dom";
 
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
-import BtnAnchor from "../../../../components/common/BtnAnchor";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
-import openExternalBtn from "../../../../img/openExternalBtn.png";
-import Tag from "../../../../components/common/Tag";
 
 import { testcasesPermissions, addTestcasesPermissions } from "../../../../permissions/TestcasePermissions";
 import isEmpty from "../../../../validation/isEmpty";

@@ -151,9 +151,7 @@ class NewDevice extends Component {
         }
       });
     } else {
-      this.setState({ errors }, () => {
-        console.log(this.state.errors);
-      });
+      this.setState({ errors });
     }
   }
 

@@ -3,13 +3,13 @@ import axios from "axios";
 import { GET_BROWSERS, GET_BROWSER, BROWSER_LOADING, GET_ERRORS } from "./types";
 
 // Get All Browsers
-export const getBrowsers = (pageSent, pageSizeSent) => dispatch => {
+export const getBrowsers = (project_id, pageSent, pageSizeSent) => dispatch => {
   dispatch(browserLoading());
   var page = pageSent === undefined ? 1 : pageSent;
   var size = pageSizeSent === undefined ? 100 : pageSizeSent;
 
   axios
-    .get(`/api/browsers?page=${page}&page_size=${size}`)
+    .get(`/api/browsers?page=${page}&page_size=${size}&project_id=${project_id}`)
     .then(res =>
       dispatch({
         type: GET_BROWSERS,
