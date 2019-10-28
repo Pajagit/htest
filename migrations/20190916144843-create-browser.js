@@ -22,6 +22,16 @@ module.exports = {
         allowNull: true,
         defaultValue: null
       },
+      project_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: "projects", key: "id" }
+      },
+      used: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
       deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

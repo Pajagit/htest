@@ -23,6 +23,14 @@ const Browser = sequelize.define(
       type: Sequelize.STRING,
       require: false
     },
+    used: {
+      require: true,
+      type: Sequelize.BOOLEAN
+    },
+    project_id: {
+      require: true,
+      type: Sequelize.INTEGER
+    },
     deleted: {
       type: Sequelize.BOOLEAN,
       require: true

@@ -7,37 +7,49 @@ module.exports = {
         title: "Firefox",
         screen_resolution: "1334x750",
         version: "33",
-        deleted: false
+        deleted: false,
+        project_id: 1,
+        used: false
       },
       {
         title: "Chrome",
         screen_resolution: "1920x1080",
         version: "32",
-        deleted: false
+        deleted: false,
+        project_id: 1,
+        used: false
       },
       {
         title: "Safari",
         screen_resolution: "1334x750",
         version: "35",
-        deleted: false
+        deleted: false,
+        project_id: 1,
+        used: false
       },
       {
         title: "Opera",
         screen_resolution: null,
         version: null,
-        deleted: true
+        deleted: true,
+        project_id: 1,
+        used: false
       },
       {
         title: "Chrome",
         screen_resolution: null,
         version: "36",
-        deleted: false
+        deleted: false,
+        project_id: 1,
+        used: false
       },
       {
         title: "Firefox",
         screen_resolution: null,
         version: "32",
-        deleted: false
+        deleted: false,
+        project_id: 1,
+        used: false
       }
     ]);
   },
