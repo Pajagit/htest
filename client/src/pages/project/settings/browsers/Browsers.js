@@ -67,7 +67,7 @@ class Browsers extends Component {
         />
       ));
       content = <div className="testcase-grid testcase-container">{browsersContainer}</div>;
-    } else if (isEmpty(browsers)) {
+    } else if (isEmpty(browsers && browsers.browsers)) {
       content = <div className="testcase-container-no-content">There are no browsers added yet</div>;
     }
 
