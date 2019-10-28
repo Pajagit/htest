@@ -12,7 +12,8 @@ module.exports = {
         retina: true,
         office_id: 1,
         simulator: false,
-        deleted: false
+        deleted: false,
+        os: "iOS 7.1.2"
       },
       {
         title: "Samsung S8",
@@ -23,7 +24,8 @@ module.exports = {
         retina: false,
         office_id: 1,
         simulator: false,
-        deleted: false
+        deleted: false,
+        os: "Lollipop 5.1.1"
       },
       {
         title: "Samsung S8",
@@ -34,7 +36,8 @@ module.exports = {
         retina: false,
         office_id: 2,
         simulator: false,
-        deleted: false
+        deleted: false,
+        os: "Lollipop 5.1.1"
       },
       {
         title: "Huawei P9",
@@ -45,7 +48,8 @@ module.exports = {
         retina: false,
         office_id: 1,
         simulator: true,
-        deleted: false
+        deleted: false,
+        os: "Lollipop 5.1.1"
       },
       {
         title: "iPhone 4",
@@ -56,7 +60,8 @@ module.exports = {
         retina: true,
         office_id: 1,
         simulator: false,
-        deleted: true
+        deleted: true,
+        os: "iOS 13.1.2"
       }
     ]);
   },

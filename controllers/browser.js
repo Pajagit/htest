@@ -75,10 +75,7 @@ module.exports = {
       if (!canCreateBrowser) {
         return res.status(403).json({ message: "Forbidden" });
       }
-      //   var browserExists = await BrowserService.checkIfBrowserExist(req.body);
-      //   if (browserExists) {
-      //     return res.status(400).json({ error: "Browser alredy exist" });
-      //   }
+
       var browserFields = {};
       browserFields.title = req.body.title;
       if (req.body.screen_resolution) {
@@ -120,10 +117,6 @@ module.exports = {
       if (!browserExists) {
         return res.status(400).json({ error: "Browser doesn't exist" });
       }
-      //   var sameBrowserExists = await BrowserService.checkIfSameBrowserExist(req.body, req.params.id);
-      //   if (sameBrowserExists) {
-      //     return res.status(400).json({ error: "Browser with same details already exist" });
-      //   }
 
       var browserFields = {};
       browserFields.title = req.body.title;
