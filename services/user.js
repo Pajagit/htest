@@ -767,7 +767,7 @@ module.exports = {
       }
     });
   },
-  canGetBrowsers: async function(user) {
+  canGetBrowsers: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
 
@@ -776,7 +776,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role.title)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });

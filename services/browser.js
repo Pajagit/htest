@@ -4,11 +4,12 @@ const Browser = require("../models/browser");
 const paginate = require("../utils/pagination").paginate;
 
 module.exports = {
-  getAllBrowsers: async function() {
+  getAllBrowsers: async function(project_id) {
     return new Promise((resolve, reject) => {
       Browser.findAll({
-        attributes: ["id", "title", "screen_resolution", "version", "deleted"],
+        attributes: ["id", "title", "screen_resolution", "version", "used"],
         where: {
+          project_id: project_id,
           deleted: false
         },
         order: [["title", "ASC"]]
@@ -23,13 +24,14 @@ module.exports = {
       });
     });
   },
-  getAllBrowsersPaginated: async function(page, pageSize) {
+  getAllBrowsersPaginated: async function(project_id, page, pageSize) {
     return new Promise((resolve, reject) => {
       Browser.findAndCountAll({
         where: {
+          project_id: project_id,
           deleted: false
         },
-        attributes: ["id", "title", "screen_resolution", "version"],
+        attributes: ["id", "title", "screen_resolution", "version", "used"],
         ...paginate({ page, pageSize }),
         order: [["title", "ASC"]]
       }).then(browser_obj => {
@@ -47,13 +49,26 @@ module.exports = {
   getBrowserById: async function(id) {
     return new Promise((resolve, reject) => {
       Browser.findOne({
-        where: {
-          deleted: false
-        },
-        attributes: ["id", "title", "screen_resolution", "version"],
+        attributes: ["id", "title", "screen_resolution", "version", "used"],
         where: {
           id: id,
           deleted: false
+        }
+      }).then(browser => {
+        if (browser) {
+          resolve(browser);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  getBrowserProject: async function(id) {
+    return new Promise((resolve, reject) => {
+      Browser.findOne({
+        attributes: ["project_id"],
+        where: {
+          id: id
         }
       }).then(browser => {
         if (browser) {
@@ -79,7 +94,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (createdOrUpdatedBrowser) {
         Browser.findOne({
-          attributes: ["id", "title", "screen_resolution", "version"],
+          attributes: ["id", "title", "screen_resolution", "version", "used"],
           where: {
             id: createdOrUpdatedBrowser.id
           }
@@ -95,12 +110,22 @@ module.exports = {
   },
   checkIfBrowserExist: async function(data) {
     return new Promise((resolve, reject) => {
+      var whereCondition = {};
+      whereCondition.title = data.title;
+      if (data.version) {
+        whereCondition.version = data.version;
+      }
+      if (data.screen_resolution) {
+        whereCondition.screen_resolution = data.screen_resolution;
+      }
+
       Browser.findOne({
         attributes: ["id"],
         where: {
           title: data.title,
           version: data.version,
-          screen_resolution: data.screen_resolution
+          screen_resolution: data.screen_resolution,
+          project_id: data.project_id
         }
       }).then(browser => {
         if (browser) {
@@ -142,6 +167,26 @@ module.exports = {
       }).then(browser => {
         if (browser[1]) {
           resolve(browser[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  deleteBrowser: async function(id) {
+    return new Promise((resolve, reject) => {
+      Browser.update(
+        {
+          deleted: true
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ).then(browser => {
+        if (browser) {
+          resolve(true);
         } else {
           resolve(false);
         }
