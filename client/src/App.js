@@ -64,6 +64,7 @@ import EditBrowser from "./pages/project/settings/browsers/EditBrowser";
 // VERSIONS
 import Versions from "./pages/project/settings/versions/Versions";
 import NewVersion from "./pages/project/settings/versions/NewVersion";
+import EditVersion from "./pages/project/settings/versions/EditVersion";
 // ENVIRONMENTS
 import Environments from "./pages/project/settings/environments/Environments";
 import NewEnvironment from "./pages/project/settings/environments/NewEnvironment";
@@ -185,6 +186,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/EditBrowser/:browserId" component={EditBrowser} />
           <PrivateRoute exact path="/:projectId/NewVersion" component={NewVersion} />
           <PrivateRoute exact path="/:projectId/NewEnvironment" component={NewEnvironment} />
+          <PrivateRoute exact path="/:projectId/EditVersion/:versionId" component={EditVersion} />
         </div>
       </Router>
     </Provider>

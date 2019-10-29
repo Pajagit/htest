@@ -40,6 +40,10 @@ export const GET_BROWSERS = "GET_BROWSERS";
 export const GET_BROWSER = "GET_BROWSER";
 export const BROWSER_LOADING = "BROWSER_LOADING";
 
+export const GET_VERSIONS = "GET_VERSIONS";
+export const GET_VERSION = "GET_VERSION";
+export const VERSION_LOADING = "VERSION_LOADING";
+
 export const GET_OFFICES = "GET_OFFICES";
 
 export const GET_MOBILE_OS = "GET_MOBILE_OS";
