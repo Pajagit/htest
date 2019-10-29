@@ -7,7 +7,6 @@ class App extends Component {
     this.state = {};
   }
   render() {
-    console.log(this.props.options);
     return (
       <div className="app">
         <div className="row">
