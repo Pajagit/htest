@@ -3,8 +3,8 @@ const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 
-const Version = sequelize.define(
-  "versions",
+const Environment = sequelize.define(
+  "environments",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -12,21 +12,14 @@ const Version = sequelize.define(
       primaryKey: true,
       autoIncrement: true
     },
-    version: {
+    title: {
       type: Sequelize.STRING,
       required: true
     },
-    is_supported: {
+    deprecated: {
       type: Sequelize.BOOLEAN,
-      required: true
-    },
-    deleted: {
-      type: Sequelize.BOOLEAN,
-      required: false
-    },
-    support_stopped_at: {
-      type: Sequelize.DATE,
-      required: false
+      required: false,
+      defaultValue: false
     },
     project_id: {
       type: Sequelize.INTEGER,
@@ -36,6 +29,9 @@ const Version = sequelize.define(
         model: "projects",
         key: "id"
       }
+    },
+    used: {
+      type: Sequelize.BOOLEAN
     },
     created_at: {
       type: Sequelize.DATE,
@@ -49,4 +45,4 @@ const Version = sequelize.define(
   { timestamps: false }
 );
 
-module.exports = Version;
+module.exports = Environment;

@@ -1,31 +1,21 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("versions", {
+    return queryInterface.createTable("environments", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      version: {
+      title: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      is_supported: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-      },
-      deleted: {
+      deprecated: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
-      },
-      support_stopped_at: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        defaultValue: null
       },
       project_id: {
         type: Sequelize.INTEGER,
@@ -41,10 +31,15 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
         defaultValue: null
+      },
+      used: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("versions");
+    return queryInterface.dropTable("environments");
   }
 };
