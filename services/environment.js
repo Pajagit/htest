@@ -78,5 +78,72 @@ module.exports = {
         }
       });
     });
+  },
+  createEnvironment: async function(env_fields) {
+    return new Promise((resolve, reject) => {
+      Environment.create(env_fields).then(environment => {
+        if (environment) {
+          var env = {};
+          env.id = environment.id;
+          env.title = environment.title;
+          env.used = environment.used;
+          resolve(env);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  returnCreatedOrUpdatedEnvironment: async function(createdOrUpdatedEnvironment) {
+    return new Promise((resolve, reject) => {
+      if (createdOrUpdatedEnvironment) {
+        Environment.findOne({
+          attributes: ["id", "title", "used"],
+          where: {
+            id: createdOrUpdatedEnvironment.id
+          }
+        }).then(environment => {
+          if (environment) {
+            resolve(environment);
+          } else {
+            resolve(false);
+          }
+        });
+      }
+    });
+  },
+  updateEnvironment: async function(id, envFields) {
+    return new Promise((resolve, reject) => {
+      envFields.updated_at = new Date();
+      Environment.update(envFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(environment => {
+        if (environment[1]) {
+          resolve(environment[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setAsDeprecated: async function(id) {
+    return new Promise((resolve, reject) => {
+      var envFields = {};
+      envFields.updated_at = new Date();
+      envFields.deprecated = true;
+      Environment.update(envFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(environment => {
+        if (environment[1]) {
+          resolve(environment[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
   }
 };
