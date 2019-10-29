@@ -24,39 +24,37 @@ module.exports = {
       isValid: isEmpty(errors)
     };
   },
-  validateVersionInput: function(data, create_version) {
+  validateEnvironmentInput: function(data, create_environment) {
     var errors = {};
 
-    var versionLimit = 150;
+    var titleLimit = 150;
 
-    data.version = !isEmpty(data.version) ? data.version : "";
-    data.is_supported = !isEmpty(data.is_supported) ? data.is_supported : "";
-    data.support_stopped_at = !isEmpty(data.support_stopped_at) ? data.support_stopped_at : "";
+    data.title = !isEmpty(data.title) ? data.title : "";
+    data.used = !isEmpty(data.used) ? data.used : "";
+    if (typeof data.used === "boolean") {
+      data.used = data.used;
+    }
     data.project_id = !isEmpty(data.project_id) ? data.project_id : "";
-
-    if (isEmpty(data.version)) {
-      errors.version = "Version id required";
+    if (typeof data.deprecated === "boolean") {
+      data.deprecated = data.deprecated;
     } else {
-      if (data.version.length > versionLimit) {
-        errors.version = `Version can not be more than ${versionLimit} long (${data.version.length})`;
+      errors.deprecated = "Deprecated is required";
+    }
+
+    if (isEmpty(data.title)) {
+      errors.title = "Title id required";
+    } else {
+      if (data.title.length > titleLimit) {
+        errors.title = `Title can not be more than ${titleLimit} long (${data.title.length})`;
       }
     }
-    if (create_version) {
+    if (create_environment) {
       if (isEmpty(data.project_id)) {
         errors.project_id = "Project id is required";
       } else {
         if (isNaN(data.project_id)) {
           errors.project_id = "Project id is not a valid number";
         }
-      }
-    }
-
-    if (isEmpty(data.is_supported)) {
-      errors.is_supported = "Is supported is required";
-    }
-    if (!isEmpty(data.is_supported)) {
-      if (typeof data.is_supported !== "boolean") {
-        errors.is_supported = "Parameter 'is_supported' must have a true or false value";
       }
     }
 

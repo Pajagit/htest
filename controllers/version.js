@@ -84,8 +84,6 @@ module.exports = {
         versionFields.support_stopped_at = req.body.support_stopped_at;
       }
 
-      versionFields.project_id = req.body.project_id;
-
       var created_version = await VersionService.createVersion(versionFields);
       if (created_version) {
         var version = await VersionService.returnCreatedOrUpdatedVersion(created_version);
