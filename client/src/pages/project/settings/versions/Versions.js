@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import isEmpty from "../../../../validation/isEmpty";
-import { getGroups } from "../../../../actions/groupsActions";
+import { getVersions } from "../../../../actions/versionAction";
 
 import ListItem from "../../../../components/lists/ListItem";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -24,27 +24,20 @@ class Versions extends Component {
   }
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
+    this.props.getVersions(this.props.match.params.projectId);
   }
   render() {
-    // var { devices, loading } = this.props.devices;
-    var versions = [
-      { id: 1, title: "1.0" },
-      { id: 2, title: "1.1" },
-      { id: 3, title: "1.2" },
-      { id: 4, title: "1.4" },
-      { id: 5, title: "2.0" },
-      { id: 6, title: "2.1" }
-    ];
+    var { versions, loading } = this.props.versions;
     var content;
 
-    if (versions === null) {
+    if (versions === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(versions)) {
-      content = versions.map((browser, index) => (
+      content = versions.versions.map((version, index) => (
         <ListItem
           key={index}
-          title={browser.title}
-          link={`/${this.props.match.params.projectId}/EditVersion/${browser.id}`}
+          title={version.version}
+          link={`/${this.props.match.params.projectId}/EditVersion/${version.id}`}
         />
       ));
     } else if (isEmpty(versions)) {
@@ -79,15 +72,17 @@ class Versions extends Component {
 
 Versions.propTypes = {
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  versions: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
+  versions: state.versions
 });
 
 export default connect(
   mapStateToProps,
-  { getGroups }
+  { getVersions }
 )(withRouter(Versions));
