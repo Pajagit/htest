@@ -850,5 +850,26 @@ module.exports = {
         resolve(false);
       }
     });
+  },
+  canGetEnvironments: async function(user, projectId) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
+
+      var allowed = false;
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
+            allowed = true;
+          }
+        });
+      }
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
   }
 };
