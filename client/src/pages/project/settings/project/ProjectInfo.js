@@ -138,8 +138,7 @@ class ProjectInfo extends Component {
           <div className="testcase-details--header">
             <div className="testcase-details-container-top">
               <div className="testcase-details-header">
-                <div className="testcase-details-header--title">Project</div>
-                <div className="testcase-details-header--value">{project.title}</div>
+                <div className="testcase-details-header--value">{<img src={project.image_url} alt="project" />}</div>
               </div>
               {editBtn}
             </div>
@@ -147,7 +146,8 @@ class ProjectInfo extends Component {
           <div className="testcase-details--body">
             <div className="testcase-details-container-bottom">
               <div className="testcase-details-item">
-                <img src={project.image_url} alt="project" />
+                <div className="testcase-details-item--title">Project</div>
+                <div className="testcase-details-item--value">{project.title}</div>
               </div>
               <div className="testcase-details-item">
                 <div className="testcase-details-item--title">Description</div>
