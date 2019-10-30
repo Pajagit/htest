@@ -53,11 +53,11 @@ module.exports = {
           errors.project_id = "Project id is not a valid number";
         }
       }
+      if (isEmpty(data.used)) {
+        errors.used = "Used is required";
+      }
     }
 
-    if (isEmpty(data.used)) {
-      errors.used = "Used is required";
-    }
     if (!isEmpty(data.used)) {
       if (typeof data.used !== "boolean") {
         errors.used = "Parameter 'used' must have a true or false value";

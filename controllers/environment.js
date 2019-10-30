@@ -114,9 +114,6 @@ module.exports = {
       var envFields = {};
       envFields.title = req.body.title;
 
-      if (typeof req.body.used === "boolean") {
-        envFields.used = req.body.used;
-      }
       if (req.body.deprecated) {
         envFields.project_id = env_project.project_id;
       }
@@ -150,6 +147,36 @@ module.exports = {
     var deprecateEnvironment = await EnvironmentService.setAsDeprecated(req.params.id);
     if (deprecateEnvironment) {
       res.status(200).json({ success: "Environment set as deprecated" });
+    } else {
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  seEnvironmentIsUsed: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Environment id is not valid number" });
+    }
+    var env_project = await EnvironmentService.getEnvironmentProject(req.params.id);
+
+    var canUpdateEnvironment = await UserService.canCreateEditEnvironments(req.user, env_project.project_id);
+    if (!canUpdateEnvironment) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    var envExists = await EnvironmentService.getEnvironmentById(req.params.id);
+    if (!envExists) {
+      return res.status(400).json({ error: "Environment doesn't exist" });
+    }
+
+    if (req.query.used !== "true" && req.query.used !== "false") {
+      return res.status(400).json({ error: "Parameter 'used' must have a true or false value" });
+    }
+
+    var setIsUsed = await EnvironmentService.setAsUsed(req.params.id, req.query.used);
+    if (setIsUsed) {
+      if (req.query.used == "true") {
+        res.status(200).json({ success: "Environment set as used on project" });
+      } else {
+        res.status(200).json({ success: "Environment set as not used on project" });
+      }
     } else {
       res.status(500).json({ error: "Something went wrong" });
     }
