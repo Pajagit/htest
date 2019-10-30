@@ -10,7 +10,7 @@ module.exports = {
         attributes: ["id", "version", "is_supported", "support_stopped_at"],
         where: {
           project_id: project_id,
-          deleted: false
+          deprecated: false
         },
         order: [["version", "ASC"]]
       }).then(versions => {
@@ -29,7 +29,7 @@ module.exports = {
       Version.findAndCountAll({
         where: {
           project_id: project_id,
-          deleted: false
+          deprecated: false
         },
         attributes: ["id", "version", "is_supported", "support_stopped_at"],
         ...paginate({ page, pageSize }),
@@ -68,7 +68,7 @@ module.exports = {
         attributes: ["id", "version", "is_supported", "support_stopped_at"],
         where: {
           id: id,
-          deleted: false
+          deprecated: false
         }
       }).then(version => {
         if (version) {
@@ -83,7 +83,12 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Version.create(version_fields).then(version => {
         if (version) {
-          resolve(version);
+          var versionObj = {};
+          versionObj.id = version.id;
+          versionObj.version = version.version;
+          versionObj.is_supported = version.is_supported;
+          versionObj.support_stopped_at = version.support_stopped_at;
+          resolve(versionObj);
         } else {
           resolve(false);
         }
@@ -124,20 +129,19 @@ module.exports = {
       });
     });
   },
-  deleteVersion: async function(id) {
+  setAsDeprecated: async function(id) {
     return new Promise((resolve, reject) => {
-      Version.update(
-        {
-          deleted: true
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ).then(version => {
-        if (version) {
-          resolve(true);
+      var versionFields = {};
+      versionFields.updated_at = new Date();
+      versionFields.deprecated = true;
+      console.log(versionFields);
+      Version.update(versionFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(version => {
+        if (version[1]) {
+          resolve(version[1]);
         } else {
           resolve(false);
         }

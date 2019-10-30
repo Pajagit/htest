@@ -20,7 +20,7 @@ const Version = sequelize.define(
       type: Sequelize.BOOLEAN,
       required: true
     },
-    deleted: {
+    deprecated: {
       type: Sequelize.BOOLEAN,
       required: false
     },

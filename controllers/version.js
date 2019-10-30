@@ -127,25 +127,69 @@ module.exports = {
       res.status(200).json(version);
     }
   },
-  deleteVersion: async function(req, res) {
+  updateVersion: async function(req, res) {
     if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "Version id is not a valid number" });
+      return res.status(400).json({ error: "Version id is not valid number" });
+    } else {
+      const { errors, isValid } = validateVersionInput(req.body, false);
+      // Check Validation
+      if (!isValid) {
+        return res.status(400).json(errors);
+      }
+      var version_project = await VersionService.getVersionProject(req.params.id);
+
+      var canUpdateVersion = await UserService.canCreateEditVersions(req.user, version_project.project_id);
+      if (!canUpdateVersion) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+      var versionExists = await VersionService.getVersionById(req.params.id);
+      if (!versionExists) {
+        return res.status(400).json({ error: "Version doesn't exist" });
+      }
+
+      var versionFields = {};
+      versionFields.version = req.body.version;
+
+      versionFields.is_supported = req.body.is_supported;
+
+      if (req.body.support_stopped_at) {
+        versionFields.support_stopped_at = req.body.support_stopped_at;
+      }
+      if (req.body.deprecated) {
+        versionFields.project_id = version_project.project_id;
+      }
+
+      if (req.body.deprecated == true) {
+        var deprecateVersion = await VersionService.setAsDeprecated(req.params.id);
+        if (deprecateVersion) {
+          var version = await VersionService.createVersion(versionFields);
+        }
+      } else {
+        var updatedVersion = await VersionService.updateVersion(req.params.id, versionFields);
+        var version = await VersionService.returnCreatedOrUpdatedVersion(updatedVersion);
+      }
+      res.status(200).json(version);
+    }
+  },
+  setVersionAsDeprecated: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Version id is not valid number" });
     }
     var version_project = await VersionService.getVersionProject(req.params.id);
 
-    var canDeleteVersion = await UserService.canCreateEditVersions(req.user, version_project.project_id);
-    if (!canDeleteVersion) {
+    var canUpdateVersion = await UserService.canCreateEditVersions(req.user, version_project.project_id);
+    if (!canUpdateVersion) {
       return res.status(403).json({ message: "Forbidden" });
     }
     var versionExists = await VersionService.getVersionById(req.params.id);
     if (!versionExists) {
-      return res.status(404).json({ error: "Version doesn't exist" });
+      return res.status(400).json({ error: "Version doesn't exist" });
     }
-    var deleteVersion = await VersionService.deleteVersion(req.params.id);
-    if (deleteVersion) {
-      return res.status(200).json({ success: "Version removed successfully" });
+    var deprecateVersion = await VersionService.setAsDeprecated(req.params.id);
+    if (deprecateVersion) {
+      res.status(200).json({ success: "Version set as deprecated" });
     } else {
-      return res.status(500).json({ message: "Something went wrong" });
+      res.status(500).json({ error: "Something went wrong" });
     }
   }
 };

@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false,
         defaultValue: true
       },
-      deleted: {
+      deprecated: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false

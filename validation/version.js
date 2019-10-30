@@ -33,9 +33,14 @@ module.exports = {
     data.is_supported = !isEmpty(data.is_supported) ? data.is_supported : "";
     data.support_stopped_at = !isEmpty(data.support_stopped_at) ? data.support_stopped_at : "";
     data.project_id = !isEmpty(data.project_id) ? data.project_id : "";
+    if (typeof data.deprecated === "boolean") {
+      data.deprecated = data.deprecated;
+    } else {
+      errors.deprecated = "Deprecated is required";
+    }
 
     if (isEmpty(data.version)) {
-      errors.version = "Version id required";
+      errors.version = "Version is required";
     } else {
       if (data.version.length > versionLimit) {
         errors.version = `Version can not be more than ${versionLimit} long (${data.version.length})`;
