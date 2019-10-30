@@ -19,7 +19,7 @@ import successToast from "../../../../toast/successToast";
 import failToast from "../../../../toast/failToast";
 import { clearErrors } from "../../../../actions/errorsActions";
 import isEmpty from "../../../../validation/isEmpty";
-import { createNewProjectPermission } from "../../../../permissions/ProjectPermissions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 
 import Confirm from "../../../../components/common/Confirm";
 import FullBtn from "../../../../components/common/FullBtn";
@@ -83,10 +83,14 @@ class ProjectInfo extends Component {
       }
     }
 
-    var { isValid } = createNewProjectPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+    var { isValid } = superAndProjectAdminPermissions(
+      nextProps.auth.user.projects,
+      nextProps.match.params.projectId,
+      nextProps.auth.user.superadmin
+    );
 
     if (!isValid) {
-      nextProps.history.push(`/ProjectSettings`);
+      nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
     }
     var { roles } = nextProps.roles;
     if (nextProps.roles.roles !== prevState.roles) {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import VersionValidation from "../../../../validation/VersionValidation";
+import EnvironmentValidation from "../../../../validation/EnvironmentValidation";
 import isEmpty from "../../../../validation/isEmpty";
 import Spinner from "../../../../components/common/Spinner";
 import { clearErrors } from "../../../../actions/errorsActions";
@@ -12,32 +12,37 @@ import { superAndProjectAdminPermissions } from "../../../../permissions/Permiss
 
 import Btn from "../../../../components/common/Btn";
 import Input from "../../../../components/common/Input";
-import Checkbox from "../../../../components/common/Checkbox";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
+import Checkbox from "../../../../components/common/Checkbox";
 import Header from "../../../../components/common/Header";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
-import { getVersion, editVersion, removeVersion } from "../../../../actions/versionAction";
+import { getEnvironment, editEnvironment, removeEnvironment } from "../../../../actions/environmentActions";
+
 import successToast from "../../../../toast/successToast";
 import failToast from "../../../../toast/failToast";
 
-class EditVersion extends Component {
+class EditEnvironment extends Component {
   constructor(props) {
     super(props);
     this.state = {
       initialRender: true,
       projectId: null,
-      versionId: null,
-      version: this.props.versions.version,
-      id: null,
-      is_supported: true,
+      environmentId: null,
+      environment: this.props.environments.environment,
+      title: "",
+      deprecated: false,
+      used: false,
       errors: {}
     };
   }
   componentDidMount() {
-    this.setState({ projectId: this.props.match.params.projectId, versionId: this.props.match.params.versionId });
-    var versionId = this.props.match.params.versionId;
-    this.props.getVersion(versionId);
+    this.setState({
+      projectId: this.props.match.params.projectId,
+      environmentId: this.props.match.params.environmentId
+    });
+    var environmentId = this.props.match.params.environmentId;
+    this.props.getEnvironment(environmentId);
   }
   componentWillUnmount() {
     this.props.clearErrors();
@@ -45,14 +50,13 @@ class EditVersion extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    var { version } = nextProps.versions;
-    if (nextProps.versions && nextProps.versions.version) {
-      if (nextProps.versions.version !== prevState.version) {
+    var { environment } = nextProps.environments;
+    if (nextProps.environments && nextProps.environments.environment) {
+      if (nextProps.environments.environment !== prevState.environment) {
         if (prevState.initialRender) {
           update.initialRender = false;
-          update.version = version.version;
-          update.id = version.id;
-          update.is_supported = version.is_supported;
+          update.title = environment.title;
+          update.used = environment.used;
         }
       }
     }
@@ -70,43 +74,40 @@ class EditVersion extends Component {
       );
 
       if (!isValid) {
-        nextProps.history.push(`/${nextProps.match.params.projectId}/Versions`);
+        nextProps.history.push(`/${nextProps.match.params.projectId}/Environments`);
       }
     }
 
     return Object.keys(update).length ? update : null;
   }
 
-  toggleSupported() {
-    this.setState({ is_supported: !this.state.is_supported });
-  }
-
   checkValidation() {
     var formData = {};
 
-    formData.version = this.state.version;
-    formData.is_supported = this.state.is_supported;
+    formData.title = this.state.title;
+    formData.used = this.state.used;
 
-    const { errors } = VersionValidation(formData);
+    const { errors } = EnvironmentValidation(formData);
 
     this.setState({ errors });
   }
 
   submitForm(e) {
     this.props.clearErrors();
-    var versionData = {};
-    versionData.version = this.state.version;
-    versionData.is_supported = this.state.is_supported;
-    const { errors, isValid } = VersionValidation(versionData);
+    var environmentData = {};
+    environmentData.title = this.state.title;
+    environmentData.used = this.state.used;
+    environmentData.deprecated = this.state.deprecated;
+    const { errors, isValid } = EnvironmentValidation(environmentData);
 
     if (isValid) {
-      this.props.editVersion(this.state.versionId, versionData, res => {
+      this.props.editEnvironment(this.state.environmentId, environmentData, res => {
         if (res.status === 200) {
-          this.props.history.push(`/${this.state.projectId}/Versions`);
+          this.props.history.push(`/${this.state.projectId}/Environments`);
 
-          successToast("Version successfully edited");
+          successToast("Environment successfully edited");
         } else {
-          failToast("Version editing failed");
+          failToast("Environment editing failed");
         }
       });
     } else {
@@ -122,36 +123,40 @@ class EditVersion extends Component {
   }
 
   confirmActivation = e => {
-    this.props.removeVersion(this.state.versionId, res => {
+    this.props.removeEnvironment(this.props.match.params.environmentId, res => {
       if (res.status === 200) {
-        successToast("Version removed successfully");
-        this.props.history.push(`/${this.state.projectId}/Versions`);
+        successToast("Environment removed successfully");
+        this.props.history.push(`/${this.state.projectId}/Environments`);
       } else {
-        failToast("Something went wrong with removing version");
+        failToast("Something went wrong with removing environment");
       }
     });
   };
   confirmModal = () => {
     var reject = "No";
-    var title = "Remove this version?";
-    var msg = "You will not be able to use this version in your reports";
+    var title = "Remove this environment?";
+    var msg = "You will not be able to use it in your reports anymore";
     var confirm = "Remove";
 
     Confirm(title, msg, reject, confirm, e => this.confirmActivation());
   };
 
+  toggleDeprecated() {
+    this.setState({ deprecated: !this.state.deprecated });
+  }
+
   render() {
-    var { version, loading } = this.props.versions;
+    var { environment, loading } = this.props.environments;
 
     var content;
     var projectId = this.props.match.params.projectId;
-    if (isEmpty(version) || loading) {
+    if (isEmpty(environment) || loading) {
       content = <Spinner />;
     } else {
       content = (
         <div className="main-content--content">
           <div className="header">
-            <div className="header--title">Version Information </div>
+            <div className="header--title">Environment Information </div>
             <div className="header--buttons">
               <div className="header--buttons--primary"></div>
               <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
@@ -161,30 +166,31 @@ class EditVersion extends Component {
           </div>
           <Input
             type="text"
-            placeholder="Enter Version Name"
-            label="Version name*"
-            validationMsg={[this.state.errors.version, this.props.errors.version, this.props.errors.error]}
-            value={this.state.version}
+            placeholder="Enter Environment Title"
+            label="Title*"
+            validationMsg={[this.state.errors.title, this.props.errors.title, this.props.errors.error]}
+            value={this.state.title}
             onChange={e => this.onChange(e)}
-            name={"version"}
+            name={"title"}
             onKeyDown={this.submitFormOnEnterKey}
           />
-          <Checkbox
-            label="Version supported"
-            onClick={e => this.toggleSupported(e)}
-            name="is_supported"
-            value={this.state.is_supported}
-          />
+
           <div className="flex-column-left mt-4">
             <Btn
               className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-              label="Save Version"
+              label="Edit Environment"
               type="text"
               onClick={e => this.submitForm(e)}
             />
 
-            <UnderlineAnchor link={`/${projectId}/Versions`} value={"Cancel"} />
+            <UnderlineAnchor link={`/${projectId}/Environments`} value={"Cancel"} />
           </div>
+          <Checkbox
+            label="Set environment as deprecated"
+            onClick={e => this.toggleDeprecated(e)}
+            name="deprecated"
+            value={this.state.deprecated}
+          />
         </div>
       );
     }
@@ -195,9 +201,9 @@ class EditVersion extends Component {
         <div className="main-content main-content-grid">
           <Header
             icon={<i className="fas fa-arrow-left"></i>}
-            title={"Back to All Versions"}
+            title={"Back to All Environments"}
             history={this.props}
-            link={`/${projectId}/Versions`}
+            link={`/${projectId}/Environments`}
             canGoBack={true}
           />
           {content}
@@ -207,20 +213,18 @@ class EditVersion extends Component {
   }
 }
 
-EditVersion.propTypes = {
-  testcases: PropTypes.object.isRequired,
-  versions: PropTypes.object.isRequired,
+EditEnvironment.propTypes = {
+  environments: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  testcases: state.testcases,
-  versions: state.versions,
+  environments: state.environments,
   errors: state.errors,
   auth: state.auth
 });
 
 export default connect(
   mapStateToProps,
-  { getVersion, editVersion, removeVersion, clearErrors }
-)(withRouter(EditVersion));
+  { getEnvironment, editEnvironment, removeEnvironment, clearErrors }
+)(withRouter(EditEnvironment));

@@ -4,14 +4,17 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import isEmpty from "../../../../validation/isEmpty";
-import { getVersions } from "../../../../actions/versionAction";
+import { getVersions, editVersion } from "../../../../actions/versionAction";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 
-import ListItem from "../../../../components/lists/ListItem";
+import PortraitVersions from "../../../../components/common/PortraitVersions";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import BtnAnchor from "../../../../components/common/BtnAnchor";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
+import successToast from "../../../../toast/successToast";
+import failToast from "../../../../toast/failToast";
 
 class Versions extends Component {
   constructor(props) {
@@ -22,9 +25,49 @@ class Versions extends Component {
       errors: {}
     };
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+
+    if (nextProps.auth && nextProps.auth.user) {
+      var { isValid } = superAndProjectAdminPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+    }
+
+    if (!isValid) {
+      nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+    }
+
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
     this.props.getVersions(this.props.match.params.projectId);
+  }
+
+  setUsed(version) {
+    var editedVersion = {};
+    editedVersion.deprecated = false;
+    editedVersion.used = !version.used;
+    editedVersion.version = version.version;
+
+    this.props.editVersion(version.id, editedVersion, res => {
+      if (res.status === 200) {
+        if (editedVersion.used) {
+          successToast("Version will now be used in reports");
+        } else if (!editedVersion.used) {
+          successToast("Version is no longer used in reports");
+        }
+
+        this.props.getVersion(this.props.match.params.projectId);
+      } else {
+        failToast("Version editing failed");
+      }
+    });
   }
   render() {
     var { versions, loading } = this.props.versions;
@@ -34,10 +77,13 @@ class Versions extends Component {
       content = <Spinner />;
     } else if (!isEmpty(versions)) {
       content = versions.versions.map((version, index) => (
-        <ListItem
+        <PortraitVersions
           key={index}
-          title={version.version}
-          link={`/${this.props.match.params.projectId}/EditVersion/${version.id}`}
+          version={version.version}
+          used={version.used}
+          id={version.id}
+          projectId={this.props.match.params.projectId}
+          onClick={e => this.setUsed(version)}
         />
       ));
     } else if (isEmpty(versions)) {
@@ -84,5 +130,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getVersions }
+  { getVersions, editVersion }
 )(withRouter(Versions));

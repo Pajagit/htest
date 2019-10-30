@@ -13,6 +13,7 @@ import browserReducer from "./browserReducer";
 import simulatorReducer from "./simulatorReducer";
 import officeReducer from "./officeReducer";
 import versionReducer from "./versionReducer";
+import environmentReducer from "./environmentReducer";
 import mobileOsReducer from "./mobileOsReducer";
 
 export default combineReducers({
@@ -29,5 +30,6 @@ export default combineReducers({
   offices: officeReducer,
   mobileOSs: mobileOsReducer,
   browsers: browserReducer,
-  versions: versionReducer
+  versions: versionReducer,
+  environments: environmentReducer
 });

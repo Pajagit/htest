@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import { createProject } from "../../../../actions/projectActions";
 import { userActivation } from "../../../../actions/userActions";
-import { createNewProjectPermission } from "../../../../permissions/ProjectPermissions";
+import { superAdminPermissions } from "../../../../permissions/Permissions";
 
 import Input from "../../../../components/common/Input";
 import Textarea from "../../../../components/common/Textarea";
@@ -44,7 +44,7 @@ class NewProject extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = createNewProjectPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+      var { isValid } = superAdminPermissions(nextProps.auth.user.superadmin);
 
       if (!isValid) {
         nextProps.history.push(`/ProjectSettings`);

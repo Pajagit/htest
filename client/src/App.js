@@ -68,6 +68,7 @@ import EditVersion from "./pages/project/settings/versions/EditVersion";
 // ENVIRONMENTS
 import Environments from "./pages/project/settings/environments/Environments";
 import NewEnvironment from "./pages/project/settings/environments/NewEnvironment";
+import EditEnvironment from "./pages/project/settings/environments/EditEnvironment";
 // TEST SETUP
 import TestSetup from "./pages/project/settings/test-setup/TestSetup";
 
@@ -187,6 +188,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/NewVersion" component={NewVersion} />
           <PrivateRoute exact path="/:projectId/NewEnvironment" component={NewEnvironment} />
           <PrivateRoute exact path="/:projectId/EditVersion/:versionId" component={EditVersion} />
+          <PrivateRoute exact path="/:projectId/EditEnvironment/:environmentId" component={EditEnvironment} />
         </div>
       </Router>
     </Provider>

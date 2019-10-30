@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import BrowserValidation from "../../../../validation/BrowserValidation";
-import { createNewGroupPermission } from "../../../../permissions/GroupPermissions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 import { clearErrors } from "../../../../actions/errorsActions";
 import Btn from "../../../../components/common/Btn";
 import Input from "../../../../components/common/Input";
@@ -38,14 +38,14 @@ class NewBrowser extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = createNewGroupPermission(
+      var { isValid } = superAndProjectAdminPermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
 
       if (!isValid) {
-        nextProps.history.push(`/${nextProps.match.params.projectId}/Groups`);
+        nextProps.history.push(`/${nextProps.match.params.projectId}/Browsers`);
       }
     }
     return Object.keys(update).length ? update : null;

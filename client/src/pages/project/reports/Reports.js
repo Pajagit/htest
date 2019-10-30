@@ -14,7 +14,7 @@ import ReportCointainer from "../../../components/reports/ReportCointainer";
 import { getGroups } from "../../../actions/groupsActions";
 import { getUsers } from "../../../actions/userActions";
 import { getProjectSettings, editProjectSettings, clearSettings } from "../../../actions/settingsActions";
-import { testcasesPermissions, addTestcasesPermissions } from "../../../permissions/TestcasePermissions";
+import { writePermissions, superAndProjectAdminPermissions } from "../../../permissions/Permissions";
 import { getTestcases } from "../../../actions/testcaseActions";
 import getidsFromObjectArray from "../../../utility/getIdsFromObjArray";
 
@@ -62,7 +62,7 @@ class Reports extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = testcasesPermissions(
+      var { isValid } = superAndProjectAdminPermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
@@ -71,7 +71,7 @@ class Reports extends Component {
         nextProps.history.push(`/Projects`);
       }
       update.isValid = isValid;
-      var isValidWrite = addTestcasesPermissions(
+      var isValidWrite = writePermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin

@@ -22,7 +22,7 @@ import TestCaseValidation from "../../../validation/TestCaseValidation";
 import checkIfElemInObjInArray from "../../../utility/checkIfElemInObjInArray";
 import getIdsFromObjArray from "../../../utility/getIdsFromObjArray";
 import filterStringArray from "../../../utility/filterStringArray";
-import { testcasesPermissions } from "../../../permissions/TestcasePermissions";
+import { writePermissions } from "../../../permissions/Permissions";
 import { getGroups } from "../../../actions/groupsActions";
 import { createTestCase } from "../../../actions/testcaseActions";
 
@@ -72,7 +72,7 @@ class NewTestCase extends Component {
 
     if (nextProps.auth && nextProps.auth.user) {
       if (nextProps.auth.user !== prevState.user) {
-        var { isValid } = testcasesPermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
+        var { isValid } = writePermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
         if (!isValid) {
           nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
         }

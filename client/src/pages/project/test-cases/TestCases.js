@@ -14,7 +14,8 @@ import TestCaseContainer from "../../../components/test-cases/TestCaseContainer"
 import { getGroups } from "../../../actions/groupsActions";
 import { getUsers } from "../../../actions/userActions";
 import { getProjectSettings, editProjectSettings, clearSettings } from "../../../actions/settingsActions";
-import { testcasesPermissions, addTestcasesPermissions } from "../../../permissions/TestcasePermissions";
+import { writePermissions } from "../../../permissions/Permissions";
+import { projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import { getTestcases } from "../../../actions/testcaseActions";
 import getidsFromObjectArray from "../../../utility/getIdsFromObjArray";
 
@@ -62,7 +63,7 @@ class TestCases extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = testcasesPermissions(
+      var { isValid } = projectIdAndSuperAdminPermission(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
@@ -71,11 +72,12 @@ class TestCases extends Component {
         nextProps.history.push(`/Projects`);
       }
       update.isValid = isValid;
-      var isValidWrite = addTestcasesPermissions(
+      var isValidWrite = writePermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
+      update.isValidWrite = isValidWrite;
 
       var usersWithTestcases = [];
       if (nextProps.users && nextProps.users.users) {
@@ -494,7 +496,6 @@ class TestCases extends Component {
         />
       );
     }
-
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -535,7 +536,11 @@ class TestCases extends Component {
             </div>
           </div>
           {filters}
-          <TestCaseContainer filters={this.state.testcaseFilters} viewOption={view_mode} />
+          <TestCaseContainer
+            filters={this.state.testcaseFilters}
+            viewOption={view_mode}
+            isValidWrite={this.state.isValidWrite}
+          />
         </div>
       </div>
     );

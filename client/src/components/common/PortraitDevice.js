@@ -20,17 +20,25 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
       </div>
     );
   }
-  var color = "";
-  if (office === "Nis") {
-    color = "VERDIGRIS";
-  } else if (office === "Belgrade") {
-    color = "MEDIUM_SEA_GREEN";
-  } else if (office === "Novi Sad") {
-    color = "PALE_COPPER";
-  } else if (office === "Banja Luka") {
-    color = "FUZZY_WUZZY";
-  }
 
+  var color = "";
+  var officeValue = "";
+  if (office) {
+    if (office === "Nis") {
+      color = "VERDIGRIS";
+    } else if (office === "Belgrade") {
+      color = "MEDIUM_SEA_GREEN";
+    } else if (office === "Novi Sad") {
+      color = "PALE_COPPER";
+    } else if (office === "Banja Luka") {
+      color = "FUZZY_WUZZY";
+    }
+    officeValue = (
+      <div className="portrait-device-top-container--tags">
+        <Tag title={office} color={color} isRemovable={false} />
+      </div>
+    );
+  }
   return (
     <div className="portrait-device">
       <div className="portrait-device-top">
@@ -39,9 +47,7 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
             {title}
             <div className="portrait-device-top-container--title-btn">{link}</div>
           </div>
-          <div className="portrait-device-top-container--tags">
-            <Tag title={office} color={color} isRemovable={false} />
-          </div>
+          {officeValue}
         </div>
       </div>
 

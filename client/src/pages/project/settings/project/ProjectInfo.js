@@ -9,7 +9,7 @@ import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
 
-import { testcasesPermissions, addTestcasesPermissions } from "../../../../permissions/TestcasePermissions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 import isEmpty from "../../../../validation/isEmpty";
 import { getProject } from "../../../../actions/projectActions";
 
@@ -28,18 +28,11 @@ class ProjectInfo extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
-      var isValidWrite = addTestcasesPermissions(
+      var { isValid } = superAndProjectAdminPermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
-
-      var { isValid } = testcasesPermissions(
-        nextProps.auth.user.projects,
-        nextProps.match.params.projectId,
-        nextProps.auth.user.superadmin
-      );
-      update.isValidWrite = isValidWrite.isValid;
 
       if (nextProps.auth.user !== prevState.user) {
         update.user = nextProps.auth.user;
@@ -64,75 +57,10 @@ class ProjectInfo extends Component {
     var { loading } = this.props.projects;
     var projectId = this.props.match.params.projectId;
     let content;
-    var editBtn = "";
-    if (this.state.isValidWrite) {
-      editBtn = (
-        <Link to={`/${projectId}/ProjectSetting`}>
-          <div className="testcase-details-button">
-            <div className="testcase-details-button-title">Edit</div>
-            <div className="testcase-details-button-icon">
-              <i className="fas fa-pen"></i>
-            </div>
-          </div>
-        </Link>
-      );
-    }
-
-    // var actionBtns = "";
-    // if (this.state.isValidWrite) {
-    //   actionBtns = (
-    //     <div className="flex-column-left mt-4">
-    //       <BtnAnchor className="a-btn a-btn-primary mr-2" label="Add To Report" link={`/${projectId}/TestCases`} />
-    //     </div>
-    //   );
-    // }
-    // var precondition = "";
-    // var links = "";
-    // var uploaded_files = "";
 
     if (project === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(project)) {
-      //   if (testcase.preconditions) {
-      //     precondition = (
-      //       <div className="testcase-details-item">
-      //         <div className="testcase-details-item--title">Preconditions</div>
-      //         <div className="testcase-details-item--value">{testcase.preconditions}</div>
-      //       </div>
-      //     );
-      //   }
-      //   if (!isEmpty(testcase.links)) {
-      //     links = (
-      //       <div className="testcase-details-item">
-      //         <div className="testcase-details-item--title">Links</div>
-      //         {testcase.links.map((link, index) => (
-      //           <span key={index}>
-      //             <div className="testcase-details-item--value">
-      //               <a href={link.value} target="_blank" rel="noopener noreferrer">
-      //                 <span className="mr-1">{link.value}</span>{" "}
-      //                 <img className="testcase-details-item--value-img" src={openExternalBtn} alt="External link" />
-      //               </a>
-      //             </div>
-      //           </span>
-      //         ))}
-      //       </div>
-      //     );
-      //   }
-      //   if (!isEmpty(testcase.uploaded_files)) {
-      //     uploaded_files = (
-      //       <div className="testcase-details-item">
-      //         <div className="testcase-details-item--title">Uploaded files</div>
-      //         {testcase.uploaded_files.map((file, index) => (
-      //           <span key={index}>
-      //             <div className="testcase-details-item--value">
-      //               <span className="mr-1">{file.path}</span> <i className="fas fa-link"></i>
-      //             </div>
-      //           </span>
-      //         ))}
-      //       </div>
-      //     );
-      //   }
-
       content = (
         <div className="testcase-details">
           <div className="testcase-details--header">
@@ -140,7 +68,14 @@ class ProjectInfo extends Component {
               <div className="testcase-details-header">
                 <div className="testcase-details-header--value">{<img src={project.image_url} alt="project" />}</div>
               </div>
-              {editBtn}
+              <Link to={`/${projectId}/ProjectSetting`}>
+                <div className="testcase-details-button">
+                  <div className="testcase-details-button-title">Edit</div>
+                  <div className="testcase-details-button-icon">
+                    <i className="fas fa-pen"></i>
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
           <div className="testcase-details--body">

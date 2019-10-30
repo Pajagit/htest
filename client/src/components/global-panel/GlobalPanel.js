@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 
 import { logoutUser } from "../../actions/authActions";
-import { globalSettingsPermission } from "../../permissions/GlobalSettingsPermissions";
+import { superAdminPermissions } from "../../permissions/Permissions";
 
 import GlobalPanelItem from "./GlobalPanelItem";
 import GlobalPanelHeader from "./GlobalPanelHeader";
@@ -28,7 +28,7 @@ class GlobalPanel extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = globalSettingsPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+      var { isValid } = superAdminPermissions(nextProps.auth.user.superadmin);
 
       if (isValid) {
         update.settingsVisible = true;
