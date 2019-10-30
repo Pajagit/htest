@@ -78,11 +78,7 @@ module.exports = {
       versionFields.version = req.body.version;
       versionFields.project_id = req.body.project_id;
 
-      versionFields.is_supported = req.body.is_supported;
-
-      if (req.body.support_stopped_at) {
-        versionFields.support_stopped_at = req.body.support_stopped_at;
-      }
+      versionFields.used = req.body.used;
 
       var created_version = await VersionService.createVersion(versionFields);
       if (created_version) {
@@ -116,11 +112,8 @@ module.exports = {
       var versionFields = {};
       versionFields.version = req.body.version;
 
-      versionFields.is_supported = req.body.is_supported;
+      versionFields.used = req.body.used;
 
-      if (req.body.support_stopped_at) {
-        versionFields.support_stopped_at = req.body.support_stopped_at;
-      }
       if (req.body.deprecated) {
         versionFields.project_id = version_project.project_id;
       }
@@ -154,6 +147,36 @@ module.exports = {
     var deprecateVersion = await VersionService.setAsDeprecated(req.params.id);
     if (deprecateVersion) {
       res.status(200).json({ success: "Version set as deprecated" });
+    } else {
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  seVersionIsUsed: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Version id is not valid number" });
+    }
+    var version_project = await VersionService.getVersionProject(req.params.id);
+
+    var canUpdateVersion = await UserService.canCreateEditVersions(req.user, version_project.project_id);
+    if (!canUpdateVersion) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    var versionExists = await VersionService.getVersionById(req.params.id);
+    if (!versionExists) {
+      return res.status(400).json({ error: "Version doesn't exist" });
+    }
+
+    if (req.query.used !== "true" && req.query.used !== "false") {
+      return res.status(400).json({ error: "Parameter 'used' must have a true or false value" });
+    }
+
+    var setIsUsed = await VersionService.setAsUsed(req.params.id, req.query.used);
+    if (setIsUsed) {
+      if (req.query.used == "true") {
+        res.status(200).json({ success: "Version set as used on project" });
+      } else {
+        res.status(200).json({ success: "Version set as not used on project" });
+      }
     } else {
       res.status(500).json({ error: "Something went wrong" });
     }

@@ -30,8 +30,7 @@ module.exports = {
     var versionLimit = 150;
 
     data.version = !isEmpty(data.version) ? data.version : "";
-    data.is_supported = !isEmpty(data.is_supported) ? data.is_supported : "";
-    data.support_stopped_at = !isEmpty(data.support_stopped_at) ? data.support_stopped_at : "";
+    data.used = !isEmpty(data.used) ? data.used : "";
     data.project_id = !isEmpty(data.project_id) ? data.project_id : "";
     if (typeof data.deprecated === "boolean") {
       data.deprecated = data.deprecated;
@@ -56,12 +55,12 @@ module.exports = {
       }
     }
 
-    if (isEmpty(data.is_supported)) {
-      errors.is_supported = "Is supported is required";
+    if (isEmpty(data.used)) {
+      errors.used = "Used is required";
     }
-    if (!isEmpty(data.is_supported)) {
-      if (typeof data.is_supported !== "boolean") {
-        errors.is_supported = "Parameter 'is_supported' must have a true or false value";
+    if (!isEmpty(data.used)) {
+      if (typeof data.used !== "boolean") {
+        errors.used = "Parameter 'used' must have a true or false value";
       }
     }
 

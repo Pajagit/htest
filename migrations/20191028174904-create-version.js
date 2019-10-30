@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      is_supported: {
+      used: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: true
@@ -21,11 +21,6 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
-      },
-      support_stopped_at: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        defaultValue: null
       },
       project_id: {
         type: Sequelize.INTEGER,

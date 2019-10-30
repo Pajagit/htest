@@ -16,16 +16,12 @@ const Version = sequelize.define(
       type: Sequelize.STRING,
       required: true
     },
-    is_supported: {
+    used: {
       type: Sequelize.BOOLEAN,
       required: true
     },
     deprecated: {
       type: Sequelize.BOOLEAN,
-      required: false
-    },
-    support_stopped_at: {
-      type: Sequelize.DATE,
       required: false
     },
     project_id: {
