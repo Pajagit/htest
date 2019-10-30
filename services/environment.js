@@ -133,6 +133,24 @@ module.exports = {
       var envFields = {};
       envFields.updated_at = new Date();
       envFields.deprecated = true;
+      envFields.used = false;
+      Environment.update(envFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(environment => {
+        if (environment[1]) {
+          resolve(environment[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setAsUsed: async function(id, used) {
+    return new Promise((resolve, reject) => {
+      var envFields = {};
+      envFields.used = used;
       Environment.update(envFields, {
         where: { id: id },
         returning: true,

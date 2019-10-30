@@ -133,6 +133,7 @@ module.exports = {
       var versionFields = {};
       versionFields.updated_at = new Date();
       versionFields.deprecated = true;
+      versionFields.used = false;
       Version.update(versionFields, {
         where: { id: id },
         returning: true,

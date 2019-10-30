@@ -112,8 +112,6 @@ module.exports = {
       var versionFields = {};
       versionFields.version = req.body.version;
 
-      versionFields.used = req.body.used;
-
       if (req.body.deprecated) {
         versionFields.project_id = version_project.project_id;
       }
