@@ -7,10 +7,10 @@ module.exports = {
   getAllVersions: async function(project_id) {
     return new Promise((resolve, reject) => {
       Version.findAll({
-        attributes: ["id", "version", "is_supported", "support_stopped_at"],
+        attributes: ["id", "version", "used"],
         where: {
           project_id: project_id,
-          deleted: false
+          deprecated: false
         },
         order: [["version", "ASC"]]
       }).then(versions => {
@@ -29,9 +29,9 @@ module.exports = {
       Version.findAndCountAll({
         where: {
           project_id: project_id,
-          deleted: false
+          deprecated: false
         },
-        attributes: ["id", "version", "is_supported", "support_stopped_at"],
+        attributes: ["id", "version", "used"],
         ...paginate({ page, pageSize }),
         order: [["version", "ASC"]]
       }).then(version_obj => {
@@ -65,10 +65,10 @@ module.exports = {
   getVersionById: async function(id) {
     return new Promise((resolve, reject) => {
       Version.findOne({
-        attributes: ["id", "version", "is_supported", "support_stopped_at"],
+        attributes: ["id", "version", "used"],
         where: {
           id: id,
-          deleted: false
+          deprecated: false
         }
       }).then(version => {
         if (version) {
@@ -83,7 +83,11 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Version.create(version_fields).then(version => {
         if (version) {
-          resolve(version);
+          var versionObj = {};
+          versionObj.id = version.id;
+          versionObj.version = version.version;
+          versionObj.used = version.used;
+          resolve(versionObj);
         } else {
           resolve(false);
         }
@@ -94,7 +98,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (createdOrUpdatedVersion) {
         Version.findOne({
-          attributes: ["id", "version", "is_supported", "support_stopped_at"],
+          attributes: ["id", "version", "used"],
           where: {
             id: createdOrUpdatedVersion.id
           }
@@ -124,20 +128,36 @@ module.exports = {
       });
     });
   },
-  deleteVersion: async function(id) {
+  setAsDeprecated: async function(id) {
     return new Promise((resolve, reject) => {
-      Version.update(
-        {
-          deleted: true
-        },
-        {
-          where: {
-            id: id
-          }
+      var versionFields = {};
+      versionFields.updated_at = new Date();
+      versionFields.deprecated = true;
+      versionFields.used = false;
+      Version.update(versionFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(version => {
+        if (version[1]) {
+          resolve(version[1]);
+        } else {
+          resolve(false);
         }
-      ).then(version => {
-        if (version) {
-          resolve(true);
+      });
+    });
+  },
+  setAsUsed: async function(id, used) {
+    return new Promise((resolve, reject) => {
+      var versionFields = {};
+      versionFields.used = used;
+      Version.update(versionFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(version => {
+        if (version[1]) {
+          resolve(version[1]);
         } else {
           resolve(false);
         }

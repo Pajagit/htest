@@ -34,6 +34,11 @@ module.exports = {
     data.title = !isEmpty(data.title) ? data.title : "";
     data.screen_resolution = !isEmpty(data.screen_resolution) ? data.screen_resolution : "";
     data.version = !isEmpty(data.version) ? data.version : "";
+    if (typeof data.deprecated === "boolean") {
+      data.deprecated = data.deprecated;
+    } else {
+      errors.deprecated = "Deprecated is required";
+    }
 
     if (isEmpty(data.title)) {
       errors.title = "Title id required";

@@ -129,31 +129,41 @@ module.exports = {
       if (typeof req.body.used === "boolean") {
         browserFields.used = req.body.used;
       }
+      if (req.body.deprecated) {
+        browserFields.project_id = browser_project.project_id;
+      }
 
-      var updatedBrowser = await BrowserService.updateBrowser(req.params.id, browserFields);
-      var browser = await BrowserService.returnCreatedOrUpdatedBrowser(updatedBrowser);
+      if (req.body.deprecated == true) {
+        var deprecateBrowser = await BrowserService.setAsDeprecated(req.params.id);
+        if (deprecateBrowser) {
+          var browser = await BrowserService.createBrowser(browserFields);
+        }
+      } else {
+        var updatedBrowser = await BrowserService.updateBrowser(req.params.id, browserFields);
+        var browser = await BrowserService.returnCreatedOrUpdatedBrowser(updatedBrowser);
+      }
       res.status(200).json(browser);
     }
   },
-  deleteBrowser: async function(req, res) {
+  setBrowserAsDeprecated: async function(req, res) {
     if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "Browser id is not a valid number" });
+      return res.status(400).json({ error: "Browser id is not valid number" });
     }
     var browser_project = await BrowserService.getBrowserProject(req.params.id);
 
-    var canDeleteBrowser = await UserService.canCreateEditBrowsers(req.user, browser_project.project_id);
-    if (!canDeleteBrowser) {
+    var canUpdateBrowser = await UserService.canCreateEditBrowsers(req.user, browser_project.project_id);
+    if (!canUpdateBrowser) {
       return res.status(403).json({ message: "Forbidden" });
     }
     var browserExists = await BrowserService.getBrowserById(req.params.id);
     if (!browserExists) {
-      return res.status(404).json({ error: "Browser doesn't exist" });
+      return res.status(400).json({ error: "Browser doesn't exist" });
     }
-    var deleteBrowser = await BrowserService.deleteBrowser(req.params.id);
-    if (deleteBrowser) {
-      return res.status(200).json({ success: "Browser removed successfully" });
+    var deprecateBrowser = await BrowserService.setAsDeprecated(req.params.id);
+    if (deprecateBrowser) {
+      res.status(200).json({ success: "Browser set as deprecated" });
     } else {
-      return res.status(500).json({ message: "Something went wrong" });
+      res.status(500).json({ error: "Something went wrong" });
     }
   }
 };

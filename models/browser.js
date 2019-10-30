@@ -31,7 +31,7 @@ const Browser = sequelize.define(
       require: true,
       type: Sequelize.INTEGER
     },
-    deleted: {
+    deprecated: {
       type: Sequelize.BOOLEAN,
       require: true
     },
