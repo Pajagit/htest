@@ -121,40 +121,6 @@ module.exports = {
       if (req.body.support_stopped_at) {
         versionFields.support_stopped_at = req.body.support_stopped_at;
       }
-
-      var updatedVersion = await VersionService.updateVersion(req.params.id, versionFields);
-      var version = await VersionService.returnCreatedOrUpdatedVersion(updatedVersion);
-      res.status(200).json(version);
-    }
-  },
-  updateVersion: async function(req, res) {
-    if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "Version id is not valid number" });
-    } else {
-      const { errors, isValid } = validateVersionInput(req.body, false);
-      // Check Validation
-      if (!isValid) {
-        return res.status(400).json(errors);
-      }
-      var version_project = await VersionService.getVersionProject(req.params.id);
-
-      var canUpdateVersion = await UserService.canCreateEditVersions(req.user, version_project.project_id);
-      if (!canUpdateVersion) {
-        return res.status(403).json({ message: "Forbidden" });
-      }
-      var versionExists = await VersionService.getVersionById(req.params.id);
-      if (!versionExists) {
-        return res.status(400).json({ error: "Version doesn't exist" });
-      }
-
-      var versionFields = {};
-      versionFields.version = req.body.version;
-
-      versionFields.is_supported = req.body.is_supported;
-
-      if (req.body.support_stopped_at) {
-        versionFields.support_stopped_at = req.body.support_stopped_at;
-      }
       if (req.body.deprecated) {
         versionFields.project_id = version_project.project_id;
       }

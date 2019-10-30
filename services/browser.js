@@ -10,7 +10,7 @@ module.exports = {
         attributes: ["id", "title", "screen_resolution", "version", "used"],
         where: {
           project_id: project_id,
-          deleted: false
+          deprecated: false
         },
         order: [["title", "ASC"]]
       }).then(browsers => {
@@ -29,7 +29,7 @@ module.exports = {
       Browser.findAndCountAll({
         where: {
           project_id: project_id,
-          deleted: false
+          deprecated: false
         },
         attributes: ["id", "title", "screen_resolution", "version", "used"],
         ...paginate({ page, pageSize }),
@@ -52,7 +52,7 @@ module.exports = {
         attributes: ["id", "title", "screen_resolution", "version", "used"],
         where: {
           id: id,
-          deleted: false
+          deprecated: false
         }
       }).then(browser => {
         if (browser) {
@@ -83,7 +83,13 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Browser.create(browser_fields).then(browser => {
         if (browser) {
-          resolve(browser);
+          var browserObj = {};
+          browserObj.id = browser.id;
+          browserObj.title = browser.title;
+          browserObj.screen_resolution = browser.screen_resolution;
+          browserObj.version = browser.version;
+          browserObj.used = browser.used;
+          resolve(browserObj);
         } else {
           resolve(false);
         }
@@ -173,11 +179,12 @@ module.exports = {
       });
     });
   },
-  deleteBrowser: async function(id) {
+  setAsDeprecated: async function(id) {
     return new Promise((resolve, reject) => {
       Browser.update(
         {
-          deleted: true
+          deprecated: true,
+          updated_at: new Date()
         },
         {
           where: {
