@@ -7,17 +7,17 @@ module.exports = {
       [
         {
           version: "1.0",
-          is_supported: false,
+          used: false,
           project_id: 1
         },
         {
           version: "1.1",
-          is_supported: true,
+          used: true,
           project_id: 1
         },
         {
           version: "1.2",
-          is_supported: true,
+          used: true,
           project_id: 1
         }
       ],
