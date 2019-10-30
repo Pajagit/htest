@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import isEmpty from "../../../../validation/isEmpty";
-import { getGroups } from "../../../../actions/groupsActions";
+import { getEnvironments, editEnvironment } from "../../../../actions/environmentActions";
 
 import PortraitEnvironment from "../../../../components/common/PortraitEnvironment";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -12,6 +12,8 @@ import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import BtnAnchor from "../../../../components/common/BtnAnchor";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
+import successToast from "../../../../toast/successToast";
+import failToast from "../../../../toast/failToast";
 
 class Environments extends Component {
   constructor(props) {
@@ -21,32 +23,47 @@ class Environments extends Component {
       projectId: null,
       errors: {}
     };
+    this.setUsed = this.setUsed.bind(this);
   }
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
+    this.props.getEnvironments(this.props.match.params.projectId);
+  }
+  setUsed(environment) {
+    var editedEnvironment = {};
+    editedEnvironment.deprecated = false;
+    editedEnvironment.used = !environment.used;
+    editedEnvironment.title = environment.title;
+
+    this.props.editEnvironment(environment.id, editedEnvironment, res => {
+      if (res.status === 200) {
+        if (editedEnvironment.used) {
+          successToast("Environment will now be used in reports");
+        } else if (!editedEnvironment.used) {
+          successToast("Environment is no longer used in reports");
+        }
+
+        this.props.getEnvironments(this.props.match.params.projectId);
+      } else {
+        failToast("Environment editing failed");
+      }
+    });
   }
   render() {
-    // var { devices, loading } = this.props.devices;
-    var environments = [
-      { id: 1, title: "Test", url: "http://www.test-url.com" },
-      { id: 2, title: "Development", url: "http://www.development-url.com" },
-      { id: 3, title: "Staging", url: "http://www.staging-url.com" },
-      { id: 4, title: "Production", url: "http://www.production-url.com" },
-      { id: 5, title: "Fleet", url: "http://www.fleet-url.com" },
-      { id: 6, title: "SSO", url: "http://www.sso-url.com" }
-    ];
+    var { environments, loading } = this.props.environments;
     var content;
 
-    if (environments === null) {
+    if (environments === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(environments)) {
-      content = environments.map((browser, index) => (
+    } else if (!isEmpty(environments.environments)) {
+      content = environments.environments.map((environment, index) => (
         <PortraitEnvironment
           key={index}
-          title={browser.title}
-          url={browser.url}
-          id={browser.id}
+          title={environment.title}
+          used={environment.used}
+          id={environment.id}
           projectId={this.props.match.params.projectId}
+          onClick={e => this.setUsed(environment)}
         />
       ));
     } else if (isEmpty(environments)) {
@@ -86,10 +103,11 @@ Environments.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
+  environments: state.environments
 });
 
 export default connect(
   mapStateToProps,
-  { getGroups }
+  { getEnvironments, editEnvironment }
 )(withRouter(Environments));

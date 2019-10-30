@@ -2,20 +2,19 @@ import React from "react";
 import Checkbox from "./Checkbox";
 import { Link } from "react-router-dom";
 
-function PortraitEnvironment({ title, used, projectId, id, onClick }) {
+function PortraitEnvironment({ version, used, projectId, id, onClick }) {
   var link = "";
   link = (
-    <Link to={`/${projectId}/EditEnvironment/${id}`}>
+    <Link to={`/${projectId}/EditVersion/${id}`}>
       <i className="fas fa-pen"></i>
     </Link>
   );
-
   return (
     <div className="portrait-device">
       <div className="portrait-device-top">
         <div className="portrait-device-top-container">
           <div className="portrait-device-top-container--title">
-            {title}
+            {version}
             <div className="portrait-device-top-container--title-btn">{link}</div>
           </div>
         </div>

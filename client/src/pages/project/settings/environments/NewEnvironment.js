@@ -3,13 +3,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { createSimulator } from "../../../../actions/simulatorActions";
-import { getOffices } from "../../../../actions/officeActions";
-import { superAdminPermissions } from "../../../../permissions/SuperAdminPermissions";
+import { createEnvironment } from "../../../../actions/environmentActions";
+import { createNewGroupPermission } from "../../../../permissions/GroupPermissions";
 import Input from "../../../../components/common/Input";
 import Btn from "../../../../components/common/Btn";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
-import SimulatorValidation from "../../../../validation/SimulatorValidation";
+import EnvironmentValidation from "../../../../validation/EnvironmentValidation";
 import successToast from "../../../../toast/successToast";
 import failToast from "../../../../toast/failToast";
 import { clearErrors } from "../../../../actions/errorsActions";
@@ -26,12 +25,7 @@ class NewEnviroment extends Component {
       submitPressed: false,
       officesFormatted: [],
       title: "",
-      resolution: "",
-      office: null,
-      dpi: "",
-      screen_size: "",
-      udid: "",
-      retina: false,
+      used: true,
       errors: {}
     };
     this.selectOffice = this.selectOffice.bind(this);
@@ -40,13 +34,13 @@ class NewEnviroment extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
 
-    if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = superAdminPermissions(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
-    }
+    // if (nextProps.auth && nextProps.auth.user) {
+    //   var { isValid } = createNewGroupPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+    // }
 
-    if (!isValid) {
-      nextProps.history.push(`/DeviceSettings`);
-    }
+    // if (!isValid) {
+    //   nextProps.history.push(`/Environments`);
+    // }
 
     return Object.keys(update).length ? update : null;
   }
@@ -67,17 +61,11 @@ class NewEnviroment extends Component {
   }
 
   checkValidation() {
-    var deviceData = {};
-    deviceData.title = this.state.title;
-    deviceData.resolution = this.state.resolution;
-    deviceData.dpi = this.state.dpi;
-    deviceData.udid = this.state.udid;
-    deviceData.retina = this.state.retina;
-    deviceData.screen_size = this.state.screen_size;
-    deviceData.simulator = false;
-    deviceData.office_id = this.state.office ? this.state.office.id : null;
+    var environmentData = {};
+    environmentData.title = this.state.title;
+    environmentData.project_id = this.props.match.params.projectId;
 
-    const { errors } = SimulatorValidation(deviceData);
+    const { errors } = EnvironmentValidation(environmentData);
     this.setState({ errors });
   }
 
@@ -86,24 +74,22 @@ class NewEnviroment extends Component {
     this.setState({ submitPressed: true });
     this.props.clearErrors();
     this.setState({ errors: {} });
-    var deviceData = {};
+    var environmentData = {};
 
-    deviceData.title = this.state.title;
-    deviceData.resolution = this.state.resolution;
-    deviceData.dpi = this.state.dpi;
-    deviceData.udid = this.state.udid;
-    deviceData.retina = this.state.retina;
-    deviceData.screen_size = this.state.screen_size;
-    deviceData.simulator = true;
-    const { errors, isValid } = SimulatorValidation(deviceData);
+    environmentData.title = this.state.title;
+    environmentData.used = true;
+    environmentData.deprecated = false;
+    environmentData.project_id = this.props.match.params.projectId;
+
+    const { errors, isValid } = EnvironmentValidation(environmentData);
 
     if (isValid) {
-      this.props.createSimulator(deviceData, res => {
+      this.props.createEnvironment(environmentData, res => {
         if (res.status === 200) {
-          successToast("Simulator added successfully");
-          this.props.history.push(`/${this.props.match.params.projectId}/Simulators`);
+          successToast("Environment added successfully");
+          this.props.history.push(`/${this.props.match.params.projectId}/Environments`);
         } else {
-          failToast("Adding simulator failed");
+          failToast("Adding environment failed");
           this.props.history.push(`/${this.props.match.params.projectId}/NewEnviroment`);
         }
       });
@@ -144,26 +130,16 @@ class NewEnviroment extends Component {
                 name={"title"}
                 onKeyDown={this.submitFormOnEnterKey}
               />
-              <Input
-                type="text"
-                placeholder="Enter URL Here"
-                label="URL"
-                validationMsg={[this.state.errors.title, this.props.errors.error]}
-                value={this.state.title}
-                onChange={e => this.onChange(e)}
-                name={"title"}
-                onKeyDown={this.submitFormOnEnterKey}
-              />
 
               <div className="flex-column-left mt-4">
                 <Btn
                   className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-                  label="Add Version"
+                  label="Add Environment"
                   type="text"
                   onClick={e => this.submitForm(e)}
                 />
 
-                <UnderlineAnchor link={`/${this.props.match.params.projectId}/Versions`} value={"Cancel"} />
+                <UnderlineAnchor link={`/${this.props.match.params.projectId}/Environments`} value={"Cancel"} />
               </div>
             </div>
           </div>
@@ -186,5 +162,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { createSimulator, getOffices, clearErrors }
+  { createEnvironment, clearErrors }
 )(withRouter(NewEnviroment));
