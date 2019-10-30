@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { addUser } from "../../../../actions/userActions";
-import { globalAddUserPermission } from "../../../../permissions/UserPermissions";
+import { superAdminPermissions } from "../../../../permissions/Permissions";
 import Input from "../../../../components/common/Input";
 import Btn from "../../../../components/common/Btn";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
@@ -36,7 +36,7 @@ class AddUser extends Component {
     let update = {};
 
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = globalAddUserPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+      var { isValid } = superAdminPermissions(nextProps.auth.user.superadmin);
     }
 
     if (!isValid) {

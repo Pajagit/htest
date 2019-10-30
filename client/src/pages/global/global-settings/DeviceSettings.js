@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import { getDevices } from "../../../actions/deviceActions";
 import { getOffices } from "../../../actions/officeActions";
 import isEmpty from "../../../validation/isEmpty";
-import { superAdminPermissions } from "../../../permissions/SuperAdminPermissions";
+import { superAdminPermissions } from "../../../permissions/Permissions";
 import getIdsFromObjArray from "../../../utility/getIdsFromObjArray";
 
 import SearchDropdown from "../../../components/common/SearchDropdown";
@@ -39,7 +39,7 @@ class DeviceSettings extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = superAdminPermissions(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+      var { isValid } = superAdminPermissions(nextProps.auth.user.superadmin);
       if (!isValid) {
         nextProps.history.push(`/Projects`);
       }

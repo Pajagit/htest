@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getProjects } from "../../../actions/projectActions";
-import { projectSettingsPermission } from "../../../permissions/ProjectPermissions";
+import { superAdminPermissions } from "../../../permissions/Permissions";
 import isEmpty from "../../../validation/isEmpty";
 import projectImagePlaceholder from "../../../img/project-placeholder.jpg";
 
@@ -33,7 +33,7 @@ class ProjectSettings extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = projectSettingsPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+      var { isValid } = superAdminPermissions(nextProps.auth.user.superadmin);
 
       if (!isValid) {
         nextProps.history.push(`/Projects`);

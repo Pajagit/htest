@@ -1,11 +1,16 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../components/project-panel/ProjectPanel";
+import { projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
+
 import Header from "../../../components/common/Header";
 import Chart from "../../../components/common/Chart";
 
-export default class Statistics extends Component {
+class Statistics extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -126,6 +131,21 @@ export default class Statistics extends Component {
     };
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.auth && nextProps.auth.user) {
+      var { isValid } = projectIdAndSuperAdminPermission(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+      if (!isValid) {
+        nextProps.history.push(`/Projects`);
+      }
+    }
+    return Object.keys(update).length ? update : null;
+  }
+
   render() {
     return (
       <div className="wrapper">
@@ -220,3 +240,18 @@ export default class Statistics extends Component {
     );
   }
 }
+
+Statistics.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  {}
+)(withRouter(Statistics));

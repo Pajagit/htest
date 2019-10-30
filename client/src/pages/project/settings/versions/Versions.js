@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import isEmpty from "../../../../validation/isEmpty";
 import { getVersions, editVersion } from "../../../../actions/versionAction";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 
 import PortraitVersions from "../../../../components/common/PortraitVersions";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -24,6 +25,25 @@ class Versions extends Component {
       errors: {}
     };
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+
+    if (nextProps.auth && nextProps.auth.user) {
+      var { isValid } = superAndProjectAdminPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+    }
+
+    if (!isValid) {
+      nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+    }
+
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
     this.props.getVersions(this.props.match.params.projectId);

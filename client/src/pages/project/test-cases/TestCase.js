@@ -12,7 +12,7 @@ import Spinner from "../../../components/common/Spinner";
 import openExternalBtn from "../../../img/openExternalBtn.png";
 import Tag from "../../../components/common/Tag";
 
-import { testcasesPermissions, addTestcasesPermissions } from "../../../permissions/TestcasePermissions";
+import { writePermissions, projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import isEmpty from "../../../validation/isEmpty";
 import { getTestcase } from "../../../actions/testcaseActions";
 
@@ -31,13 +31,13 @@ class TestCase extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
-      var isValidWrite = addTestcasesPermissions(
+      var isValidWrite = writePermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
 
-      var { isValid } = testcasesPermissions(
+      var { isValid } = projectIdAndSuperAdminPermission(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin

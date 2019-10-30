@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getUsers } from "../../../actions/userActions";
-import { globalUsersPermissions } from "../../../permissions/UserPermissions";
+import { superAdminPermissions } from "../../../permissions/Permissions";
 import isEmpty from "../../../validation/isEmpty";
 import { userActivation } from "../../../actions/userActions";
 import successToast from "../../../toast/successToast";
@@ -36,7 +36,7 @@ class UserSettings extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = globalUsersPermissions(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+      var { isValid } = superAdminPermissions(nextProps.auth.user.superadmin);
 
       if (!isValid) {
         nextProps.history.push(`/Projects`);

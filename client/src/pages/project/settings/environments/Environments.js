@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import isEmpty from "../../../../validation/isEmpty";
 import { getEnvironments, editEnvironment } from "../../../../actions/environmentActions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 
 import PortraitEnvironment from "../../../../components/common/PortraitEnvironment";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -25,6 +26,25 @@ class Environments extends Component {
     };
     this.setUsed = this.setUsed.bind(this);
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+
+    if (nextProps.auth && nextProps.auth.user) {
+      var { isValid } = superAndProjectAdminPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+    }
+
+    if (!isValid) {
+      nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+    }
+
+    return Object.keys(update).length ? update : null;
+  }
+
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
     this.props.getEnvironments(this.props.match.params.projectId);
@@ -51,12 +71,13 @@ class Environments extends Component {
   }
   render() {
     var { environments, loading } = this.props.environments;
+    var environmentsContainer;
     var content;
 
     if (environments === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(environments.environments)) {
-      content = environments.environments.map((environment, index) => (
+      environmentsContainer = environments.environments.map((environment, index) => (
         <PortraitEnvironment
           key={index}
           title={environment.title}
@@ -66,7 +87,8 @@ class Environments extends Component {
           onClick={e => this.setUsed(environment)}
         />
       ));
-    } else if (isEmpty(environments)) {
+      content = <div className="testcase-grid testcase-container">{environmentsContainer}</div>;
+    } else if (isEmpty(environments && environments.environments)) {
       content = <div className="testcase-container-no-content">There are no environments added yet</div>;
     }
     return (
@@ -89,7 +111,7 @@ class Environments extends Component {
               />
             }
           />
-          <div className="testcase-grid testcase-container">{content}</div>
+          {content}
         </div>
       </div>
     );

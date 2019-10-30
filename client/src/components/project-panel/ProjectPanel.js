@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { projectPanelSettingsPermission } from "../../permissions/GroupPermissions";
+import { superAndProjectAdminPermissions } from "../../permissions/Permissions";
 import { getProject } from "../../actions/projectActions";
 import isEmpty from "../../validation/isEmpty";
 
@@ -37,7 +37,7 @@ class ProjectPanel extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = projectPanelSettingsPermission(
+      var { isValid } = superAndProjectAdminPermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin

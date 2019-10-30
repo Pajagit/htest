@@ -19,7 +19,7 @@ import successToast from "../../../../toast/successToast";
 import failToast from "../../../../toast/failToast";
 import { clearErrors } from "../../../../actions/errorsActions";
 import isEmpty from "../../../../validation/isEmpty";
-import { createNewProjectPermission } from "../../../../permissions/ProjectPermissions";
+import { superAdminPermissions } from "../../../../permissions/Permissions";
 
 import Confirm from "../../../../components/common/Confirm";
 import FullBtn from "../../../../components/common/FullBtn";
@@ -83,7 +83,7 @@ class EditProject extends Component {
       }
     }
 
-    var { isValid } = createNewProjectPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+    var { isValid } = superAdminPermissions(nextProps.auth.user.superadmin);
 
     if (!isValid) {
       nextProps.history.push(`/ProjectSettings`);

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getBrowsers } from "../../../../actions/browserActions";
-import { projectAdminPermissions } from "../../../../permissions/ProjectRolePermissions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 import isEmpty from "../../../../validation/isEmpty";
 
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -32,7 +32,7 @@ class Browsers extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = projectAdminPermissions(
+      var { isValid } = superAndProjectAdminPermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
@@ -53,7 +53,7 @@ class Browsers extends Component {
     var { browsers, loading } = this.props.browsers;
     var browsersContainer;
     var content;
-    if ((browsers && browsers.browsers === null) || loading) {
+    if (browsers === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(browsers && browsers.browsers)) {
       browsersContainer = browsers.browsers.map((browser, index) => (

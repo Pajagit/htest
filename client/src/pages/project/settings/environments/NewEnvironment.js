@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { createEnvironment } from "../../../../actions/environmentActions";
-import { createNewGroupPermission } from "../../../../permissions/GroupPermissions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 import Input from "../../../../components/common/Input";
 import Btn from "../../../../components/common/Btn";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
@@ -34,13 +34,17 @@ class NewEnviroment extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
 
-    // if (nextProps.auth && nextProps.auth.user) {
-    //   var { isValid } = createNewGroupPermission(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
-    // }
+    if (nextProps.auth && nextProps.auth.user) {
+      var { isValid } = superAndProjectAdminPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+    }
 
-    // if (!isValid) {
-    //   nextProps.history.push(`/Environments`);
-    // }
+    if (!isValid) {
+      nextProps.history.push(`/${nextProps.match.params.projectId}/Environments`);
+    }
 
     return Object.keys(update).length ? update : null;
   }

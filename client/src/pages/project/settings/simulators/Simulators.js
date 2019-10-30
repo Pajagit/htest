@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { getDevices } from "../../../../actions/deviceActions";
-import { projectAdminPermissions } from "../../../../permissions/ProjectRolePermissions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 import { getSimulators } from "../../../../actions/simulatorActions";
 import { clearDevices } from "../../../../actions/deviceActions";
 import isEmpty from "../../../../validation/isEmpty";
@@ -34,7 +34,7 @@ class Devices extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = projectAdminPermissions(
+      var { isValid } = superAndProjectAdminPermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin

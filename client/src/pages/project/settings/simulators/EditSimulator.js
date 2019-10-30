@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import { getSimulator, editSimulator, removeSimulator } from "../../../../actions/simulatorActions";
 import { getMobileOs } from "../../../../actions/mobileOsActions";
 import { getOffices } from "../../../../actions/officeActions";
-import { superAdminPermissions } from "../../../../permissions/SuperAdminPermissions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 import Input from "../../../../components/common/Input";
 import Btn from "../../../../components/common/Btn";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
@@ -51,11 +51,15 @@ class EditSimulator extends Component {
     let update = {};
 
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = superAdminPermissions(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+      var { isValid } = superAndProjectAdminPermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
     }
 
     if (!isValid) {
-      nextProps.history.push(`/DeviceSettings`);
+      nextProps.history.push(`/${nextProps.match.params.projectId}/Simulators`);
     }
     var { device } = nextProps.devices;
     if (nextProps.devices.device !== prevState.device) {

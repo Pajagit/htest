@@ -8,7 +8,7 @@ import isEmpty from "../../../../validation/isEmpty";
 import Spinner from "../../../../components/common/Spinner";
 import { clearErrors } from "../../../../actions/errorsActions";
 import Confirm from "../../../../components/common/Confirm";
-import { createNewGroupPermission } from "../../../../permissions/GroupPermissions";
+import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 
 import Btn from "../../../../components/common/Btn";
 import Input from "../../../../components/common/Input";
@@ -67,7 +67,7 @@ class EditEnvironment extends Component {
       if (nextProps.auth.user !== prevState.user) {
         update.user = user;
       }
-      var { isValid } = createNewGroupPermission(
+      var { isValid } = superAndProjectAdminPermissions(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin

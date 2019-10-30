@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import { getDevice, editDevice, removeDevice } from "../../../../actions/deviceActions";
 import { getOffices } from "../../../../actions/officeActions";
-import { superAdminPermissions } from "../../../../permissions/SuperAdminPermissions";
+import { superAdminPermissions } from "../../../../permissions/Permissions";
 import Input from "../../../../components/common/Input";
 import Btn from "../../../../components/common/Btn";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
@@ -55,7 +55,7 @@ class EditDevice extends Component {
     let update = {};
 
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = superAdminPermissions(nextProps.auth.user.projects, nextProps.auth.user.superadmin);
+      var { isValid } = superAdminPermissions(nextProps.auth.user.superadmin);
     }
 
     if (!isValid) {
