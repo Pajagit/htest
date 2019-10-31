@@ -126,9 +126,7 @@ module.exports = {
       if (req.body.version) {
         browserFields.version = req.body.version;
       }
-      if (typeof req.body.used === "boolean") {
-        browserFields.used = req.body.used;
-      }
+
       if (req.body.deprecated) {
         browserFields.project_id = browser_project.project_id;
       }
@@ -162,6 +160,36 @@ module.exports = {
     var deprecateBrowser = await BrowserService.setAsDeprecated(req.params.id);
     if (deprecateBrowser) {
       res.status(200).json({ success: "Browser set as deprecated" });
+    } else {
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  setBrowserIsUsed: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Browser id is not valid number" });
+    }
+    var browser_project = await BrowserService.getBrowserProject(req.params.id);
+
+    var canUpdateBrowser = await UserService.canCreateEditBrowsers(req.user, browser_project.project_id);
+    if (!canUpdateBrowser) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    var browserExists = await BrowserService.getBrowserById(req.params.id);
+    if (!browserExists) {
+      return res.status(400).json({ error: "Browser doesn't exist" });
+    }
+
+    if (req.query.used !== "true" && req.query.used !== "false") {
+      return res.status(400).json({ error: "Parameter 'used' must have a true or false value" });
+    }
+
+    var setIsUsed = await BrowserService.setAsUsed(req.params.id, req.query.used);
+    if (setIsUsed) {
+      if (req.query.used == "true") {
+        res.status(200).json({ success: "Browser set as used on project" });
+      } else {
+        res.status(200).json({ success: "Browser set as not used on project" });
+      }
     } else {
       res.status(500).json({ error: "Something went wrong" });
     }
