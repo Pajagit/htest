@@ -49,11 +49,7 @@ const Device = sequelize.define(
       },
       require: false
     },
-    simulator: {
-      type: Sequelize.BOOLEAN,
-      require: true
-    },
-    deleted: {
+    deprecated: {
       type: Sequelize.BOOLEAN,
       require: true
     },

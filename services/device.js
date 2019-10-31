@@ -12,7 +12,7 @@ module.exports = {
   getDevicesPaginated: async function(whereStatement, page, pageSize) {
     return new Promise((resolve, reject) => {
       Device.findAndCountAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
         where: whereStatement,
         include: [
           {
@@ -38,7 +38,7 @@ module.exports = {
   getAllDevices: async function(whereStatement) {
     return new Promise((resolve, reject) => {
       Device.findAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
         where: whereStatement,
         include: [
           {
@@ -73,7 +73,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (createdOrUpdatedDevice) {
         Device.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
           where: {
             id: createdOrUpdatedDevice.id
           },
@@ -94,13 +94,12 @@ module.exports = {
       }
     });
   },
-  checkIfDeviceExistById: async function(id, isRealDevice) {
+  checkIfDeviceExistById: async function(id) {
     return new Promise((resolve, reject) => {
       Device.findOne({
         where: {
           id: id,
-          deleted: false,
-          simulator: !isRealDevice
+          deprecated: false
         }
       }).then(device => {
         if (device) {
@@ -131,7 +130,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Device.update(
         {
-          deleted: true
+          deprecated: true
         },
         {
           where: {
@@ -151,10 +150,10 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (id) {
         Device.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
           where: {
             id: id,
-            simulator: !isRealDevice
+            deprecated: false
           },
           include: [
             {
@@ -171,6 +170,27 @@ module.exports = {
           }
         });
       }
+    });
+  },
+  setAsDeprecated: async function(id) {
+    return new Promise((resolve, reject) => {
+      Device.update(
+        {
+          deprecated: true,
+          updated_at: new Date()
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ).then(device => {
+        if (device) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
     });
   }
 };

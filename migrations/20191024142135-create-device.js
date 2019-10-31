@@ -51,12 +51,7 @@ module.exports = {
           allowNull: true,
           defaultValue: null
         },
-        simulator: {
-          type: Sequelize.BOOLEAN,
-          allowNull: false,
-          defaultValue: false
-        },
-        deleted: {
+        deprecated: {
           type: Sequelize.BOOLEAN,
           allowNull: false,
           defaultValue: false

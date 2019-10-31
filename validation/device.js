@@ -8,15 +8,6 @@ module.exports = {
       errors.page = "Page is not a valid number";
     }
 
-    if (isEmpty(data.simulator)) {
-      errors.page = "Simulator is required";
-    } else {
-      var arrayOfSimulatorValues = ["true", "false"];
-      if (!arrayOfSimulatorValues.includes(data.simulator)) {
-        errors.simulator = "Simulator can have one of these values [true, false]";
-      }
-    }
-
     if (!isEmpty(data.page_size) && isNaN(data.page_size)) {
       errors.page_size = "Page size is not a valid number";
     }
@@ -26,7 +17,7 @@ module.exports = {
       isValid: isEmpty(errors)
     };
   },
-  validateDeviceInput: function(data, isRealDevice) {
+  validateDeviceInput: function(data) {
     var errors = {};
 
     var titleLimit = 150;
@@ -42,7 +33,6 @@ module.exports = {
     data.screen_size = !isEmpty(data.screen_size) ? data.screen_size : "";
     data.retina = data.retina;
     data.office_id = !isEmpty(data.office_id) ? data.office_id : "";
-    data.simulator = data.simulator;
 
     if (isEmpty(data.title)) {
       errors.title = "Title id required";
@@ -79,14 +69,8 @@ module.exports = {
       }
     }
 
-    if (isRealDevice) {
-      if (isEmpty(data.office_id)) {
-        errors.office_id = "Office is required";
-      } else {
-        if (isNaN(data.office_id)) {
-          errors.office_id = "Office id is not a valid number";
-        }
-      }
+    if (isEmpty(data.office_id)) {
+      errors.office_id = "Office is required";
     }
 
     return {
