@@ -72,11 +72,12 @@ class Versions extends Component {
   render() {
     var { versions, loading } = this.props.versions;
     var content;
+    var versionsContent;
 
     if (versions === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(versions)) {
-      content = versions.versions.map((version, index) => (
+    } else if (!isEmpty(versions && versions.versions)) {
+      versionsContent = versions.versions.map((version, index) => (
         <PortraitVersions
           key={index}
           version={version.version}
@@ -86,7 +87,8 @@ class Versions extends Component {
           onClick={e => this.setUsed(version)}
         />
       ));
-    } else if (isEmpty(versions)) {
+      content = versionsContent;
+    } else if (isEmpty(versions.versions)) {
       content = <div className="testcase-container-no-content">There are no versions added yet</div>;
     }
     return (
@@ -109,7 +111,7 @@ class Versions extends Component {
               />
             }
           />
-          <div className="testcase-grid testcase-container">{content}</div>
+          {content}
         </div>
       </div>
     );
