@@ -64,11 +64,6 @@ module.exports = {
     if (!isEmpty(data.screen_resolution) && data.screen_resolution.length > screenResolutionLimit) {
       errors.screen_resolution = `Screen resolution can not be more than ${screenResolutionLimit} long (${data.screen_resolution.length})`;
     }
-    if (!isEmpty(data.used)) {
-      if (typeof data.used !== "boolean") {
-        errors.used = "Parameter 'used' must have a true or false value";
-      }
-    }
 
     return {
       errors,

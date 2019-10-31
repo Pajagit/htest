@@ -184,6 +184,7 @@ module.exports = {
       Browser.update(
         {
           deprecated: true,
+          used: false,
           updated_at: new Date()
         },
         {
@@ -194,6 +195,23 @@ module.exports = {
       ).then(browser => {
         if (browser) {
           resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setAsUsed: async function(id, used) {
+    return new Promise((resolve, reject) => {
+      var browserFields = {};
+      browserFields.used = used;
+      Browser.update(browserFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(browser => {
+        if (browser[1]) {
+          resolve(browser[1]);
         } else {
           resolve(false);
         }
