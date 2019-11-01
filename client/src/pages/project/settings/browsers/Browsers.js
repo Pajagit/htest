@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getBrowsers } from "../../../../actions/browserActions";
+import { getBrowsers, usedBrowser } from "../../../../actions/browserActions";
 import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 import isEmpty from "../../../../validation/isEmpty";
 
@@ -13,6 +13,8 @@ import PortraitBrowser from "../../../../components/common/PortraitBrowser";
 import BtnAnchor from "../../../../components/common/BtnAnchor";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
+import successToast from "../../../../toast/successToast";
+import failToast from "../../../../toast/failToast";
 
 class Browsers extends Component {
   constructor(props) {
@@ -49,6 +51,23 @@ class Browsers extends Component {
     this.props.getBrowsers(this.props.match.params.projectId);
   }
 
+  setUsed(browser) {
+    var is_used = !browser.used;
+
+    this.props.usedBrowser(browser.id, is_used, res => {
+      if (res.status === 200) {
+        if (is_used) {
+          successToast(res.data.success);
+        } else if (!is_used) {
+          successToast(res.data.success);
+        }
+        this.props.getBrowsers(this.props.match.params.projectId);
+      } else {
+        failToast(res.error);
+      }
+    });
+  }
+
   render() {
     var { browsers, loading } = this.props.browsers;
     var browsersContainer;
@@ -61,8 +80,10 @@ class Browsers extends Component {
           key={index}
           title={browser.title}
           resolution={browser.screen_resolution}
+          used={browser.used}
           version={browser.version}
           id={browser.id}
+          onClick={e => this.setUsed(browser)}
           projectId={this.props.match.params.projectId}
         />
       ));
@@ -111,5 +132,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getBrowsers }
+  { getBrowsers, usedBrowser }
 )(withRouter(Browsers));

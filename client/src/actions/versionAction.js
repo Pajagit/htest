@@ -74,7 +74,7 @@ export const editVersion = (version_id, versionData, callback) => dispatch => {
 // Remove Version by version_id
 export const removeVersion = (version_id, callback) => dispatch => {
   axios
-    .delete(`/api/versions/version/${version_id}`)
+    .put(`/api/versions/version/${version_id}/deprecated`)
     .then(res => callback(res))
     .catch(err =>
       dispatch({
@@ -82,6 +82,20 @@ export const removeVersion = (version_id, callback) => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+// Change is used for Version by version_id
+export const usedVersion = (version_id, is_used, callback) => dispatch => {
+  axios
+    .put(`/api/versions/version/${version_id}/isused?used=${is_used}`)
+    .then(res => callback(res))
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+      callback(err.response.data);
+    });
 };
 
 // Version loading

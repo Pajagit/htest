@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import isEmpty from "../../../../validation/isEmpty";
-import { getVersions, editVersion } from "../../../../actions/versionAction";
+import { getVersions, usedVersion } from "../../../../actions/versionAction";
 import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 
 import PortraitVersions from "../../../../components/common/PortraitVersions";
@@ -50,34 +50,30 @@ class Versions extends Component {
   }
 
   setUsed(version) {
-    var editedVersion = {};
-    editedVersion.deprecated = false;
-    editedVersion.used = !version.used;
-    editedVersion.version = version.version;
+    var is_used = !version.used;
 
-    this.props.editVersion(version.id, editedVersion, res => {
+    this.props.usedVersion(version.id, is_used, res => {
       if (res.status === 200) {
-        if (editedVersion.used) {
-          successToast("Version will now be used in reports");
-        } else if (!editedVersion.used) {
-          successToast("Version is no longer used in reports");
+        if (is_used) {
+          successToast(res.data.success);
+        } else if (!is_used) {
+          successToast(res.data.success);
         }
-
-        this.props.getVersion(this.props.match.params.projectId);
+        this.props.getVersions(this.props.match.params.projectId);
       } else {
-        failToast("Version editing failed");
+        failToast(res.error);
       }
     });
   }
   render() {
     var { versions, loading } = this.props.versions;
     var content;
-    var versionsContent;
+    var versionContainer;
 
     if (versions === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(versions && versions.versions)) {
-      versionsContent = versions.versions.map((version, index) => (
+      versionContainer = versions.versions.map((version, index) => (
         <PortraitVersions
           key={index}
           version={version.version}
@@ -87,7 +83,7 @@ class Versions extends Component {
           onClick={e => this.setUsed(version)}
         />
       ));
-      content = versionsContent;
+      content = <div className="testcase-grid testcase-container">{versionContainer}</div>;
     } else if (isEmpty(versions.versions)) {
       content = <div className="testcase-container-no-content">There are no versions added yet</div>;
     }
@@ -132,5 +128,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getVersions, editVersion }
+  { getVersions, usedVersion }
 )(withRouter(Versions));

@@ -8,7 +8,6 @@ import { superAndProjectAdminPermissions } from "../../../../permissions/Permiss
 import { clearErrors } from "../../../../actions/errorsActions";
 import Btn from "../../../../components/common/Btn";
 import Input from "../../../../components/common/Input";
-import Checkbox from "../../../../components/common/Checkbox";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import Header from "../../../../components/common/Header";
@@ -25,7 +24,7 @@ class NewVersion extends Component {
       projectId: null,
       version: "",
       user: this.props.auth.user,
-      is_supported: true,
+      deprecated: false,
       submitPressed: false,
       errors: {}
     };
@@ -58,14 +57,14 @@ class NewVersion extends Component {
     this.props.clearErrors();
   }
   toggleSupported() {
-    this.setState({ is_supported: !this.state.is_supported });
+    this.setState({ deprecated: !this.state.deprecated });
   }
 
   checkValidation() {
     var formData = {};
 
     formData.title = this.state.title;
-    formData.is_supported = this.state.is_supported;
+    formData.deprecated = this.state.deprecated;
 
     const { errors } = VersionValidation(formData);
 
@@ -77,7 +76,8 @@ class NewVersion extends Component {
     this.props.clearErrors();
     var formData = {};
     formData.version = this.state.version;
-    formData.is_supported = this.state.is_supported;
+    formData.deprecated = false;
+    formData.used = true;
     formData.project_id = this.state.projectId;
     const { errors, isValid } = VersionValidation(formData);
 
@@ -120,16 +120,11 @@ class NewVersion extends Component {
           name={"version"}
           onKeyDown={this.submitFormOnEnterKey}
         />
-        <Checkbox
-          label="Version supported"
-          onClick={e => this.toggleSupported(e)}
-          name="is_supported"
-          value={this.state.is_supported}
-        />
+
         <div className="flex-column-left mt-4">
           <Btn
             className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-            label="Save Group"
+            label="Save Version"
             type="text"
             onClick={e => this.submitForm(e)}
           />

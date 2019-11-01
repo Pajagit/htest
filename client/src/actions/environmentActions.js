@@ -84,6 +84,20 @@ export const removeEnvironment = (environment_id, callback) => dispatch => {
     );
 };
 
+// Change is used for Environment by environment_id
+export const usedEnvironment = (environment_id, is_used, callback) => dispatch => {
+  axios
+    .put(`/api/environments/environment/${environment_id}/isused?used=${is_used}`)
+    .then(res => callback(res))
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+      callback(err.response.data);
+    });
+};
+
 // Environment loading
 export const environmentLoading = () => {
   return {

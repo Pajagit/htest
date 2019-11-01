@@ -14,6 +14,7 @@ import Btn from "../../../../components/common/Btn";
 import Input from "../../../../components/common/Input";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
+import Checkbox from "../../../../components/common/Checkbox";
 import Header from "../../../../components/common/Header";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
 import { getBrowser } from "../../../../actions/browserActions";
@@ -33,6 +34,7 @@ class EditBrowser extends Component {
       title: "",
       screen_resolution: "",
       version: "",
+      deprecated: false,
       errors: {}
     };
   }
@@ -85,6 +87,7 @@ class EditBrowser extends Component {
     formData.title = this.state.title;
     formData.screen_resolution = this.state.screen_resolution;
     formData.version = this.state.version;
+    formData.deprecated = this.state.deprecated;
 
     const { errors } = BrowserValidation(formData);
 
@@ -97,6 +100,7 @@ class EditBrowser extends Component {
     browserData.title = this.state.title;
     browserData.screen_resolution = this.state.screen_resolution;
     browserData.version = this.state.version;
+    browserData.deprecated = this.state.deprecated;
     const { errors, isValid } = BrowserValidation(browserData);
 
     if (isValid) {
@@ -139,6 +143,10 @@ class EditBrowser extends Component {
 
     Confirm(title, msg, reject, confirm, e => this.confirmActivation());
   };
+
+  toggleDeprecated() {
+    this.setState({ deprecated: !this.state.deprecated });
+  }
 
   render() {
     var { browser, loading } = this.props.browsers;
@@ -204,6 +212,12 @@ class EditBrowser extends Component {
 
             <UnderlineAnchor link={`/${projectId}/Browsers`} value={"Cancel"} />
           </div>
+          <Checkbox
+            label="Set browser as deprecated"
+            onClick={e => this.toggleDeprecated(e)}
+            name="deprecated"
+            value={this.state.deprecated}
+          />
         </div>
       );
     }

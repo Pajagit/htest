@@ -74,7 +74,7 @@ export const editBrowser = (browser_id, browserData, callback) => dispatch => {
 // Remove Browser by browser_id
 export const removeBrowser = (browser_id, callback) => dispatch => {
   axios
-    .delete(`/api/browsers/browser/${browser_id}`)
+    .put(`/api/browsers/browser/${browser_id}/deprecated`)
     .then(res => callback(res))
     .catch(err =>
       dispatch({
@@ -82,6 +82,20 @@ export const removeBrowser = (browser_id, callback) => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+// Change is used for Browser by browser_id
+export const usedBrowser = (browser_id, is_used, callback) => dispatch => {
+  axios
+    .put(`/api/browsers/browser/${browser_id}/isused?used=${is_used}`)
+    .then(res => callback(res))
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+      callback(err.response.data);
+    });
 };
 
 // Device loading
