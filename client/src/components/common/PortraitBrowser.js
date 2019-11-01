@@ -2,7 +2,7 @@ import React from "react";
 import Checkbox from "./Checkbox";
 import { Link } from "react-router-dom";
 
-function PortraitBrowser({ title, version, resolution, projectId, id }) {
+function PortraitBrowser({ title, version, resolution, projectId, id, onClick, used }) {
   var link = "";
   link = (
     <Link to={`/${projectId}/EditBrowser/${id}`}>
@@ -36,7 +36,7 @@ function PortraitBrowser({ title, version, resolution, projectId, id }) {
             <div className="portrait-device-bottom-container--item-value"></div>
           </div>
           <div className="portrait-device-bottom-container--button">
-            <Checkbox label={"Used on project"} />
+            <Checkbox label={"Used on project"} value={used} onClick={onClick} />
           </div>
         </div>
       </div>

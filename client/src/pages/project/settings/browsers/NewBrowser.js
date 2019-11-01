@@ -64,6 +64,7 @@ class NewBrowser extends Component {
     formData.title = this.state.title;
     formData.screen_resolution = this.state.screen_resolution;
     formData.version = this.state.version;
+    formData.deprecated = false;
 
     const { errors } = BrowserValidation(formData);
 
@@ -77,6 +78,7 @@ class NewBrowser extends Component {
     browserData.title = this.state.title;
     browserData.screen_resolution = this.state.screen_resolution;
     browserData.version = this.state.version;
+    browserData.deprecated = false;
     browserData.project_id = this.props.match.params.projectId;
     const { errors, isValid } = BrowserValidation(browserData);
 

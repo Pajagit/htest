@@ -30,7 +30,7 @@ class EditVersion extends Component {
       versionId: null,
       version: this.props.versions.version,
       id: null,
-      is_supported: true,
+      deprecated: false,
       errors: {}
     };
   }
@@ -52,7 +52,6 @@ class EditVersion extends Component {
           update.initialRender = false;
           update.version = version.version;
           update.id = version.id;
-          update.is_supported = version.is_supported;
         }
       }
     }
@@ -77,15 +76,15 @@ class EditVersion extends Component {
     return Object.keys(update).length ? update : null;
   }
 
-  toggleSupported() {
-    this.setState({ is_supported: !this.state.is_supported });
+  toggleDeprecated() {
+    this.setState({ deprecated: !this.state.deprecated });
   }
 
   checkValidation() {
     var formData = {};
 
     formData.version = this.state.version;
-    formData.is_supported = this.state.is_supported;
+    formData.deprecated = this.state.deprecated;
 
     const { errors } = VersionValidation(formData);
 
@@ -96,9 +95,10 @@ class EditVersion extends Component {
     this.props.clearErrors();
     var versionData = {};
     versionData.version = this.state.version;
-    versionData.is_supported = this.state.is_supported;
+    versionData.deprecated = this.state.deprecated;
+    console.log(this.state);
     const { errors, isValid } = VersionValidation(versionData);
-
+    console.log(errors);
     if (isValid) {
       this.props.editVersion(this.state.versionId, versionData, res => {
         if (res.status === 200) {
@@ -169,12 +169,7 @@ class EditVersion extends Component {
             name={"version"}
             onKeyDown={this.submitFormOnEnterKey}
           />
-          <Checkbox
-            label="Version supported"
-            onClick={e => this.toggleSupported(e)}
-            name="is_supported"
-            value={this.state.is_supported}
-          />
+
           <div className="flex-column-left mt-4">
             <Btn
               className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
@@ -185,6 +180,12 @@ class EditVersion extends Component {
 
             <UnderlineAnchor link={`/${projectId}/Versions`} value={"Cancel"} />
           </div>
+          <Checkbox
+            label="Set version as deprecated"
+            onClick={e => this.toggleDeprecated(e)}
+            name="deprecated"
+            value={this.state.deprecated}
+          />
         </div>
       );
     }

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import isEmpty from "../../../../validation/isEmpty";
-import { getEnvironments, editEnvironment } from "../../../../actions/environmentActions";
+import { getEnvironments, usedEnvironment } from "../../../../actions/environmentActions";
 import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 
 import PortraitEnvironment from "../../../../components/common/PortraitEnvironment";
@@ -50,22 +50,18 @@ class Environments extends Component {
     this.props.getEnvironments(this.props.match.params.projectId);
   }
   setUsed(environment) {
-    var editedEnvironment = {};
-    editedEnvironment.deprecated = false;
-    editedEnvironment.used = !environment.used;
-    editedEnvironment.title = environment.title;
+    var is_used = !environment.used;
 
-    this.props.editEnvironment(environment.id, editedEnvironment, res => {
+    this.props.usedEnvironment(environment.id, is_used, res => {
       if (res.status === 200) {
-        if (editedEnvironment.used) {
-          successToast("Environment will now be used in reports");
-        } else if (!editedEnvironment.used) {
-          successToast("Environment is no longer used in reports");
+        if (is_used) {
+          successToast(res.data.success);
+        } else if (!is_used) {
+          successToast(res.data.success);
         }
-
         this.props.getEnvironments(this.props.match.params.projectId);
       } else {
-        failToast("Environment editing failed");
+        failToast(res.error);
       }
     });
   }
@@ -131,5 +127,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getEnvironments, editEnvironment }
+  { getEnvironments, usedEnvironment }
 )(withRouter(Environments));

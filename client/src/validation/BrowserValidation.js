@@ -9,6 +9,7 @@ const BrowserValidation = data => {
   data.title = !isEmpty(data.title) ? data.title : "";
   data.screen_resolution = !isEmpty(data.screen_resolution) ? data.screen_resolution : "";
   data.version = !isEmpty(data.version) ? data.version : "";
+  data.deprecated = !isEmpty(data.deprecated) ? data.deprecated : "";
 
   if (isEmpty(data.title)) {
     errors.title = "Title id required";
