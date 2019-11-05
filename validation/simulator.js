@@ -1,7 +1,7 @@
 const isEmpty = require("./is-empty");
 
 module.exports = {
-  validateGetDevices: function(data) {
+  validateGetSimulator: function(data) {
     var errors = {};
 
     if (!isEmpty(data.page) && isNaN(data.page)) {
@@ -12,29 +12,33 @@ module.exports = {
       errors.page_size = "Page size is not a valid number";
     }
 
+    if (typeof data.emulator === "string") {
+      if (data.emulator !== "true" && data.emulator !== "false") {
+        errors.emulator = "Parameter 'emulator' must have a true or false value";
+      }
+    }
+
     return {
       errors,
       isValid: isEmpty(errors)
     };
   },
-  validateDeviceInput: function(data, createDevice) {
+  validateSimulatorInput: function(data, createSimulator) {
     var errors = {};
 
     var titleLimit = 150;
     var resolutionLimit = 150;
     var dpiLimit = 150;
-    var udidLimit = 150;
     var screenSizeLimit = 150;
 
     data.title = !isEmpty(data.title) ? data.title : "";
     data.resolution = !isEmpty(data.resolution) ? data.resolution : "";
     data.dpi = !isEmpty(data.dpi) ? data.dpi : "";
-    data.udid = !isEmpty(data.udid) ? data.udid : "";
     data.screen_size = !isEmpty(data.screen_size) ? data.screen_size : "";
     data.retina = data.retina;
-    data.office_id = !isEmpty(data.office_id) ? data.office_id : "";
+    data.emulator = data.emulator;
 
-    if (!createDevice) {
+    if (!createSimulator) {
       if (typeof data.deprecated === "boolean") {
         data.deprecated = data.deprecated;
       } else {
@@ -61,10 +65,6 @@ module.exports = {
       errors.dpi = `Dpi can not be more than ${dpiLimit} long (${data.dpi.length})`;
     }
 
-    if (!isEmpty(data.udid) && data.udid.length > udidLimit) {
-      errors.udid = `UDID can not be more than ${udidLimit} long (${data.udid.length})`;
-    }
-
     if (!isEmpty(data.screen_size) && data.screen_size.length > screenSizeLimit) {
       errors.screen_size = `Screen size can not be more than ${screenSizeLimit} long (${data.screen_size.length})`;
     }
@@ -77,8 +77,10 @@ module.exports = {
       }
     }
 
-    if (isEmpty(data.office_id)) {
-      errors.office_id = "Office is required";
+    if (typeof data.emulator === "string") {
+      if (data.emulator !== "true" && data.emulator !== "false") {
+        errors.emulator = "Parameter 'emulator' must have a true or false value";
+      }
     }
 
     return {

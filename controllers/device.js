@@ -49,7 +49,7 @@ module.exports = {
       if (!canCreateDevice) {
         return res.status(403).json({ message: "Forbidden" });
       }
-      const { errors, isValid } = validateDeviceInput(req.body);
+      const { errors, isValid } = validateDeviceInput(req.body, true);
 
       // Check Validation
       if (!isValid) {
@@ -99,7 +99,7 @@ module.exports = {
     if (isNaN(req.params.id)) {
       return res.status(400).json({ error: "Device id is not valid number" });
     } else {
-      const { errors, isValid } = validateDeviceInput(req.body);
+      const { errors, isValid } = validateDeviceInput(req.body, false);
       // Check Validation
       if (!isValid) {
         return res.status(400).json(errors);
@@ -139,8 +139,16 @@ module.exports = {
           return res.status(404).json({ error: "Device doesn't exist" });
         }
 
-        var updatedDevice = await DeviceService.updateDevice(req.params.id, deviceFields);
-        var device = await DeviceService.returnCreatedOrUpdatedDevice(updatedDevice);
+        if (req.body.deprecated == true) {
+          var deprecateDevice = await DeviceService.setAsDeprecated(req.params.id);
+          if (deprecateDevice) {
+            var device_created = await DeviceService.createDevice(deviceFields);
+            var device = await DeviceService.returnCreatedOrUpdatedDevice(device_created);
+          }
+        } else {
+          var updatedDevice = await DeviceService.updateDevice(req.params.id, deviceFields);
+          var device = await DeviceService.returnCreatedOrUpdatedDevice(updatedDevice);
+        }
         res.status(200).json(device);
       })();
     }
@@ -184,128 +192,6 @@ module.exports = {
       return res.status(200).json(device);
     } else {
       return res.status(500).json({ error: "Something went wrong" });
-    }
-  },
-  createSimulator: async function(req, res) {
-    (async () => {
-      var canCreateSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
-      if (!canCreateSimulator) {
-        return res.status(403).json({ message: "Forbidden" });
-      }
-      const { errors, isValid } = validateDeviceInput(req.body, false);
-
-      // Check Validation
-      if (!isValid) {
-        return res.status(400).json(errors);
-      }
-      var deviceFields = {};
-      deviceFields.title = req.body.title;
-      if (req.body.resolution) {
-        deviceFields.resolution = req.body.resolution;
-      }
-      deviceFields.os = req.body.os;
-
-      if (req.body.dpi) {
-        deviceFields.dpi = req.body.dpi;
-      }
-      if (req.body.udid) {
-        deviceFields.udid = req.body.udid;
-      }
-      if (req.body.screen_size) {
-        deviceFields.screen_size = req.body.screen_size;
-      }
-      deviceFields.retina = req.body.retina;
-
-      deviceFields.simulator = true;
-
-      var created_device = await DeviceService.createDevice(deviceFields);
-      if (created_device) {
-        var device = await DeviceService.returnCreatedOrUpdatedDevice(created_device);
-        res.json(device);
-      } else {
-        res.status(500).json({ error: "An error occured while creating simulator" });
-      }
-    })();
-  },
-  updateSimulator: async function(req, res) {
-    var canUpdateSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
-    if (!canUpdateSimulator) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "Simulator id is not valid number" });
-    } else {
-      const { errors, isValid } = validateDeviceInput(req.body, false);
-      // Check Validation
-      if (!isValid) {
-        return res.status(400).json(errors);
-      }
-
-      var deviceFields = {};
-      deviceFields.title = req.body.title;
-      if (req.body.resolution) {
-        deviceFields.resolution = req.body.resolution;
-      }
-      if (req.body.dpi) {
-        deviceFields.dpi = req.body.dpi;
-      }
-      deviceFields.os = req.body.os;
-
-      if (req.body.udid) {
-        deviceFields.udid = req.body.udid;
-      }
-      if (req.body.screen_size) {
-        deviceFields.screen_size = req.body.screen_size;
-      }
-      deviceFields.retina = req.body.retina;
-
-      (async () => {
-        var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, false);
-        if (!deviceExists) {
-          return res.status(403).json({ error: "Simulator doesn't exist" });
-        }
-
-        var updatedDevice = await DeviceService.updateDevice(req.params.id, deviceFields);
-        var device = await DeviceService.returnCreatedOrUpdatedDevice(updatedDevice);
-        res.status(200).json(device);
-      })();
-    }
-  },
-  getSimulatorById: async function(req, res) {
-    var canGetSimulator = await UserService.canGetDeviceAndSimulator(req.user);
-    if (!canGetSimulator) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "Simulator id is not valid number" });
-    }
-    if (req.params.id) {
-      var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, false);
-      if (!deviceExists) {
-        return res.status(404).json({ error: "Simulator doesn't exist" });
-      }
-    }
-    var device = await DeviceService.getDeviceById(req.params.id, false);
-    if (device) {
-      return res.status(200).json(device);
-    } else {
-      return res.status(500).json({ error: "Something went wrong" });
-    }
-  },
-  deleteSimulator: async function(req, res) {
-    var canDeleteSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
-    if (!canDeleteSimulator) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, false);
-    if (!deviceExists) {
-      return res.status(404).json({ error: "Simulator doesn't exist" });
-    }
-    var deleteDevice = await DeviceService.deleteDevice(req.params.id);
-    if (deleteDevice) {
-      return res.status(200).json({ success: "Simulator removed successfully" });
-    } else {
-      return res.status(500).json({ message: "Something went wrong" });
     }
   }
 };

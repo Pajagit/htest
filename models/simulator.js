@@ -2,9 +2,8 @@
 const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
-const Office = require("./office");
-const Device = sequelize.define(
-  "devices",
+const Simulator = sequelize.define(
+  "simulators",
   {
     id: {
       require: true,
@@ -24,10 +23,6 @@ const Device = sequelize.define(
       type: Sequelize.STRING,
       require: false
     },
-    udid: {
-      type: Sequelize.STRING,
-      require: false
-    },
     screen_size: {
       type: Sequelize.STRING,
       require: false
@@ -40,14 +35,9 @@ const Device = sequelize.define(
       type: Sequelize.BOOLEAN,
       require: false
     },
-    office_id: {
-      type: Sequelize.INTEGER,
-      foreignKey: true,
-      references: {
-        model: "offices",
-        key: "id"
-      },
-      require: true
+    emulator: {
+      type: Sequelize.BOOLEAN,
+      require: false
     },
     deprecated: {
       type: Sequelize.BOOLEAN,
@@ -62,15 +52,9 @@ const Device = sequelize.define(
       type: Sequelize.DATE
     }
   },
-
   {
     timestamps: false
   }
 );
 
-Device.belongsTo(Office, {
-  foreignKey: "office_id",
-  targetKey: "id"
-});
-
-module.exports = Device;
+module.exports = Simulator;
