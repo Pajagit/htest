@@ -5,7 +5,7 @@ const Op = Sequelize.Op;
 const DeviceService = require("../services/device");
 const OfficeService = require("../services/office");
 const UserService = require("../services/user");
-const OSService = require("../services/os");
+const ProjectService = require("../services/project");
 const validateGetDevices = require("../validation/device").validateGetDevices;
 const validateDeviceInput = require("../validation/device").validateDeviceInput;
 
@@ -192,6 +192,58 @@ module.exports = {
       return res.status(200).json(device);
     } else {
       return res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  setDeviceIsUsed: async function(req, res) {
+    var canSetDeviceIsUsed = await UserService.canCreateUpdateDeleteDevice(req.user);
+    if (!canSetDeviceIsUsed) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Device id is not valid number" });
+    }
+    if (!req.query.project_id) {
+      return res.status(400).json({ error: "Project id is required" });
+    } else {
+      if (isNaN(req.query.project_id)) {
+        return res.status(400).json({ error: "Project id is not valid number" });
+      }
+    }
+    if (req.params.id) {
+      var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, true);
+      if (!deviceExists) {
+        return res.status(404).json({ error: "Device doesn't exist" });
+      }
+    }
+    if (req.query.project_id) {
+      var projectExists = await ProjectService.checkIfProjectExist(req.query.project_id);
+      if (!projectExists) {
+        return res.status(404).json({ error: "Project doesn't exist" });
+      }
+    }
+    if (req.query.used !== "true" && req.query.used !== "false") {
+      return res.status(400).json({ error: "Parameter 'used' must have a true or false value" });
+    }
+
+    var used = await DeviceService.checkIfUsed(req.params.id, req.query.project_id);
+
+    if ((used && req.query.used === "false") || (!used && req.query.used === "true")) {
+      device_used = await DeviceService.setIsUsed(req.params.id, req.query.project_id, req.query.used);
+      if (device_used) {
+        if (req.query.used === "true") {
+          res.status(200).json({ success: "Device set as used on project" });
+        } else {
+          res.status(200).json({ success: "Device set as not used on project" });
+        }
+      } else {
+        res.status(500).json({ error: "Something went wrong" });
+      }
+    } else {
+      if (req.query.used === "true") {
+        res.status(200).json({ success: "Device has already been set as used on project" });
+      } else {
+        res.status(200).json({ success: "Device has already been set as not used on project" });
+      }
     }
   }
 };

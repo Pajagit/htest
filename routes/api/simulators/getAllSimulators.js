@@ -1,6 +1,6 @@
 const Router = require("express").Router;
 const passport = require("passport");
-const SimulatorController = require("../../../controllers//simulator");
+const SimulatorController = require("../../../controllers/simulator");
 
 // @route GET api/simulators
 // @desc all devices route

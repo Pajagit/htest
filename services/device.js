@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const User = require("../models/user");
 const Device = require("../models/device");
 const Office = require("../models/office");
+const ProjectDevice = require("../models/projectdevice");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -191,6 +192,51 @@ module.exports = {
           resolve(false);
         }
       });
+    });
+  },
+  checkIfUsed: async function(id, project_id) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.findOne({
+        where: {
+          project_id: project_id,
+          device_id: id
+        }
+      }).then(device => {
+        if (device) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setIsUsed: async function(id, project_id, used) {
+    return new Promise((resolve, reject) => {
+      if (used === "true") {
+        var projectDeviceFields = {};
+        projectDeviceFields.project_id = project_id;
+        projectDeviceFields.device_id = id;
+        ProjectDevice.create(projectDeviceFields).then(device => {
+          if (device) {
+            resolve(device);
+          } else {
+            resolve(false);
+          }
+        });
+      } else {
+        ProjectDevice.destroy({
+          where: {
+            project_id: project_id,
+            device_id: id
+          }
+        }).then(device => {
+          if (device) {
+            resolve(device);
+          } else {
+            resolve(false);
+          }
+        });
+      }
     });
   }
 };
