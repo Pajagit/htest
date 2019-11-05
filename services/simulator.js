@@ -4,6 +4,7 @@ const sequelize = new Sequelize(pgURI);
 const Op = Sequelize.Op;
 const User = require("../models/user");
 const Simulator = require("../models/simulator");
+const ProjectSimulator = require("../models/projectsimulator");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -142,6 +143,51 @@ module.exports = {
           resolve(false);
         }
       });
+    });
+  },
+  checkIfUsed: async function(id, project_id) {
+    return new Promise((resolve, reject) => {
+      ProjectSimulator.findOne({
+        where: {
+          project_id: project_id,
+          simulator_id: id
+        }
+      }).then(simulator => {
+        if (simulator) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setIsUsed: async function(id, project_id, used) {
+    return new Promise((resolve, reject) => {
+      if (used === "true") {
+        var projectSimulatorFields = {};
+        projectSimulatorFields.project_id = project_id;
+        projectSimulatorFields.simulator_id = id;
+        ProjectSimulator.create(projectSimulatorFields).then(simulator => {
+          if (simulator) {
+            resolve(simulator);
+          } else {
+            resolve(false);
+          }
+        });
+      } else {
+        ProjectSimulator.destroy({
+          where: {
+            project_id: project_id,
+            simulator_id: id
+          }
+        }).then(simulator => {
+          if (simulator) {
+            resolve(simulator);
+          } else {
+            resolve(false);
+          }
+        });
+      }
     });
   }
 };

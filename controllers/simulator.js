@@ -4,14 +4,14 @@ const sequelize = new Sequelize(pgURI);
 const Op = Sequelize.Op;
 const SimulatorService = require("../services/simulator");
 const UserService = require("../services/user");
-const OSService = require("../services/os");
+const ProjectService = require("../services/project");
 const validateGetSimulator = require("../validation/simulator").validateGetSimulator;
 const validateSimulatorInput = require("../validation/simulator").validateSimulatorInput;
 
 module.exports = {
   getSimulators: async function(req, res) {
-    var canGetDevice = await UserService.canGetDeviceAndSimulator(req.user);
-    if (!canGetDevice) {
+    var canGetSimulator = await UserService.canGetDeviceAndSimulator(req.user);
+    if (!canGetSimulator) {
       return res.status(403).json({ message: "Forbidden" });
     }
     const { errors, isValid } = validateGetSimulator(req.query);
@@ -173,6 +173,58 @@ module.exports = {
       return res.status(200).json(simulator);
     } else {
       return res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  setSimulatorIsUsed: async function(req, res) {
+    var canSetSimulatorIsUsed = await UserService.canCreateUpdateDeleteSimulator(req.user);
+    if (!canSetSimulatorIsUsed) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Simulator id is not valid number" });
+    }
+    if (!req.query.project_id) {
+      return res.status(400).json({ error: "Project id is required" });
+    } else {
+      if (isNaN(req.query.project_id)) {
+        return res.status(400).json({ error: "Project id is not valid number" });
+      }
+    }
+    if (req.params.id) {
+      var simulatorExists = await SimulatorService.checkIfSimulatorExistById(req.params.id);
+      if (!simulatorExists) {
+        return res.status(404).json({ error: "Simulator doesn't exist" });
+      }
+    }
+    if (req.query.project_id) {
+      var projectExists = await ProjectService.checkIfProjectExist(req.query.project_id);
+      if (!projectExists) {
+        return res.status(404).json({ error: "Project doesn't exist" });
+      }
+    }
+    if (req.query.used !== "true" && req.query.used !== "false") {
+      return res.status(400).json({ error: "Parameter 'used' must have a true or false value" });
+    }
+
+    var used = await SimulatorService.checkIfUsed(req.params.id, req.query.project_id);
+
+    if ((used && req.query.used === "false") || (!used && req.query.used === "true")) {
+      simulator_used = await SimulatorService.setIsUsed(req.params.id, req.query.project_id, req.query.used);
+      if (simulator_used) {
+        if (req.query.used === "true") {
+          res.status(200).json({ success: "Simulator set as used on project" });
+        } else {
+          res.status(200).json({ success: "Simulator set as not used on project" });
+        }
+      } else {
+        res.status(500).json({ error: "Something went wrong" });
+      }
+    } else {
+      if (req.query.used === "true") {
+        res.status(200).json({ success: "Simulator has already been set as used on project" });
+      } else {
+        res.status(200).json({ success: "Simulator has already been set as not used on project" });
+      }
     }
   }
 };
