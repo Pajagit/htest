@@ -144,6 +144,10 @@ module.exports = {
           if (deprecateDevice) {
             var device_created = await DeviceService.createDevice(deviceFields);
             var device = await DeviceService.returnCreatedOrUpdatedDevice(device_created);
+            var usedOnProjects = await DeviceService.checkIfUsedOnAnyProject(req.params.id);
+            if (usedOnProjects) {
+              await DeviceService.updateProjectDevices(req.params.id, device);
+            }
           }
         } else {
           var updatedDevice = await DeviceService.updateDevice(req.params.id, deviceFields);
@@ -167,6 +171,10 @@ module.exports = {
       return res.status(400).json({ error: "Device doesn't exist" });
     }
     var deprecateDevice = await DeviceService.setAsDeprecated(req.params.id);
+    var usedOnProjects = await DeviceService.checkIfUsedOnAnyProject(req.params.id);
+    if (usedOnProjects) {
+      await DeviceService.removeFromProjects(req.params.id);
+    }
     if (deprecateDevice) {
       res.status(200).json({ success: "Device set as deprecated" });
     } else {

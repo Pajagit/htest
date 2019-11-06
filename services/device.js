@@ -210,6 +210,21 @@ module.exports = {
       });
     });
   },
+  checkIfUsedOnAnyProject: async function(id) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.count({
+        where: {
+          device_id: id
+        }
+      }).then(devices => {
+        if (devices > 0) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
   setIsUsed: async function(id, project_id, used) {
     return new Promise((resolve, reject) => {
       if (used === "true") {
@@ -237,6 +252,39 @@ module.exports = {
           }
         });
       }
+    });
+  },
+  removeFromProjects: async function(id) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.destroy({
+        where: {
+          device_id: id
+        }
+      }).then(device => {
+        if (device) {
+          resolve(device);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  updateProjectDevices: async function(id_old_device, new_device) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.update(
+        { device_id: new_device.id },
+        {
+          where: { device_id: id_old_device },
+          returning: true,
+          plain: true
+        }
+      ).then(device => {
+        if (device) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
     });
   }
 };
