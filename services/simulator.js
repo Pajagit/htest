@@ -189,5 +189,53 @@ module.exports = {
         });
       }
     });
+  },
+  checkIfUsedOnAnyProject: async function(id) {
+    return new Promise((resolve, reject) => {
+      ProjectSimulator.count({
+        where: {
+          simulator_id: id
+        }
+      }).then(simulator => {
+        if (simulator > 0) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeFromProjects: async function(id) {
+    return new Promise((resolve, reject) => {
+      ProjectSimulator.destroy({
+        where: {
+          simulator_id: id
+        }
+      }).then(simulator => {
+        if (simulator) {
+          resolve(simulator);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  updateProjectSimulators: async function(id_old_simulator, new_simulator) {
+    return new Promise((resolve, reject) => {
+      ProjectSimulator.update(
+        { simulator_id: new_simulator.id },
+        {
+          where: { simulator_id: id_old_simulator },
+          returning: true,
+          plain: true
+        }
+      ).then(simulator => {
+        if (simulator) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
   }
 };

@@ -83,6 +83,10 @@ module.exports = {
           if (deprecateSimulator) {
             var simulator_created = await SimulatorService.createSimulator(simulatorFields);
             var simulator = await SimulatorService.returnCreatedOrUpdatedSimulator(simulator_created);
+            var usedOnProjects = await SimulatorService.checkIfUsedOnAnyProject(req.params.id);
+            if (usedOnProjects) {
+              await SimulatorService.updateProjectSimulators(req.params.id, simulator);
+            }
           }
         } else {
           var updatedSimulator = await SimulatorService.updateSimulator(req.params.id, simulatorFields);
@@ -106,6 +110,10 @@ module.exports = {
       return res.status(400).json({ error: "Simulator doesn't exist" });
     }
     var deprecateSimulator = await SimulatorService.setAsDeprecated(req.params.id);
+    var usedOnProjects = await SimulatorService.checkIfUsedOnAnyProject(req.params.id);
+    if (usedOnProjects) {
+      await SimulatorService.removeFromProjects(req.params.id);
+    }
     if (deprecateSimulator) {
       res.status(200).json({ success: "Simulator set as deprecated" });
     } else {
