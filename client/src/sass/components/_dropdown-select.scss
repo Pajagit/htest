@@ -28,7 +28,6 @@
   }
   &__placeholder {
     color: $placeholder-color !important;
-    margin-left: 3.5rem;
     font-size: 1.4rem !important;
   }
   &__filter {
@@ -81,4 +80,8 @@
 .selected {
   background-color: $color-primary !important;
   color: white;
+}
+
+.picky__input {
+  padding-left: 3.5rem !important;
 }

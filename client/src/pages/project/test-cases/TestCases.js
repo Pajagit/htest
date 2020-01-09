@@ -82,7 +82,7 @@ class TestCases extends Component {
       var usersWithTestcases = [];
       if (nextProps.users && nextProps.users.users) {
         if (nextProps.users.users !== prevState.users) {
-          nextProps.users.users.map(function(item) {
+          nextProps.users.users.map(function (item) {
             return usersWithTestcases.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
           });
           update.usersWithTestcases = usersWithTestcases;
@@ -215,7 +215,7 @@ class TestCases extends Component {
     this.setState({ searchTerm: "" });
   }
   removeGroupFilter(e) {
-    var groups = this.props.filters.selectedGroupFilters.filter(function(item) {
+    var groups = this.props.filters.selectedGroupFilters.filter(function (item) {
       return item["id"] !== e;
     });
 
@@ -234,7 +234,7 @@ class TestCases extends Component {
     });
   }
   removeUser(e) {
-    var selectedUsers = this.state.selectedUsers.filter(function(item) {
+    var selectedUsers = this.state.selectedUsers.filter(function (item) {
       return item["id"] !== e;
     });
 
@@ -496,6 +496,21 @@ class TestCases extends Component {
         />
       );
     }
+    if (!this.state.listViewActivity) {
+      var listView = <div className="view-options">
+        <div
+          className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
+          onClick={e => this.setViewList(e)}
+        >
+          <i className="fas fa-bars "></i>
+        </div>
+        <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
+          <i className="fas fa-th "></i>
+        </div>
+      </div>
+    }
+
+
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -524,17 +539,7 @@ class TestCases extends Component {
               />
             }
           />
-          <div className="view-options">
-            <div
-              className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
-              onClick={e => this.setViewList(e)}
-            >
-              <i className="fas fa-bars "></i>
-            </div>
-            <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
-              <i className="fas fa-th "></i>
-            </div>
-          </div>
+          {listView}
           {filters}
           <TestCaseContainer
             filters={this.state.testcaseFilters}
@@ -596,7 +601,7 @@ const filterSelector = createSelector(
       if (groups) {
         if (groups.groups) {
           var selectedGroup = [];
-          groups.groups.map(function(item) {
+          groups.groups.map(function (item) {
             if (settings && settings.groups) {
               if (settings.groups.includes(item.id)) {
                 selectedGroup.push({ id: item.id, title: item.title, color: item.color });
@@ -611,7 +616,7 @@ const filterSelector = createSelector(
       if (users) {
         if (users.users) {
           var selectedUsersObjects = [];
-          users.users.map(function(item) {
+          users.users.map(function (item) {
             if (settings && settings.users) {
               if (settings.users.includes(item.id)) {
                 selectedUsersObjects.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
