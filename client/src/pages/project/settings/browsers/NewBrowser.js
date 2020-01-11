@@ -110,11 +110,11 @@ class NewBrowser extends Component {
     var content;
     var projectId = this.props.match.params.projectId;
     content = (
-      <div className="main-content--content">
+      <div className='main-content--content'>
         <Input
-          type="text"
-          placeholder="Enter Browser Title Here"
-          label="Title*"
+          type='text'
+          placeholder='Enter Browser Title Here'
+          label='Title*'
           validationMsg={[this.state.errors.title, this.props.errors.title]}
           value={this.state.title}
           onChange={e => this.onChange(e)}
@@ -122,9 +122,9 @@ class NewBrowser extends Component {
           onKeyDown={this.submitFormOnEnterKey}
         />
         <Input
-          type="text"
-          placeholder="Enter Browser Version Here"
-          label="Version"
+          type='text'
+          placeholder='Enter Browser Version Here'
+          label='Version'
           validationMsg={[this.state.errors.version, this.props.errors.version]}
           value={this.state.version}
           onChange={e => this.onChange(e)}
@@ -132,20 +132,20 @@ class NewBrowser extends Component {
           onKeyDown={this.submitFormOnEnterKey}
         />
         <Input
-          type="text"
-          placeholder="Enter Browser Resolution Here"
-          label="Resolution"
+          type='text'
+          placeholder='Enter Browser Resolution Here'
+          label='Resolution'
           validationMsg={[this.state.errors.screen_resolution, this.props.errors.screen_resolution]}
           value={this.state.screen_resolution}
           onChange={e => this.onChange(e)}
           name={"screen_resolution"}
           onKeyDown={this.submitFormOnEnterKey}
         />
-        <div className="flex-column-left mt-4">
+        <div className='flex-column-left mt-4'>
           <Btn
             className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-            label="Save Group"
-            type="text"
+            label='Save Browser'
+            type='text'
             onClick={e => this.submitForm(e)}
           />
 
@@ -155,12 +155,12 @@ class NewBrowser extends Component {
     );
 
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className="main-content main-content-grid">
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fas fa-arrow-left"></i>}
+            icon={<i className='fas fa-arrow-left'></i>}
             title={"Back to All Browsers"}
             history={this.props}
             link={`/${projectId}/Browsers`}
@@ -184,7 +184,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { createBrowser, clearErrors }
-)(withRouter(NewBrowser));
+export default connect(mapStateToProps, { createBrowser, clearErrors })(withRouter(NewBrowser));

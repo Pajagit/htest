@@ -63,3 +63,12 @@
     }
   }
 }
+
+.list-item--checkbox {
+  position: absolute;
+  display: flex;
+  right: 2rem;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+}

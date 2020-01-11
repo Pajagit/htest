@@ -15,7 +15,7 @@ module.exports = {
     if (!canGetDevice) {
       return res.status(403).json({ message: "Forbidden" });
     }
-    const { errors, isValid } = validateGetDevices(req.query);
+    const { errors, isValid } = validateGetDevices(req.query, req.body);
 
     // Check Validation
     if (!isValid) {
@@ -33,7 +33,12 @@ module.exports = {
     }
 
     if (req.query.page >= 0 && req.query.page_size) {
-      var devices = await DeviceService.getDevicesPaginated(whereStatement, req.query.page, req.query.page_size);
+      var devices = await DeviceService.getDevicesPaginated(
+        whereStatement,
+        req.query.page,
+        req.query.page_size,
+        req.body.project_id
+      );
     } else {
       var devices = await DeviceService.getAllDevices(whereStatement);
     }
