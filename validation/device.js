@@ -1,7 +1,7 @@
 const isEmpty = require("./is-empty");
 
 module.exports = {
-  validateGetDevices: function(data) {
+  validateGetDevices: function(data, data_body) {
     var errors = {};
 
     if (!isEmpty(data.page) && isNaN(data.page)) {
@@ -10,6 +10,12 @@ module.exports = {
 
     if (!isEmpty(data.page_size) && isNaN(data.page_size)) {
       errors.page_size = "Page size is not a valid number";
+    }
+
+    if (!isEmpty(data_body.project_id)) {
+      if (isNaN(data_body.project_id)) {
+        errors.project_id = "Project_id is not a valid number";
+      }
     }
 
     return {

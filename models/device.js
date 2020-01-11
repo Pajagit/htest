@@ -3,6 +3,9 @@ const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 const Office = require("./office");
+const Project = require("./project");
+const ProjectDevice = require("./projectdevice");
+
 const Device = sequelize.define(
   "devices",
   {
@@ -71,6 +74,19 @@ const Device = sequelize.define(
 Device.belongsTo(Office, {
   foreignKey: "office_id",
   targetKey: "id"
+});
+
+Device.belongsToMany(Project, {
+  through: ProjectDevice,
+  foreignKey: "device_id",
+  targetKey: "id",
+  as: "projects"
+});
+Project.belongsToMany(Device, {
+  through: ProjectDevice,
+  foreignKey: "project_id",
+  targetKey: "id",
+  as: "devices"
 });
 
 module.exports = Device;
