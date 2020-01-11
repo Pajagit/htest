@@ -31,7 +31,7 @@ class EditSimulator extends Component {
       initialRender: true,
       offices: this.props.offices.offices,
       office: [],
-      device: this.props.devices.device,
+      simulator: this.props.simulators.simulator,
       officesFormatted: [],
       title: "",
       resolution: "",
@@ -61,18 +61,18 @@ class EditSimulator extends Component {
     if (!isValid) {
       nextProps.history.push(`/${nextProps.match.params.projectId}/Simulators`);
     }
-    var { device } = nextProps.devices;
-    if (nextProps.devices.device !== prevState.device) {
+    var { simulator } = nextProps.simulators;
+    if (nextProps.simulators.simulator !== prevState.simulator) {
       if (prevState.initialRender) {
         update.initialRender = false;
 
-        update.title = device.title;
-        update.resolution = device.resolution ? device.resolution : "";
-        update.dpi = device.dpi ? device.dpi : "";
-        update.udid = device.udid ? device.udid : "";
-        update.retina = device.retina;
-        update.screen_size = device.screen_size ? device.screen_size : "";
-        update.os = { id: device.os, title: device.os };
+        update.title = simulator.title;
+        update.resolution = simulator.resolution ? simulator.resolution : "";
+        update.dpi = simulator.dpi ? simulator.dpi : "";
+        update.udid = simulator.udid ? simulator.udid : "";
+        update.retina = simulator.retina;
+        update.screen_size = simulator.screen_size ? simulator.screen_size : "";
+        update.os = { id: simulator.os, title: simulator.os };
       }
     }
 
@@ -109,19 +109,19 @@ class EditSimulator extends Component {
   }
 
   checkValidation() {
-    var deviceData = {};
-    deviceData.title = this.state.title;
-    deviceData.resolution = this.state.resolution;
-    deviceData.dpi = this.state.dpi;
-    deviceData.udid = this.state.udid;
-    deviceData.retina = this.state.retina;
-    deviceData.screen_size = this.state.screen_size;
-    deviceData.simulator = false;
-    deviceData.office_id = this.state.office ? this.state.office.id : null;
-    deviceData.os = this.state.os.title;
-    deviceData.simulator = true;
+    var simulatorData = {};
+    simulatorData.title = this.state.title;
+    simulatorData.resolution = this.state.resolution;
+    simulatorData.dpi = this.state.dpi;
+    simulatorData.udid = this.state.udid;
+    simulatorData.retina = this.state.retina;
+    simulatorData.screen_size = this.state.screen_size;
+    simulatorData.simulator = false;
+    simulatorData.office_id = this.state.office ? this.state.office.id : null;
+    simulatorData.os = this.state.os.title;
+    simulatorData.simulator = true;
 
-    const { errors } = SimulatorValidation(deviceData);
+    const { errors } = SimulatorValidation(simulatorData);
     this.setState({ errors });
   }
 
@@ -129,19 +129,20 @@ class EditSimulator extends Component {
     e.preventDefault();
     this.props.clearErrors();
     this.setState({ errors: {} });
-    var deviceData = {};
+    var simulatorData = {};
 
-    deviceData.title = this.state.title;
-    deviceData.resolution = this.state.resolution;
-    deviceData.dpi = this.state.dpi;
-    deviceData.udid = this.state.udid;
-    deviceData.retina = this.state.retina;
-    deviceData.screen_size = this.state.screen_size;
-    deviceData.os = this.state.os.title;
-    deviceData.simulator = true;
-    const { errors, isValid } = SimulatorValidation(deviceData);
+    simulatorData.title = this.state.title;
+    simulatorData.resolution = this.state.resolution;
+    simulatorData.dpi = this.state.dpi;
+    simulatorData.udid = this.state.udid;
+    simulatorData.retina = this.state.retina;
+    simulatorData.screen_size = this.state.screen_size;
+    simulatorData.os = this.state.os.title;
+    simulatorData.simulator = true;
+    simulatorData.deprecated = false;
+    const { errors, isValid } = SimulatorValidation(simulatorData);
     if (isValid) {
-      this.props.editSimulator(this.props.match.params.simulatorId, deviceData, res => {
+      this.props.editSimulator(this.props.match.params.simulatorId, simulatorData, res => {
         if (res.status === 200) {
           successToast("Simulator edited successfully");
           this.props.history.push(`/${this.props.match.params.projectId}/Simulators`);
@@ -182,9 +183,9 @@ class EditSimulator extends Component {
   }
   render() {
     var content;
-    var { device, loading } = this.props.devices;
+    var { simulator, loading } = this.props.simulators;
 
-    if (isEmpty(device) || loading) {
+    if (isEmpty(simulator) || loading) {
       content = <Spinner />;
     } else {
       content = (
@@ -203,7 +204,7 @@ class EditSimulator extends Component {
           <div>
             <Input
               type="text"
-              placeholder="Enter Device Title Here"
+              placeholder="Enter Simulator Title Here"
               label="Title*"
               validationMsg={[this.state.errors.title, this.props.errors.error]}
               value={this.state.title}
@@ -223,7 +224,7 @@ class EditSimulator extends Component {
             />
             <Input
               type="text"
-              placeholder="Enter Device Resolution Here"
+              placeholder="Enter Simulator Resolution Here"
               label="Resolution"
               validationMsg={this.state.errors.resolution}
               value={this.state.resolution}
@@ -233,7 +234,7 @@ class EditSimulator extends Component {
             />
             <Input
               type="text"
-              placeholder="Enter Device Screen Size Here"
+              placeholder="Enter Simulator Screen Size Here"
               label="Screen Size"
               validationMsg={this.state.errors.screen_size}
               value={this.state.screen_size}
@@ -243,7 +244,7 @@ class EditSimulator extends Component {
             />
             <Input
               type="text"
-              placeholder="Enter Device dpi Here"
+              placeholder="Enter Simulator dpi Here"
               label="Pixels Per Inch"
               validationMsg={this.state.errors.dpi}
               value={this.state.dpi}
@@ -261,7 +262,7 @@ class EditSimulator extends Component {
             <div className="flex-column-left mt-4">
               <Btn
                 className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-                label="Edit Device"
+                label="Edit Simulator"
                 type="text"
                 onClick={e => this.submitForm(e)}
               />
@@ -300,7 +301,7 @@ EditSimulator.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
-  devices: state.devices,
+  simulators: state.simulators,
   offices: state.offices,
   mobileOSs: state.mobileOSs
 });

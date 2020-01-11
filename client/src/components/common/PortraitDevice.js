@@ -3,7 +3,7 @@ import Checkbox from "./Checkbox";
 import Tag from "./Tag";
 import { Link } from "react-router-dom";
 
-function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId, os }) {
+function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId, os, isUsed, changeIsUsed }) {
   var link = "";
   var udidValue = "";
   if (simulator) {
@@ -79,7 +79,7 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
             <div className="portrait-device-bottom-container--item-value"></div>
           </div>
           <div className="portrait-device-bottom-container--button">
-            <Checkbox label={"Used on project"} />
+            <Checkbox label={"Used on project"} value={isUsed} onClick={changeIsUsed} />
           </div>
         </div>
       </div>

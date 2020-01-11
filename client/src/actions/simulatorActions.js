@@ -1,42 +1,42 @@
 import axios from "axios";
 
-import { GET_DEVICE, GET_DEVICES, DEVICE_LOADING, GET_ERRORS } from "./types";
+import { GET_SIMULATOR, GET_SIMULATORS, SIMULATOR_LOADING, GET_ERRORS } from "./types";
 
 // Get All Simulators
-export const getSimulators = (pageSent, pageSizeSent) => dispatch => {
+export const getSimulators = (project_id, pageSent, pageSizeSent) => dispatch => {
   dispatch(simulatorLoading());
   var page = pageSent === undefined ? 1 : pageSent;
   var size = pageSizeSent === undefined ? 100 : pageSizeSent;
   axios
-    .post(`/api/devices?page=${page}&page_size=${size}&simulator=true`)
+    .post(`/api/simulators?page=${page}&page_size=${size}`)
     .then(res =>
       dispatch({
-        type: GET_DEVICES,
+        type: GET_SIMULATORS,
         payload: res.data
       })
     )
     .catch(err =>
       dispatch({
-        type: GET_DEVICES,
+        type: GET_SIMULATORS,
         payload: {}
       })
     );
 };
 
-// Get Simulator by device_id
-export const getSimulator = device_id => dispatch => {
+// Get Simulator by simulator_id
+export const getSimulator = simulator_id => dispatch => {
   dispatch(simulatorLoading());
   axios
-    .get(`/api/devices/simulator/${device_id}`)
+    .get(`/api/simulators/simulator/${simulator_id}`)
     .then(res =>
       dispatch({
-        type: GET_DEVICE,
+        type: GET_SIMULATOR,
         payload: res.data
       })
     )
     .catch(err =>
       dispatch({
-        type: GET_DEVICE,
+        type: GET_SIMULATOR,
         payload: {}
       })
     );
@@ -46,7 +46,7 @@ export const getSimulator = device_id => dispatch => {
 export const createSimulator = (simulatorData, callback) => dispatch => {
   dispatch(simulatorLoading());
   axios
-    .post(`/api/devices/simulator`, simulatorData)
+    .post(`/api/simulators/simulator`, simulatorData)
     .then(res => callback(res))
     .catch(err =>
       dispatch({
@@ -56,10 +56,10 @@ export const createSimulator = (simulatorData, callback) => dispatch => {
     );
 };
 
-// Edit Simulator by device_id
-export const editSimulator = (device_id, simulatorData, callback) => dispatch => {
+// Edit Simulator by simulator_id
+export const editSimulator = (simulator_id, simulatorData, callback) => dispatch => {
   axios
-    .put(`/api/devices/simulator/${device_id}`, simulatorData)
+    .put(`/api/simulators/simulator/${simulator_id}`, simulatorData)
     .then(res => callback(res))
     .catch(err =>
       dispatch({
@@ -69,10 +69,24 @@ export const editSimulator = (device_id, simulatorData, callback) => dispatch =>
     );
 };
 
-// Remove Simulator by device_id
-export const removeSimulator = (device_id, callback) => dispatch => {
+// Remove Simulator by simulator_id
+export const removeSimulator = (simulator_id, callback) => dispatch => {
   axios
-    .delete(`/api/devices/simulator/${device_id}`)
+    .put(`/api/simulators/simulator/${simulator_id}/deprecated`)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Set simulator as used/not used on project
+export const simulatorIsUsed = (simulator_id, is_used, project_id, callback) => dispatch => {
+
+  axios
+    .put(`/api/simulators/simulator/${simulator_id}/isused?used=${is_used}&project_id=${project_id}`)
     .then(res => callback(res))
     .catch(err =>
       dispatch({
@@ -85,6 +99,6 @@ export const removeSimulator = (device_id, callback) => dispatch => {
 // Simulator loading
 export const simulatorLoading = () => {
   return {
-    type: DEVICE_LOADING
+    type: SIMULATOR_LOADING
   };
 };

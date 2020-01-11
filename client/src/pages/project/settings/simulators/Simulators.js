@@ -3,10 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getDevices } from "../../../../actions/deviceActions";
 import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
-import { getSimulators } from "../../../../actions/simulatorActions";
-import { clearDevices } from "../../../../actions/deviceActions";
+import { getSimulators, simulatorIsUsed } from "../../../../actions/simulatorActions";
 import isEmpty from "../../../../validation/isEmpty";
 
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
@@ -16,7 +14,7 @@ import BtnAnchor from "../../../../components/common/BtnAnchor";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
 
-class Devices extends Component {
+class Simulators extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,33 +48,39 @@ class Devices extends Component {
     this.setState({ projectId: this.props.match.params.projectId });
     this.props.getSimulators();
   }
-
+  changeIsUsed(id, used) {
+    this.props.simulatorIsUsed(id, used, this.props.match.params.projectId, () => {
+      this.props.getSimulators();
+    });
+  }
   render() {
-    var { devices, loading } = this.props.devices;
+    var { simulators, loading } = this.props.simulators;
     var content;
     var simulatorContainer;
 
-    if (devices === null || loading) {
+    if (simulators === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(devices.devices)) {
-      simulatorContainer = devices.devices.map((device, index) => (
+    } else if (!isEmpty(simulators.simulators)) {
+      simulatorContainer = simulators.simulators.map((simulator, index) => (
         <PortraitDevice
           key={index}
-          title={device.title}
-          office={device.office ? device.office.city : ""}
-          udid={device.udid}
-          resolution={device.resolution}
-          dpi={device.dpi}
-          os={device.os}
-          screen_size={device.screen_size}
-          retina={device.retina}
+          title={simulator.title}
+          office={simulator.office ? simulator.office.city : ""}
+          udid={simulator.udid}
+          resolution={simulator.resolution}
+          dpi={simulator.dpi}
+          os={simulator.os}
+          screen_size={simulator.screen_size}
+          retina={simulator.retina}
           simulator={true}
-          id={device.id}
+          id={simulator.id}
           projectId={this.props.match.params.projectId}
+          isUsed={simulator.used}
+          changeIsUsed={e => this.changeIsUsed(simulator.id, !simulator.used)}
         />
       ));
       content = <div className="testcase-grid testcase-container">{simulatorContainer}</div>;
-    } else if (isEmpty(devices.devices) && isEmpty(this.state.office)) {
+    } else if (isEmpty(simulators.simulators) && isEmpty(this.state.office)) {
       content = <div className="testcase-container-no-content">There are no simulators added yet</div>;
     }
 
@@ -107,18 +111,18 @@ class Devices extends Component {
   }
 }
 
-Devices.propTypes = {
+Simulators.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  devices: state.devices,
+  simulators: state.simulators,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
-  { getSimulators, clearDevices, getDevices }
-)(withRouter(Devices));
+  { getSimulators, simulatorIsUsed }
+)(withRouter(Simulators));

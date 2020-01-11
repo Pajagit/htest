@@ -3,10 +3,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { getDevices, clearDevices } from "../../../../actions/deviceActions";
+import { getDevices, clearDevices, deviceIsUsed } from "../../../../actions/deviceActions";
 import { superAndProjectAdminPermissions } from "../../../../permissions/Permissions";
 import { getOffices } from "../../../../actions/officeActions";
-import { getSimulators } from "../../../../actions/simulatorActions";
 import getIdsFromObjArray from "../../../../utility/getIdsFromObjArray";
 import isEmpty from "../../../../validation/isEmpty";
 
@@ -31,6 +30,7 @@ class Devices extends Component {
       errors: {}
     };
     this.selectOffice = this.selectOffice.bind(this);
+    this.changeIsUsed = this.changeIsUsed.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -66,14 +66,20 @@ class Devices extends Component {
   }
   componentDidMount() {
     this.setState({ projectId: this.props.match.params.projectId });
-    this.props.getDevices();
+    this.props.getDevices(null, this.props.match.params.projectId);
     this.props.getOffices();
   }
 
   selectOffice(value) {
     this.setState({ office: value }, () => {
       var officesIds = getIdsFromObjArray(this.state.office);
-      this.props.getDevices({ offices: officesIds });
+      this.props.getDevices(officesIds, this.props.match.params.projectId);
+    });
+  }
+  changeIsUsed(id, used) {
+    this.props.deviceIsUsed(id, used, this.props.match.params.projectId, () => {
+      var officesIds = getIdsFromObjArray(this.state.office);
+      this.props.getDevices(officesIds, this.props.match.params.projectId);
     });
   }
   render() {
@@ -98,6 +104,8 @@ class Devices extends Component {
           type={this.state.deviceType}
           id={device.id}
           projectId={this.props.match.params.projectId}
+          isUsed={device.used}
+          changeIsUsed={e => this.changeIsUsed(device.id, !device.used)}
         />
       ));
       content = <div className="testcase-grid testcase-container">{deviceContainer}</div>;
@@ -152,5 +160,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getOffices, getSimulators, clearDevices, getDevices }
+  { getOffices, clearDevices, getDevices, deviceIsUsed }
 )(withRouter(Devices));
