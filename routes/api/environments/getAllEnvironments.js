@@ -5,7 +5,7 @@ const EnvironmentControler = require("../../../controllers/environment");
 // @route GET api/environments
 // @desc all environments route
 // @access public
-module.exports = Router({ mergeParams: true }).get(
+module.exports = Router({ mergeParams: true }).post(
   "/environments",
   passport.authenticate("jwt", { session: false }),
   EnvironmentControler.getAllEnvironments

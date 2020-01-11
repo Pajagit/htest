@@ -1,7 +1,7 @@
 const isEmpty = require("./is-empty");
 
 module.exports = {
-  validateGetEnvironments: function(data) {
+  validateGetEnvironments: function(data, dataBody) {
     var errors = {};
 
     if (!isEmpty(data.page) && isNaN(data.page)) {
@@ -11,10 +11,10 @@ module.exports = {
     if (!isEmpty(data.page_size) && isNaN(data.page_size)) {
       errors.page_size = "Page size is not a valid number";
     }
-    if (isEmpty(data.project_id)) {
+    if (isEmpty(dataBody.project_id)) {
       errors.project_id = "Project id is required";
     } else {
-      if (isNaN(data.project_id)) {
+      if (isNaN(dataBody.project_id)) {
         errors.project_id = "Project id is not a valid number";
       }
     }
