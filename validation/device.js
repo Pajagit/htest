@@ -40,14 +40,6 @@ module.exports = {
     data.retina = data.retina;
     data.office_id = !isEmpty(data.office_id) ? data.office_id : "";
 
-    if (!createDevice) {
-      if (typeof data.deprecated === "boolean") {
-        data.deprecated = data.deprecated;
-      } else {
-        errors.deprecated = "Deprecated is required";
-      }
-    }
-
     if (isEmpty(data.title)) {
       errors.title = "Title id required";
     } else {
