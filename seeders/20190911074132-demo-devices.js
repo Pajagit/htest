@@ -11,8 +11,7 @@ module.exports = {
         screen_size: '4,7"',
         retina: true,
         office_id: 1,
-        simulator: false,
-        deleted: false,
+        deprecated: false,
         os: "iOS 7.1.2"
       },
       {
@@ -23,8 +22,7 @@ module.exports = {
         screen_size: null,
         retina: false,
         office_id: 1,
-        simulator: false,
-        deleted: false,
+        deprecated: false,
         os: "Lollipop 5.1.1"
       },
       {
@@ -35,8 +33,7 @@ module.exports = {
         screen_size: null,
         retina: false,
         office_id: 2,
-        simulator: false,
-        deleted: false,
+        deprecated: false,
         os: "Lollipop 5.1.1"
       },
       {
@@ -47,8 +44,7 @@ module.exports = {
         screen_size: '5,1"',
         retina: false,
         office_id: 1,
-        simulator: true,
-        deleted: false,
+        deprecated: false,
         os: "Lollipop 5.1.1"
       },
       {
@@ -59,8 +55,7 @@ module.exports = {
         screen_size: '3,5"',
         retina: true,
         office_id: 1,
-        simulator: false,
-        deleted: true,
+        deprecated: true,
         os: "iOS 13.1.2"
       }
     ]);

@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const User = require("../models/user");
 const Device = require("../models/device");
 const Office = require("../models/office");
+const ProjectDevice = require("../models/projectdevice");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -12,7 +13,7 @@ module.exports = {
   getDevicesPaginated: async function(whereStatement, page, pageSize) {
     return new Promise((resolve, reject) => {
       Device.findAndCountAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
         where: whereStatement,
         include: [
           {
@@ -38,7 +39,7 @@ module.exports = {
   getAllDevices: async function(whereStatement) {
     return new Promise((resolve, reject) => {
       Device.findAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
         where: whereStatement,
         include: [
           {
@@ -73,7 +74,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (createdOrUpdatedDevice) {
         Device.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
           where: {
             id: createdOrUpdatedDevice.id
           },
@@ -94,13 +95,12 @@ module.exports = {
       }
     });
   },
-  checkIfDeviceExistById: async function(id, isRealDevice) {
+  checkIfDeviceExistById: async function(id) {
     return new Promise((resolve, reject) => {
       Device.findOne({
         where: {
           id: id,
-          deleted: false,
-          simulator: !isRealDevice
+          deprecated: false
         }
       }).then(device => {
         if (device) {
@@ -131,7 +131,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Device.update(
         {
-          deleted: true
+          deprecated: true
         },
         {
           where: {
@@ -151,10 +151,10 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (id) {
         Device.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "deleted", "os"],
+          attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
           where: {
             id: id,
-            simulator: !isRealDevice
+            deprecated: false
           },
           include: [
             {
@@ -171,6 +171,120 @@ module.exports = {
           }
         });
       }
+    });
+  },
+  setAsDeprecated: async function(id) {
+    return new Promise((resolve, reject) => {
+      Device.update(
+        {
+          deprecated: true,
+          updated_at: new Date()
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ).then(device => {
+        if (device) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  checkIfUsed: async function(id, project_id) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.findOne({
+        where: {
+          project_id: project_id,
+          device_id: id
+        }
+      }).then(device => {
+        if (device) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  checkIfUsedOnAnyProject: async function(id) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.count({
+        where: {
+          device_id: id
+        }
+      }).then(devices => {
+        if (devices > 0) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setIsUsed: async function(id, project_id, used) {
+    return new Promise((resolve, reject) => {
+      if (used === "true") {
+        var projectDeviceFields = {};
+        projectDeviceFields.project_id = project_id;
+        projectDeviceFields.device_id = id;
+        ProjectDevice.create(projectDeviceFields).then(device => {
+          if (device) {
+            resolve(device);
+          } else {
+            resolve(false);
+          }
+        });
+      } else {
+        ProjectDevice.destroy({
+          where: {
+            project_id: project_id,
+            device_id: id
+          }
+        }).then(device => {
+          if (device) {
+            resolve(device);
+          } else {
+            resolve(false);
+          }
+        });
+      }
+    });
+  },
+  removeFromProjects: async function(id) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.destroy({
+        where: {
+          device_id: id
+        }
+      }).then(device => {
+        if (device) {
+          resolve(device);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  updateProjectDevices: async function(id_old_device, new_device) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.update(
+        { device_id: new_device.id },
+        {
+          where: { device_id: id_old_device },
+          returning: true,
+          plain: true
+        }
+      ).then(device => {
+        if (device) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
     });
   }
 };

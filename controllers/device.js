@@ -5,7 +5,7 @@ const Op = Sequelize.Op;
 const DeviceService = require("../services/device");
 const OfficeService = require("../services/office");
 const UserService = require("../services/user");
-const OSService = require("../services/os");
+const ProjectService = require("../services/project");
 const validateGetDevices = require("../validation/device").validateGetDevices;
 const validateDeviceInput = require("../validation/device").validateDeviceInput;
 
@@ -23,9 +23,8 @@ module.exports = {
     }
 
     var whereStatement = {};
-    whereStatement.deleted = false;
-    whereStatement.simulator = req.query.simulator;
-    if (req.body.offices && req.query.simulator == "false") {
+    whereStatement.deprecated = false;
+    if (req.body.offices) {
       if (req.body.offices.length > 0) {
         whereStatement.office_id = {
           [Op.in]: req.body.offices
@@ -76,11 +75,9 @@ module.exports = {
       if (req.body.office_id) {
         deviceFields.office_id = req.body.office_id;
       }
-      deviceFields.simulator = false;
 
-      if (req.body.office_id) {
-        var office_exists = await OfficeService.checkIfOfficeExists(req.body.office_id);
-      }
+      var office_exists = await OfficeService.checkIfOfficeExists(req.body.office_id);
+
       if (!office_exists) {
         return res.status(400).json({ error: "Office doesn't exist" });
       }
@@ -102,7 +99,7 @@ module.exports = {
     if (isNaN(req.params.id)) {
       return res.status(400).json({ error: "Device id is not valid number" });
     } else {
-      const { errors, isValid } = validateDeviceInput(req.body);
+      const { errors, isValid } = validateDeviceInput(req.body, false);
       // Check Validation
       if (!isValid) {
         return res.status(400).json(errors);
@@ -137,31 +134,51 @@ module.exports = {
       }
 
       (async () => {
-        var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, true);
+        var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id);
         if (!deviceExists) {
           return res.status(404).json({ error: "Device doesn't exist" });
         }
 
-        var updatedDevice = await DeviceService.updateDevice(req.params.id, deviceFields);
-        var device = await DeviceService.returnCreatedOrUpdatedDevice(updatedDevice);
+        if (req.body.deprecated == true) {
+          var deprecateDevice = await DeviceService.setAsDeprecated(req.params.id);
+          if (deprecateDevice) {
+            var device_created = await DeviceService.createDevice(deviceFields);
+            var device = await DeviceService.returnCreatedOrUpdatedDevice(device_created);
+            var usedOnProjects = await DeviceService.checkIfUsedOnAnyProject(req.params.id);
+            if (usedOnProjects) {
+              await DeviceService.updateProjectDevices(req.params.id, device);
+            }
+          }
+        } else {
+          var updatedDevice = await DeviceService.updateDevice(req.params.id, deviceFields);
+          var device = await DeviceService.returnCreatedOrUpdatedDevice(updatedDevice);
+        }
         res.status(200).json(device);
       })();
     }
   },
-  deleteDevice: async function(req, res) {
+  setDeviceAsDeprecated: async function(req, res) {
     var canDeleteDevice = await UserService.canCreateUpdateDeleteDevice(req.user);
     if (!canDeleteDevice) {
       return res.status(403).json({ message: "Forbidden" });
     }
-    var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, true);
-    if (!deviceExists) {
-      return res.status(404).json({ error: "Device doesn't exist" });
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Device id is not valid number" });
     }
-    var deleteDevice = await DeviceService.deleteDevice(req.params.id);
-    if (deleteDevice) {
-      return res.status(200).json({ success: "Device removed successfully" });
+
+    var deviceExists = await DeviceService.getDeviceById(req.params.id);
+    if (!deviceExists) {
+      return res.status(400).json({ error: "Device doesn't exist" });
+    }
+    var deprecateDevice = await DeviceService.setAsDeprecated(req.params.id);
+    var usedOnProjects = await DeviceService.checkIfUsedOnAnyProject(req.params.id);
+    if (usedOnProjects) {
+      await DeviceService.removeFromProjects(req.params.id);
+    }
+    if (deprecateDevice) {
+      res.status(200).json({ success: "Device set as deprecated" });
     } else {
-      return res.status(500).json({ message: "Something went wrong" });
+      res.status(500).json({ error: "Something went wrong" });
     }
   },
   getDeviceById: async function(req, res) {
@@ -185,126 +202,56 @@ module.exports = {
       return res.status(500).json({ error: "Something went wrong" });
     }
   },
-  createSimulator: async function(req, res) {
-    (async () => {
-      var canCreateSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
-      if (!canCreateSimulator) {
-        return res.status(403).json({ message: "Forbidden" });
-      }
-      const { errors, isValid } = validateDeviceInput(req.body, false);
-
-      // Check Validation
-      if (!isValid) {
-        return res.status(400).json(errors);
-      }
-      var deviceFields = {};
-      deviceFields.title = req.body.title;
-      if (req.body.resolution) {
-        deviceFields.resolution = req.body.resolution;
-      }
-      deviceFields.os = req.body.os;
-
-      if (req.body.dpi) {
-        deviceFields.dpi = req.body.dpi;
-      }
-      if (req.body.udid) {
-        deviceFields.udid = req.body.udid;
-      }
-      if (req.body.screen_size) {
-        deviceFields.screen_size = req.body.screen_size;
-      }
-      deviceFields.retina = req.body.retina;
-
-      deviceFields.simulator = true;
-
-      var created_device = await DeviceService.createDevice(deviceFields);
-      if (created_device) {
-        var device = await DeviceService.returnCreatedOrUpdatedDevice(created_device);
-        res.json(device);
-      } else {
-        res.status(500).json({ error: "An error occured while creating simulator" });
-      }
-    })();
-  },
-  updateSimulator: async function(req, res) {
-    var canUpdateSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
-    if (!canUpdateSimulator) {
+  setDeviceIsUsed: async function(req, res) {
+    var canSetDeviceIsUsed = await UserService.canCreateUpdateDeleteDevice(req.user);
+    if (!canSetDeviceIsUsed) {
       return res.status(403).json({ message: "Forbidden" });
     }
     if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "Simulator id is not valid number" });
+      return res.status(400).json({ error: "Device id is not valid number" });
+    }
+    if (!req.query.project_id) {
+      return res.status(400).json({ error: "Project id is required" });
     } else {
-      const { errors, isValid } = validateDeviceInput(req.body, false);
-      // Check Validation
-      if (!isValid) {
-        return res.status(400).json(errors);
+      if (isNaN(req.query.project_id)) {
+        return res.status(400).json({ error: "Project id is not valid number" });
       }
-
-      var deviceFields = {};
-      deviceFields.title = req.body.title;
-      if (req.body.resolution) {
-        deviceFields.resolution = req.body.resolution;
-      }
-      if (req.body.dpi) {
-        deviceFields.dpi = req.body.dpi;
-      }
-      deviceFields.os = req.body.os;
-
-      if (req.body.udid) {
-        deviceFields.udid = req.body.udid;
-      }
-      if (req.body.screen_size) {
-        deviceFields.screen_size = req.body.screen_size;
-      }
-      deviceFields.retina = req.body.retina;
-
-      (async () => {
-        var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, false);
-        if (!deviceExists) {
-          return res.status(403).json({ error: "Simulator doesn't exist" });
-        }
-
-        var updatedDevice = await DeviceService.updateDevice(req.params.id, deviceFields);
-        var device = await DeviceService.returnCreatedOrUpdatedDevice(updatedDevice);
-        res.status(200).json(device);
-      })();
-    }
-  },
-  getSimulatorById: async function(req, res) {
-    var canGetSimulator = await UserService.canGetDeviceAndSimulator(req.user);
-    if (!canGetSimulator) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "Simulator id is not valid number" });
     }
     if (req.params.id) {
-      var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, false);
+      var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, true);
       if (!deviceExists) {
-        return res.status(404).json({ error: "Simulator doesn't exist" });
+        return res.status(404).json({ error: "Device doesn't exist" });
       }
     }
-    var device = await DeviceService.getDeviceById(req.params.id, false);
-    if (device) {
-      return res.status(200).json(device);
+    if (req.query.project_id) {
+      var projectExists = await ProjectService.checkIfProjectExist(req.query.project_id);
+      if (!projectExists) {
+        return res.status(404).json({ error: "Project doesn't exist" });
+      }
+    }
+    if (req.query.used !== "true" && req.query.used !== "false") {
+      return res.status(400).json({ error: "Parameter 'used' must have a true or false value" });
+    }
+
+    var used = await DeviceService.checkIfUsed(req.params.id, req.query.project_id);
+
+    if ((used && req.query.used === "false") || (!used && req.query.used === "true")) {
+      device_used = await DeviceService.setIsUsed(req.params.id, req.query.project_id, req.query.used);
+      if (device_used) {
+        if (req.query.used === "true") {
+          res.status(200).json({ success: "Device set as used on project" });
+        } else {
+          res.status(200).json({ success: "Device set as not used on project" });
+        }
+      } else {
+        res.status(500).json({ error: "Something went wrong" });
+      }
     } else {
-      return res.status(500).json({ error: "Something went wrong" });
-    }
-  },
-  deleteSimulator: async function(req, res) {
-    var canDeleteSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
-    if (!canDeleteSimulator) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    var deviceExists = await DeviceService.checkIfDeviceExistById(req.params.id, false);
-    if (!deviceExists) {
-      return res.status(404).json({ error: "Simulator doesn't exist" });
-    }
-    var deleteDevice = await DeviceService.deleteDevice(req.params.id);
-    if (deleteDevice) {
-      return res.status(200).json({ success: "Simulator removed successfully" });
-    } else {
-      return res.status(500).json({ message: "Something went wrong" });
+      if (req.query.used === "true") {
+        res.status(200).json({ success: "Device has already been set as used on project" });
+      } else {
+        res.status(200).json({ success: "Device has already been set as not used on project" });
+      }
     }
   }
 };

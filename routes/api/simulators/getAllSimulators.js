@@ -1,12 +1,12 @@
 const Router = require("express").Router;
 const passport = require("passport");
-const DeviceController = require("../../../controllers/device");
+const SimulatorController = require("../../../controllers/simulator");
 
-// @route GET api/devices/simulator/:id
-// @desc Get device by id
+// @route GET api/simulators
+// @desc all devices route
 // @access public
 module.exports = Router({ mergeParams: true }).get(
-  "/devices/simulator/:id",
+  "/simulators",
   passport.authenticate("jwt", { session: false }),
-  DeviceController.getSimulatorById
+  SimulatorController.getSimulators
 );
