@@ -11,28 +11,28 @@ const validateEnvironmentInput = require("../validation/environment").validateEn
 
 module.exports = {
   getAllEnvironments: async function(req, res) {
-    const { errors, isValid } = validateGetEnvironments(req.query, req.body);
+    const { errors, isValid } = validateGetEnvironments(req.query);
     // Check Validation
     if (!isValid) {
       return res.status(400).json(errors);
     }
-    var project_exists = await ProjectService.checkIfProjectExist(req.body.project_id);
+    var project_exists = await ProjectService.checkIfProjectExist(req.query.project_id);
     if (!project_exists) {
       return res.status(404).json({ error: "Project doesn't exist" });
     }
 
-    var canGetEnvironments = await UserService.canGetEnvironments(req.user, req.body.project_id);
+    var canGetEnvironments = await UserService.canGetEnvironments(req.user, req.query.project_id);
     if (!canGetEnvironments) {
       return res.status(403).json({ message: "Forbidden" });
     }
     if (req.query.page >= 0 && req.query.page_size) {
       var environments = await EnvironmentService.getAllEnvironmentsPaginated(
-        req.body.project_id,
+        req.query.project_id,
         req.query.page,
         req.query.page_size
       );
     } else {
-      var environments = await EnvironmentService.getAllEnvironments(req.body.project_id);
+      var environments = await EnvironmentService.getAllEnvironments(req.query.project_id);
     }
     if (environments) {
       return res.status(200).json(environments);
