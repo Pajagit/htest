@@ -29,7 +29,9 @@ module.exports = {
     var whereStatement = {};
     whereStatement.deprecated = false;
 
-    whereStatement.emulator = req.body.emulator;
+    if (typeof req.body.emulator === "boolean") {
+      whereStatement.emulator = req.body.emulator;
+    }
     whereStatement.deprecated = false;
 
     whereStatement.project_id = req.body.project_id;
