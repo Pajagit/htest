@@ -70,6 +70,7 @@ class EditSimulator extends Component {
         update.resolution = simulator.resolution ? simulator.resolution : "";
         update.dpi = simulator.dpi ? simulator.dpi : "";
         update.udid = simulator.udid ? simulator.udid : "";
+        update.emulator = simulator.emulator;
         update.retina = simulator.retina;
         update.screen_size = simulator.screen_size ? simulator.screen_size : "";
         update.os = { id: simulator.os, title: simulator.os };
@@ -116,10 +117,9 @@ class EditSimulator extends Component {
     simulatorData.udid = this.state.udid;
     simulatorData.retina = this.state.retina;
     simulatorData.screen_size = this.state.screen_size;
-    simulatorData.simulator = false;
     simulatorData.office_id = this.state.office ? this.state.office.id : null;
     simulatorData.os = this.state.os.title;
-    simulatorData.simulator = true;
+    simulatorData.emulator = this.state.emulator;
 
     const { errors } = SimulatorValidation(simulatorData);
     this.setState({ errors });
@@ -138,7 +138,7 @@ class EditSimulator extends Component {
     simulatorData.retina = this.state.retina;
     simulatorData.screen_size = this.state.screen_size;
     simulatorData.os = this.state.os.title;
-    simulatorData.simulator = true;
+    simulatorData.emulator = this.state.emulator;
     simulatorData.deprecated = false;
     const { errors, isValid } = SimulatorValidation(simulatorData);
     if (isValid) {
@@ -258,6 +258,13 @@ class EditSimulator extends Component {
               value={this.state.retina}
               onClick={e => this.setState({ retina: !this.state.retina })}
               name={"retina"}
+            />
+            <br />
+            <Switch
+              label={"Emulator"}
+              value={this.state.emulator}
+              onClick={e => this.setState({ emulator: !this.state.emulator })}
+              name={"emulator"}
             />
             <div className="flex-column-left mt-4">
               <Btn

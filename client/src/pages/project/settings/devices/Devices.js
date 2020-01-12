@@ -92,7 +92,7 @@ class Devices extends Component {
   changeIsUsed(id, used) {
     function changeDesc(id, used, callback) {
       for (var i in newArray) {
-        if (newArray[i].id == id) {
+        if (newArray[i].id === id) {
           newArray[i].used = used;
           break;
         }

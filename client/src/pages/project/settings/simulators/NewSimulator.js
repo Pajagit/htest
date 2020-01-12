@@ -33,6 +33,7 @@ class NewSimulator extends Component {
       office: null,
       dpi: "",
       os: [],
+      emulator: false,
       screen_size: "",
       udid: "",
       retina: false,
@@ -92,7 +93,7 @@ class NewSimulator extends Component {
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
-    deviceData.simulator = false;
+    deviceData.emulator = this.state.emulator;
     deviceData.os = this.state.os.title;
     deviceData.office_id = this.state.office ? this.state.office.id : null;
 
@@ -113,8 +114,9 @@ class NewSimulator extends Component {
     deviceData.udid = this.state.udid;
     deviceData.retina = this.state.retina;
     deviceData.screen_size = this.state.screen_size;
-    deviceData.simulator = true;
+    deviceData.emulator = this.state.emulator;
     deviceData.os = this.state.os.title;
+    deviceData.project_id = this.props.match.params.projectId;
 
     const { errors, isValid } = SimulatorValidation(deviceData);
 
@@ -211,6 +213,13 @@ class NewSimulator extends Component {
                 value={this.state.retina}
                 onClick={e => this.setState({ retina: !this.state.retina })}
                 name={"retina"}
+              />
+              <br />
+              <Switch
+                label={"Emulator"}
+                value={this.state.emulator}
+                onClick={e => this.setState({ emulator: !this.state.emulator })}
+                name={"emulator"}
               />
               <div className="flex-column-left mt-4">
                 <Btn
