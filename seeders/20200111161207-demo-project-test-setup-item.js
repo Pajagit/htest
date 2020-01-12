@@ -6,11 +6,11 @@ module.exports = {
       "projecttestsetupitems",
       [
         {
-          project_id: 7,
+          project_id: 1,
           testsetupitem_id: 1
         },
         {
-          project_id: 7,
+          project_id: 1,
           testsetupitem_id: 2
         }
       ],

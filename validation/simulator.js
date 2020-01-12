@@ -1,7 +1,7 @@
 const isEmpty = require("./is-empty");
 
 module.exports = {
-  validateGetSimulator: function(data) {
+  validateGetSimulator: function(data, dataBody) {
     var errors = {};
 
     if (!isEmpty(data.page) && isNaN(data.page)) {
@@ -12,10 +12,16 @@ module.exports = {
       errors.page_size = "Page size is not a valid number";
     }
 
-    if (typeof data.emulator === "string") {
-      if (data.emulator !== "true" && data.emulator !== "false") {
-        errors.emulator = "Parameter 'emulator' must have a true or false value";
+    if (isEmpty(dataBody.project_id)) {
+      errors.project_id = "Project id is a required field";
+    } else {
+      if (isNaN(dataBody.project_id)) {
+        errors.project_id = "Project id is not valid number";
       }
+    }
+
+    if (dataBody.emulator !== true && dataBody.emulator !== false) {
+      errors.emulator = "Parameter 'emulator' must have a true or false value";
     }
 
     return {
@@ -38,11 +44,13 @@ module.exports = {
     data.retina = data.retina;
     data.emulator = data.emulator;
 
-    if (!createSimulator) {
-      if (typeof data.deprecated === "boolean") {
-        data.deprecated = data.deprecated;
+    if (createSimulator) {
+      if (isEmpty(data.project_id)) {
+        errors.project_id = "Project id is a required field";
       } else {
-        errors.deprecated = "Deprecated is required";
+        if (isNaN(data.project_id)) {
+          errors.project_id = "Project id is not valid number";
+        }
       }
     }
 
@@ -77,10 +85,8 @@ module.exports = {
       }
     }
 
-    if (typeof data.emulator === "string") {
-      if (data.emulator !== "true" && data.emulator !== "false") {
-        errors.emulator = "Parameter 'emulator' must have a true or false value";
-      }
+    if (data.emulator !== true && data.emulator !== false) {
+      errors.emulator = "Parameter 'emulator' must have a true or false value";
     }
 
     return {

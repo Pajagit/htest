@@ -14,18 +14,25 @@ module.exports = {
     if (!canGetSimulator) {
       return res.status(403).json({ message: "Forbidden" });
     }
-    const { errors, isValid } = validateGetSimulator(req.query);
+    const { errors, isValid } = validateGetSimulator(req.query, req.body);
 
     // Check Validation
     if (!isValid) {
       return res.status(400).json(errors);
     }
 
+    var project_exists = await ProjectService.checkIfProjectExist(req.body.project_id);
+    if (!project_exists) {
+      return res.status(404).json({ error: "Project doesn't exist" });
+    }
+
     var whereStatement = {};
     whereStatement.deprecated = false;
-    if (typeof req.query.emulator === "string") {
-      whereStatement.emulator = req.query.emulator;
-    }
+
+    whereStatement.emulator = req.body.emulator;
+    whereStatement.deprecated = false;
+
+    whereStatement.project_id = req.body.project_id;
     if (req.query.page >= 0 && req.query.page_size) {
       var simulators = await SimulatorService.getSimulatorsPaginated(
         whereStatement,
@@ -69,7 +76,7 @@ module.exports = {
       simulatorFields.retina = req.body.retina;
       simulatorFields.os = req.body.os;
 
-      if (typeof req.body.emulator === "string") {
+      if (typeof req.body.emulator === "boolean") {
         simulatorFields.emulator = req.body.emulator;
       }
       (async () => {
@@ -110,10 +117,7 @@ module.exports = {
       return res.status(400).json({ error: "Simulator doesn't exist" });
     }
     var deprecateSimulator = await SimulatorService.setAsDeprecated(req.params.id);
-    var usedOnProjects = await SimulatorService.checkIfUsedOnAnyProject(req.params.id);
-    if (usedOnProjects) {
-      await SimulatorService.removeFromProjects(req.params.id);
-    }
+
     if (deprecateSimulator) {
       res.status(200).json({ success: "Simulator set as deprecated" });
     } else {
@@ -133,7 +137,15 @@ module.exports = {
       if (!isValid) {
         return res.status(400).json(errors);
       }
+
+      var project_exists = await ProjectService.checkIfProjectExist(req.body.project_id);
+      if (!project_exists) {
+        return res.status(404).json({ error: "Project doesn't exist" });
+      }
+
       var simulatorFields = {};
+      simulatorFields.project_id = req.body.project_id;
+
       simulatorFields.title = req.body.title;
       if (req.body.resolution) {
         simulatorFields.resolution = req.body.resolution;
@@ -148,8 +160,12 @@ module.exports = {
       }
       simulatorFields.retina = req.body.retina;
 
-      if (typeof req.body.emulator === "string") {
+      if (typeof req.body.emulator === "boolean") {
         simulatorFields.emulator = req.body.emulator;
+      }
+
+      if (typeof req.body.used === "boolean") {
+        simulatorFields.used = req.body.used;
       }
 
       var created_simulator = await SimulatorService.createSimulator(simulatorFields);

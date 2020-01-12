@@ -12,7 +12,7 @@ module.exports = {
   getSimulatorsPaginated: async function(whereStatement, page, pageSize) {
     return new Promise((resolve, reject) => {
       Simulator.findAndCountAll({
-        attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os"],
+        attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os", "used"],
         where: whereStatement,
         ...paginate({ page, pageSize }),
         order: [["title", "ASC"]]
@@ -59,7 +59,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (createdOrUpdatedSimulator) {
         Simulator.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os"],
+          attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os", "used", "emulator"],
           where: {
             id: createdOrUpdatedSimulator.id
           }
@@ -109,7 +109,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (id) {
         Simulator.findOne({
-          attributes: ["id", "title", "resolution", "dpi", "emulator", "screen_size", "retina", "os"],
+          attributes: ["id", "title", "resolution", "dpi", "emulator", "screen_size", "retina", "os", "used"],
           where: {
             id: id,
             deprecated: false
@@ -129,6 +129,7 @@ module.exports = {
       Simulator.update(
         {
           deprecated: true,
+          used: false,
           updated_at: new Date()
         },
         {
