@@ -83,24 +83,24 @@ class Environments extends Component {
           onClick={e => this.setUsed(environment)}
         />
       ));
-      content = <div className="testcase-grid testcase-container">{environmentsContainer}</div>;
+      content = <div className='testcase-grid testcase-container'>{environmentsContainer}</div>;
     } else if (isEmpty(environments && environments.environments)) {
-      content = <div className="testcase-container-no-content">There are no environments added yet</div>;
+      content = <div className='testcase-container-no-content'>There are no environments added yet</div>;
     }
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className="main-content main-content-grid">
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fab fa-dev"></i>}
+            icon={<i className='fab fa-dev'></i>}
             title={"Environments"}
             history={this.props}
             canGoBack={false}
             addBtn={
               <BtnAnchor
                 type={"text"}
-                label="Add Environment"
+                label='Add Environment'
                 disabled={true}
                 className={"a-btn a-btn-primary"}
                 link={`/${this.state.projectId}/NewEnvironment`}
@@ -125,7 +125,4 @@ const mapStateToProps = state => ({
   environments: state.environments
 });
 
-export default connect(
-  mapStateToProps,
-  { getEnvironments, usedEnvironment }
-)(withRouter(Environments));
+export default connect(mapStateToProps, { getEnvironments, usedEnvironment })(withRouter(Environments));
