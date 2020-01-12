@@ -8,6 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      project_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: "projects", key: "id" }
+      },
       title: {
         type: Sequelize.STRING,
         allowNull: false
@@ -54,6 +59,11 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
+      },
+      used: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       }
     });
   },

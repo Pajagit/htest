@@ -7,15 +7,18 @@ module.exports = {
       [
         {
           title: "iPhone 8",
-          retina: true
+          retina: true,
+          project_id: 1
         },
         {
           title: "iPhone 7",
-          retina: true
+          retina: true,
+          project_id: 1
         },
         {
           title: "Huawei P9",
-          retina: true
+          retina: true,
+          project_id: 1
         }
       ],
       {}
