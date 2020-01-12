@@ -77,6 +77,7 @@ class Simulators extends Component {
           projectId={this.props.match.params.projectId}
           isUsed={simulator.used}
           changeIsUsed={e => this.changeIsUsed(simulator.id, !simulator.used)}
+          emulator={simulator.emulator}
         />
       ));
       content = <div className="testcase-grid testcase-container">{simulatorContainer}</div>;

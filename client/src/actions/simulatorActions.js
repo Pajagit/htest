@@ -8,7 +8,6 @@ export const getSimulators = (project_id, pageSent, pageSizeSent) => dispatch =>
   var page = pageSent === undefined ? 1 : pageSent;
   var size = pageSizeSent === undefined ? 100 : pageSizeSent;
   var data = {};
-  data.emulator = false;
   if (project_id) {
     data.project_id = project_id
   }
