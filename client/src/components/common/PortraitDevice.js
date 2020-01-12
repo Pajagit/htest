@@ -3,15 +3,28 @@ import Checkbox from "./Checkbox";
 import Tag from "./Tag";
 import { Link } from "react-router-dom";
 
-function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId, os, isUsed, changeIsUsed }) {
+function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, retina, screen_size, projectId, os, isUsed, changeIsUsed, emulator }) {
   var link = "";
   var udidValue = "";
+  var emulatorValue = "";
   if (simulator) {
     link = (
       <Link to={`/${projectId}/EditSimulator/${id}`}>
         <i className="fas fa-pen"></i>
       </Link>
     );
+
+    if (emulator) {
+      var value = "Emulator";
+    } else {
+      value = "Simulator";
+    }
+    emulatorValue = (
+      <div className="portrait-device-bottom-container--item">
+        <div className="portrait-device-bottom-container--item-title">Emulator/Simulator:</div>
+        <div className="portrait-device-bottom-container--item-value"> {value}</div>
+      </div>
+    )
   } else {
     udidValue = (
       <div className="portrait-device-bottom-container--item">
@@ -53,6 +66,7 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
 
       <div className="portrait-device-bottom">
         <div className="portrait-device-bottom-container">
+          {emulatorValue}
           <div className="portrait-device-bottom-container--item">
             <div className="portrait-device-bottom-container--item-title"> Resolution: </div>
             <div className="portrait-device-bottom-container--item-value">{resolution}</div>
@@ -78,6 +92,7 @@ function PortraitDevice({ title, udid, resolution, office, dpi, id, simulator, r
             <div className="portrait-device-bottom-container--item-title"></div>
             <div className="portrait-device-bottom-container--item-value"></div>
           </div>
+
           <div className="portrait-device-bottom-container--button">
             <Checkbox label={"Used on project"} value={isUsed} onClick={changeIsUsed} />
           </div>
