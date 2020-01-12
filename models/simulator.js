@@ -11,6 +11,18 @@ const Simulator = sequelize.define(
       primaryKey: true,
       type: Sequelize.INTEGER
     },
+    project_id: {
+      type: Sequelize.INTEGER,
+      required: true,
+      foreignKey: true,
+      references: {
+        model: "projects",
+        key: "id"
+      }
+    },
+    used: {
+      type: Sequelize.BOOLEAN
+    },
     title: {
       type: Sequelize.STRING,
       require: true
