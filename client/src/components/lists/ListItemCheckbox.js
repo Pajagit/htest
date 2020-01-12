@@ -1,7 +1,7 @@
 import React from "react";
 import Checkbox from "../common/Checkbox";
 
-function ListItemCheckbox({ title, checkboxText }) {
+function ListItemCheckbox({ title, checkboxText, value, onClick }) {
   var content = "";
 
   content = (
@@ -10,7 +10,7 @@ function ListItemCheckbox({ title, checkboxText }) {
         <div className='list-item--text--title'>{title}</div>
       </div>
       <div className='list-item--checkbox'>
-        <Checkbox label={checkboxText} />
+        <Checkbox label={checkboxText} value={value} onClick={onClick} />
       </div>
     </div>
   );
