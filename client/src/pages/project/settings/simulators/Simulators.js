@@ -50,7 +50,7 @@ class Simulators extends Component {
   }
   changeIsUsed(id, used) {
     this.props.simulatorIsUsed(id, used, this.props.match.params.projectId, () => {
-      this.props.getSimulators();
+      this.props.getSimulators(this.props.match.params.projectId);
     });
   }
   render() {
