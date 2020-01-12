@@ -26,6 +26,7 @@ class Devices extends Component {
       office: [],
       officesFormatted: [],
       deviceType: false,
+      devices: null,
       user: this.props.auth.user,
       errors: {}
     };
@@ -62,6 +63,17 @@ class Devices extends Component {
         update.officesFormatted = offices;
       }
     }
+
+    if (nextProps.devices && nextProps.devices.devices) {
+      if (nextProps.devices.devices !== prevState.devices) {
+        update.devices = nextProps.devices.devices;
+
+        var devices = nextProps.devices.devices;
+
+        update.devices = devices.devices;
+      }
+    }
+
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
@@ -76,21 +88,40 @@ class Devices extends Component {
       this.props.getDevices(officesIds, this.props.match.params.projectId);
     });
   }
+
   changeIsUsed(id, used) {
+    function changeDesc(id, used, callback) {
+      for (var i in newArray) {
+        if (newArray[i].id == id) {
+          newArray[i].used = used;
+          break;
+        }
+      }
+      callback();
+    }
+
+    var newArray = this.state.devices;
     this.props.deviceIsUsed(id, used, this.props.match.params.projectId, () => {
-      var officesIds = getIdsFromObjArray(this.state.office);
-      this.props.getDevices(officesIds, this.props.match.params.projectId);
-    });
+      changeDesc(id, used, () => {
+
+        this.setState({ devices: newArray })
+      });
+    })
   }
   render() {
-    var { devices, loading } = this.props.devices;
+    var { loading } = this.props.devices;
+
+    var devices = [];
+    if (this.state.devices) {
+      devices = this.state.devices;
+    }
     var content;
     var deviceContainer;
 
     if (devices === null || loading) {
       content = <Spinner />;
-    } else if (!isEmpty(devices.devices)) {
-      deviceContainer = devices.devices.map((device, index) => (
+    } else if (!isEmpty(devices)) {
+      deviceContainer = devices.map((device, index) => (
         <PortraitDevice
           key={index}
           title={device.title}
