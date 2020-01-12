@@ -19,9 +19,10 @@ module.exports = {
         errors.project_id = "Project id is not valid number";
       }
     }
-
-    if (dataBody.emulator !== true && dataBody.emulator !== false) {
-      errors.emulator = "Parameter 'emulator' must have a true or false value";
+    if (typeof dataBody.emulator === "boolean") {
+      if (dataBody.emulator !== true && dataBody.emulator !== false) {
+        errors.emulator = "Parameter 'emulator' must have a true or false value";
+      }
     }
 
     return {

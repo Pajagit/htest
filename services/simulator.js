@@ -12,7 +12,7 @@ module.exports = {
   getSimulatorsPaginated: async function(whereStatement, page, pageSize) {
     return new Promise((resolve, reject) => {
       Simulator.findAndCountAll({
-        attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os", "used"],
+        attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os", "used", "emulator"],
         where: whereStatement,
         ...paginate({ page, pageSize }),
         order: [["title", "ASC"]]
