@@ -7,8 +7,13 @@ export const getSimulators = (project_id, pageSent, pageSizeSent) => dispatch =>
   dispatch(simulatorLoading());
   var page = pageSent === undefined ? 1 : pageSent;
   var size = pageSizeSent === undefined ? 100 : pageSizeSent;
+  var data = {};
+  data.emulator = false;
+  if (project_id) {
+    data.project_id = project_id
+  }
   axios
-    .post(`/api/simulators?page=${page}&page_size=${size}`)
+    .post(`/api/simulators?page=${page}&page_size=${size}`, data)
     .then(res =>
       dispatch({
         type: GET_SIMULATORS,
