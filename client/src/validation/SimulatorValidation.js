@@ -48,13 +48,6 @@ const SimulatorValidation = data => {
     }
   }
 
-  if (isEmpty(data.simulator)) {
-    errors.simulator = "Simulator is required";
-  } else {
-    if (typeof data.simulator !== "boolean") {
-      errors.simulator = "Parameter 'simulator' must have a true or false value";
-    }
-  }
   if (isEmpty(data.os)) {
     errors.os = "Operation System is required";
   }

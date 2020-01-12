@@ -3,16 +3,23 @@ import axios from "axios";
 import { GET_DEVICES, GET_DEVICE, DEVICE_LOADING, GET_ERRORS, CLEAR_DEVICES } from "./types";
 
 // Get All Devices
-export const getDevices = (offices, pageSent, pageSizeSent, simulator) => dispatch => {
+export const getDevices = (offices, project_id, pageSent, pageSizeSent) => dispatch => {
+
   dispatch(deviceLoading());
   var page = pageSent === undefined ? 1 : pageSent;
   var size = pageSizeSent === undefined ? 100 : pageSizeSent;
-  var isSimulator = false;
-  if (simulator) {
-    isSimulator = true;
+  var data = {};
+  if (offices) {
+    data.offices = offices;
   }
+
+  if (project_id) {
+    data.project_id = project_id
+  }
+
+
   axios
-    .post(`/api/devices?page=${page}&page_size=${size}&simulator=${isSimulator}`, offices)
+    .post(`/api/devices?page=${page}&page_size=${size}`, data)
     .then(res =>
       dispatch({
         type: GET_DEVICES,
@@ -77,7 +84,20 @@ export const editDevice = (device_id, deviceData, callback) => dispatch => {
 // Remove Device by device_id
 export const removeDevice = (device_id, callback) => dispatch => {
   axios
-    .delete(`/api/devices/device/${device_id}`)
+    .put(`/api/devices/device/${device_id}/deprecated`)
+    .then(res => callback(res))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Set device as used/not used on project
+export const deviceIsUsed = (device_id, is_used, project_id, callback) => dispatch => {
+  axios
+    .put(`/api/devices/device/${device_id}/isused?used=${is_used}&project_id=${project_id}`)
     .then(res => callback(res))
     .catch(err =>
       dispatch({

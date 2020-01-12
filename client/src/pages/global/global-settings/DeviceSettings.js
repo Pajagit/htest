@@ -84,7 +84,7 @@ class DeviceSettings extends Component {
           link={`/EditDevice/${device.id}`}
           list={`${device.retina ? "Retina" : ""}${" "} ${device.screen_size ? device.screen_size : " "}${" "} ${
             device.resolution ? device.resolution : " "
-          }${" "} ${device.dpi ? "ppi: " + device.dpi : " "} ${" "}${device.udid ? "udid: " + device.udid : " "}`}
+            }${" "} ${device.dpi ? "ppi: " + device.dpi : " "} ${" "}${device.udid ? "udid: " + device.udid : " "}`}
         />
       ));
     } else if (isEmpty(devices.devices) && isEmpty(this.state.office)) {
