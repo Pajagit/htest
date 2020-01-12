@@ -162,33 +162,37 @@ module.exports = {
       });
     });
   },
-  setIsUsed: async function(id, project_id, used) {
+  getSimulatorProject: async function(id) {
     return new Promise((resolve, reject) => {
-      if (used === "true") {
-        var projectSimulatorFields = {};
-        projectSimulatorFields.project_id = project_id;
-        projectSimulatorFields.simulator_id = id;
-        ProjectSimulator.create(projectSimulatorFields).then(simulator => {
-          if (simulator) {
-            resolve(simulator);
-          } else {
-            resolve(false);
-          }
-        });
-      } else {
-        ProjectSimulator.destroy({
-          where: {
-            project_id: project_id,
-            simulator_id: id
-          }
-        }).then(simulator => {
-          if (simulator) {
-            resolve(simulator);
-          } else {
-            resolve(false);
-          }
-        });
-      }
+      Simulator.findOne({
+        attributes: ["project_id"],
+        where: {
+          id: id
+        }
+      }).then(simulator => {
+        if (simulator) {
+          resolve(simulator);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setAsUsed: async function(id, used) {
+    return new Promise((resolve, reject) => {
+      var simulatorFields = {};
+      simulatorFields.used = used;
+      Simulator.update(simulatorFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(simulator => {
+        if (simulator[1]) {
+          resolve(simulator[1]);
+        } else {
+          resolve(false);
+        }
+      });
     });
   },
   checkIfUsedOnAnyProject: async function(id) {
