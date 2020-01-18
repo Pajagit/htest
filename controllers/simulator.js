@@ -51,10 +51,6 @@ module.exports = {
     }
   },
   updateSimulator: async function(req, res) {
-    var canUpdateSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
-    if (!canUpdateSimulator) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
     if (isNaN(req.params.id)) {
       return res.status(400).json({ error: "Simulator id is not valid number" });
     } else {
@@ -62,6 +58,12 @@ module.exports = {
       // Check Validation
       if (!isValid) {
         return res.status(400).json(errors);
+      }
+
+      var simulatorProject = await SimulatorService.getSimulatorProject(req.params.id);
+      var canUpdateSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user, simulatorProject.project_id);
+      if (!canUpdateSimulator) {
+        return res.status(403).json({ message: "Forbidden" });
       }
 
       var simulatorFields = {};
@@ -87,26 +89,16 @@ module.exports = {
           return res.status(404).json({ error: "Simulator doesn't exist" });
         }
 
-        if (req.body.deprecated == true) {
-          var deprecateSimulator = await SimulatorService.setAsDeprecated(req.params.id);
-          if (deprecateSimulator) {
-            var simulator_created = await SimulatorService.createSimulator(simulatorFields);
-            var simulator = await SimulatorService.returnCreatedOrUpdatedSimulator(simulator_created);
-            var usedOnProjects = await SimulatorService.checkIfUsedOnAnyProject(req.params.id);
-            if (usedOnProjects) {
-              await SimulatorService.updateProjectSimulators(req.params.id, simulator);
-            }
-          }
-        } else {
-          var updatedSimulator = await SimulatorService.updateSimulator(req.params.id, simulatorFields);
-          var simulator = await SimulatorService.returnCreatedOrUpdatedSimulator(updatedSimulator);
-        }
+        var updatedSimulator = await SimulatorService.updateSimulator(req.params.id, simulatorFields);
+        var simulator = await SimulatorService.returnCreatedOrUpdatedSimulator(updatedSimulator);
+
         res.status(200).json(simulator);
       })();
     }
   },
   setSimulatorAsDeprecated: async function(req, res) {
-    var canDeleteSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
+    var simulatorProject = await SimulatorService.getSimulatorProject(req.params.id);
+    var canDeleteSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user, simulatorProject.project_id);
     if (!canDeleteSimulator) {
       return res.status(403).json({ message: "Forbidden" });
     }
@@ -129,10 +121,6 @@ module.exports = {
 
   createSimulator: async function(req, res) {
     (async () => {
-      var canCreateSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user);
-      if (!canCreateSimulator) {
-        return res.status(403).json({ message: "Forbidden" });
-      }
       const { errors, isValid } = validateSimulatorInput(req.body, true);
 
       // Check Validation
@@ -143,6 +131,11 @@ module.exports = {
       var project_exists = await ProjectService.checkIfProjectExist(req.body.project_id);
       if (!project_exists) {
         return res.status(404).json({ error: "Project doesn't exist" });
+      }
+
+      var canCreateSimulator = await UserService.canCreateUpdateDeleteSimulator(req.user, req.body.project_id);
+      if (!canCreateSimulator) {
+        return res.status(403).json({ message: "Forbidden" });
       }
 
       var simulatorFields = {};

@@ -22,8 +22,8 @@ module.exports = {
       return res.status(404).json({ error: "Project doesn't exist" });
     }
 
-    var canEditTestSetup = await UserService.canEditTestSetup(req.user);
-    if (!canEditTestSetup) {
+    var canGetTestSetup = await UserService.canGetTestSetup(req.user, req.query.project_id);
+    if (!canGetTestSetup) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
@@ -52,7 +52,7 @@ module.exports = {
       return res.status(404).json({ error: "Test setup item doesn't exist" });
     }
 
-    var canEditTestSetup = await UserService.canEditTestSetup(req.user);
+    var canEditTestSetup = await UserService.canEditTestSetup(req.user, req.query.project_id);
     if (!canEditTestSetup) {
       return res.status(403).json({ message: "Forbidden" });
     }
