@@ -691,7 +691,7 @@ module.exports = {
       }
     });
   },
-  canCreateUpdateDeleteSimulator: async function(user) {
+  canCreateUpdateDeleteSimulator: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator"];
 
@@ -700,7 +700,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role.title)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -788,7 +788,7 @@ module.exports = {
       }
     });
   },
-  canCreateEditBrowsers: async function(user) {
+  canCreateEditBrowsers: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator"];
 
@@ -797,7 +797,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role.title)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -830,7 +830,7 @@ module.exports = {
       }
     });
   },
-  canCreateEditVersions: async function(user) {
+  canCreateEditVersions: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator"];
 
@@ -839,7 +839,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role.title)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -872,7 +872,7 @@ module.exports = {
       }
     });
   },
-  canCreateEditEnvironments: async function(user) {
+  canCreateEditEnvironments: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator"];
 
@@ -881,7 +881,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role.title)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -894,7 +894,7 @@ module.exports = {
     });
   },
 
-  canEditTestSetup: async function(user) {
+  canEditTestSetup: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator"];
 
@@ -903,7 +903,28 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role.title)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
+            allowed = true;
+          }
+        });
+      }
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  },
+  canGetTestSetup: async function(user, projectId) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
+
+      var allowed = false;
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
