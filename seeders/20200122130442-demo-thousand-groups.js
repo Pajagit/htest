@@ -14,7 +14,7 @@ module.exports = {
       pinned: false,
       project_id: 1,
       user_id: 1,
-      color_id: 55
+      color_id: 25
     });
     return queryInterface.bulkInsert("groups", fakeTestCases, {});
   },
