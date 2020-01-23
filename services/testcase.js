@@ -116,7 +116,11 @@ module.exports = {
             ]
           }
         ],
-        order: [["created_at", "DESC"], [{ model: TestStep, as: "test_steps" }, "id", "ASC"], [Group, "id", "ASC"]]
+        order: [
+          ["created_at", "DESC"],
+          [{ model: TestStep, as: "test_steps" }, "id", "ASC"],
+          [Group, "id", "ASC"]
+        ]
       }).then(testcases => {
         if (testcases) {
           testcasesRes = {};
@@ -175,6 +179,38 @@ module.exports = {
           resolve(testcasesRes);
         } else {
           resolve([]);
+        }
+      });
+    });
+  },
+  getTestcaseProject: async function(id) {
+    return new Promise((resolve, reject) => {
+      TestCase.findOne({
+        attributes: ["project_id"],
+        where: {
+          id: id
+        }
+      }).then(testcase => {
+        if (testcase) {
+          resolve(testcase);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  checkIfTestcaseExist: async function(id) {
+    return new Promise((resolve, reject) => {
+      TestCase.findOne({
+        where: {
+          id: id,
+          deprecated: false
+        }
+      }).then(testcase => {
+        if (testcase) {
+          resolve(true);
+        } else {
+          resolve(false);
         }
       });
     });
