@@ -1,33 +1,29 @@
-'use strict';
+"use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('ReportSteps', {
+    return queryInterface.createTable("reportsteps", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      test_step_id: {
-        type: Sequelize.INTEGER
+      step: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      iput_data: {
-        type: Sequelize.STRING
+      input_data: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       report_id: {
-        type: Sequelize.INTEGER
-      },
-      createdAt: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+        references: { model: "reports", key: "id" }
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('ReportSteps');
+    return queryInterface.dropTable("reportsteps");
   }
 };

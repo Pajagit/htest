@@ -142,6 +142,23 @@ module.exports = {
       });
     });
   },
+  checkIfBrowserExistById: async function(id) {
+    return new Promise((resolve, reject) => {
+      Browser.findOne({
+        attributes: ["id"],
+        where: {
+          id: id,
+          deprecated: false
+        }
+      }).then(browser => {
+        if (browser) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
   checkIfSameBrowserExist: async function(data, id) {
     return new Promise((resolve, reject) => {
       Browser.findOne({

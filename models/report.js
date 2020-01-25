@@ -2,6 +2,11 @@
 const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
+const Status = require("./status");
+const ReportSetup = require("./reportsetup");
+const ReportStep = require("./reportstep");
+const TestCase = require("./testcase");
+const User = require("./user");
 const Report = sequelize.define(
   "reports",
   {
@@ -59,5 +64,35 @@ const Report = sequelize.define(
     timestamps: false
   }
 );
+
+Report.belongsTo(Status, {
+  foreignKey: "status_id",
+  targetKey: "id",
+  as: "status"
+});
+
+Report.hasOne(ReportSetup, {
+  foreignKey: "report_id",
+  targetKey: "id",
+  as: "reportsetup"
+});
+
+Report.hasMany(ReportStep, {
+  foreignKey: "report_id",
+  targetKey: "id",
+  as: "steps"
+});
+
+Report.belongsTo(TestCase, {
+  foreignKey: "test_case_id",
+  targetKey: "id",
+  as: "testcase"
+});
+
+Report.belongsTo(User, {
+  foreignKey: "user_id",
+  targetKey: "id",
+  as: "user"
+});
 
 module.exports = Report;

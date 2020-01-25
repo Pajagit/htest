@@ -79,6 +79,23 @@ module.exports = {
       });
     });
   },
+  checkIfEnvironmentExistById: async function(id) {
+    return new Promise((resolve, reject) => {
+      Environment.findOne({
+        attributes: ["id"],
+        where: {
+          id: id,
+          deprecated: false
+        }
+      }).then(environment => {
+        if (environment) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
   createEnvironment: async function(env_fields) {
     return new Promise((resolve, reject) => {
       Environment.create(env_fields).then(environment => {
