@@ -42,6 +42,65 @@ module.exports = {
       }
     }
 
+    if (!isEmpty(data.browser_id)) {
+      if (isNaN(data.browser_id)) {
+        errors.browser_id = "Browser id is not a valid number";
+      }
+    }
+
+    if (!isEmpty(data.environment_id)) {
+      if (isNaN(data.environment_id)) {
+        errors.environment_id = "Environment id is not a valid number";
+      }
+    }
+
+    if (!isEmpty(data.device_id)) {
+      if (isNaN(data.device_id)) {
+        errors.device_id = "Device id is not a valid number";
+      }
+    }
+
+    if (!isEmpty(data.simulator_id)) {
+      if (isNaN(data.simulator_id)) {
+        errors.simulator_id = "Simulator id is not a valid number";
+      }
+    }
+
+    if (!isEmpty(data.operating_system_id)) {
+      if (isNaN(data.operating_system_id)) {
+        errors.operating_system_id = "Operating system id is not a valid number";
+      }
+    }
+
+    if (!isEmpty(data.version_id)) {
+      if (isNaN(data.version_id)) {
+        errors.version_id = "Version id is not a valid number";
+      }
+    }
+
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    };
+  },
+  validateGetReports: function(data) {
+    var errors = {};
+
+    if (!isEmpty(data.page) && isNaN(data.page)) {
+      errors.page = "Page is not a valid number";
+    }
+
+    if (!isEmpty(data.page_size) && isNaN(data.page_size)) {
+      errors.page_size = "Page size is not a valid number";
+    }
+    if (isEmpty(data.project_id)) {
+      errors.project_id = "Project id is required";
+    } else {
+      if (isNaN(data.project_id)) {
+        errors.project_id = "Project id is not a valid number";
+      }
+    }
+
     return {
       errors,
       isValid: isEmpty(errors)

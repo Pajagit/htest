@@ -1,7 +1,13 @@
 const pgURI = require("./config/keys").postgresURI;
 const bodyParser = require("body-parser");
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(pgURI);
+var opts = {
+  define: {
+    //prevent sequelize from pluralizing table names
+    freezeTableName: true
+  }
+};
+const sequelize = new Sequelize(pgURI, opts);
 const passport = require("passport");
 
 const express = require("express");

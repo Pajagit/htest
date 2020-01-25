@@ -79,6 +79,23 @@ module.exports = {
       });
     });
   },
+  checkIfVersionExists: async function(id) {
+    return new Promise((resolve, reject) => {
+      Version.findOne({
+        attributes: ["id"],
+        where: {
+          id: id,
+          deprecated: false
+        }
+      }).then(version => {
+        if (version) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
   createVersion: async function(version_fields) {
     return new Promise((resolve, reject) => {
       Version.create(version_fields).then(version => {
