@@ -5,11 +5,16 @@
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "node server.js",
+    "server-install": "npm install",
     "webSocket": "node sio-server.js",
     "server": "nodemon server.js",
+    "start": "node server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run webSocket\""
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run webSocket\"",
+    "prod-install": "concurrently \"npm run server-install\" \"npm run client-install\"",
+    "prod": "concurrently \"npm run start\" \"npm run client\"",
+    "db-migrate": "npx sequelize-cli db:migrate",
+    "db-seed-all": "npx sequelize-cli db:seed:all"
   },
   "author": "QA Nis",
   "license": "ISC",

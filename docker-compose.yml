@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+     image: postgres:latest
+     ports: 
+        - "5432:5432"
+     restart: always
+     environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASS=postgres
+        - POSTGRES_DB=htest
+  web:
+    image: htest_docker:latest
+    depends_on:
+       - db
+    container_name: htest_1
+    restart: always
+    ports:
+       - "3000:3000"
+       - "4000:4000"
+       - "5000:5000"  
+    environment:
+       - database=htest
+       - username=postgres
+       - password=postgres
+       - DATABASE_URL=postgres://postgres:postgres@db:5432/htest

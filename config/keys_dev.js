@@ -1,5 +1,5 @@
 module.exports = {
-  postgresURI: "postgres://postgres:postgres@localhost:5432/htest",
+  postgresURI: "postgres://postgres:postgres@db:5432/htest",
   baseURL: "http://localhost:3000/",
   secretOrKey: "interviewSecret",
   secretOrKeyRefresh: "refreshKey",
