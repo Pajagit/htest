@@ -6,21 +6,37 @@ services:
         - "5432:5432"
      restart: always
      environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASS=postgres
-        - POSTGRES_DB=htest
-  web:
-    image: htest_docker:latest
+        POSTGRES_DB: htest
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+     command: ["./be/wait_for_db.sh"]   
+  be:
+    image: htest_beckend:latest
     depends_on:
        - db
-    container_name: htest_1
+    container_name: htest_beckend_container
     restart: always
     ports:
-       - "3000:3000"
        - "4000:4000"
        - "5000:5000"  
     environment:
-       - database=htest
-       - username=postgres
-       - password=postgres
        - DATABASE_URL=postgres://postgres:postgres@db:5432/htest
+    build:
+      context: ./beckend
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+  client:
+    image: htest_client:latest
+    depends_on:
+       - db
+       - be
+    container_name: htest_client_container
+    restart: always
+    ports:
+       - "3000:3000"
+    build:  
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
