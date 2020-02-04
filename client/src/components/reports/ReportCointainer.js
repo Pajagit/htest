@@ -4,27 +4,27 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import PortraitReport from "../common/PortraitReport";
-// import LandscapeTestCase from "../common/LandscapeTestCase";
+import LandscapeReport from "../common/LandscapeReport";
 import Tag from "../common/Tag";
 import Spinner from "../common/Spinner";
 import isEmpty from "../../validation/isEmpty";
-// import Pagination from "../pagination/Pagination";
+import Pagination from "../pagination/Pagination";
 
 import { getTestcases } from "../../actions/testcaseActions";
 
-class ReportContainer extends Component {
+class TestCaseContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       settings: this.props.settings.settings,
       filters: this.props.settings.settings,
-      testcases: this.props.reports,
+      testcases: this.props.testcases.testcases,
       initialRender: true,
       projectId: null,
-      page: 0
-      //   dimensions: null
+      page: 0,
+      dimensions: null
     };
-    // this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -39,482 +39,124 @@ class ReportContainer extends Component {
       }
     }
 
-    if (nextProps.testcases && nextProps.reports) {
-      update.testcases = nextProps.reports;
-      if (nextProps.reports.page !== prevState.page) {
-        update.page = nextProps.reports.page;
+    if (nextProps.testcases && nextProps.testcases.testcases) {
+      update.testcases = nextProps.testcases.testcases;
+      if (nextProps.testcases.testcases.page !== prevState.page) {
+        update.page = nextProps.testcases.testcases.page;
       }
     }
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
-    // this.updateWindowDimensions();
-    // window.addEventListener("resize", this.updateWindowDimensions);
+    this.updateWindowDimensions();
+    window.addEventListener("resize", this.updateWindowDimensions);
   }
   componentWillUnmount() {
-    // window.removeEventListener("resize", this.updateWindowDimensions);
+    window.removeEventListener("resize", this.updateWindowDimensions);
   }
-  //   updateWindowDimensions() {
-  //     this.setState({
-  //       dimensions: {
-  //         width: this.container.offsetWidth,
-  //         height: this.container.offsetHeight
-  //       }
-  //     });
-  //   }
+  updateWindowDimensions() {
+    this.setState({
+      dimensions: {
+        width: this.container.offsetWidth,
+        height: this.container.offsetHeight
+      }
+    });
+  }
   render() {
     var projectId = this.props.match.params.projectId;
     var settingsLoading = this.props.settings.loading;
-    // var testcases = this.props.testcases;
+    var testcases = this.props.testcases;
     var { loading } = this.props.testcases;
-    // var pageCount = null;
-    // var showPagination = false;
-    // if (reports) {
-    //   pageCount = reports.pages;
+    var pageCount = null;
+    var showPagination = false;
+    if (testcases.testcases) {
+      pageCount = testcases.testcases.pages;
 
-    //   if (pageCount > 1) {
-    //     showPagination = true;
-    //   }
-    // }
-
-    var reports = [
-      {
-        id: 1086,
-        title: "Report 1",
-        description: "test",
-        expected_result: "Succesful login",
-        preconditions: null,
-        date: "2019-10-27T16:32:16.502Z",
-        links: [],
-        uploaded_files: [],
-        test_steps: [{ id: 1945, value: "test", expected_result: null }],
-        groups: [
-          {
-            id: 5,
-            pinned: true,
-            title: "Sanity",
-            color: "LIBERTY"
-          },
-          {
-            id: 2,
-            pinned: true,
-            title: "Regression",
-            color: "CYAN_AZURE"
-          },
-          {
-            id: 4,
-            pinned: true,
-            title: "Automated",
-            color: "DARK_KHAKI"
-          },
-          {
-            id: 6,
-            pinned: true,
-            title: "Performance",
-            color: "AMARANTH"
-          },
-          {
-            id: 7,
-            pinned: true,
-            title: "Login",
-            color: "VERDIGRIS"
-          },
-          {
-            id: 8,
-            pinned: true,
-            title: "Energy Management",
-            color: "MEDIUM_SEA_GREEN"
-          }
-        ],
-        author: { id: 11, first_name: "Aleksandar", last_name: "Pavlovic", position: "" },
-        device: "Samsung Galaxy A7",
-        browser: "Chrome 10.2",
-        version: 2.1,
-        operatingSystem: "Android KitKat 4.4",
-        environment: "Development",
-        additionalPrecondition: "Log in application",
-        comment: "Not so long comment",
-        status: "passed"
-      },
-      {
-        id: 1086,
-        title: "Report 2",
-        description: "test",
-        expected_result: "Succesful login",
-        preconditions: null,
-        date: "2019-10-27T16:32:16.502Z",
-        links: [],
-        uploaded_files: [],
-        test_steps: [{ id: 1945, value: "test", expected_result: null }],
-        groups: [
-          {
-            id: 5,
-            pinned: true,
-            title: "Sanity",
-            color: "LIBERTY"
-          },
-          {
-            id: 2,
-            pinned: true,
-            title: "Regression",
-            color: "CYAN_AZURE"
-          },
-          {
-            id: 4,
-            pinned: true,
-            title: "Automated",
-            color: "DARK_KHAKI"
-          },
-          {
-            id: 6,
-            pinned: true,
-            title: "Performance",
-            color: "AMARANTH"
-          },
-          {
-            id: 7,
-            pinned: true,
-            title: "Login",
-            color: "VERDIGRIS"
-          },
-          {
-            id: 8,
-            pinned: true,
-            title: "Energy Management",
-            color: "MEDIUM_SEA_GREEN"
-          }
-        ],
-        author: { id: 11, first_name: "Aleksandar", last_name: "Pavlovic", position: "" },
-        device: "Samsung Galaxy A7",
-        browser: "Chrome 10.2",
-        version: 2.1,
-        operatingSystem: "Android KitKat 4.4",
-        environment: "Development",
-        additionalPrecondition: "Log in application",
-        comment: "Not so long comment",
-        status: "failed"
-      },
-      {
-        id: 1086,
-        title: "Report 3",
-        description: "test",
-        expected_result: "Succesful login",
-        preconditions: null,
-        date: "2019-10-27T16:32:16.502Z",
-        links: [],
-        uploaded_files: [],
-        test_steps: [{ id: 1945, value: "test", expected_result: null }],
-        groups: [
-          {
-            id: 5,
-            pinned: true,
-            title: "Sanity",
-            color: "LIBERTY"
-          },
-          {
-            id: 2,
-            pinned: true,
-            title: "Regression",
-            color: "CYAN_AZURE"
-          },
-          {
-            id: 4,
-            pinned: true,
-            title: "Automated",
-            color: "DARK_KHAKI"
-          },
-          {
-            id: 6,
-            pinned: true,
-            title: "Performance",
-            color: "AMARANTH"
-          },
-          {
-            id: 7,
-            pinned: true,
-            title: "Login",
-            color: "VERDIGRIS"
-          },
-          {
-            id: 8,
-            pinned: true,
-            title: "Energy Management",
-            color: "MEDIUM_SEA_GREEN"
-          }
-        ],
-        author: { id: 11, first_name: "Aleksandar", last_name: "Pavlovic", position: "" },
-        device: "Samsung Galaxy A7",
-        browser: "Chrome 10.2",
-        version: 2.1,
-        operatingSystem: "Android KitKat 4.4",
-        environment: "Development",
-        additionalPrecondition: "Log in application",
-        comment: "Not so long comment",
-        status: "failed"
-      },
-
-      {
-        id: 1086,
-        title: "Report 4",
-        description: "test",
-        expected_result: "Succesful login",
-        preconditions: null,
-        date: "2019-10-27T16:32:16.502Z",
-        links: [],
-        uploaded_files: [],
-        test_steps: [{ id: 1945, value: "test", expected_result: null }],
-        groups: [
-          {
-            id: 5,
-            pinned: true,
-            title: "Sanity",
-            color: "LIBERTY"
-          },
-          {
-            id: 2,
-            pinned: true,
-            title: "Regression",
-            color: "CYAN_AZURE"
-          },
-          {
-            id: 4,
-            pinned: true,
-            title: "Automated",
-            color: "DARK_KHAKI"
-          },
-          {
-            id: 6,
-            pinned: true,
-            title: "Performance",
-            color: "AMARANTH"
-          },
-          {
-            id: 7,
-            pinned: true,
-            title: "Login",
-            color: "VERDIGRIS"
-          },
-          {
-            id: 8,
-            pinned: true,
-            title: "Energy Management",
-            color: "MEDIUM_SEA_GREEN"
-          }
-        ],
-        author: { id: 11, first_name: "Aleksandar", last_name: "Pavlovic", position: "" },
-        device: "Samsung Galaxy A7",
-        browser: "Chrome 10.2",
-        version: 2.1,
-        operatingSystem: "Android KitKat 4.4",
-        environment: "Development",
-        additionalPrecondition: "Log in application",
-        comment: "Not so long comment",
-        status: "blocked"
-      },
-      {
-        id: 1086,
-        title: "Report 5",
-        description: "test",
-        expected_result: "Succesful login",
-        preconditions: null,
-        date: "2019-10-27T16:32:16.502Z",
-        links: [],
-        uploaded_files: [],
-        test_steps: [{ id: 1945, value: "test", expected_result: null }],
-        groups: [
-          {
-            id: 5,
-            pinned: true,
-            title: "Sanity",
-            color: "LIBERTY"
-          },
-          {
-            id: 2,
-            pinned: true,
-            title: "Regression",
-            color: "CYAN_AZURE"
-          },
-          {
-            id: 4,
-            pinned: true,
-            title: "Automated",
-            color: "DARK_KHAKI"
-          },
-          {
-            id: 6,
-            pinned: true,
-            title: "Performance",
-            color: "AMARANTH"
-          },
-          {
-            id: 7,
-            pinned: true,
-            title: "Login",
-            color: "VERDIGRIS"
-          },
-          {
-            id: 8,
-            pinned: true,
-            title: "Energy Management",
-            color: "MEDIUM_SEA_GREEN"
-          }
-        ],
-        author: { id: 11, first_name: "Aleksandar", last_name: "Pavlovic", position: "" },
-        device: "Samsung Galaxy A7",
-        browser: "Chrome 10.2",
-        version: 2.1,
-        operatingSystem: "Android KitKat 4.4",
-        environment: "Development",
-        additionalPrecondition: "Log in application",
-        comment: "Not so long comment",
-        status: "passed"
-      },
-      {
-        id: 1086,
-        title: "Report 6",
-        description: "test",
-        expected_result: "Succesful login",
-        preconditions: null,
-        date: "2019-10-27T16:32:16.502Z",
-        links: [],
-        uploaded_files: [],
-        test_steps: [{ id: 1945, value: "test", expected_result: null }],
-        groups: [
-          {
-            id: 5,
-            pinned: true,
-            title: "Sanity",
-            color: "LIBERTY"
-          },
-          {
-            id: 2,
-            pinned: true,
-            title: "Regression",
-            color: "CYAN_AZURE"
-          },
-          {
-            id: 4,
-            pinned: true,
-            title: "Automated",
-            color: "DARK_KHAKI"
-          },
-          {
-            id: 6,
-            pinned: true,
-            title: "Performance",
-            color: "AMARANTH"
-          },
-          {
-            id: 7,
-            pinned: true,
-            title: "Login",
-            color: "VERDIGRIS"
-          },
-          {
-            id: 8,
-            pinned: true,
-            title: "Energy Management",
-            color: "MEDIUM_SEA_GREEN"
-          }
-        ],
-        author: { id: 11, first_name: "Aleksandar", last_name: "Pavlovic", position: "" },
-        device: "Samsung Galaxy A7",
-        browser: "Chrome 10.2",
-        version: 2.1,
-        operatingSystem: "Android KitKat 4.4",
-        environment: "Development",
-        additionalPrecondition: "Log in application",
-        comment: "Not so long comment",
-        status: "passed"
+      if (pageCount > 1) {
+        showPagination = true;
       }
-    ];
-
+    }
     let content;
     let grid = "";
-    // var pagination = "";
-    if (reports === null || loading || this.state.settings === null || settingsLoading) {
+    var pagination = "";
+    if (testcases.testcases === null || loading || this.state.settings === null || settingsLoading) {
       content = <Spinner />;
-    } else if (reports.length > 0 && this.state.settings.view_mode === 1) {
-      //   testcases = this.props.reports;
-      //   if (showPagination) {
-      //     pagination = (
-      //       <Pagination
-      //         pageCount={pageCount}
-      //         page={this.state.page}
-      //         searchTerm={this.state.searchTerm}
-      //         projectId={projectId}
-      //         // width={this.state.dimensions.width}
-      //       />
-      //     );
-      //   }
+    } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 1) {
+      testcases = this.props.testcases.testcases;
+      if (showPagination) {
+        pagination = (
+          <Pagination
+            pageCount={pageCount}
+            page={this.state.page}
+            searchTerm={this.state.searchTerm}
+            projectId={projectId}
+            width={this.state.dimensions && this.state.dimensions.width}
+          />
+        );
+      }
       grid = "testcase-grid";
       content =
-        reports &&
-        reports.map((testcase, index) => (
-          <React.Fragment key={index}>
-            <PortraitReport
-              title={testcase.title}
-              tags={testcase.groups.map((group, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Tag title={group.title} color={group.color} isRemovable={false} />
-                </React.Fragment>
-              ))}
-              author={testcase.author}
-              date={testcase.date}
-              description={testcase.description}
-              device={testcase.device}
-              browser={testcase.browser}
-              version={testcase.version}
-              operatingSystem={testcase.operatingSystem}
-              status={testcase.status}
-              environment={testcase.environment}
-              additionalPrecondition={testcase.additionalPrecondition}
-              comment={testcase.comment}
-              id={testcase.id}
-              projectId={projectId}
-              onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
-            ></PortraitReport>
-          </React.Fragment>
-        ));
-    }
-    // else if (reports.testcases.length > 0 && this.state.settings.view_mode === 2) {
-    //   testcases = this.props.reports;
-    //   testcases = this.props.reports;
-    //   //   if (showPagination) {
-    //   //     pagination = (
-    //   //       <Pagination
-    //   //         pageCount={pageCount}
-    //   //         page={this.state.page}
-    //   //         searchTerm={this.state.searchTerm}
-    //   //         projectId={projectId}
-    //   //         width={this.state.dimensions.width}
-    //   //       />
-    //   //     );
-    //   //   }
-    //   grid = "testcase-grid grid-none";
-    //   content =
-    //     reports &&
-    //     reports.map((testcase, index) => (
-    //       <React.Fragment key={index}>
-    //         <LandscapeTestCase
-    //           title={testcase.title}
-    //           tags={testcase.groups.map((group, groupIndex) => (
-    //             <React.Fragment key={groupIndex}>
-    //               <Tag title={group.title} color={group.color} isRemovable={false} />
-    //             </React.Fragment>
-    //           ))}
-    //           author={testcase.author}
-    //           status={testcase.status}
-    //           date={testcase.date}
-    //           description={testcase.description}
-    //           id={testcase.id}
-    //           projectId={projectId}
-    //           onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
-    //         ></LandscapeTestCase>
-    //       </React.Fragment>
-    //     ));
-    // }
-    else {
+        // testcases.testcases &&
+        // testcases.testcases.map((testcase, index) => (
+        <React.Fragment
+        // key={index}
+        >
+          <PortraitReport
+          // title={testcase.title}
+          // tags={testcase.groups.map((group, groupIndex) => (
+          //   <React.Fragment key={groupIndex}>
+          //     <Tag title={group.title} color={group.color} isRemovable={false} />
+          //   </React.Fragment>
+          // ))}
+          // author={testcase.author}
+          // date={testcase.date}
+          // description={testcase.description}
+          // id={testcase.id}
+          // projectId={projectId}
+          // onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
+          // isValidWrite={this.props.isValidWrite}
+          ></PortraitReport>
+        </React.Fragment>
+      // ));
+    } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 2) {
+      testcases = this.props.testcases.testcases;
+      testcases = this.props.testcases.testcases;
+      if (showPagination) {
+        pagination = (
+          <Pagination
+            pageCount={pageCount}
+            page={this.state.page}
+            searchTerm={this.state.searchTerm}
+            projectId={projectId}
+            width={this.state.dimensions.width}
+          />
+        );
+      }
+      grid = "testcase-grid grid-none";
+      content =
+        // testcases.testcases &&
+        // testcases.testcases.map((testcase, index) => (
+        <React.Fragment
+        // key={index}
+        >
+          <LandscapeReport
+          // title={testcase.title}
+          // tags={testcase.groups.map((group, groupIndex) => (
+          //   <React.Fragment key={groupIndex}>
+          //     <Tag title={group.title} color={group.color} isRemovable={false} />
+          //   </React.Fragment>
+          // ))}
+          // author={testcase.author}
+          // date={testcase.date}
+          // description={testcase.description}
+          // id={testcase.id}
+          // projectId={projectId}
+          // onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
+          // isValidWrite={this.props.isValidWrite}
+          ></LandscapeReport>
+        </React.Fragment>
+      // ));
+    } else {
       if (
         !isEmpty(this.state.settings && this.state.settings.users) ||
         !isEmpty(this.state.settings && this.state.settings.groups) ||
@@ -533,19 +175,16 @@ class ReportContainer extends Component {
 
     return (
       <div>
-        <div
-          //  ref={el => (this.container = el)}
-          className={`${grid} testcase-container`}
-        >
+        <div ref={el => (this.container = el)} className={`${grid} testcase-container`}>
           {content}
         </div>
-        {/* {pagination} */}
+        {pagination}
       </div>
     );
   }
 }
 
-ReportContainer.propTypes = {
+TestCaseContainer.propTypes = {
   testcases: PropTypes.object.isRequired
 };
 
@@ -557,4 +196,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getTestcases }
-)(withRouter(ReportContainer));
+)(withRouter(TestCaseContainer));
