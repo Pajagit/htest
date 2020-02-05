@@ -12,6 +12,8 @@ const OperatingSystem = require("../models/operatingsystem");
 const ReportStep = require("../models/reportstep");
 const TestCase = require("../models/testcase");
 const User = require("../models/user");
+const Group = require("../models/group");
+const Color = require("../models/color");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -251,11 +253,30 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["project_id"],
+            attributes: ["project_id", "title"],
             required: true,
             where: {
               project_id: project_id
-            }
+            },
+            include: [
+              {
+                model: Group,
+                attributes: ["id", "title", "color_id", "pinned"],
+                through: {
+                  attributes: []
+                },
+                as: "groups",
+                required: true,
+                include: [
+                  {
+                    model: Color,
+                    as: "color",
+                    attributes: ["title"],
+                    required: true
+                  }
+                ]
+              }
+            ]
           },
           {
             model: Status,
@@ -266,7 +287,7 @@ module.exports = {
           {
             model: User,
             as: "user",
-            attributes: ["id", "first_name", "last_name", "email"],
+            attributes: ["id", "first_name", "last_name", "email", "position"],
             required: true
           },
           {
@@ -337,11 +358,30 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["project_id"],
+            attributes: ["project_id", "title"],
             required: true,
             where: {
               project_id: project_id
-            }
+            },
+            include: [
+              {
+                model: Group,
+                attributes: ["id", "title", "color_id", "pinned"],
+                through: {
+                  attributes: []
+                },
+                as: "groups",
+                required: true,
+                include: [
+                  {
+                    model: Color,
+                    as: "color",
+                    attributes: ["title"],
+                    required: true
+                  }
+                ]
+              }
+            ]
           },
           {
             model: Status,
@@ -352,7 +392,7 @@ module.exports = {
           {
             model: User,
             as: "user",
-            attributes: ["id", "first_name", "last_name", "email"],
+            attributes: ["id", "first_name", "last_name", "email", "position"],
             required: true
           },
           {
