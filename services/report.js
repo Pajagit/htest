@@ -14,6 +14,7 @@ const TestCase = require("../models/testcase");
 const User = require("../models/user");
 const Group = require("../models/group");
 const Color = require("../models/color");
+const GroupTestCase = require("../models/grouptestcase");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -253,30 +254,11 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["project_id", "title"],
+            attributes: ["project_id", "title", "id"],
             required: true,
             where: {
               project_id: project_id
-            },
-            include: [
-              {
-                model: Group,
-                attributes: ["id", "title", "color_id", "pinned"],
-                through: {
-                  attributes: []
-                },
-                as: "groups",
-                required: true,
-                include: [
-                  {
-                    model: Color,
-                    as: "color",
-                    attributes: ["title"],
-                    required: true
-                  }
-                ]
-              }
-            ]
+            }
           },
           {
             model: Status,
@@ -351,6 +333,68 @@ module.exports = {
       });
     });
   },
+
+  getAllReportsWithGroups: async function(reports) {
+    return new Promise((resolve, reject) => {
+      var reportsWithGroups = Array();
+      var reportsCount = reports.length;
+      reports.forEach(report => {
+        var report_obj = {};
+        report_obj.id = report.id;
+        report_obj.actual_result = report.actual_result;
+        report_obj.created_at = report.created_at;
+        report_obj.comment = report.comment;
+        report_obj.additional_precondition = report.additional_precondition;
+        report_obj.testcase_id = report.testcase.id;
+        report_obj.title = report.testcase.title;
+        report_obj.project_id = report.testcase.project_id;
+        report_obj.status = report.status;
+        report_obj.user = report.user;
+        report_obj.steps = report.steps;
+        report_obj.reportsetup = report.reportsetup;
+
+        GroupTestCase.findAll({
+          where: {
+            test_case_id: report_obj.testcase_id
+          },
+          include: [
+            {
+              model: Group,
+              as: "group",
+              attributes: ["id", "title"],
+              include: [
+                {
+                  model: Color,
+                  as: "color",
+                  attributes: ["title"],
+                  required: true
+                }
+              ]
+            }
+          ]
+        }).then(groups => {
+          var groupsArr = [];
+          groups.forEach(group => {
+            var groupObj = {};
+            groupObj.id = group.group.id;
+            groupObj.title = group.group.title;
+            groupObj.color = group.group.color;
+            groupsArr.push(groupObj);
+          });
+          report_obj.groups = groupsArr;
+
+          reportsWithGroups.push(report_obj);
+          if (reportsCount > 0) {
+            reportsCount = reportsCount - 1;
+          }
+          if (reportsCount == 0) {
+            resolve(reportsWithGroups);
+          }
+        });
+      });
+    });
+  },
+
   getAllReports: async function(project_id) {
     return new Promise((resolve, reject) => {
       Report.findAll({
@@ -366,7 +410,7 @@ module.exports = {
             include: [
               {
                 model: Group,
-                attributes: ["id", "title", "color_id", "pinned"],
+                attributes: ["id", "title"],
                 through: {
                   attributes: []
                 },
@@ -441,14 +485,38 @@ module.exports = {
         ],
         attributes: ["id", "actual_result", "created_at", "comment", "additional_precondition"],
         order: [["id", "DESC"]]
-      }).then(reports => {
-        var page = 1;
-        var pages = 0;
-        if (reports.length > 0) {
-          page = 1;
-          pages = 1;
-        }
-        resolve({ reports, page, pages });
+      }).then(reportsArr => {
+        var reports = Array();
+        var reportsCount = reportsArr.length;
+        reportsArr.forEach(report => {
+          var report_obj = {};
+          report_obj.id = report.id;
+          report_obj.actual_result = report.actual_result;
+          report_obj.created_at = report.created_at;
+          report_obj.comment = report.comment;
+          report_obj.additional_precondition = report.additional_precondition;
+          report_obj.testcase_id = report.testcase.id;
+          report_obj.title = report.testcase.title;
+          report_obj.project_id = report.testcase.project_id;
+          report_obj.status = report.status;
+          report_obj.user = report.user;
+          report_obj.steps = report.steps;
+          report_obj.reportsetup = report.reportsetup;
+          report_obj.groups = report.testcase.groups;
+          reports.push(report_obj);
+          if (reportsCount > 0) {
+            reportsCount = reportsCount - 1;
+          }
+          if (reportsCount == 0) {
+            var page = 1;
+            var pages = 0;
+            if (reports.length > 0) {
+              page = 1;
+              pages = 1;
+            }
+            resolve({ reports, page, pages });
+          }
+        });
       });
     });
   }
