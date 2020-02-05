@@ -168,6 +168,8 @@ module.exports = {
         req.query.page,
         req.query.page_size
       );
+      var reportsWithGroups = await ReportService.getAllReportsWithGroups(reports.reports);
+      reports.reports = reportsWithGroups;
     } else {
       var reports = await ReportService.getAllReports(req.query.project_id);
     }
