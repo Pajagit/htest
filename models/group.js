@@ -3,6 +3,7 @@ const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 const Color = require("./color");
+const GroupTestCase = require("./grouptestcase");
 
 const Group = sequelize.define(
   "groups",
@@ -64,6 +65,12 @@ Group.belongsTo(Color, {
   foreignKey: "color_id",
   targetKey: "id",
   as: "color"
+});
+
+GroupTestCase.belongsTo(Group, {
+  foreignKey: "group_id",
+  targetKey: "id",
+  as: "group"
 });
 
 module.exports = Group;
