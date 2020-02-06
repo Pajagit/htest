@@ -11,14 +11,15 @@ import isEmpty from "../../validation/isEmpty";
 import Pagination from "../pagination/Pagination";
 
 import { getTestcases } from "../../actions/testcaseActions";
+import { getReports } from "../../actions/reportActions";
 
-class TestCaseContainer extends Component {
+class ReportContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       settings: this.props.settings.settings,
       filters: this.props.settings.settings,
-      testcases: this.props.testcases.testcases,
+      reports: this.props.reports.reports,
       initialRender: true,
       projectId: null,
       page: 0,
@@ -34,15 +35,16 @@ class TestCaseContainer extends Component {
         update.settings = nextProps.settings.settings;
         if (prevState.initialRender) {
           update.initialRender = false;
-          nextProps.getTestcases(nextProps.match.params.projectId, nextProps.settings.settings, 1);
+
+          nextProps.getReports(nextProps.match.params.projectId);
         }
       }
     }
 
-    if (nextProps.testcases && nextProps.testcases.testcases) {
-      update.testcases = nextProps.testcases.testcases;
-      if (nextProps.testcases.testcases.page !== prevState.page) {
-        update.page = nextProps.testcases.testcases.page;
+    if (nextProps.reports && nextProps.reports.reports) {
+      update.reports = nextProps.reports.reports;
+      if (nextProps.reports.reports.page !== prevState.page) {
+        update.page = nextProps.reports.reports.page;
       }
     }
     return Object.keys(update).length ? update : null;
@@ -65,12 +67,12 @@ class TestCaseContainer extends Component {
   render() {
     var projectId = this.props.match.params.projectId;
     var settingsLoading = this.props.settings.loading;
-    var testcases = this.props.testcases;
-    var { loading } = this.props.testcases;
+    var reports = this.props.reports;
+    var { loading } = this.props.reports;
     var pageCount = null;
     var showPagination = false;
-    if (testcases.testcases) {
-      pageCount = testcases.testcases.pages;
+    if (reports.reports) {
+      pageCount = reports.reports.pages;
 
       if (pageCount > 1) {
         showPagination = true;
@@ -79,10 +81,10 @@ class TestCaseContainer extends Component {
     let content;
     let grid = "";
     var pagination = "";
-    if (testcases.testcases === null || loading || this.state.settings === null || settingsLoading) {
+    if (reports.reports === null || loading || this.state.settings === null || settingsLoading) {
       content = <Spinner />;
-    } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 1) {
-      testcases = this.props.testcases.testcases;
+    } else if (reports.reports.reports.length > 0 && this.state.settings.view_mode === 1) {
+      reports = this.props.reports.reports;
       if (showPagination) {
         pagination = (
           <Pagination
@@ -96,31 +98,39 @@ class TestCaseContainer extends Component {
       }
       grid = "testcase-grid";
       content =
-        // testcases.testcases &&
-        // testcases.testcases.map((testcase, index) => (
-        <React.Fragment
-        // key={index}
-        >
-          <PortraitReport
-          // title={testcase.title}
-          // tags={testcase.groups.map((group, groupIndex) => (
-          //   <React.Fragment key={groupIndex}>
-          //     <Tag title={group.title} color={group.color} isRemovable={false} />
-          //   </React.Fragment>
-          // ))}
-          // author={testcase.author}
-          // date={testcase.date}
-          // description={testcase.description}
-          // id={testcase.id}
-          // projectId={projectId}
-          // onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
-          // isValidWrite={this.props.isValidWrite}
-          ></PortraitReport>
-        </React.Fragment>
-      // ));
-    } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 2) {
-      testcases = this.props.testcases.testcases;
-      testcases = this.props.testcases.testcases;
+        reports.reports &&
+        reports.reports.map(
+          (report, index) => (
+            <React.Fragment key={index}>
+              <PortraitReport
+                title={report.title}
+                tags={report.groups.map((group, groupIndex) => (
+                  <React.Fragment key={groupIndex}>
+                    <Tag title={group.title} color={group.color.title} isRemovable={false} />
+                  </React.Fragment>
+                ))}
+                author={report.user}
+                date={report.created_at}
+                comment={report.comment}
+                actual_result={report.actual_result}
+                status={report.status}
+                device={report.reportsetup.device !== null ? report.reportsetup.device : "/"}
+                browser={report.reportsetup.browser ? report.reportsetup.browser : "/"}
+                version={report.reportsetup.version ? report.reportsetup.version : "/"}
+                operatingsystem={report.reportsetup.operatingsystem !== null ? report.reportsetup.operatingsystem : "/"}
+                environment={report.reportsetup.environment !== null ? report.reportsetup.environment : "/"}
+                simulator={report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/"}
+                id={report.id}
+                projectId={projectId}
+                onClick={e => this.props.history.push(`/${projectId}/TestCase/${report.id}`)}
+                isValidWrite={this.props.isValidWrite}
+              />
+            </React.Fragment>
+          )
+          // console.log(report.reportsetup.device)
+        );
+    } else if (reports.reports.reports.length > 0 && this.state.settings.view_mode === 2) {
+      reports = this.props.reports.reports;
       if (showPagination) {
         pagination = (
           <Pagination
@@ -134,28 +144,34 @@ class TestCaseContainer extends Component {
       }
       grid = "testcase-grid grid-none";
       content =
-        // testcases.testcases &&
-        // testcases.testcases.map((testcase, index) => (
-        <React.Fragment
-        // key={index}
-        >
-          <LandscapeReport
-          // title={testcase.title}
-          // tags={testcase.groups.map((group, groupIndex) => (
-          //   <React.Fragment key={groupIndex}>
-          //     <Tag title={group.title} color={group.color} isRemovable={false} />
-          //   </React.Fragment>
-          // ))}
-          // author={testcase.author}
-          // date={testcase.date}
-          // description={testcase.description}
-          // id={testcase.id}
-          // projectId={projectId}
-          // onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
-          // isValidWrite={this.props.isValidWrite}
-          ></LandscapeReport>
-        </React.Fragment>
-      // ));
+        reports.reports &&
+        reports.reports.map((report, index) => (
+          <React.Fragment key={index}>
+            <LandscapeReport
+              title={report.title}
+              tags={report.groups.map((group, groupIndex) => (
+                <React.Fragment key={groupIndex}>
+                  <Tag title={group.title} color={group.color.title} isRemovable={false} />
+                </React.Fragment>
+              ))}
+              author={report.user}
+              date={report.created_at}
+              comment={report.comment}
+              actual_result={report.actual_result}
+              status={report.status}
+              device={report.reportsetup.device !== null ? report.reportsetup.device : "/"}
+              browser={report.reportsetup.browser ? report.reportsetup.browser : "/"}
+              version={report.reportsetup.version ? report.reportsetup.version : "/"}
+              operatingsystem={report.reportsetup.operatingsystem !== null ? report.reportsetup.operatingsystem : "/"}
+              environment={report.reportsetup.environment !== null ? report.reportsetup.environment : "/"}
+              simulator={report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/"}
+              id={report.id}
+              projectId={projectId}
+              onClick={e => this.props.history.push(`/${projectId}/TestCase/${report.id}`)}
+              isValidWrite={this.props.isValidWrite}
+            ></LandscapeReport>
+          </React.Fragment>
+        ));
     } else {
       if (
         !isEmpty(this.state.settings && this.state.settings.users) ||
@@ -184,16 +200,15 @@ class TestCaseContainer extends Component {
   }
 }
 
-TestCaseContainer.propTypes = {
-  testcases: PropTypes.object.isRequired
+ReportContainer.propTypes = {
+  testcases: PropTypes.object.isRequired,
+  reports: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
-  settings: state.settings
+  settings: state.settings,
+  reports: state.reports
 });
 
-export default connect(
-  mapStateToProps,
-  { getTestcases }
-)(withRouter(TestCaseContainer));
+export default connect(mapStateToProps, { getTestcases, getReports })(withRouter(ReportContainer));

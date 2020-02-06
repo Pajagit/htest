@@ -16,6 +16,7 @@ import versionReducer from "./versionReducer";
 import environmentReducer from "./environmentReducer";
 import mobileOsReducer from "./mobileOsReducer";
 import testSetupReducer from "./testSetupReducer";
+import reportReducer from "./reportReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -33,5 +34,6 @@ export default combineReducers({
   browsers: browserReducer,
   versions: versionReducer,
   environments: environmentReducer,
-  testSetup: testSetupReducer
+  testSetup: testSetupReducer,
+  reports: reportReducer
 });
