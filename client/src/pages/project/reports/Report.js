@@ -65,8 +65,8 @@ class Report extends Component {
                   <div className="report-details-header--value">{report.title}</div>
                   <br />
                   <div className="report-details-header--title">
-                    {report.user.first_name} {report.user.last_name}{" "}
-                    {report.user.position ? ", " + report.user.position : ""}
+                    {report.testcase_user.first_name} {report.testcase_user.last_name}{" "}
+                    {report.testcase_user.position ? ", " + report.testcase_user.position : ""}
                   </div>
                   <div className="report-details-header--subvalue">
                     {report.groups.map((group, index) => (
