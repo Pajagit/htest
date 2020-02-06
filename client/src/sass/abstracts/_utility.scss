@@ -59,6 +59,13 @@ $lines-to-show: 6;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.truncate-report {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .truncate {
   display: block; /* Fallback for non-webkit */
   display: -webkit-box;

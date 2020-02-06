@@ -29,7 +29,12 @@
         }
         margin-bottom: 1.3rem;
       }
-
+&--button{
+  position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    margin-top: 2rem;
+}
       &--author {
         padding-bottom: 0.5rem;
         color: #4a4a4a;
@@ -49,47 +54,23 @@
   &-bottom {
     padding: 1.5rem 2rem;
     &-container {
-      //   &--description {
-      //     max-height: 14rem;
-      //     overflow: hidden;
-      //     color: #000000;
-      //     font-size: 1.4rem;
-      //     letter-spacing: 0.17px;
-      //     line-height: 1.8rem;
-
-      //     margin-bottom: 5rem;
-      //   }
       &--item {
-        font-size: 1.4rem;
+
         display: flex;
         &-title {
+            margin-right: 0.5rem;
+          font-size: 1.4rem;
           color: #9b9b9b;
-          margin-right: 0.5rem;
         }
         &-value {
-          overflow-wrap: break-word;
-          word-wrap: break-word;
-          -ms-word-break: break-all;
-          word-break: break-all;
-          word-break: break-word;
-          -ms-hyphens: auto;
-          -moz-hyphens: auto;
-          -webkit-hyphens: auto;
-          hyphens: auto;
+          font-size: 1.4rem;
+          color: #000;
         }
-        max-height: 14rem;
-        overflow: hidden;
-        color: #000000;
-
-        letter-spacing: 0.17px;
-        line-height: 1.8rem;
-        margin-bottom: 1.5rem;
-      }
-      &--button {
-        position: absolute;
-        bottom: 2rem;
-        left: 2rem;
-        margin-top: 2rem;
+        &-status{
+          bottom: 0;
+          right: 0;
+          background-color: red;
+        }
       }
     }
   }
