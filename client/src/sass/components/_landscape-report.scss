@@ -1,81 +1,81 @@
 .landscape-report {
+  display: flex;
+  box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
+  margin-bottom: 2px;
+  background-color: #ffffff;
+  &:hover {
+    background-color: #eceef9;
+  }
+  &-left {
+    width: 50%;
+    min-width: 40rem;
     display: flex;
-    background-color: #ffffff;
-    &:hover {
-      background-color: #eceef9;
-    }
-    &-left {
-      width: 50%;
-      min-width: 40rem;
-      display: flex;
-      flex-direction: row;
-      position: relative;
-      box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
-      &-container {
-        padding: 1.5rem 2rem;
-        &--title {
-          font-weight: 500;
-          padding-bottom: 1.3rem;
-          font-size: 1.6rem;
-          font-weight: 500;
-          letter-spacing: 0.2px;
-          line-height: 2.3rem;
+    flex-direction: row;
+    position: relative;
+    box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
+    &-container {
+      padding: 1.5rem 2rem;
+      &--title {
+        font-weight: 500;
+        padding-bottom: 1.3rem;
+        font-size: 1.6rem;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        line-height: 2.3rem;
+      }
+      &--tags {
+        &:after {
+          content: "";
+          display: block;
+          clear: both;
         }
-        &--tags {
-          &:after {
-            content: "";
-            display: block;
-            clear: both;
-          }
-          margin-bottom: 1.3rem;
+        margin-bottom: 1.3rem;
+      }
+      &--author {
+        padding-bottom: 0.5rem;
+        color: #4a4a4a;
+        font-size: 1.4rem;
+        letter-spacing: 0.17px;
+        line-height: 1.8rem;
+      }
+      &--date {
+        color: #8a94a3;
+        font-size: 1.2rem;
+        letter-spacing: 0.15px;
+        line-height: 1.5rem;
+        &:after {
+          content: "";
+          display: block;
+          clear: both;
         }
-        &--author {
-          padding-bottom: 0.5rem;
-          color: #4a4a4a;
-          font-size: 1.4rem;
-          letter-spacing: 0.17px;
-          line-height: 1.8rem;
-        }
-        &--date {
-          color: #8a94a3;
-          font-size: 1.2rem;
-          letter-spacing: 0.15px;
-          line-height: 1.5rem;
-          &:after {
-            content: "";
-            display: block;
-            clear: both;
-          }
-          margin-bottom: 1.3rem;
-        }
-        &--button {
-          position: absolute;
-          bottom: 2rem;
-          right: 2rem;
-          margin-top: 2rem;
-          &:after {
-            content: "";
-            display: block;
-            clear: both;
-          }
+        margin-bottom: 1.3rem;
+      }
+      &--button {
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        margin-top: 2rem;
+        &:after {
+          content: "";
+          display: block;
+          clear: both;
         }
       }
     }
-    &-right {
-      
-      width: 100%;
-      min-width: 10rem;
-      &-left{
-        width: 50%;
+  }
+  &-right {
+    width: 100%;
+    min-width: 10rem;
+    &-left {
+      width: 50%;
       &-container {
-       
         padding: 1.5rem 2rem;
         &--item {
-            &:not(:last-child) {
-                padding-bottom: 0.9rem;
-              }
-            display: flex;
-            
+          &:not(:last-child) {
+            padding-bottom: 0.9rem;
+          }
+          display: flex;
+
           &-title {
             margin-right: 0.5rem;
             font-size: 1.4rem;
@@ -88,38 +88,36 @@
         }
       }
     }
-    &-right{
-        width: 50%;
-        &-container {
-         
-          padding: 1.5rem 2rem;
-          &--item {
-            &:not(:last-child) {
-                padding-bottom: 0.9rem;
-              }
-            display: flex;
-            &-title {
-                margin-right: 0.5rem;
-              font-size: 1.4rem;
-              color: #9b9b9b;
-            }
-            &-value {
-              font-size: 1.4rem;
-              color: #000;
-            }
+    &-right {
+      width: 50%;
+      &-container {
+        padding: 1.5rem 2rem;
+        &--item {
+          &:not(:last-child) {
+            padding-bottom: 0.9rem;
+          }
+          display: flex;
+          &-title {
+            margin-right: 0.5rem;
+            font-size: 1.4rem;
+            color: #9b9b9b;
+          }
+          &-value {
+            font-size: 1.4rem;
+            color: #000;
           }
         }
       }
     }
   }
-  
-  .padding {
-    padding-left: 3.8rem;
-    padding-right: 3.8rem;
-    padding-top: 2.4rem;
-  }
-  
-  .grid-none {
-    display: inline-block;
-  }
-  
+}
+
+.padding {
+  padding-left: 3.8rem;
+  padding-right: 3.8rem;
+  padding-top: 2.4rem;
+}
+
+.grid-none {
+  display: inline-block;
+}

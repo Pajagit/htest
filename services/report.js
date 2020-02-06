@@ -23,12 +23,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Report.create(report_fields).then(report => {
         if (report) {
-          //   var reportObj = {};
-          //   reportObj.id = report.id;
-          //   reportObj.title = report.title;
-          //   reportObj.screen_resolution = report.screen_resolution;
-          //   reportObj.version = report.version;
-          //   reportObj.used = report.used;
           resolve(report);
         } else {
           resolve(false);
@@ -80,7 +74,7 @@ module.exports = {
     });
   },
 
-  returnCreatedReport: async function(report, report_setup, report_steps) {
+  returnCreatedReport: async function(report, report_setup, report_steps, project_id) {
     return new Promise((resolve, reject) => {
       if (report_setup && report_steps && report) {
         Report.findOne({
@@ -90,9 +84,43 @@ module.exports = {
           },
           include: [
             {
+              model: TestCase,
+              as: "testcase",
+              attributes: ["project_id", "title", "description", "preconditions", "expected_result"],
+              required: true,
+              where: {
+                project_id: project_id
+              },
+              include: [
+                {
+                  model: Group,
+                  attributes: ["id", "title"],
+                  through: {
+                    attributes: []
+                  },
+                  as: "groups",
+                  required: true,
+                  include: [
+                    {
+                      model: Color,
+                      as: "color",
+                      attributes: ["title"],
+                      required: true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               model: Status,
               as: "status",
               attributes: ["title"],
+              required: true
+            },
+            {
+              model: User,
+              as: "user",
+              attributes: ["id", "first_name", "last_name", "email", "position"],
               required: true
             },
             {
@@ -141,7 +169,25 @@ module.exports = {
           ]
         }).then(report => {
           if (report) {
-            resolve(report);
+            var report_obj = {};
+            report_obj.id = report.id;
+            report_obj.actual_result = report.actual_result;
+            report_obj.description = report.testcase.description;
+            report_obj.preconditions = report.testcase.preconditions;
+            report_obj.expected_result = report.testcase.expected_result;
+            report_obj.created_at = report.created_at;
+            report_obj.comment = report.comment;
+            report_obj.additional_precondition = report.additional_precondition;
+            report_obj.testcase_id = report.testcase.id;
+            report_obj.title = report.testcase.title;
+            report_obj.project_id = report.testcase.project_id;
+            report_obj.status = report.status;
+            report_obj.user = report.user;
+            report_obj.steps = report.steps;
+            report_obj.reportsetup = report.reportsetup;
+            report_obj.groups = report.testcase.groups;
+
+            resolve(report_obj);
           } else {
             resolve(false);
           }
@@ -150,7 +196,7 @@ module.exports = {
     });
   },
 
-  returnReportById: async function(reportId) {
+  returnReportById: async function(reportId, project_id) {
     return new Promise((resolve, reject) => {
       Report.findOne({
         attributes: ["id", "actual_result", "created_at", "comment", "additional_precondition"],
@@ -158,6 +204,35 @@ module.exports = {
           id: reportId
         },
         include: [
+          {
+            model: TestCase,
+            as: "testcase",
+            attributes: ["project_id", "title", "description", "preconditions", "expected_result"],
+            required: true,
+            where: {
+              project_id: project_id
+            },
+            include: [
+              {
+                model: Group,
+                attributes: ["id", "title"],
+                through: {
+                  attributes: []
+                },
+                as: "groups",
+                required: true,
+                include: [
+                  {
+                    model: Color,
+                    as: "color",
+                    attributes: ["title"],
+                    required: true
+                  }
+                ]
+              }
+            ]
+          },
+
           {
             model: Status,
             as: "status",
@@ -167,7 +242,7 @@ module.exports = {
           {
             model: User,
             as: "user",
-            attributes: ["id", "first_name", "last_name", "email"],
+            attributes: ["id", "first_name", "last_name", "email", "position"],
             required: true
           },
           {
@@ -216,7 +291,25 @@ module.exports = {
         ]
       }).then(report => {
         if (report) {
-          resolve(report);
+          var report_obj = {};
+          report_obj.id = report.id;
+          report_obj.actual_result = report.actual_result;
+          report_obj.description = report.testcase.description;
+          report_obj.preconditions = report.testcase.preconditions;
+          report_obj.expected_result = report.testcase.expected_result;
+          report_obj.created_at = report.created_at;
+          report_obj.comment = report.comment;
+          report_obj.additional_precondition = report.additional_precondition;
+          report_obj.testcase_id = report.testcase.id;
+          report_obj.title = report.testcase.title;
+          report_obj.project_id = report.testcase.project_id;
+          report_obj.status = report.status;
+          report_obj.user = report.user;
+          report_obj.steps = report.steps;
+          report_obj.reportsetup = report.reportsetup;
+          report_obj.groups = report.testcase.groups;
+
+          resolve(report_obj);
         } else {
           resolve(false);
         }

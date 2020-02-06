@@ -6,7 +6,6 @@ import { createSelector } from "reselect";
 
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../components/project-panel/ProjectPanel";
-import BtnAnchorResponsive from "../../../components/common/BtnAnchorResponsive";
 import FilterBtn from "../../../components/common/FilterBtn";
 import Header from "../../../components/common/Header";
 import SearchBtn from "../../../components/common/SearchBtn";
@@ -531,17 +530,6 @@ class Reports extends Component {
         </div>
       );
     }
-    var addTestCase = "";
-    if (this.state.isValidWrite) {
-      addTestCase = (
-        <BtnAnchorResponsive
-          type={"text"}
-          label="Add New"
-          className={"a-btn-responsive a-btn-primary"}
-          link={`/${this.props.match.params.projectId}/CreateTestCase`}
-        />
-      );
-    }
 
     return (
       <div className="wrapper">
@@ -549,11 +537,9 @@ class Reports extends Component {
         <ProjectPanel projectId={this.props.match.params.projectId} />
         <div className="main-content main-content-grid">
           <Header
-            icon={<i className="fas fa-clipboard-list"></i>}
-            title={"Test Cases"}
-            // link={"CreateTestCase"}
+            icon={<i className="fas fa-file-alt"></i>}
+            title={"Reports"}
             canGoBack={false}
-            addBtn={addTestCase}
             filterBtn={
               <FilterBtn
                 onClick={this.filterBtn}
@@ -604,117 +590,118 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { getGroups, getUsers, getProjectSettings, editProjectSettings, getTestcases, clearSettings }
-)(withRouter(Reports));
+export default connect(mapStateToProps, {
+  getGroups,
+  getUsers,
+  getProjectSettings,
+  editProjectSettings,
+  getTestcases,
+  clearSettings
+})(withRouter(Reports));
 
 const getSettings = state => state.settings.settings;
 const getUsersProps = state => state.users;
 const getGroupsProps = state => state.groups;
 
-const filterSelector = createSelector(
-  [getSettings, getUsersProps, getGroupsProps],
-  (settings, users, groups) => {
-    var dateFrom = "";
-    var selectedDateTimestampFrom = "";
-    var selectedDateFrom = "";
-    var selectedDateFromFormated = "";
+const filterSelector = createSelector([getSettings, getUsersProps, getGroupsProps], (settings, users, groups) => {
+  var dateFrom = "";
+  var selectedDateTimestampFrom = "";
+  var selectedDateFrom = "";
+  var selectedDateFromFormated = "";
 
-    var dateTo = "";
-    var selectedDateTimestampTo = "";
-    var selectedDateTo = "";
-    var selectedDateToFormated = "";
+  var dateTo = "";
+  var selectedDateTimestampTo = "";
+  var selectedDateTo = "";
+  var selectedDateToFormated = "";
 
-    var viewMode = 1;
-    var showFilters = true;
-    var searchTerm = "";
+  var viewMode = 1;
+  var showFilters = true;
+  var searchTerm = "";
 
-    var selectedUsers = [];
-    var selectedGroupFilters = [];
+  var selectedUsers = [];
+  var selectedGroupFilters = [];
 
-    var activeFilters = false;
+  var activeFilters = false;
 
-    if (settings) {
-      if (groups) {
-        if (groups.groups) {
-          var selectedGroup = [];
-          groups.groups.map(function(item) {
-            if (settings && settings.groups) {
-              if (settings.groups.includes(item.id)) {
-                selectedGroup.push({ id: item.id, title: item.title, color: item.color });
-              }
+  if (settings) {
+    if (groups) {
+      if (groups.groups) {
+        var selectedGroup = [];
+        groups.groups.map(function(item) {
+          if (settings && settings.groups) {
+            if (settings.groups.includes(item.id)) {
+              selectedGroup.push({ id: item.id, title: item.title, color: item.color });
             }
-            return selectedGroup;
-          });
-          selectedGroupFilters = selectedGroup;
-        }
+          }
+          return selectedGroup;
+        });
+        selectedGroupFilters = selectedGroup;
       }
-
-      if (users) {
-        if (users.users) {
-          var selectedUsersObjects = [];
-          users.users.map(function(item) {
-            if (settings && settings.users) {
-              if (settings.users.includes(item.id)) {
-                selectedUsersObjects.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
-              }
-            }
-            return selectedUsersObjects;
-          });
-          selectedUsers = selectedUsersObjects;
-        }
-      }
-
-      if (settings.date_from) {
-        dateFrom = settings.date_from;
-        selectedDateTimestampFrom = moment(settings.date_from)._d;
-        selectedDateFrom = moment(settings.date_from).format(" Do MMM YY");
-        selectedDateFromFormated = moment(settings.date_from).format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (settings.date_to) {
-        dateTo = settings.date_to;
-        selectedDateTimestampTo = moment(settings.date_to)._d;
-        selectedDateTo = moment(settings.date_to).format(" Do MMM YY");
-        selectedDateToFormated = moment(settings.date_to)
-          .add(21, "hours")
-          .add(59, "minutes")
-          .add(59, "seconds")
-          .format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (settings.view_mode) {
-        viewMode = settings.view_mode;
-      }
-      showFilters = settings.show_filters;
-      if (settings.search_term !== null) {
-        searchTerm = settings.search_term;
-      }
-
-      if (
-        !isEmpty(selectedUsers) ||
-        !isEmpty(selectedGroupFilters) ||
-        selectedDateTimestampFrom !== "" ||
-        selectedDateTimestampTo !== ""
-      ) {
-        activeFilters = true;
-      }
-      return {
-        dateFrom,
-        selectedDateTimestampFrom,
-        selectedDateFrom,
-        dateTo,
-        selectedDateTimestampTo,
-        selectedDateTo,
-        viewMode,
-        showFilters,
-        searchTerm,
-        selectedUsers,
-        selectedGroupFilters,
-        activeFilters,
-        selectedDateFromFormated,
-        selectedDateToFormated
-      };
     }
-    return {};
+
+    if (users) {
+      if (users.users) {
+        var selectedUsersObjects = [];
+        users.users.map(function(item) {
+          if (settings && settings.users) {
+            if (settings.users.includes(item.id)) {
+              selectedUsersObjects.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
+            }
+          }
+          return selectedUsersObjects;
+        });
+        selectedUsers = selectedUsersObjects;
+      }
+    }
+
+    if (settings.date_from) {
+      dateFrom = settings.date_from;
+      selectedDateTimestampFrom = moment(settings.date_from)._d;
+      selectedDateFrom = moment(settings.date_from).format(" Do MMM YY");
+      selectedDateFromFormated = moment(settings.date_from).format("YYYY-MM-DD HH:mm:ss");
+    }
+    if (settings.date_to) {
+      dateTo = settings.date_to;
+      selectedDateTimestampTo = moment(settings.date_to)._d;
+      selectedDateTo = moment(settings.date_to).format(" Do MMM YY");
+      selectedDateToFormated = moment(settings.date_to)
+        .add(21, "hours")
+        .add(59, "minutes")
+        .add(59, "seconds")
+        .format("YYYY-MM-DD HH:mm:ss");
+    }
+    if (settings.view_mode) {
+      viewMode = settings.view_mode;
+    }
+    showFilters = settings.show_filters;
+    if (settings.search_term !== null) {
+      searchTerm = settings.search_term;
+    }
+
+    if (
+      !isEmpty(selectedUsers) ||
+      !isEmpty(selectedGroupFilters) ||
+      selectedDateTimestampFrom !== "" ||
+      selectedDateTimestampTo !== ""
+    ) {
+      activeFilters = true;
+    }
+    return {
+      dateFrom,
+      selectedDateTimestampFrom,
+      selectedDateFrom,
+      dateTo,
+      selectedDateTimestampTo,
+      selectedDateTo,
+      viewMode,
+      showFilters,
+      searchTerm,
+      selectedUsers,
+      selectedGroupFilters,
+      activeFilters,
+      selectedDateFromFormated,
+      selectedDateToFormated
+    };
   }
-);
+  return {};
+});

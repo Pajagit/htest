@@ -41,6 +41,7 @@ import EditTestCase from "./pages/project/test-cases/EditTestCase";
 import TestCase from "./pages/project/test-cases/TestCase";
 // REPORTS
 import Reports from "./pages/project/reports/Reports";
+import Report from "./pages/project/reports/Report";
 // STATISTICS
 import Statistics from "./pages/project/statistics/Statistics";
 // ---STATISTICS---
@@ -160,6 +161,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/EditTestCase/:testcaseId" component={EditTestCase} />
           <PrivateRoute exact path="/:projectId/TestCases" component={TestCases} />
           <PrivateRoute exact path="/:projectId/Reports" component={Reports} />
+          <PrivateRoute exact path="/:projectId/Report/:reportId" component={Report} />
           <PrivateRoute exact path="/:projectId/Statistics" component={Statistics} />
           <PrivateRoute exact path="/UserSettings" component={UserSettings} />
           <PrivateRoute exact path="/AddUser" component={AddUser} />
