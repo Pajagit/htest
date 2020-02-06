@@ -28,7 +28,7 @@ module.exports = {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    var report = await ReportService.returnReportById(req.params.id);
+    var report = await ReportService.returnReportById(req.params.id, report_project);
     if (report) {
       return res.status(200).json(report);
     } else {
@@ -131,7 +131,7 @@ module.exports = {
       if (stepsArray) {
         hasSteps = true;
       }
-
+      console.log(project.project_id);
       var created_report = await ReportService.createReport(reportFields);
       if (created_report) {
         var created_report_setup = await ReportService.CreateReportSetup(created_report, setupFields);
@@ -139,7 +139,8 @@ module.exports = {
         var report = await ReportService.returnCreatedReport(
           created_report,
           created_report_setup,
-          created_report_steps
+          created_report_steps,
+          project.project_id
         );
         res.json(report);
       } else {
