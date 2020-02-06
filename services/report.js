@@ -108,6 +108,12 @@ module.exports = {
                       required: true
                     }
                   ]
+                },
+                {
+                  model: User,
+                  attributes: ["id", "first_name", "last_name", "email", "position"],
+                  required: true,
+                  as: "user"
                 }
               ]
             },
@@ -186,6 +192,7 @@ module.exports = {
             report_obj.steps = report.steps;
             report_obj.reportsetup = report.reportsetup;
             report_obj.groups = report.testcase.groups;
+            report_obj.testcase_user = report.testcase.user;
 
             resolve(report_obj);
           } else {
@@ -229,6 +236,12 @@ module.exports = {
                     required: true
                   }
                 ]
+              },
+              {
+                model: User,
+                attributes: ["id", "first_name", "last_name", "email", "position"],
+                required: true,
+                as: "user"
               }
             ]
           },
@@ -308,6 +321,7 @@ module.exports = {
           report_obj.steps = report.steps;
           report_obj.reportsetup = report.reportsetup;
           report_obj.groups = report.testcase.groups;
+          report_obj.testcase_user = report.testcase.user;
 
           resolve(report_obj);
         } else {
@@ -351,7 +365,15 @@ module.exports = {
             required: true,
             where: {
               project_id: project_id
-            }
+            },
+            include: [
+              {
+                model: User,
+                attributes: ["id", "first_name", "last_name", "email", "position"],
+                required: true,
+                as: "user"
+              }
+            ]
           },
           {
             model: Status,
@@ -445,6 +467,7 @@ module.exports = {
         report_obj.user = report.user;
         report_obj.steps = report.steps;
         report_obj.reportsetup = report.reportsetup;
+        report_obj.testcase_user = report.testcase.user;
 
         GroupTestCase.findAll({
           where: {
@@ -517,6 +540,12 @@ module.exports = {
                     required: true
                   }
                 ]
+              },
+              {
+                model: User,
+                attributes: ["id", "first_name", "last_name", "email", "position"],
+                required: true,
+                as: "user"
               }
             ]
           },
@@ -596,6 +625,8 @@ module.exports = {
           report_obj.steps = report.steps;
           report_obj.reportsetup = report.reportsetup;
           report_obj.groups = report.testcase.groups;
+          report_obj.testcase_user = report.testcase.user;
+
           reports.push(report_obj);
           if (reportsCount > 0) {
             reportsCount = reportsCount - 1;
