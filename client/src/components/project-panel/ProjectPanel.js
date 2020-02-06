@@ -61,7 +61,10 @@ class ProjectPanel extends Component {
       this.props.match.path === "/:projectId/EditTestCase/:testcaseId"
     ) {
       this.setState({ testcasesUrl: true, reportsUrl: false, statisticsUrl: false, settingsUrl: false });
-    } else if (this.props.match.url === `/${projectId}/Reports`) {
+    } else if (
+      this.props.match.url === `/${projectId}/Reports` ||
+      this.props.match.path === `/:projectId/Report/:reportId`
+    ) {
       this.setState({ testcasesUrl: false, reportsUrl: true, statisticsUrl: false, settingsUrl: false });
     } else if (this.props.match.url === `/${projectId}/Statistics`) {
       this.setState({ testcasesUrl: false, reportsUrl: false, statisticsUrl: true, settingsUrl: false });
@@ -145,7 +148,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { getProject }
-)(withRouter(ProjectPanel));
+export default connect(mapStateToProps, { getProject })(withRouter(ProjectPanel));

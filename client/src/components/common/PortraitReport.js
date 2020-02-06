@@ -1,6 +1,5 @@
-import React, { version } from "react";
+import React from "react";
 import ReportStatus from "./ReportStatus";
-import Tag from "./Tag";
 import moment from "moment";
 
 function PortraitReport({

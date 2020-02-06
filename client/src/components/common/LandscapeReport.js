@@ -1,7 +1,6 @@
 import React from "react";
 import moment from "moment";
 import ReportStatus from "./ReportStatus";
-import Tag from "./Tag";
 
 function LandscapeTestCase({
   title,
@@ -27,10 +26,7 @@ function LandscapeTestCase({
         <div className="landscape-report-left-container">
           <div className="landscape-report-left-container--title">{title}</div>
 
-          <div className="landscape-report-left-container--tags">
-            <Tag title="Login" color="DARK_KHAKI" isRemovable={false} />
-            <Tag title="Regression" color="MEDIUM_SEA_GREEN" isRemovable={false} />
-          </div>
+          <div className="landscape-report-left-container--tags">{tags}</div>
 
           <div className="landscape-report-left-container--author">
             {author.first_name} {author.last_name} {author.position ? ", " + author.position : ""}

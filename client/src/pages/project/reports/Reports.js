@@ -6,7 +6,6 @@ import { createSelector } from "reselect";
 
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../components/project-panel/ProjectPanel";
-import BtnAnchorResponsive from "../../../components/common/BtnAnchorResponsive";
 import FilterBtn from "../../../components/common/FilterBtn";
 import Header from "../../../components/common/Header";
 import SearchBtn from "../../../components/common/SearchBtn";
@@ -531,17 +530,6 @@ class Reports extends Component {
         </div>
       );
     }
-    var addTestCase = "";
-    if (this.state.isValidWrite) {
-      addTestCase = (
-        <BtnAnchorResponsive
-          type={"text"}
-          label="Add New"
-          className={"a-btn-responsive a-btn-primary"}
-          link={`/${this.props.match.params.projectId}/CreateTestCase`}
-        />
-      );
-    }
 
     return (
       <div className="wrapper">
@@ -551,9 +539,7 @@ class Reports extends Component {
           <Header
             icon={<i className="fas fa-file-alt"></i>}
             title={"Reports"}
-            // link={"CreateTestCase"}
             canGoBack={false}
-            addBtn={addTestCase}
             filterBtn={
               <FilterBtn
                 onClick={this.filterBtn}

@@ -122,7 +122,7 @@ class ReportContainer extends Component {
                 simulator={report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/"}
                 id={report.id}
                 projectId={projectId}
-                onClick={e => this.props.history.push(`/${projectId}/TestCase/${report.id}`)}
+                onClick={e => this.props.history.push(`/${projectId}/Report/${report.id}`)}
                 isValidWrite={this.props.isValidWrite}
               />
             </React.Fragment>
@@ -167,7 +167,7 @@ class ReportContainer extends Component {
               simulator={report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/"}
               id={report.id}
               projectId={projectId}
-              onClick={e => this.props.history.push(`/${projectId}/TestCase/${report.id}`)}
+              onClick={e => this.props.history.push(`/${projectId}/Report/${report.id}`)}
               isValidWrite={this.props.isValidWrite}
             ></LandscapeReport>
           </React.Fragment>
