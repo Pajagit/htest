@@ -81,7 +81,13 @@ class ReportContainer extends Component {
     let content;
     let grid = "";
     var pagination = "";
-    if (reports.reports === null || loading || this.state.settings === null || settingsLoading) {
+    if (
+      reports.reports === null ||
+      loading ||
+      this.state.settings === null ||
+      settingsLoading ||
+      this.state.dimensions === null
+    ) {
       content = <Spinner />;
     } else if (reports.reports.reports.length > 0 && this.state.settings.view_mode === 1) {
       reports = this.props.reports.reports;
@@ -99,36 +105,33 @@ class ReportContainer extends Component {
       grid = "testcase-grid";
       content =
         reports.reports &&
-        reports.reports.map(
-          (report, index) => (
-            <React.Fragment key={index}>
-              <PortraitReport
-                title={report.title}
-                tags={report.groups.map((group, groupIndex) => (
-                  <React.Fragment key={groupIndex}>
-                    <Tag title={group.title} color={group.color.title} isRemovable={false} />
-                  </React.Fragment>
-                ))}
-                author={report.user}
-                date={report.created_at}
-                comment={report.comment}
-                actual_result={report.actual_result}
-                status={report.status}
-                device={report.reportsetup.device !== null ? report.reportsetup.device : "/"}
-                browser={report.reportsetup.browser ? report.reportsetup.browser : "/"}
-                version={report.reportsetup.version ? report.reportsetup.version : "/"}
-                operatingsystem={report.reportsetup.operatingsystem !== null ? report.reportsetup.operatingsystem : "/"}
-                environment={report.reportsetup.environment !== null ? report.reportsetup.environment : "/"}
-                simulator={report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/"}
-                id={report.id}
-                projectId={projectId}
-                onClick={e => this.props.history.push(`/${projectId}/Report/${report.id}`)}
-                isValidWrite={this.props.isValidWrite}
-              />
-            </React.Fragment>
-          )
-          // console.log(report.reportsetup.device)
-        );
+        reports.reports.map((report, index) => (
+          <React.Fragment key={index}>
+            <PortraitReport
+              title={report.title}
+              tags={report.groups.map((group, groupIndex) => (
+                <React.Fragment key={groupIndex}>
+                  <Tag title={group.title} color={group.color.title} isRemovable={false} />
+                </React.Fragment>
+              ))}
+              author={report.user}
+              date={report.created_at}
+              comment={report.comment}
+              actual_result={report.actual_result}
+              status={report.status}
+              device={report.reportsetup.device !== null ? report.reportsetup.device : "/"}
+              browser={report.reportsetup.browser ? report.reportsetup.browser : "/"}
+              version={report.reportsetup.version ? report.reportsetup.version : "/"}
+              operatingsystem={report.reportsetup.operatingsystem !== null ? report.reportsetup.operatingsystem : "/"}
+              environment={report.reportsetup.environment !== null ? report.reportsetup.environment : "/"}
+              simulator={report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/"}
+              id={report.id}
+              projectId={projectId}
+              onClick={e => this.props.history.push(`/${projectId}/Report/${report.id}`)}
+              isValidWrite={this.props.isValidWrite}
+            />
+          </React.Fragment>
+        ));
     } else if (reports.reports.reports.length > 0 && this.state.settings.view_mode === 2) {
       reports = this.props.reports.reports;
       if (showPagination) {

@@ -6,7 +6,7 @@ import { GET_REPORTS, GET_REPORT, REPORT_LOADING, GET_ERRORS } from "./types";
 export const getReports = (project_id, pageSent, pageSizeSent) => dispatch => {
   dispatch(reportLoading());
   var page = pageSent === undefined ? 1 : pageSent;
-  var size = pageSizeSent === undefined ? 100 : pageSizeSent;
+  var size = pageSizeSent === undefined ? 15 : pageSizeSent;
 
   axios
     .get(`/api/reports?page=${page}&page_size=${size}&project_id=${project_id}`)

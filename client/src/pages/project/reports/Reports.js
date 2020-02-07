@@ -531,6 +531,21 @@ class Reports extends Component {
       );
     }
 
+    if (!this.state.listViewActivity) {
+      var listView = (
+        <div className="view-options">
+          <div
+            className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
+            onClick={e => this.setViewList(e)}
+          >
+            <i className="fas fa-bars "></i>
+          </div>
+          <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
+            <i className="fas fa-th "></i>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="wrapper">
         <GlobalPanel props={this.props} />
@@ -557,17 +572,8 @@ class Reports extends Component {
               />
             }
           />
-          <div className="view-options">
-            <div
-              className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
-              onClick={e => this.setViewList(e)}
-            >
-              <i className="fas fa-bars "></i>
-            </div>
-            <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
-              <i className="fas fa-th "></i>
-            </div>
-          </div>
+
+          {listView}
           {filters}
           <ReportCointainer filters={this.state.testcaseFilters} viewOption={view_mode} />
         </div>
