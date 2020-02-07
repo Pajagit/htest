@@ -79,7 +79,13 @@ class TestCaseContainer extends Component {
     let content;
     let grid = "";
     var pagination = "";
-    if (testcases.testcases === null || loading || this.state.settings === null || settingsLoading) {
+    if (
+      testcases.testcases === null ||
+      loading ||
+      this.state.settings === null ||
+      settingsLoading ||
+      this.state.dimensions === null
+    ) {
       content = <Spinner />;
     } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 1) {
       testcases = this.props.testcases.testcases;
@@ -189,7 +195,4 @@ const mapStateToProps = state => ({
   settings: state.settings
 });
 
-export default connect(
-  mapStateToProps,
-  { getTestcases }
-)(withRouter(TestCaseContainer));
+export default connect(mapStateToProps, { getTestcases })(withRouter(TestCaseContainer));
