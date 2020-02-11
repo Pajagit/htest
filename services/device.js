@@ -14,7 +14,7 @@ module.exports = {
   getDevicesPaginated: async function(whereStatement, page, pageSize, project_id) {
     return new Promise((resolve, reject) => {
       Device.findAndCountAll({
-        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os"],
+        attributes: ["id", "title", "resolution", "dpi", "udid", "screen_size", "retina", "os", "office_id"],
         where: whereStatement,
         include: [
           {
