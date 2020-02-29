@@ -189,7 +189,153 @@ class Report extends Component {
             link={`/${this.props.match.params.projectId}/Reports`}
             canGoBack={true}
           />
-          {content}
+          {/* {content} */}
+          <div className="report-details">
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-header">
+                  <div className="report-details-row-half-header-value">Test Case</div>
+                </div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-header">
+                  <div className="report-details-row-half-header-value">Report</div>
+                </div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Title</div>
+                <div className="report-details-row-half-value">ime test casea</div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Status</div>
+                <div className="report-details-row-half-value">Passed</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Date</div>
+                <div className="report-details-row-half-value">12.02.2019</div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Date</div>
+                <div className="report-details-row-half-value">20.01.2020</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">User</div>
+                <div className="report-details-row-half-value">Aleksandar Pavlovic</div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">User</div>
+                <div className="report-details-row-half-value">Jana Antic</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-full">
+                <div className="report-details-row-full-title">Groups</div>
+                <div className="report-details-row-full-value">grupe</div>
+              </div>
+            </div>
+
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Precondition</div>
+                <div className="report-details-row-half-value">precondition</div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title ">Additional Precondition</div>
+                <div className="report-details-row-half-value">dodatni precondition</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Expected Result</div>
+                <div className="report-details-row-half-value">ocekivani rezultat</div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Actual Result</div>
+                <div className="report-details-row-half-value">rezultat</div>
+              </div>
+            </div>
+
+            <div className="report-details-row">
+              <div className="report-details-row-full">
+                <div className="report-details-row-full-title">Description</div>
+                <div className="report-details-row-full-value">
+                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean
+                  massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec
+                  quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec
+                  pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a,
+                  venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.
+                </div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Test Steps</div>
+                <div className="report-details-row-half-value">
+                  1. step1 <br /> 2. step2 <br /> 3. step3
+                </div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Steps Input Data</div>
+                <div className="report-details-row-half-value">
+                  1. step1 <br /> 2. step2 <br /> 3. step3
+                </div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Links</div>
+                <div className="report-details-row-half-value">https://www.google.com</div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Links</div>
+                <div className="report-details-row-half-value">https://www.google.com</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Device</div>
+                <div className="report-details-row-half-value">iPhone 7</div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Browser</div>
+                <div className="report-details-row-half-value">Google Chrome</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Version</div>
+                <div className="report-details-row-half-value">2.1</div>
+              </div>
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Operating System</div>
+                <div className="report-details-row-half-value">iOS</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half FAILED-REPORT">
+                <div className="report-details-row-half-title">Environment</div>
+                <div className="report-details-row-half-value">Development</div>
+              </div>
+            </div>
+            <div className="report-details-row-full">
+              <div className="report-details-row-full FAILED-REPORT">
+                <div className="report-details-row-full-title">Comment</div>
+                <div className="report-details-row-full-value">
+                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean
+                  massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec
+                  quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec
+                  pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a,
+                  venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
