@@ -214,7 +214,7 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["project_id", "title", "description", "preconditions", "expected_result"],
+            attributes: ["project_id", "title", "description", "preconditions", "expected_result", "created_at"],
             required: true,
             where: {
               project_id: project_id
@@ -322,6 +322,7 @@ module.exports = {
           report_obj.reportsetup = report.reportsetup;
           report_obj.groups = report.testcase.groups;
           report_obj.testcase_user = report.testcase.user;
+          report_obj.testcase_created_at = report.testcase.created_at;
 
           resolve(report_obj);
         } else {
@@ -641,6 +642,16 @@ module.exports = {
             resolve({ reports, page, pages });
           }
         });
+      });
+    });
+  },
+  getReportStatuses: async function() {
+    return new Promise((resolve, reject) => {
+      Status.findAll({
+        attributes: ["id", "title"],
+        order: [["id", "ASC"]]
+      }).then(statuses => {
+        resolve(statuses);
       });
     });
   }
