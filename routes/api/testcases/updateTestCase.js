@@ -42,7 +42,7 @@ module.exports = Router({ mergeParams: true }).put(
       testCaseFields.deprecated = req.body.deprecated ? req.body.deprecated : false;
       testCaseFields.preconditions = req.body.preconditions ? req.body.preconditions : null;
       if (req.body.expected_result) testCaseFields.expected_result = req.body.expected_result;
-      var test_steps = req.body.test_steps.filter(Boolean);
+      var test_steps = req.body.test_steps;
       if (req.body.links) {
         var links = req.body.links.filter(Boolean);
       }
@@ -158,7 +158,8 @@ module.exports = Router({ mergeParams: true }).put(
             for (var i = 0; i < test_steps.length; i++) {
               arrayTestSteps.push({
                 test_case_id: updatedTestCase,
-                title: test_steps[i]
+                title: test_steps[i].value,
+                expected_result: test_steps[i].expected_result
               });
             }
             TestStep.bulkCreate(arrayTestSteps).then(steps => {
