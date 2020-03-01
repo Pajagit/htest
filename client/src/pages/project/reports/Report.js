@@ -166,11 +166,11 @@ class Report extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Test Steps</div>
                 <div className='report-details-row-half-value'>
-                  {report.steps.map((step, index) => (
+                  {report.testcase.steps.map((step, index) => (
                     <div key={index}>
                       <span>
                         {`${index + 1}. `}
-                        {step.step}
+                        {step.value}
                       </span>
                     </div>
                   ))}
