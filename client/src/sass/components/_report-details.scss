@@ -1,188 +1,56 @@
 .report-details {
-  margin-left: 3rem;
-  margin-right: 3rem;
-  margin-top: 3rem;
+  margin: 3rem;
   max-width: 120.8rem;
-
   background-color: #ffffff;
   box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
-  &-container-top {
-    padding: 1.8rem 3.8rem;
+  &-row {
     display: flex;
-    justify-content: space-between;
-    align-content: center;
-    align-items: center;
-  }
-  &-container-bottom {
-    padding-left: 3.8rem;
-    padding-right: 3.8rem;
-    padding-top: 1.8rem;
-    padding-bottom: 5rem;
-  }
-  &--header {
-    box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
-  }
-  &-header {
-    &--value {
-      & > img {
-        max-width: 15rem;
+    flex-direction: row;
+    z-index: 1000;
+    &-half {
+      box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
+      &-header {
+        font-weight: 500;
+        font-size: 1.4rem;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        line-height: 2.3rem;
+        &-value {
+          padding: 1.8rem 3.8rem;
+        }
       }
-    }
-  }
-
-  &-item {
-    margin-bottom: 2.4rem;
-
-    &--title {
-      margin-bottom: 1rem;
-      color: #9b9b9b;
-      font-size: 1.4rem;
-      letter-spacing: 0.17px;
-      line-height: 1.8rem;
-    }
-    &--value {
-      color: #000000;
-      font-size: 1.4rem;
-      line-height: 2.3rem;
-      &-muted {
-        text-indent: 1.5rem;
-        font-style: italic;
-        color: gray;
+      width: 50%;
+      &-title {
+        padding: 1.5rem 3.5rem 0 3.5rem;
+        color: #9b9b9b;
+        font-size: 1.2rem;
+        letter-spacing: 0.17px;
+        line-height: 1.8rem;
       }
-      &-img {
-        width: 1.8rem;
+      &-value {
+        padding: 1.5rem 3.5rem;
+        color: #000000;
+        font-size: 1.2rem;
+        line-height: 2.3rem;
       }
+      box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
     }
-  }
-  &-header {
-    &--title {
-      margin-bottom: 1rem;
-      color: #9b9b9b;
-      font-size: 1.4rem;
-      letter-spacing: 0.17px;
-      line-height: 1.8rem;
-    }
-    &--value {
-      font-size: 1.6rem;
-      font-weight: 500;
-      letter-spacing: 0.2px;
-      line-height: 2rem;
-    }
-    &--subvalue {
-      //   font-size: 1.6rem;
-      //   font-weight: 500;
-      //   letter-spacing: 0.2px;
-      //   line-height: 2rem;
-    }
-  }
-  &-button {
-    display: flex;
-    align-items: center;
-    font-size: 1.4rem;
-    &-title {
-      margin-right: 1.5rem;
-      color: #9b9b9b;
-
-      letter-spacing: 0.17px;
-      line-height: 1.8rem;
-    }
-    &-icon {
-      color: $color-primary;
-    }
-  }
-}
-
-.report-details-values {
-  margin-top: 2px;
-  margin-left: 3rem;
-  margin-right: 3rem;
-  margin-bottom: 3rem;
-  max-width: 120.8rem;
-
-  background-color: #ffffff;
-  box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
-  &-container-top {
-    padding: 1.8rem 3.8rem;
-    display: flex;
-    justify-content: space-between;
-    align-content: center;
-    align-items: center;
-  }
-  &-container-bottom {
-    padding-left: 3.8rem;
-    padding-right: 3.8rem;
-    padding-top: 1.8rem;
-    padding-bottom: 5rem;
-  }
-  &--header {
-    box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
-  }
-  &-header {
-    &--value {
-      & > img {
-        max-width: 15rem;
+    &-full {
+      box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
+      width: 100%;
+      &-title {
+        padding: 1.5rem 3.5rem;
+        color: #9b9b9b;
+        font-size: 1.2rem;
+        letter-spacing: 0.17px;
+        line-height: 1.8rem;
       }
-    }
-  }
-
-  &-item {
-    margin-bottom: 2.4rem;
-
-    &--title {
-      margin-bottom: 1rem;
-      color: #9b9b9b;
-      font-size: 1.4rem;
-      letter-spacing: 0.17px;
-      line-height: 1.8rem;
-    }
-    &--value {
-      color: #000000;
-      font-size: 1.4rem;
-      line-height: 2.3rem;
-      &-muted {
-        text-indent: 1.5rem;
-        font-style: italic;
-        color: gray;
+      &-value {
+        padding: 1.5rem 3.5rem;
+        color: #000000;
+        font-size: 1.2rem;
+        line-height: 2.3rem;
       }
-      &-img {
-        width: 1.8rem;
-      }
-    }
-  }
-  &-header {
-    &--title {
-      margin-bottom: 1rem;
-      color: #9b9b9b;
-      font-size: 1.4rem;
-      letter-spacing: 0.17px;
-      line-height: 1.8rem;
-    }
-    &--value {
-      font-size: 1.6rem;
-      font-weight: 500;
-      letter-spacing: 0.2px;
-      line-height: 2rem;
-    }
-    &--subvalue {
-      //   font-size: 1.6rem;
-      //   font-weight: 500;
-      //   letter-spacing: 0.2px;
-      //   line-height: 2rem;
-    }
-  }
-  &-button {
-    display: flex;
-    align-items: center;
-    font-size: 1.4rem;
-    &-title {
-      margin-right: 1.5rem;
-      color: #9b9b9b;
-
-      letter-spacing: 0.17px;
-      line-height: 1.8rem;
-    }
-    &-icon {
-      color: $color-primary;
     }
   }
 }

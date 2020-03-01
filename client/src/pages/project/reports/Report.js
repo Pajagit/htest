@@ -55,122 +55,167 @@ class Report extends Component {
     if (isEmpty(report) || loading) {
       content = <Spinner />;
     } else {
-      console.log(this.props);
+
       content = (
         <div>
           <div className="report-details">
-            <div className="report-details--header">
-              <div className="report-details-container-top">
-                <div className="report-details-header">
-                  <div className="report-details-header--value">{report.title}</div>
-                  <br />
-                  <div className="report-details-header--title">
-                    {report.testcase_user.first_name} {report.testcase_user.last_name}{" "}
-                    {report.testcase_user.position ? ", " + report.testcase_user.position : ""}
-                  </div>
-                  <div className="report-details-header--subvalue">
-                    {report.groups.map((group, index) => (
-                      <span key={index}>
-                        <Tag title={group.title} color={group.color.title} isRemovable={false} />
-                      </span>
-                    ))}
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-header">
+                  <div className="report-details-row-half-header-value">Test Case</div>
+                </div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-header">
+                  <div className="report-details-row-half-header-value">Report</div>
+                </div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Title</div>
+                <div className="report-details-row-half-value">{report.title}</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Status</div>
+                <div className="report-details-row-half-value">{report.status.title}</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Test Case Created</div>
+                <div className="report-details-row-half-value">TO DO:{moment(report.created_at).format("Do MMMM YYYY, h:mm:ss a")}</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Reported</div>
+                <div className="report-details-row-half-value"> {moment(report.created_at).format("Do MMMM YYYY, h:mm:ss a")}</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Created By</div>
+                <div className="report-details-row-half-value">{report.testcase_user.first_name + " " + report.testcase_user.last_name + " - " + report.testcase_user.email}</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Tested By</div>
+                <div className="report-details-row-half-value">{report.user.first_name + " " + report.user.last_name + " - " + report.user.email}</div>
+              </div>
+            </div>
+
+
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Precondition</div>
+                <div className="report-details-row-half-value">{report.preconditions}</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title ">Additional Precondition</div>
+                <div className="report-details-row-half-value">{report.additional_precondition}</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Expected Result</div>
+                <div className="report-details-row-half-value">{report.expected_result}</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Actual Result</div>
+                <div className="report-details-row-half-value">{report.actual_result}</div>
+              </div>
+            </div>
+
+            <div className="report-details-row">
+              <div className="report-details-row-full">
+                <div className="report-details-row-full-title">Description</div>
+                <div className="report-details-row-full-value">
+                  {report.description}
+                </div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-full">
+                <div className="report-details-row-full-title">Groups</div>
+                <div className="report-details-row-full-value">{report.groups.map((group, groupIndex) => (
+                  <React.Fragment key={groupIndex}>
+                    <Tag title={group.title} color={group.color.title} isRemovable={false} />
+                  </React.Fragment>
+                ))}</div>
+                <br />
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className="report-details-row-full">
+                <div className={`report-details-row-full ${report.status.title.toUpperCase()}-REPORT`}>
+                  <div className="report-details-row-full-title">Comment</div>
+                  <div className="report-details-row-full-value">
+                    {report.comment}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="report-details--body">
-              <div className="report-details-container-bottom">
-                <div className="report-details-item">
-                  <div className="report-details-item--title">Actual result</div>
-                  <div className="report-details-item--value">{report.actual_result}</div>
-                </div>
-                <div className="report-details-item">
-                  <div className="report-details-item--title">Description</div>
-                  <div className="report-details-item--value">{report.description}</div>
-                </div>
-                <div className="report-details-item">
-                  <div className="report-details-item--title">Precondition</div>
-                  <div className="report-details-item--value">{report.preconditions}</div>
-                </div>
-                <div className="report-details-item">
-                  <div className="report-details-item--title">Test Steps</div>
-
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Test Steps</div>
+                <div className="report-details-row-half-value">
                   {report.steps.map((step, index) => (
-                    <div className="report-details-item--value" key={index}>
+                    <div key={index}>
                       <span>
                         {`${index + 1}. `}
                         {step.step}
-
-                        <div className="report-details-item--value-muted" key={index}>
-                          {!isEmpty(step.input_data) ? `Input data:  ${step.input_data}` : ""}
-                        </div>
                       </span>
                     </div>
                   ))}
                 </div>
-                <div className="report-details-item">
-                  <div className="report-details-item--title">Expected Result</div>
-                  <div className="report-details-item--value">{report.expected_result}</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Steps Input Data</div>
+                <div className="report-details-row-half-value">
+                  {report.steps.map((step, index) => (
+                    <div key={index}>
+                      <span>
+                        {`${index + 1}. `}
+                        {!isEmpty(step.input_data) ? `${step.input_data}` : "/"}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Links</div>
+                <div className="report-details-row-half-value">TO DO: https://www.google.com</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Links</div>
+                <div className="report-details-row-half-value">TO DO: https://www.google.com</div>
+              </div>
+            </div>
 
-          <div className="report-details-values">
-            <div className="report-details-values--header">
-              <div className="report-details-values-container-top">
-                <div className="report-details-values-header">
-                  <div className="report-details-values-header--title">
-                    {moment(report.create_at).format("YYYY-MM-DD HH:mm:ss")}
-                  </div>
-                  <div className="report-details-values-header--value">{`Status: ${report.status.title}`}</div>
-                  <br />
-                  <div className="report-details-values-header--subvalue">
-                    Tested by: {`${report.user.first_name} ${report.user.last_name}`}
-                  </div>
-                </div>
+            <div className="report-details-row">
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Device</div>
+                <div className="report-details-row-half-value">{report.reportsetup.device ? report.reportsetup.device.title : ""}</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Browser</div>
+                <div className="report-details-row-half-value">{report.reportsetup.browser ? report.reportsetup.browser.title : ""}</div>
               </div>
             </div>
-            <div className="report-details-values--body">
-              <div className="report-details-values-container-bottom">
-                <div className="report-details-values-item">
-                  <div className="report-details-values-item--title">Devices</div>
-                  <div className="report-details-values-item--value">
-                    {report.reportsetup.device && report.reportsetup.device.title}
-                  </div>
-                </div>
-                <div className="report-details-values-item">
-                  <div className="report-details-values-item--title">Versions</div>
-                  <div className="report-details-values-item--value">
-                    {report.reportsetup.version && report.reportsetup.version.version}
-                  </div>
-                </div>
-                <div className="report-details-values-item">
-                  <div className="report-details-values-item--title">Browser</div>
-                  <div className="report-details-values-item--value">
-                    {report.reportsetup.browser && report.reportsetup.browser.title}
-                  </div>
-                </div>
-                <div className="report-details-values-item">
-                  <div className="report-details-values-item--title">Operating System</div>
-                  <div className="report-details-values-item--value">
-                    {report.reportsetup.operatingsystem && report.reportsetup.operatingsystem.title}
-                  </div>
-                </div>
-                <div className="report-details-item">
-                  <div className="report-details-item--title">Environment</div>
-                  <div className="report-details-item--value">
-                    {report.reportsetup.environment && report.reportsetup.environment.title}
-                  </div>
-                </div>
-                <div className="report-details-item">
-                  <div className="report-details-item--title">Additional Precondition</div>
-                  <div className="report-details-item--value">{report.additional_precondition}</div>
-                </div>
-                <div className="report-details-item">
-                  <div className="report-details-item--title">Comment</div>
-                  <div className="report-details-item--value">{report.comment}</div>
-                </div>
+            <div className="report-details-row">
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Version</div>
+                <div className="report-details-row-half-value">{report.reportsetup.version ? report.reportsetup.version.version : ""}</div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Operating System</div>
+                <div className="report-details-row-half-value">{report.reportsetup.operatingsystem ? report.reportsetup.operatingsystem.title : ""}</div>
+              </div>
+            </div>
+            <div className="report-details-row">
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className="report-details-row-half-title">Environment</div>
+                <div className="report-details-row-half-value">{report.reportsetup.environment ? report.reportsetup.environment.title : ""}</div>
               </div>
             </div>
           </div>
@@ -190,6 +235,7 @@ class Report extends Component {
             canGoBack={true}
           />
           {content}
+
         </div>
       </div>
     );

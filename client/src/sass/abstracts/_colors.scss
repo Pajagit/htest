@@ -146,3 +146,11 @@
 .RESET_COLOR {
   background-color: black;
 }
+
+.PASSED-REPORT {
+  background: rgba(187, 231, 177, 0.2);
+}
+
+.FAILED-REPORT {
+  background: rgba(216, 150, 150, 0.2);
+}

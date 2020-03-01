@@ -42,6 +42,7 @@ import TestCase from "./pages/project/test-cases/TestCase";
 // REPORTS
 import Reports from "./pages/project/reports/Reports";
 import Report from "./pages/project/reports/Report";
+import NewReport from "./pages/project/reports/NewReport";
 // STATISTICS
 import Statistics from "./pages/project/statistics/Statistics";
 // ---STATISTICS---
@@ -79,7 +80,7 @@ import openSocket from "socket.io-client";
 import webSocket from "./configSocket/keys";
 var socket = openSocket(webSocket.webSocket);
 
-socket.on("refreshUserToken", function(data) {
+socket.on("refreshUserToken", function (data) {
   if (localStorage.jwtHtestToken) {
     const decoded = jwt_decode(localStorage.jwtHtestToken);
     if (decoded.id === parseInt(data)) {
@@ -161,6 +162,7 @@ function App() {
           <PrivateRoute exact path="/:projectId/EditTestCase/:testcaseId" component={EditTestCase} />
           <PrivateRoute exact path="/:projectId/TestCases" component={TestCases} />
           <PrivateRoute exact path="/:projectId/Reports" component={Reports} />
+          <PrivateRoute exact path="/:projectId/NewReport/:testcaseId" component={NewReport} />
           <PrivateRoute exact path="/:projectId/Report/:reportId" component={Report} />
           <PrivateRoute exact path="/:projectId/Statistics" component={Statistics} />
           <PrivateRoute exact path="/UserSettings" component={UserSettings} />

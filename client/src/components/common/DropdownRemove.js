@@ -18,7 +18,7 @@ function DropdownRemove({
   var placeholderValue = "";
   if (isEmpty(value)) {
     placeholderValue = (
-      <option value="0" className="default">
+      <option value='0' className='default'>
         {placeholder}
       </option>
     );
@@ -28,12 +28,12 @@ function DropdownRemove({
     disabledValue = "disabled";
   }
   return (
-    <div className="form-element">
-      <div className="form-element-item">
+    <div className='form-element'>
+      <div className='form-element-item'>
         <FormElementTitle label={label} validationMsg={validationMsg} />
       </div>
       <div className={`form-element-item ${disabledValue}`}>
-        <select className="form-element--dropdown-with-remove" onChange={onChange} name={name} value={role}>
+        <select className='form-element--dropdown-with-remove' onChange={onChange} name={name} value={role}>
           {placeholderValue}
 
           {options.map((option, index) => (
@@ -42,11 +42,11 @@ function DropdownRemove({
             </option>
           ))}
         </select>
-        <div className="form-element--dropdown-with-remove--icon">
-          <i className="fas fa-chevron-down"></i>
+        <div className='form-element--dropdown-with-remove--icon'>
+          <i className='fas fa-chevron-down'></i>
         </div>
-        <div className="form-element--dropdown-with-remove--remove-btn" onClick={onClickRemove}>
-          <img src={removeBtn} alt="Remove"></img>
+        <div className='form-element--dropdown-with-remove--remove-btn' onClick={onClickRemove}>
+          <img src={removeBtn} alt='Remove'></img>
         </div>
       </div>
     </div>
