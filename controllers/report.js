@@ -134,15 +134,25 @@ module.exports = {
       if (stepsArray) {
         hasSteps = true;
       }
-      console.log(project.project_id);
+
+      if (req.body.links) {
+        var linksArray = req.body.links.filter(Boolean);
+      }
+      var hasLinks = false;
+      if (linksArray) {
+        hasLinks = true;
+      }
       var created_report = await ReportService.createReport(reportFields);
       if (created_report) {
         var created_report_setup = await ReportService.CreateReportSetup(created_report, setupFields);
         var created_report_steps = await ReportService.addTestSteps(hasSteps, stepsArray, created_report);
+        var created_report_links = await ReportService.addLinks(hasLinks, linksArray, created_report);
+
         var report = await ReportService.returnCreatedReport(
           created_report,
           created_report_setup,
           created_report_steps,
+          created_report_links,
           project.project_id
         );
         res.json(report);
