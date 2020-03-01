@@ -446,15 +446,8 @@ module.exports = {
                 attributes: ["id", "first_name", "last_name", "email", "position"],
                 required: true,
                 as: "user"
-              },
-              {
-                model: TestStep,
-                attributes: ["id", ["title","value"], "expected_result"],
-                required: false,
-                as: "test_steps"
               }
-            ],
-            order: [[{ model: TestStep, as: "test_steps" }, "id", "ASC"]]
+            ]
           },
           {
             model: Status,
@@ -468,12 +461,7 @@ module.exports = {
             attributes: ["id", "first_name", "last_name", "email", "position"],
             required: true
           },
-          {
-            model: ReportStep,
-            as: "steps",
-            attributes: ["id", ["step", "value"], "input_data"],
-            required: false
-          },
+
           {
             model: ReportSetup,
             as: "reportsetup",
@@ -514,10 +502,7 @@ module.exports = {
         ],
         attributes: ["id", "actual_result", "created_at", "comment", "additional_precondition"],
         ...paginate({ page, pageSize }),
-        order: [
-          ["id", "desc"],
-          [{ model: ReportStep, as: "steps" }, "id", "ASC"]
-        ]
+        order: [["id", "desc"]]
       }).then(report_obj => {
         var reports = report_obj.rows;
         var pages = 1;
@@ -637,15 +622,8 @@ module.exports = {
                 attributes: ["id", "first_name", "last_name", "email", "position"],
                 required: true,
                 as: "user"
-              },
-              {
-                model: TestStep,
-                attributes: ["id", ["title","value"], "expected_result"],
-                required: false,
-                as: "test_steps"
               }
-            ],
-            order: [[{ model: TestStep, as: "test_steps" }, "id", "ASC"]]
+            ]
           },
           {
             model: Status,
@@ -659,12 +637,7 @@ module.exports = {
             attributes: ["id", "first_name", "last_name", "email", "position"],
             required: true
           },
-          {
-            model: ReportStep,
-            as: "steps",
-            attributes: ["id", ["step", "value"], "input_data"],
-            required: false
-          },
+
           {
             model: ReportSetup,
             as: "reportsetup",
@@ -705,10 +678,7 @@ module.exports = {
           }
         ],
         attributes: ["id", "actual_result", "created_at", "comment", "additional_precondition"],
-        order: [
-          ["id", "desc"],
-          [{ model: ReportStep, as: "steps" }, "id", "ASC"]
-        ]
+        order: [["id", "desc"]]
       }).then(reportsArr => {
         var reports = Array();
         var reportsCount = reportsArr.length;
@@ -735,7 +705,6 @@ module.exports = {
           report_obj.testcase.created_at = report.testcase.created_at;
           report_obj.links = report.links;
           report_obj.testcase.links = report.testcase.links;
-          report_obj.testcase.steps = report.testcase.test_steps;
 
           reports.push(report_obj);
           if (reportsCount > 0) {
