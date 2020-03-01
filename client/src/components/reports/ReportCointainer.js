@@ -108,7 +108,7 @@ class ReportContainer extends Component {
         reports.reports.map((report, index) => (
           <React.Fragment key={index}>
             <PortraitReport
-              title={report.title}
+              title={report.testcase.title}
               tags={report.groups.map((group, groupIndex) => (
                 <React.Fragment key={groupIndex}>
                   <Tag title={group.title} color={group.color.title} isRemovable={false} />
@@ -183,11 +183,11 @@ class ReportContainer extends Component {
         (this.state.settings && this.state.settings.date_to !== null)
       ) {
         content = (
-          <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>
+          <div className='testcase-container-no-content padding'>There are no test cases matching selected filters</div>
         );
       } else {
         content = (
-          <div className="testcase-container-no-content padding">There are no test cases created for this project</div>
+          <div className='testcase-container-no-content padding'>There are no test cases created for this project</div>
         );
       }
     }

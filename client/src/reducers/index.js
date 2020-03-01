@@ -18,6 +18,7 @@ import mobileOsReducer from "./mobileOsReducer";
 import testSetupReducer from "./testSetupReducer";
 import reportReducer from "./reportReducer";
 import statusReducer from "./statusReducer";
+import osReducer from "./osReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -37,5 +38,6 @@ export default combineReducers({
   environments: environmentReducer,
   testSetup: testSetupReducer,
   statuses: statusReducer,
+  oss: osReducer,
   reports: reportReducer
 });

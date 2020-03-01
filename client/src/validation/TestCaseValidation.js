@@ -73,7 +73,7 @@ const TestCaseValidation = testCase => {
   if (filteredLinksLimit.length > 0) {
     var longLinkValue = `"${filteredLinksLimit[0].substring(0, 20)}"`;
 
-    errors.links = `${longLinkValue}... test step is too long and can have more than ${linkLimit} characters (${filteredLinksLimit[0].length})`;
+    errors.links = `${longLinkValue}... link is too long and can have more than ${linkLimit} characters (${filteredLinksLimit[0].length})`;
   }
   var options = {
     protocols: ["http", "https", "ftp"],

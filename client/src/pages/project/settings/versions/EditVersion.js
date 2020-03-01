@@ -96,9 +96,7 @@ class EditVersion extends Component {
     var versionData = {};
     versionData.version = this.state.version;
     versionData.deprecated = this.state.deprecated;
-    console.log(this.state);
     const { errors, isValid } = VersionValidation(versionData);
-    console.log(errors);
     if (isValid) {
       this.props.editVersion(this.state.versionId, versionData, res => {
         if (res.status === 200) {
@@ -149,20 +147,20 @@ class EditVersion extends Component {
       content = <Spinner />;
     } else {
       content = (
-        <div className="main-content--content">
-          <div className="header">
-            <div className="header--title">Version Information </div>
-            <div className="header--buttons">
-              <div className="header--buttons--primary"></div>
-              <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
-                <i className="fas fa-trash-alt"></i>
+        <div className='main-content--content'>
+          <div className='header'>
+            <div className='header--title'>Version Information </div>
+            <div className='header--buttons'>
+              <div className='header--buttons--primary'></div>
+              <div className='header--buttons--secondary clickable' onClick={e => this.confirmModal([])}>
+                <i className='fas fa-trash-alt'></i>
               </div>
             </div>
           </div>
           <Input
-            type="text"
-            placeholder="Enter Version Name"
-            label="Version name*"
+            type='text'
+            placeholder='Enter Version Name'
+            label='Version name*'
             validationMsg={[this.state.errors.version, this.props.errors.version, this.props.errors.error]}
             value={this.state.version}
             onChange={e => this.onChange(e)}
@@ -170,32 +168,32 @@ class EditVersion extends Component {
             onKeyDown={this.submitFormOnEnterKey}
           />
 
-          <div className="flex-column-left mt-4">
+          <div className='flex-column-left mt-4'>
             <Btn
               className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-              label="Save Version"
-              type="text"
+              label='Save Version'
+              type='text'
               onClick={e => this.submitForm(e)}
             />
 
             <UnderlineAnchor link={`/${projectId}/Versions`} value={"Cancel"} />
           </div>
           <Checkbox
-            label="Set version as deprecated"
+            label='Set version as deprecated'
             onClick={e => this.toggleDeprecated(e)}
-            name="deprecated"
+            name='deprecated'
             value={this.state.deprecated}
           />
         </div>
       );
     }
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className="main-content main-content-grid">
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fas fa-arrow-left"></i>}
+            icon={<i className='fas fa-arrow-left'></i>}
             title={"Back to All Versions"}
             history={this.props}
             link={`/${projectId}/Versions`}
@@ -221,7 +219,6 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { getVersion, editVersion, removeVersion, clearErrors }
-)(withRouter(EditVersion));
+export default connect(mapStateToProps, { getVersion, editVersion, removeVersion, clearErrors })(
+  withRouter(EditVersion)
+);

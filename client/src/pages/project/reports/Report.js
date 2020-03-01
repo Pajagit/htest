@@ -9,6 +9,7 @@ import Header from "../../../components/common/Header";
 import Tag from "../../../components/common/Tag";
 import { superAndProjectAdminPermissions } from "../../../permissions/Permissions";
 import Spinner from "../../../components/common/Spinner";
+import openExternalBtn from "../../../img/openExternalBtn.png";
 import moment from "moment";
 
 import { getReport } from "../../../actions/reportActions";
@@ -73,7 +74,7 @@ class Report extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Title</div>
-                <div className='report-details-row-half-value'>{report.title}</div>
+                <div className='report-details-row-half-value'>{report.testcase.title}</div>
               </div>
               <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
                 <div className='report-details-row-half-title'>Status</div>
@@ -98,11 +99,11 @@ class Report extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Created By</div>
                 <div className='report-details-row-half-value'>
-                  {report.testcase_user.first_name +
+                  {report.testcase.user.first_name +
                     " " +
-                    report.testcase_user.last_name +
+                    report.testcase.user.last_name +
                     " - " +
-                    report.testcase_user.email}
+                    report.testcase.user.email}
                 </div>
               </div>
               <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
@@ -116,7 +117,7 @@ class Report extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Precondition</div>
-                <div className='report-details-row-half-value'>{report.preconditions}</div>
+                <div className='report-details-row-half-value'>{report.testcase.preconditions}</div>
               </div>
               <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
                 <div className='report-details-row-half-title '>Additional Precondition</div>
@@ -126,7 +127,7 @@ class Report extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Expected Result</div>
-                <div className='report-details-row-half-value'>{report.expected_result}</div>
+                <div className='report-details-row-half-value'>{report.testcase.expected_result}</div>
               </div>
               <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
                 <div className='report-details-row-half-title'>Actual Result</div>
@@ -137,14 +138,14 @@ class Report extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-full'>
                 <div className='report-details-row-full-title'>Description</div>
-                <div className='report-details-row-full-value'>{report.description}</div>
+                <div className='report-details-row-full-value'>{report.testcase.description}</div>
               </div>
             </div>
             <div className='report-details-row'>
               <div className='report-details-row-full'>
                 <div className='report-details-row-full-title'>Groups</div>
                 <div className='report-details-row-full-value'>
-                  {report.groups.map((group, groupIndex) => (
+                  {report.testcase.groups.map((group, groupIndex) => (
                     <React.Fragment key={groupIndex}>
                       <Tag title={group.title} color={group.color.title} isRemovable={false} />
                     </React.Fragment>
@@ -192,11 +193,35 @@ class Report extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Links</div>
-                <div className='report-details-row-half-value'>TO DO: https://www.google.com</div>
+                <div className='report-details-row-half-value'>
+                  {report.testcase.links.map((link, index) => (
+                    <div key={index}>
+                      <span>
+                        {`${index + 1}. `}
+                        <a href={link.value} target='_blank' rel='noopener noreferrer'>
+                          <span className='mr-1'>{link.value}</span>
+                          <img className='testcase-details-item--value-img' src={openExternalBtn} alt='External link' />
+                        </a>
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
                 <div className='report-details-row-half-title'>Links</div>
-                <div className='report-details-row-half-value'>TO DO: https://www.google.com</div>
+                <div className='report-details-row-half-value'>
+                  {report.links.map((link, index) => (
+                    <div key={index}>
+                      <span>
+                        {`${index + 1}. `}
+                        <a href={link.value} target='_blank' rel='noopener noreferrer'>
+                          <span className='mr-1'>{link.value.substring(0, 50)}...</span>
+                          <img className='testcase-details-item--value-img' src={openExternalBtn} alt='External link' />
+                        </a>
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
