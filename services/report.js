@@ -142,6 +142,11 @@ module.exports = {
                   as: "user"
                 },
                 {
+                  model: Link,
+                  attributes: ["id", "value"],
+                  required: false
+                },
+                {
                   model: TestStep,
                   attributes: ["id", "title", "expected_result"],
                   required: false,
