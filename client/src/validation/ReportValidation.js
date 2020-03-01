@@ -28,6 +28,8 @@ const ReportValidation = data => {
     var filteredStepsLimit = data.steps.filter(function(step) {
       if (!isEmpty(step.input_data)) {
         return step.input_data.length > stepLimit;
+      } else {
+        return null;
       }
     });
     if (filteredStepsLimit.length > 0) {

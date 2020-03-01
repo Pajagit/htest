@@ -70,7 +70,7 @@
   z-index: 9999;
 }
 .picky__dropdown {
-  z-index: 101;
+  z-index: 101 !important;
 }
 .picky__dropdown .option:hover,
 .picky__dropdown li:hover {
