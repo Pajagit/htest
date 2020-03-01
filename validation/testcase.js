@@ -40,14 +40,14 @@ module.exports = {
     }
 
     // Test steps validation
-    if (isEmpty(data.test_steps)) {
+    if (data.test_steps.length < 1) {
       errors.test_steps = "There must be at least one test step";
     } else {
       var empty = true;
       for (var i = 0; i < data.test_steps.length; i++) {
-        if (data.test_steps[i].trim().length > 0) {
+        if (data.test_steps[i].value.trim().length > 0) {
           empty = false;
-          if (data.test_steps[i].trim().length > testStepLimit) {
+          if (data.test_steps[i].value.trim().length > testStepLimit) {
             errors.test_steps = `Test step can not be more than ${testStepLimit} long (${data.test_steps[i].length})`;
           }
         }
