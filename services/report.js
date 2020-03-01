@@ -142,8 +142,13 @@ module.exports = {
                   as: "user"
                 },
                 {
+                  model: Link,
+                  attributes: ["id", "value"],
+                  required: false
+                },
+                {
                   model: TestStep,
-                  attributes: ["id", "title", "expected_result"],
+                  attributes: ["id", ["title", "value"], "expected_result"],
                   required: false,
                   as: "test_steps"
                 }
@@ -165,6 +170,7 @@ module.exports = {
             {
               model: ReportStep,
               as: "steps",
+              attributes: ["id", ["step", "value"], "input_data"],
               required: false
             },
             {
@@ -294,7 +300,7 @@ module.exports = {
               },
               {
                 model: TestStep,
-                attributes: ["id", "title", "expected_result"],
+                attributes: ["id", ["title", "value"], "expected_result"],
                 required: false,
                 as: "test_steps"
               }
@@ -321,6 +327,7 @@ module.exports = {
           },
           {
             model: ReportStep,
+            attributes: ["id", ["step", "value"], "input_data"],
             as: "steps",
             required: false
           },
@@ -442,7 +449,7 @@ module.exports = {
               },
               {
                 model: TestStep,
-                attributes: ["id", "title", "expected_result"],
+                attributes: ["id", ["title","value"], "expected_result"],
                 required: false,
                 as: "test_steps"
               }
@@ -464,6 +471,7 @@ module.exports = {
           {
             model: ReportStep,
             as: "steps",
+            attributes: ["id", ["step", "value"], "input_data"],
             required: false
           },
           {
@@ -632,7 +640,7 @@ module.exports = {
               },
               {
                 model: TestStep,
-                attributes: ["id", "title", "expected_result"],
+                attributes: ["id", ["title","value"], "expected_result"],
                 required: false,
                 as: "test_steps"
               }
@@ -654,6 +662,7 @@ module.exports = {
           {
             model: ReportStep,
             as: "steps",
+            attributes: ["id", ["step", "value"], "input_data"],
             required: false
           },
           {

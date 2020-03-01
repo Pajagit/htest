@@ -35,7 +35,10 @@ module.exports = Router({ mergeParams: true }).post(
     testCaseFields.description = req.body.description ? req.body.description : null;
     testCaseFields.preconditions = req.body.preconditions ? req.body.preconditions : null;
     if (req.body.expected_result) testCaseFields.expected_result = req.body.expected_result;
-    var test_steps = req.body.test_steps.filter(Boolean);
+    if (req.body.test_steps.length > 0) {
+      var test_steps = req.body.test_steps;
+    }
+
     if (req.body.links) {
       var links = req.body.links.filter(Boolean);
     }
@@ -101,14 +104,20 @@ module.exports = Router({ mergeParams: true }).post(
       return new Promise((resolve, reject) => {
         if (hasTestSteps) {
           var arrayTestSteps = new Array();
+
           for (var i = 0; i < test_steps.length; i++) {
             arrayTestSteps.push({
               test_case_id: testcase.id,
-              title: test_steps[i]
+              title: test_steps[i].value,
+              expected_result: test_steps[i].expected_result
             });
           }
           TestStep.bulkCreate(arrayTestSteps).then(teststeps => {
-            resolve(true);
+            if (teststeps) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
           });
         } else {
           resolve(true);
@@ -166,7 +175,10 @@ module.exports = Router({ mergeParams: true }).post(
                 ]
               }
             ],
-            order: [[Group, "id", "ASC"]]
+            order: [
+              [Group, "id", "ASC"],
+              [{ model: TestStep, as: "test_steps" }, "id", "ASC"]
+            ]
           }).then(testcase => {
             if (testcase) {
               if (testcase.groups) {
