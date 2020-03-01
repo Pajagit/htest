@@ -190,7 +190,9 @@ class NewReport extends Component {
   onChange(e) {
     console.log(e.target);
     if (e.target.name === "input_data") {
-      console.log(this.props.testcases.testcase.test_steps);
+      console.log(e.target.id);
+    } else if (e.target.name === "expected_result") {
+      console.log(e.target.id);
     }
     this.setState({ [e.target.name]: e.target.value }, () => {
       if (this.state.submitPressed) {
@@ -351,7 +353,7 @@ class NewReport extends Component {
                   {testcase.test_steps.map((step, index) => (
                     <React.Fragment key={index}>
                       <span key={index}>
-                        <div className='mb-2' className='steps-class'>
+                        <div className='steps-class mb-2'>
                           {`${index + 1}. `}
                           {step.value}
                         </div>
@@ -369,8 +371,8 @@ class NewReport extends Component {
                         <Input
                           placeholder={`${index + 1}. Input Data`}
                           onChange={e => this.onChange(e)}
-                          name={"input_data"}
-                          id={index + 1}
+                          name={`input_data`}
+                          id={`i${index + 1}`}
                           noMargin={true}
                           validationMsg={this.state.errors.input_data}
                         />
@@ -378,7 +380,7 @@ class NewReport extends Component {
                           placeholder={`${index + 1}. Expected Result`}
                           onChange={e => this.onChange(e)}
                           name={"expected_result"}
-                          id={index + 1}
+                          id={`e${index + 1}`}
                           noMargin={true}
                           validationMsg={this.state.errors.expected_result}
                         />

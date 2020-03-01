@@ -2,8 +2,6 @@ import isEmpty from "../validation/isEmpty";
 const ReportValidation = data => {
   var errors = {};
 
-  var titleLimit = 150;
-  var screenResolutionLimit = 150;
   var additionalPreconditionLimit = 1000;
   var actualResultLimit = 1000;
   var commentLimit = 1000;
