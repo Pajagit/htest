@@ -237,7 +237,7 @@ module.exports = Router({ mergeParams: true }).put(
                 },
                 {
                   model: User,
-                  attributes: ["id", "first_name", "last_name", "position"],
+                  attributes: ["id", "first_name", "last_name", "position", "email"],
                   required: true,
                   as: "user"
                 },
