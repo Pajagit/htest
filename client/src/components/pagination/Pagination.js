@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import { getProjects } from "../../actions/projectActions";
 import { getTestcases } from "../../actions/testcaseActions";
+import { getReports } from "../../actions/reportActions";
 
 class Pagination extends Component {
   constructor(props) {
@@ -52,6 +53,8 @@ class Pagination extends Component {
       this.props.getProjects(this.props.searchTerm, page);
     } else if (this.props.match.url === `/${this.state.projectId}/TestCases`) {
       this.props.getTestcases(this.state.projectId, this.props.settings.settings, page);
+    } else if (this.props.match.url === "/${this.state.projectId}/Reports") {
+      this.props.getReports(this.state.projectId, this.props.settings.settings, page);
     }
   }
   newPagePredefined(e) {
@@ -63,6 +66,8 @@ class Pagination extends Component {
       this.props.getProjects(this.props.searchTerm, page);
     } else if (this.props.match.url === `/${this.state.projectId}/TestCases`) {
       this.props.getTestcases(this.state.projectId, this.props.settings.settings, page);
+    } else if (this.props.match.url === `/${this.state.projectId}/Reports`) {
+      this.props.getReports(this.state.projectId, this.props.settings.settings, page);
     }
   }
 
@@ -142,21 +147,21 @@ class Pagination extends Component {
     }
 
     return (
-      <div className="pagination">
-        <div className="pagination-items">
+      <div className='pagination'>
+        <div className='pagination-items'>
           <div className={`pagination-items--item ${firstPageBtnClass}`} onClick={e => this.newPage(0)}>
-            <i className="fas fa-backward"></i>
+            <i className='fas fa-backward'></i>
           </div>
 
           <div className={`pagination-items--item ${backPageBtnClass}`} onClick={e => this.newPage(1)}>
-            <i className="fas fa-step-backward"></i>
+            <i className='fas fa-step-backward'></i>
           </div>
           {content}
           <div className={`pagination-items--item ${forwardPageBtnClass}`} onClick={e => this.newPage(2)}>
-            <i className="fas fa-step-forward"></i>
+            <i className='fas fa-step-forward'></i>
           </div>
           <div className={`pagination-items--item ${lastPageBtnClass}`} onClick={e => this.newPage(3)}>
-            <i className="fas fa-forward"></i>
+            <i className='fas fa-forward'></i>
           </div>
         </div>
       </div>
@@ -169,10 +174,8 @@ Pagination.propTypes = {
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
+  reports: state.reports,
   settings: state.settings
 });
 
-export default connect(
-  mapStateToProps,
-  { getTestcases, getProjects }
-)(withRouter(Pagination));
+export default connect(mapStateToProps, { getTestcases, getProjects, getReports })(withRouter(Pagination));
