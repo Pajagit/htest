@@ -13,16 +13,23 @@ import Tag from "../../../components/common/Tag";
 import Btn from "../../../components/common/Btn";
 import UnderlineAnchor from "../../../components/common/UnderlineAnchor";
 import Input from "../../../components/common/Input";
+import FullBtn from "../../../components/common/FullBtn";
+import InputGroup from "../../../components/common/InputGroup";
 
 import SearchDropdown from "../../../components/common/SearchDropdown";
 import { superAndProjectAdminPermissions } from "../../../permissions/Permissions";
 import ReportValidation from "../../../validation/ReportValidation";
+import successToast from "../../../toast/successToast";
+import failToast from "../../../toast/failToast";
 
 import { getTestcase } from "../../../actions/testcaseActions";
 import { getDevices } from "../../../actions/deviceActions";
 import { getBrowsers } from "../../../actions/browserActions";
 import { getVersions } from "../../../actions/versionAction";
 import { getEnvironments } from "../../../actions/environmentActions";
+import { getStatuses } from "../../../actions/statusActions";
+import { getOperatingSystems } from "../../../actions/osActions";
+import { createReport } from "../../../actions/reportActions";
 
 class NewReport extends Component {
   constructor(props) {
@@ -33,8 +40,10 @@ class NewReport extends Component {
       additional_precondition: "",
       actual_result: "",
       comment: "",
+      reportLinks: [],
       submitPressed: false,
       test_steps: [],
+      filteredOperatingSystems: [],
       filteredDevices: [],
       filteredBrowsers: [],
       filteredVersions: [],
@@ -45,6 +54,8 @@ class NewReport extends Component {
     this.selectBrowser = this.selectBrowser.bind(this);
     this.selectDevice = this.selectDevice.bind(this);
     this.selectVersion = this.selectVersion.bind(this);
+    this.selectEnvironment = this.selectEnvironment.bind(this);
+    this.selectOperatingSystem = this.selectOperatingSystem.bind(this);
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
@@ -74,6 +85,15 @@ class NewReport extends Component {
       });
       update.filteredBrowsers = filteredBrowsers;
     }
+
+    if (nextProps.oss && nextProps.oss.oss && nextProps.oss.oss.operatingsystems) {
+      var operatingsystems = nextProps.oss.oss.operatingsystems;
+      //   var filteredOperatingSystems = operatingsystems.filter(function(browser) {
+      //     return browser.used === true;
+      //   });
+      update.filteredOperatingSystems = operatingsystems;
+    }
+
     if (
       nextProps.environments &&
       nextProps.environments.environments &&
@@ -106,7 +126,9 @@ class NewReport extends Component {
     this.props.getDevices(null, projectId);
     this.props.getBrowsers(projectId);
     this.props.getVersions(projectId);
+    this.props.getOperatingSystems(projectId);
     this.props.getEnvironments(projectId);
+    this.props.getStatuses();
   }
   selectStatus(value) {
     this.setState({ status: value }, () => {
@@ -136,25 +158,50 @@ class NewReport extends Component {
       }
     });
   }
+  selectEnvironment(value) {
+    this.setState({ environment: value }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
+  }
+  selectOperatingSystem(value) {
+    this.setState({ os: value }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
+  }
+
+  addColumnLink(e) {
+    var links = this.state.reportLinks;
+    links.push({ id: links.length, value: "" });
+    this.setState({ links });
+  }
+  removeColumnLink(e) {
+    var indexToRemove = e.target.id.substring(5);
+    var links = this.state.reportLinks;
+    links.splice(indexToRemove, 1);
+    this.setState({ links }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
+  }
+
   checkValidation() {
     var formData = {};
-    // var testSteps = filterStringArray(this.state.test_steps);
-    // var links = filterStringArray(this.state.links);
-    // var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
-    // formData.title = this.state.title;
-    // formData.description = this.state.description;
-    // formData.test_steps = testSteps;
-    // formData.expected_result = this.state.expected_result;
-    // formData.groups = groups;
-    // formData.preconditions = this.state.preconditions;
-    // formData.isDeprecated = this.state.isDeprecated;
     formData.status_id = this.state.status ? this.state.status.id : null;
     formData.additional_precondition = this.state.additional_precondition ? this.state.additional_precondition : null;
     formData.actual_result = this.state.actual_result ? this.state.actual_result : null;
     formData.comment = this.state.comment ? this.state.comment : null;
     formData.browser = this.state.browser ? this.state.browser : null;
     formData.device = this.state.device ? this.state.device : null;
+    formData.simulator = this.state.simulator ? this.state.simulator : null;
     formData.version = this.state.version ? this.state.version : null;
+    formData.environment = this.state.environment ? this.state.environment : null;
+    formData.steps = this.state.inputSteps ? this.state.inputSteps : null;
+    formData.links = this.state.reportLinks;
 
     const { errors } = ReportValidation(formData);
 
@@ -164,34 +211,60 @@ class NewReport extends Component {
     this.setState({ submitPressed: true });
     e.preventDefault();
     var formData = {};
-
-    // var testSteps = filterStringArray(this.state.test_steps);
-    // var links = filterStringArray(this.state.links);
-    // var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
-    // formData.title = this.state.title;
-    // formData.description = this.state.description;
-    // formData.test_steps = testSteps;
+    formData.test_case_id = this.props.match.params.testcaseId;
     formData.status_id = this.state.status ? this.state.status.id : null;
     formData.additional_precondition = this.state.additional_precondition ? this.state.additional_precondition : null;
     formData.actual_result = this.state.actual_result ? this.state.actual_result : null;
     formData.comment = this.state.comment ? this.state.comment : null;
-    formData.browser = this.state.browser ? this.state.browser.id : null;
-    formData.device = this.state.device ? this.state.device.id : null;
-    formData.version = this.state.version ? this.state.version.id : null;
-    console.log(formData);
+    formData.browser_id = this.state.browser ? this.state.browser.id : null;
+    formData.device_id = this.state.device ? this.state.device.id : null;
+    formData.version_id = this.state.version ? this.state.version.id : null;
+    formData.simulator_id = this.state.simulator ? this.state.simulator.id : null;
+    formData.environment_id = this.state.environment ? this.state.environment.id : null;
+    formData.operating_system_id = this.state.os ? this.state.os.id : null;
+    formData.steps = this.state.inputSteps ? this.state.inputSteps : null;
+    formData.links = this.state.reportLinks;
     const { errors, isValid } = ReportValidation(formData);
     this.setState({ errors });
     if (isValid) {
-      console.log(formData);
+      this.props.createReport(formData, res => {
+        if (res.status === 200) {
+          this.props.history.push(
+            `/${this.props.match.params.projectId}/TestCase/${this.props.match.params.testcaseId}`
+          );
+          successToast("Report created successfully");
+        } else {
+          failToast("Report creating failed");
+        }
+      });
     } else {
       console.log(errors);
     }
   }
   onChange(e) {
-    console.log(e.target);
     if (e.target.name === "input_data") {
-      console.log(this.props.testcases.testcase.test_steps);
+      var steps = this.props.testcases.testcase.test_steps;
+      steps[e.target.id - 1]["input_data"] = e.target.value;
+
+      const stepsMap = steps.map(function(row) {
+        return { id: row.id, step: row.value, input_data: row.input_data };
+      });
+      this.setState({ inputSteps: stepsMap }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
     }
+    if (e.target.id === "link") {
+      var enteredLinks = this.state.links;
+      enteredLinks[e.target.name.substring(5)].value = e.target.value;
+      this.setState({ reportLinks: enteredLinks }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    }
+
     this.setState({ [e.target.name]: e.target.value }, () => {
       if (this.state.submitPressed) {
         this.checkValidation();
@@ -202,9 +275,9 @@ class NewReport extends Component {
   render() {
     var { testcase } = this.props.testcases;
     var { loading } = this.props.testcases;
-    // console.log(this.state);
+    var { statuses } = this.props.statuses;
     var content = "";
-    if (isEmpty(testcase) || loading) {
+    if (isEmpty(testcase) || loading || isEmpty(statuses)) {
       content = <Spinner />;
     } else {
       var statusValueClass = `${this.state.status !== null ? this.state.status.title.toUpperCase() : ""}-REPORT`;
@@ -231,14 +304,11 @@ class NewReport extends Component {
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-value'>
                   <SearchDropdown
-                    options={[
-                      { id: 1, title: "Passed" },
-                      { id: 2, title: "Failed" }
-                    ]}
+                    options={statuses}
                     name={"report_status"}
                     value={this.state.status}
                     onChange={this.selectStatus}
-                    placeholder={"Report Status"}
+                    placeholder={"Report Status*"}
                     includeFilterParam={false}
                     validationMsg={this.state.errors.status}
                     multiple={false}
@@ -264,7 +334,7 @@ class NewReport extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Created By</div>
                 <div className='report-details-row-half-value'>
-                  {testcase.author.first_name + " " + testcase.author.last_name + " EMAIL TO DO"}
+                  {testcase.author.first_name + " " + testcase.author.last_name + " - " + testcase.author.email}
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
@@ -351,7 +421,7 @@ class NewReport extends Component {
                   {testcase.test_steps.map((step, index) => (
                     <React.Fragment key={index}>
                       <span key={index}>
-                        <div className='mb-2' className='steps-class'>
+                        <div className='steps-class mb-2'>
                           {`${index + 1}. `}
                           {step.value}
                         </div>
@@ -369,18 +439,10 @@ class NewReport extends Component {
                         <Input
                           placeholder={`${index + 1}. Input Data`}
                           onChange={e => this.onChange(e)}
-                          name={"input_data"}
-                          id={index + 1}
+                          name={`input_data`}
+                          id={`${index + 1}`}
                           noMargin={true}
-                          validationMsg={this.state.errors.input_data}
-                        />
-                        <Input
-                          placeholder={`${index + 1}. Expected Result`}
-                          onChange={e => this.onChange(e)}
-                          name={"expected_result"}
-                          id={index + 1}
-                          noMargin={true}
-                          validationMsg={this.state.errors.expected_result}
+                          validationMsg={index === 0 ? this.state.errors.step : ""}
                         />
                       </span>
                     </div>
@@ -391,11 +453,35 @@ class NewReport extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Links</div>
-                <div className='report-details-row-half-value'>TO DO: https://www.google.com</div>
+                <div className='report-details-row-half-value'>
+                  {testcase.links.map((link, index) => (
+                    <div key={index}>
+                      <span>
+                        {`${index + 1}. `}
+                        {link.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-title'>Links</div>
-                <div className='report-details-row-half-value'>TO DO: https://www.google.com</div>
+                <div className='report-details-row-half-value'>
+                  <InputGroup
+                    type='text'
+                    placeholder='Add Link here'
+                    // label='Links'
+                    values={this.state.reportLinks}
+                    onChange={e => this.onChange(e)}
+                    id={"link"}
+                    validationMsg={this.state.errors.links}
+                    addColumn={<FullBtn placeholder='Add links' onClick={e => this.addColumnLink(e)} />}
+                    removeColumn={e => this.removeColumnLink(e)}
+                    required={false}
+                    disabled={false}
+                    onKeyDown={this.submitFormOnEnterKey}
+                  />
+                </div>
               </div>
             </div>
 
@@ -414,7 +500,6 @@ class NewReport extends Component {
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                {/* <div className='report-details-row-half-title'>Browser</div> */}
                 <div className='report-details-row-half-value'>
                   <SearchDropdown
                     options={this.state.filteredBrowsers}
@@ -430,7 +515,6 @@ class NewReport extends Component {
             </div>
             <div className='report-details-row'>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                {/* <div className='report-details-row-half-title'>Version</div> */}
                 <div className='report-details-row-half-value'>
                   <SearchDropdown
                     options={this.state.filteredVersions}
@@ -444,13 +528,21 @@ class NewReport extends Component {
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-title'>Operating System</div>
-                <div className='report-details-row-half-value'>TO DO: No project settings for Operating Systems</div>
+                <div className='report-details-row-half-value'>
+                  <SearchDropdown
+                    options={this.state.filteredOperatingSystems}
+                    name={"operating_systems"}
+                    value={this.state.os}
+                    onChange={this.selectOperatingSystem}
+                    placeholder={"Operating System"}
+                    validationMsg={this.state.errors.operating_system}
+                    multiple={false}
+                  />
+                </div>
               </div>
             </div>
             <div className='report-details-row'>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                {/* <div className='report-details-row-half-title'>Environment</div> */}
                 <div className='report-details-row-half-value'>
                   <SearchDropdown
                     options={this.state.filteredEnvironments}
@@ -513,9 +605,19 @@ const mapStateToProps = state => ({
   browsers: state.browsers,
   versions: state.versions,
   environments: state.environments,
+  operatingsystems: state.oss,
+  oss: state.oss,
+  statuses: state.statuses,
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getTestcase, getDevices, getBrowsers, getVersions, getEnvironments })(
-  withRouter(NewReport)
-);
+export default connect(mapStateToProps, {
+  getTestcase,
+  getDevices,
+  getBrowsers,
+  getVersions,
+  getEnvironments,
+  getStatuses,
+  getOperatingSystems,
+  createReport
+})(withRouter(NewReport));

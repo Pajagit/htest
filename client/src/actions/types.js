@@ -48,6 +48,10 @@ export const GET_ENVIRONMENTS = "GET_ENVIRONMENTS";
 export const GET_ENVIRONMENT = "GET_ENVIRONMENT";
 export const ENVIRONMENT_LOADING = "ENVIRONMENT_LOADING";
 
+export const GET_OSS = "GET_OSS";
+export const GET_OS = "GET_OS";
+export const OS_LOADING = "OS_LOADING";
+
 export const GET_REPORT = "GET_REPORT";
 export const GET_REPORTS = "GET_REPORTS";
 export const REPORT_LOADING = "REPORT_LOADING";
@@ -58,3 +62,5 @@ export const TEST_SETUP_LOADING = "TEST_SETUP_LOADING";
 export const GET_OFFICES = "GET_OFFICES";
 
 export const GET_MOBILE_OS = "GET_MOBILE_OS";
+
+export const GET_STATUSES = "GET_STATUSES";
