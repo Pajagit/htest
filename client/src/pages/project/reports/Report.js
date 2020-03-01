@@ -55,21 +55,7 @@ class Report extends Component {
     if (isEmpty(report) || loading) {
       content = <Spinner />;
     } else {
-      console.log(this.props);
-      var device = "";
-      var browser = "";
-      if (report.reportsetup.browser) {
-        browser = (<div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
-          <div className="report-details-row-half-title">Browser</div>
-          <div className="report-details-row-half-value">{report.reportsetup.browser.title}</div>
-        </div>)
-      }
-      if (report.reportsetup.device) {
-        device = (<div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
-          <div className="report-details-row-half-title">Device</div>
-          <div className="report-details-row-half-value">{report.reportsetup.device.title}</div>
-        </div>)
-      }
+
       content = (
         <div>
           <div className="report-details">

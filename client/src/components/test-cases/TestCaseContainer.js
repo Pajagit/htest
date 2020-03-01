@@ -117,8 +117,14 @@ class TestCaseContainer extends Component {
               description={testcase.description}
               id={testcase.id}
               projectId={projectId}
+              history={this.props.history}
               onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
               isValidWrite={this.props.isValidWrite}
+              onClickAddReport={(e) => {
+                e.stopPropagation();
+                this.props.history.push(`/${projectId}/NewReport/${testcase.id}`)
+              }}
+
             ></PortraitTestCase>
           </React.Fragment>
         ));
@@ -154,6 +160,7 @@ class TestCaseContainer extends Component {
               id={testcase.id}
               projectId={projectId}
               onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
+              onClickAddReport={e => this.props.history.push(`/${projectId}/NewReport/${testcase.id}`)}
               isValidWrite={this.props.isValidWrite}
             ></LandscapeTestCase>
           </React.Fragment>

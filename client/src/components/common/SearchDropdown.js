@@ -17,12 +17,18 @@ function SearchDropdown({
   id,
   multiple,
   name,
-  numberDisplayed
+  numberDisplayed,
+  includeFilterParam
 }) {
   var disabled = false;
   var includeSelectAll = true;
   var includeFilter = true;
+  if (includeFilterParam === false) {
+    includeFilter = false;
+  }
+
   var disabledDropdownSelect = "";
+
   if (isEmpty(options)) {
     disabled = true;
     includeSelectAll = false;
@@ -35,15 +41,15 @@ function SearchDropdown({
     customClass = className;
   }
   return (
-    <div className="form-element noselect">
-      <div className="form-element-item">
+    <div className='form-element noselect'>
+      <div className='form-element-item'>
         <FormElementTitle label={label} validationMsg={validationMsg} />
       </div>
 
       <div className={`form-element-item ${disabledDropdownSelect}`}>
         <div className={`select-dropdown ${customClass}`}>
-          <div className="select-dropdown--icon">
-            <i className="fas fa-search"></i>
+          <div className='select-dropdown--icon'>
+            <i className='fas fa-search'></i>
           </div>
           <Picky
             id={id}
@@ -55,8 +61,8 @@ function SearchDropdown({
             open={false}
             name={name}
             disabled={disabled}
-            valueKey="id"
-            labelKey="title"
+            valueKey='id'
+            labelKey='title'
             multiple={multiple}
             includeSelectAll={includeSelectAll}
             defaultFocusFilter={true}

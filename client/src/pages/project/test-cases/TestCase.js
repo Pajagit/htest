@@ -82,14 +82,6 @@ class TestCase extends Component {
       );
     }
 
-    var actionBtns = "";
-    if (this.state.isValidWrite) {
-      actionBtns = (
-        <div className="flex-column-left mt-4">
-          <BtnAnchor className="a-btn a-btn-primary mr-2" label="Add To Report" link={`/${projectId}/TestCases`} />
-        </div>
-      );
-    }
     var precondition = "";
     var links = "";
     var uploaded_files = "";
@@ -97,6 +89,14 @@ class TestCase extends Component {
     if (testcase === null || loading) {
       content = <Spinner />;
     } else if (!isEmpty(testcase)) {
+      var actionBtns = "";
+      if (this.state.isValidWrite) {
+        actionBtns = (
+          <div className="flex-column-left mt-4">
+            <BtnAnchor className="a-btn a-btn-primary mr-2" label="Add To Report" link={`/${projectId}/NewReport/${testcase.id}`} />
+          </div>
+        );
+      }
       if (testcase.preconditions) {
         precondition = (
           <div className="testcase-details-item">

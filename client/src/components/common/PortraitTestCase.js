@@ -2,17 +2,17 @@ import React from "react";
 import AddReportBtn from "../common/AddReportBtn";
 import moment from "moment";
 
-function PortraitTestCase({ title, tags, author, date, description, id, projectId, onClick, isValidWrite }) {
+function PortraitTestCase({ title, tags, author, date, description, id, onClick, isValidWrite, onClickAddReport }) {
   var addReportBtn = "";
   if (isValidWrite) {
     addReportBtn = (
-      <div className="portrait-testcase-bottom-container--button">
+      <div className="portrait-testcase-bottom-container--button" onClick={onClickAddReport}  >
         <AddReportBtn title={"Add to Report"} id={id} />
       </div>
     );
   }
   return (
-    <div className="portrait-testcase clickable" onClick={onClick}>
+    <div className="portrait-testcase clickable" onClick={onClick} >
       <div className="portrait-testcase-top">
         <div className="portrait-testcase-top-container">
           <div className="portrait-testcase-top-container--title">{title}</div>
