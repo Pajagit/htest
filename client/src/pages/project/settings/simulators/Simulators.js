@@ -13,6 +13,8 @@ import PortraitDevice from "../../../../components/common/PortraitDevice";
 import BtnAnchor from "../../../../components/common/BtnAnchor";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
+import successToast from "../../../../toast/successToast";
+import failToast from "../../../../toast/failToast";
 
 class Simulators extends Component {
   constructor(props) {
@@ -49,7 +51,12 @@ class Simulators extends Component {
     this.props.getSimulators(this.props.match.params.projectId);
   }
   changeIsUsed(id, used) {
-    this.props.simulatorIsUsed(id, used, this.props.match.params.projectId, () => {
+    this.props.simulatorIsUsed(id, used, this.props.match.params.projectId, res => {
+      if (res.status === 200) {
+        successToast(res.data.success);
+      } else {
+        failToast("Something went wrong");
+      }
       this.props.getSimulators(this.props.match.params.projectId);
     });
   }
@@ -123,7 +130,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { getSimulators, simulatorIsUsed }
-)(withRouter(Simulators));
+export default connect(mapStateToProps, { getSimulators, simulatorIsUsed })(withRouter(Simulators));

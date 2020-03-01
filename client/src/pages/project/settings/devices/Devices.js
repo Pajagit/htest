@@ -15,6 +15,8 @@ import PortraitDevice from "../../../../components/common/PortraitDevice";
 import SearchDropdown from "../../../../components/common/SearchDropdown";
 import Header from "../../../../components/common/Header";
 import Spinner from "../../../../components/common/Spinner";
+import successToast from "../../../../toast/successToast";
+import failToast from "../../../../toast/failToast";
 
 class Devices extends Component {
   constructor(props) {
@@ -101,12 +103,16 @@ class Devices extends Component {
     }
 
     var newArray = this.state.devices;
-    this.props.deviceIsUsed(id, used, this.props.match.params.projectId, () => {
+    this.props.deviceIsUsed(id, used, this.props.match.params.projectId, res => {
       changeDesc(id, used, () => {
-
-        this.setState({ devices: newArray })
+        if (res.status === 200) {
+          successToast(res.data.success);
+        } else {
+          failToast("Something went wrong");
+        }
+        this.setState({ devices: newArray });
       });
-    })
+    });
   }
   render() {
     var { loading } = this.props.devices;
@@ -189,7 +195,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { getOffices, clearDevices, getDevices, deviceIsUsed }
-)(withRouter(Devices));
+export default connect(mapStateToProps, { getOffices, clearDevices, getDevices, deviceIsUsed })(withRouter(Devices));

@@ -27,13 +27,16 @@ module.exports = {
     if (!canGetReport) {
       return res.status(403).json({ message: "Forbidden" });
     }
-
     var report = await ReportService.returnReportById(req.params.id, report_project);
     if (report) {
       return res.status(200).json(report);
     } else {
       return res.status(404).json({ error: "Report doesn't exist" });
     }
+  },
+  getReportStatuses: async function(req, res) {
+    var reportStatuses = await ReportService.getReportStatuses();
+    return res.status(200).json(reportStatuses);
   },
   createReport: async function(req, res) {
     (async () => {
