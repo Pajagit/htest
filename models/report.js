@@ -7,6 +7,8 @@ const ReportSetup = require("./reportsetup");
 const ReportStep = require("./reportstep");
 const TestCase = require("./testcase");
 const User = require("./user");
+const ReportLink = require("./reportlink");
+
 const Report = sequelize.define(
   "reports",
   {
@@ -81,6 +83,12 @@ Report.hasMany(ReportStep, {
   foreignKey: "report_id",
   targetKey: "id",
   as: "steps"
+});
+
+Report.hasMany(ReportLink, {
+  foreignKey: "report_id",
+  targetKey: "id",
+  as: "links"
 });
 
 Report.belongsTo(TestCase, {
