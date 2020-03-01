@@ -16,6 +16,8 @@ const Group = require("../models/group");
 const Color = require("../models/color");
 const GroupTestCase = require("../models/grouptestcase");
 const ReportLink = require("../models/reportlink");
+const Link = require("../models/link");
+const TestStep = require("../models/teststep");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -110,7 +112,7 @@ module.exports = {
             {
               model: TestCase,
               as: "testcase",
-              attributes: ["project_id", "title", "description", "preconditions", "expected_result"],
+              attributes: ["id", "project_id", "title", "description", "preconditions", "expected_result"],
               required: true,
               where: {
                 project_id: project_id
@@ -138,8 +140,15 @@ module.exports = {
                   attributes: ["id", "first_name", "last_name", "email", "position"],
                   required: true,
                   as: "user"
+                },
+                {
+                  model: TestStep,
+                  attributes: ["id", "title", "expected_result"],
+                  required: false,
+                  as: "test_steps"
                 }
-              ]
+              ],
+              order: [[{ model: TestStep, as: "test_steps" }, "id", "ASC"]]
             },
             {
               model: Status,
@@ -201,28 +210,33 @@ module.exports = {
                 }
               ]
             }
-          ]
+          ],
+          order: [[{ model: ReportStep, as: "steps" }, "id", "ASC"]]
         }).then(report => {
           if (report) {
             var report_obj = {};
+            report_obj.testcase = {};
             report_obj.id = report.id;
             report_obj.actual_result = report.actual_result;
-            report_obj.description = report.testcase.description;
-            report_obj.preconditions = report.testcase.preconditions;
-            report_obj.expected_result = report.testcase.expected_result;
+            report_obj.testcase.description = report.testcase.description;
+            report_obj.testcase.preconditions = report.testcase.preconditions;
+            report_obj.testcase.expected_result = report.testcase.expected_result;
             report_obj.created_at = report.created_at;
             report_obj.comment = report.comment;
             report_obj.additional_precondition = report.additional_precondition;
-            report_obj.testcase_id = report.testcase.id;
-            report_obj.title = report.testcase.title;
-            report_obj.project_id = report.testcase.project_id;
+            report_obj.testcase.id = report.testcase.id;
+            report_obj.testcase.title = report.testcase.title;
+            report_obj.testcase.project_id = report.testcase.project_id;
             report_obj.status = report.status;
             report_obj.user = report.user;
             report_obj.steps = report.steps;
             report_obj.reportsetup = report.reportsetup;
-            report_obj.groups = report.testcase.groups;
-            report_obj.testcase_user = report.testcase.user;
+            report_obj.testcase.groups = report.testcase.groups;
+            report_obj.testcase.user = report.testcase.user;
+            report_obj.testcase.created_at = report.testcase.created_at;
             report_obj.links = report.links;
+            report_obj.testcase.links = report.testcase.links;
+            report_obj.testcase.steps = report.testcase.test_steps;
 
             resolve(report_obj);
           } else {
@@ -244,7 +258,7 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["project_id", "title", "description", "preconditions", "expected_result", "created_at"],
+            attributes: ["id", "project_id", "title", "description", "preconditions", "expected_result", "created_at"],
             required: true,
             where: {
               project_id: project_id
@@ -272,8 +286,20 @@ module.exports = {
                 attributes: ["id", "first_name", "last_name", "email", "position"],
                 required: true,
                 as: "user"
+              },
+              {
+                model: Link,
+                attributes: ["id", "value"],
+                required: false
+              },
+              {
+                model: TestStep,
+                attributes: ["id", "title", "expected_result"],
+                required: false,
+                as: "test_steps"
               }
-            ]
+            ],
+            order: [[{ model: TestStep, as: "test_steps" }, "id", "ASC"]]
           },
 
           {
@@ -336,29 +362,33 @@ module.exports = {
               }
             ]
           }
-        ]
+        ],
+        order: [[{ model: ReportStep, as: "steps" }, "id", "ASC"]]
       }).then(report => {
         if (report) {
           var report_obj = {};
+          report_obj.testcase = {};
           report_obj.id = report.id;
           report_obj.actual_result = report.actual_result;
-          report_obj.description = report.testcase.description;
-          report_obj.preconditions = report.testcase.preconditions;
-          report_obj.expected_result = report.testcase.expected_result;
+          report_obj.testcase.description = report.testcase.description;
+          report_obj.testcase.preconditions = report.testcase.preconditions;
+          report_obj.testcase.expected_result = report.testcase.expected_result;
           report_obj.created_at = report.created_at;
           report_obj.comment = report.comment;
           report_obj.additional_precondition = report.additional_precondition;
-          report_obj.testcase_id = report.testcase.id;
-          report_obj.title = report.testcase.title;
-          report_obj.project_id = report.testcase.project_id;
+          report_obj.testcase.id = report.testcase.id;
+          report_obj.testcase.title = report.testcase.title;
+          report_obj.testcase.project_id = report.testcase.project_id;
           report_obj.status = report.status;
           report_obj.user = report.user;
           report_obj.steps = report.steps;
           report_obj.reportsetup = report.reportsetup;
-          report_obj.groups = report.testcase.groups;
-          report_obj.testcase_user = report.testcase.user;
-          report_obj.testcase_created_at = report.testcase.created_at;
+          report_obj.testcase.groups = report.testcase.groups;
+          report_obj.testcase.user = report.testcase.user;
+          report_obj.testcase.created_at = report.testcase.created_at;
           report_obj.links = report.links;
+          report_obj.testcase.links = report.testcase.links;
+          report_obj.testcase.steps = report.testcase.test_steps;
 
           resolve(report_obj);
         } else {
@@ -398,7 +428,7 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["project_id", "title", "id"],
+            attributes: ["id", "project_id", "title", "description", "preconditions", "expected_result", "created_at"],
             required: true,
             where: {
               project_id: project_id
@@ -409,8 +439,15 @@ module.exports = {
                 attributes: ["id", "first_name", "last_name", "email", "position"],
                 required: true,
                 as: "user"
+              },
+              {
+                model: TestStep,
+                attributes: ["id", "title", "expected_result"],
+                required: false,
+                as: "test_steps"
               }
-            ]
+            ],
+            order: [[{ model: TestStep, as: "test_steps" }, "id", "ASC"]]
           },
           {
             model: Status,
@@ -492,23 +529,32 @@ module.exports = {
       var reportsCount = reports.length;
       reports.forEach(report => {
         var report_obj = {};
+        report_obj.testcase = {};
         report_obj.id = report.id;
         report_obj.actual_result = report.actual_result;
+        report_obj.testcase.description = report.testcase.description;
+        report_obj.testcase.preconditions = report.testcase.preconditions;
+        report_obj.testcase.expected_result = report.testcase.expected_result;
         report_obj.created_at = report.created_at;
         report_obj.comment = report.comment;
         report_obj.additional_precondition = report.additional_precondition;
-        report_obj.testcase_id = report.testcase.id;
-        report_obj.title = report.testcase.title;
-        report_obj.project_id = report.testcase.project_id;
+        report_obj.testcase.id = report.testcase.id;
+        report_obj.testcase.title = report.testcase.title;
+        report_obj.testcase.project_id = report.testcase.project_id;
         report_obj.status = report.status;
         report_obj.user = report.user;
         report_obj.steps = report.steps;
         report_obj.reportsetup = report.reportsetup;
-        report_obj.testcase_user = report.testcase.user;
+        report_obj.testcase.groups = report.testcase.groups;
+        report_obj.testcase.user = report.testcase.user;
+        report_obj.testcase.created_at = report.testcase.created_at;
+        report_obj.links = report.links;
+        report_obj.testcase.links = report.testcase.links;
+        report_obj.testcase.steps = report.testcase.test_steps;
 
         GroupTestCase.findAll({
           where: {
-            test_case_id: report_obj.testcase_id
+            test_case_id: report_obj.testcase.id
           },
           include: [
             {
@@ -555,7 +601,7 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["project_id", "title"],
+            attributes: ["id", "project_id", "title", "description", "preconditions", "expected_result", "created_at"],
             required: true,
             where: {
               project_id: project_id
@@ -583,8 +629,15 @@ module.exports = {
                 attributes: ["id", "first_name", "last_name", "email", "position"],
                 required: true,
                 as: "user"
+              },
+              {
+                model: TestStep,
+                attributes: ["id", "title", "expected_result"],
+                required: false,
+                as: "test_steps"
               }
-            ]
+            ],
+            order: [[{ model: TestStep, as: "test_steps" }, "id", "ASC"]]
           },
           {
             model: Status,
@@ -643,26 +696,37 @@ module.exports = {
           }
         ],
         attributes: ["id", "actual_result", "created_at", "comment", "additional_precondition"],
-        order: [["id", "DESC"]]
+        order: [
+          ["id", "desc"],
+          [{ model: ReportStep, as: "steps" }, "id", "ASC"]
+        ]
       }).then(reportsArr => {
         var reports = Array();
         var reportsCount = reportsArr.length;
         reportsArr.forEach(report => {
           var report_obj = {};
+          report_obj.testcase = {};
           report_obj.id = report.id;
           report_obj.actual_result = report.actual_result;
+          report_obj.testcase.description = report.testcase.description;
+          report_obj.testcase.preconditions = report.testcase.preconditions;
+          report_obj.testcase.expected_result = report.testcase.expected_result;
           report_obj.created_at = report.created_at;
           report_obj.comment = report.comment;
           report_obj.additional_precondition = report.additional_precondition;
-          report_obj.testcase_id = report.testcase.id;
-          report_obj.title = report.testcase.title;
-          report_obj.project_id = report.testcase.project_id;
+          report_obj.testcase.id = report.testcase.id;
+          report_obj.testcase.title = report.testcase.title;
+          report_obj.testcase.project_id = report.testcase.project_id;
           report_obj.status = report.status;
           report_obj.user = report.user;
           report_obj.steps = report.steps;
           report_obj.reportsetup = report.reportsetup;
-          report_obj.groups = report.testcase.groups;
-          report_obj.testcase_user = report.testcase.user;
+          report_obj.testcase.groups = report.testcase.groups;
+          report_obj.testcase.user = report.testcase.user;
+          report_obj.testcase.created_at = report.testcase.created_at;
+          report_obj.links = report.links;
+          report_obj.testcase.links = report.testcase.links;
+          report_obj.testcase.steps = report.testcase.test_steps;
 
           reports.push(report_obj);
           if (reportsCount > 0) {
