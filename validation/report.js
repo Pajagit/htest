@@ -78,6 +78,14 @@ module.exports = {
       }
     }
 
+    if (!isEmpty(data.links)) {
+      for (var i = 0; i < data.links.length; i++) {
+        if (isEmpty(data.links[i].value)) {
+          errors.links = { message: "Link[" + i + "] value is required", position: i };
+        }
+      }
+    }
+
     return {
       errors,
       isValid: isEmpty(errors)

@@ -15,6 +15,7 @@ const User = require("../models/user");
 const Group = require("../models/group");
 const Color = require("../models/color");
 const GroupTestCase = require("../models/grouptestcase");
+const ReportLink = require("../models/reportlink");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -73,10 +74,33 @@ module.exports = {
       }
     });
   },
-
-  returnCreatedReport: async function(report, report_setup, report_steps, project_id) {
+  addLinks: async function(hasLinks, report_links, report) {
     return new Promise((resolve, reject) => {
-      if (report_setup && report_steps && report) {
+      if (hasLinks) {
+        var arrayReportLinks = new Array();
+        for (var i = 0; i < report_links.length; i++) {
+          arrayReportLinks.push({
+            report_id: report.id,
+            title: report_links[i].title,
+            value: report_links[i].value
+          });
+        }
+        ReportLink.bulkCreate(arrayReportLinks).then(reportlinks => {
+          if (reportlinks) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      } else {
+        resolve(true);
+      }
+    });
+  },
+
+  returnCreatedReport: async function(report, report_setup, report_steps, report_links, project_id) {
+    return new Promise((resolve, reject) => {
+      if (report_setup && report_steps && report && report_links) {
         Report.findOne({
           attributes: ["id", "actual_result", "created_at", "comment", "additional_precondition"],
           where: {
@@ -132,6 +156,11 @@ module.exports = {
             {
               model: ReportStep,
               as: "steps",
+              required: false
+            },
+            {
+              model: ReportLink,
+              as: "links",
               required: false
             },
             {
@@ -193,6 +222,7 @@ module.exports = {
             report_obj.reportsetup = report.reportsetup;
             report_obj.groups = report.testcase.groups;
             report_obj.testcase_user = report.testcase.user;
+            report_obj.links = report.links;
 
             resolve(report_obj);
           } else {
@@ -251,6 +281,11 @@ module.exports = {
             as: "status",
             attributes: ["title"],
             required: true
+          },
+          {
+            model: ReportLink,
+            as: "links",
+            required: false
           },
           {
             model: User,
@@ -323,6 +358,7 @@ module.exports = {
           report_obj.groups = report.testcase.groups;
           report_obj.testcase_user = report.testcase.user;
           report_obj.testcase_created_at = report.testcase.created_at;
+          report_obj.links = report.links;
 
           resolve(report_obj);
         } else {
