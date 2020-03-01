@@ -17,12 +17,16 @@ import Input from "../../../components/common/Input";
 import SearchDropdown from "../../../components/common/SearchDropdown";
 import { superAndProjectAdminPermissions } from "../../../permissions/Permissions";
 import ReportValidation from "../../../validation/ReportValidation";
+import successToast from "../../../toast/successToast";
+import failToast from "../../../toast/failToast";
 
 import { getTestcase } from "../../../actions/testcaseActions";
 import { getDevices } from "../../../actions/deviceActions";
 import { getBrowsers } from "../../../actions/browserActions";
 import { getVersions } from "../../../actions/versionAction";
 import { getEnvironments } from "../../../actions/environmentActions";
+import { getStatuses } from "../../../actions/statusActions";
+import { createReport } from "../../../actions/reportActions";
 
 class NewReport extends Component {
   constructor(props) {
@@ -45,6 +49,7 @@ class NewReport extends Component {
     this.selectBrowser = this.selectBrowser.bind(this);
     this.selectDevice = this.selectDevice.bind(this);
     this.selectVersion = this.selectVersion.bind(this);
+    this.selectEnvironment = this.selectEnvironment.bind(this);
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
@@ -107,6 +112,7 @@ class NewReport extends Component {
     this.props.getBrowsers(projectId);
     this.props.getVersions(projectId);
     this.props.getEnvironments(projectId);
+    this.props.getStatuses();
   }
   selectStatus(value) {
     this.setState({ status: value }, () => {
@@ -136,18 +142,15 @@ class NewReport extends Component {
       }
     });
   }
+  selectEnvironment(value) {
+    this.setState({ environment: value }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
+  }
   checkValidation() {
     var formData = {};
-    // var testSteps = filterStringArray(this.state.test_steps);
-    // var links = filterStringArray(this.state.links);
-    // var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
-    // formData.title = this.state.title;
-    // formData.description = this.state.description;
-    // formData.test_steps = testSteps;
-    // formData.expected_result = this.state.expected_result;
-    // formData.groups = groups;
-    // formData.preconditions = this.state.preconditions;
-    // formData.isDeprecated = this.state.isDeprecated;
     formData.status_id = this.state.status ? this.state.status.id : null;
     formData.additional_precondition = this.state.additional_precondition ? this.state.additional_precondition : null;
     formData.actual_result = this.state.actual_result ? this.state.actual_result : null;
@@ -155,6 +158,7 @@ class NewReport extends Component {
     formData.browser = this.state.browser ? this.state.browser : null;
     formData.device = this.state.device ? this.state.device : null;
     formData.version = this.state.version ? this.state.version : null;
+    formData.environment = this.state.environment ? this.state.environment : null;
 
     const { errors } = ReportValidation(formData);
 
@@ -164,13 +168,7 @@ class NewReport extends Component {
     this.setState({ submitPressed: true });
     e.preventDefault();
     var formData = {};
-
-    // var testSteps = filterStringArray(this.state.test_steps);
-    // var links = filterStringArray(this.state.links);
-    // var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
-    // formData.title = this.state.title;
-    // formData.description = this.state.description;
-    // formData.test_steps = testSteps;
+    formData.test_case_id = this.props.match.params.testcaseId;
     formData.status_id = this.state.status ? this.state.status.id : null;
     formData.additional_precondition = this.state.additional_precondition ? this.state.additional_precondition : null;
     formData.actual_result = this.state.actual_result ? this.state.actual_result : null;
@@ -178,22 +176,37 @@ class NewReport extends Component {
     formData.browser = this.state.browser ? this.state.browser.id : null;
     formData.device = this.state.device ? this.state.device.id : null;
     formData.version = this.state.version ? this.state.version.id : null;
-    console.log(formData);
+    formData.environment = this.state.environment ? this.state.environment.id : null;
+    formData.steps = this.state.inputSteps ? this.state.inputSteps : null;
     const { errors, isValid } = ReportValidation(formData);
     this.setState({ errors });
     if (isValid) {
-      console.log(formData);
+      this.props.createReport(formData, res => {
+        if (res.status === 200) {
+          this.props.history.push(
+            `/${this.props.match.params.projectId}/TestCase/${this.props.match.params.testcaseId}`
+          );
+          successToast("Report created successfully");
+        } else {
+          failToast("Report creating failed");
+        }
+      });
     } else {
       console.log(errors);
     }
   }
   onChange(e) {
-    console.log(e.target);
     if (e.target.name === "input_data") {
-      console.log(e.target.id);
-    } else if (e.target.name === "expected_result") {
-      console.log(e.target.id);
+      var steps = this.props.testcases.testcase.test_steps;
+      //   console.log(e.target.id);
+      steps[e.target.id - 1]["input_data"] = e.target.value;
+
+      const stepsMap = steps.map(function(row) {
+        return { id: row.id, step: row.value, input_data: row.input_data };
+      });
+      this.setState({ inputSteps: stepsMap });
     }
+
     this.setState({ [e.target.name]: e.target.value }, () => {
       if (this.state.submitPressed) {
         this.checkValidation();
@@ -204,9 +217,9 @@ class NewReport extends Component {
   render() {
     var { testcase } = this.props.testcases;
     var { loading } = this.props.testcases;
-    // console.log(this.state);
+    var { statuses } = this.props.statuses;
     var content = "";
-    if (isEmpty(testcase) || loading) {
+    if (isEmpty(testcase) || loading || isEmpty(statuses)) {
       content = <Spinner />;
     } else {
       var statusValueClass = `${this.state.status !== null ? this.state.status.title.toUpperCase() : ""}-REPORT`;
@@ -233,14 +246,11 @@ class NewReport extends Component {
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-value'>
                   <SearchDropdown
-                    options={[
-                      { id: 1, title: "Passed" },
-                      { id: 2, title: "Failed" }
-                    ]}
+                    options={statuses}
                     name={"report_status"}
                     value={this.state.status}
                     onChange={this.selectStatus}
-                    placeholder={"Report Status"}
+                    placeholder={"Report Status*"}
                     includeFilterParam={false}
                     validationMsg={this.state.errors.status}
                     multiple={false}
@@ -372,17 +382,9 @@ class NewReport extends Component {
                           placeholder={`${index + 1}. Input Data`}
                           onChange={e => this.onChange(e)}
                           name={`input_data`}
-                          id={`i${index + 1}`}
+                          id={`${index + 1}`}
                           noMargin={true}
                           validationMsg={this.state.errors.input_data}
-                        />
-                        <Input
-                          placeholder={`${index + 1}. Expected Result`}
-                          onChange={e => this.onChange(e)}
-                          name={"expected_result"}
-                          id={`e${index + 1}`}
-                          noMargin={true}
-                          validationMsg={this.state.errors.expected_result}
                         />
                       </span>
                     </div>
@@ -416,7 +418,6 @@ class NewReport extends Component {
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                {/* <div className='report-details-row-half-title'>Browser</div> */}
                 <div className='report-details-row-half-value'>
                   <SearchDropdown
                     options={this.state.filteredBrowsers}
@@ -432,7 +433,6 @@ class NewReport extends Component {
             </div>
             <div className='report-details-row'>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                {/* <div className='report-details-row-half-title'>Version</div> */}
                 <div className='report-details-row-half-value'>
                   <SearchDropdown
                     options={this.state.filteredVersions}
@@ -452,7 +452,6 @@ class NewReport extends Component {
             </div>
             <div className='report-details-row'>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                {/* <div className='report-details-row-half-title'>Environment</div> */}
                 <div className='report-details-row-half-value'>
                   <SearchDropdown
                     options={this.state.filteredEnvironments}
@@ -515,9 +514,16 @@ const mapStateToProps = state => ({
   browsers: state.browsers,
   versions: state.versions,
   environments: state.environments,
+  statuses: state.statuses,
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getTestcase, getDevices, getBrowsers, getVersions, getEnvironments })(
-  withRouter(NewReport)
-);
+export default connect(mapStateToProps, {
+  getTestcase,
+  getDevices,
+  getBrowsers,
+  getVersions,
+  getEnvironments,
+  getStatuses,
+  createReport
+})(withRouter(NewReport));

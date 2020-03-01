@@ -58,3 +58,5 @@ export const TEST_SETUP_LOADING = "TEST_SETUP_LOADING";
 export const GET_OFFICES = "GET_OFFICES";
 
 export const GET_MOBILE_OS = "GET_MOBILE_OS";
+
+export const GET_STATUSES = "GET_STATUSES";
