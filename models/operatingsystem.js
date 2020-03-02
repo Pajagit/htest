@@ -15,6 +15,31 @@ const OperatingSystem = sequelize.define(
       required: true,
       type: Sequelize.STRING,
       unique: true
+    },
+    used: {
+      type: Sequelize.BOOLEAN,
+      required: true
+    },
+    deprecated: {
+      type: Sequelize.BOOLEAN,
+      required: false
+    },
+    project_id: {
+      type: Sequelize.INTEGER,
+      required: true,
+      foreignKey: true,
+      references: {
+        model: "projects",
+        key: "id"
+      }
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      required: false
+    },
+    updated_at: {
+      type: Sequelize.DATE,
+      required: false
     }
   },
   { timestamps: false }

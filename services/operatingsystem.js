@@ -22,37 +22,181 @@ module.exports = {
       });
     });
   },
-  getAllOperatingSystemsPaginated: async function(page, pageSize) {
+
+  getAllOperatingSystemsPaginated: async function(project_id, page, pageSize) {
     return new Promise((resolve, reject) => {
       OperatingSystem.findAndCountAll({
-        attributes: ["id", "title"],
+        where: {
+          project_id: project_id,
+          deprecated: false
+        },
+        attributes: ["id", "title", "used"],
         ...paginate({ page, pageSize }),
-        order: [["title", "ASC"]]
+        order: [["id", "ASC"]]
       }).then(os_obj => {
-        var operatingsystem = os_obj.rows;
+        var oss = os_obj.rows;
         var pages = 1;
         if (os_obj.count > 0) {
           pages = Math.ceil(os_obj.count / pageSize);
         }
         page = Number(page);
 
-        resolve({ operatingsystem, page, pages });
+        resolve({ oss, page, pages });
       });
     });
   },
-  getAllOperatingSystems: async function() {
+  getAllOperatingSystems: async function(project_id) {
     return new Promise((resolve, reject) => {
       OperatingSystem.findAll({
-        attributes: ["id", "title"],
-        order: [["title", "ASC"]]
-      }).then(operatingsystems => {
+        attributes: ["id", "title", "used"],
+        where: {
+          project_id: project_id,
+          deprecated: false
+        },
+        order: [["id", "ASC"]]
+      }).then(oss => {
         var page = 1;
         var pages = 0;
-        if (operatingsystems.length > 0) {
+        if (oss.length > 0) {
           page = 1;
           pages = 1;
         }
-        resolve({ operatingsystems, page, pages });
+        resolve({ oss, page, pages });
+      });
+    });
+  },
+  getOSProject: async function(id) {
+    return new Promise((resolve, reject) => {
+      OperatingSystem.findOne({
+        attributes: ["project_id"],
+        where: {
+          id: id
+        }
+      }).then(os => {
+        if (os) {
+          resolve(os);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  getOSById: async function(id) {
+    return new Promise((resolve, reject) => {
+      OperatingSystem.findOne({
+        attributes: ["id", "title", "used"],
+        where: {
+          id: id,
+          deprecated: false
+        }
+      }).then(os => {
+        if (os) {
+          resolve(os);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  checkIfOSExists: async function(id) {
+    return new Promise((resolve, reject) => {
+      OperatingSystem.findOne({
+        attributes: ["id"],
+        where: {
+          id: id,
+          deprecated: false
+        }
+      }).then(os => {
+        if (os) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  createOS: async function(os_fields) {
+    return new Promise((resolve, reject) => {
+      OperatingSystem.create(os_fields).then(os => {
+        if (os) {
+          var osObj = {};
+          osObj.id = os.id;
+          osObj.title = os.title;
+          osObj.used = os.used;
+          resolve(osObj);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  returnCreatedOrUpdatedOS: async function(createdOrUpdatedOs) {
+    return new Promise((resolve, reject) => {
+      if (createdOrUpdatedOs) {
+        OperatingSystem.findOne({
+          attributes: ["id", "title", "used"],
+          where: {
+            id: createdOrUpdatedOs.id
+          }
+        }).then(os => {
+          if (os) {
+            resolve(os);
+          } else {
+            resolve(false);
+          }
+        });
+      }
+    });
+  },
+  updateOS: async function(id, osFields) {
+    return new Promise((resolve, reject) => {
+      osFields.updated_at = new Date();
+      OperatingSystem.update(osFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(os => {
+        if (os[1]) {
+          resolve(os[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setAsDeprecated: async function(id) {
+    return new Promise((resolve, reject) => {
+      var osFields = {};
+      osFields.updated_at = new Date();
+      osFields.deprecated = true;
+      osFields.used = false;
+      OperatingSystem.update(osFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(os => {
+        if (os[1]) {
+          resolve(os[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  setAsUsed: async function(id, used) {
+    return new Promise((resolve, reject) => {
+      var osFields = {};
+      osFields.used = used;
+      OperatingSystem.update(osFields, {
+        where: { id: id },
+        returning: true,
+        plain: true
+      }).then(os => {
+        if (os[1]) {
+          resolve(os[1]);
+        } else {
+          resolve(false);
+        }
       });
     });
   }

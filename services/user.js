@@ -746,7 +746,7 @@ module.exports = {
       }
     });
   },
-  canGetOS: async function(user) {
+  canGetOS: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
 
@@ -755,7 +755,7 @@ module.exports = {
         allowed = true;
       } else {
         user.projects.forEach(project => {
-          if (allowedRoles.includes(project.role.title)) {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
             allowed = true;
           }
         });
@@ -831,6 +831,27 @@ module.exports = {
     });
   },
   canCreateEditVersions: async function(user, projectId) {
+    return new Promise((resolve, reject) => {
+      var allowedRoles = ["Superadmin", "Project Administrator"];
+
+      var allowed = false;
+      if (user.superadmin == true) {
+        allowed = true;
+      } else {
+        user.projects.forEach(project => {
+          if (project.id == projectId && allowedRoles.includes(project.role.title)) {
+            allowed = true;
+          }
+        });
+      }
+      if (allowed) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  },
+  canCreateEditOS: async function(user, projectId) {
     return new Promise((resolve, reject) => {
       var allowedRoles = ["Superadmin", "Project Administrator"];
 
