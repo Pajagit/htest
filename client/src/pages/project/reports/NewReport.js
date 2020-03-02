@@ -29,6 +29,7 @@ import { getVersions } from "../../../actions/versionAction";
 import { getEnvironments } from "../../../actions/environmentActions";
 import { getStatuses } from "../../../actions/statusActions";
 import { getOperatingSystems } from "../../../actions/osActions";
+import { getSimulators } from "../../../actions/simulatorActions";
 import { createReport } from "../../../actions/reportActions";
 
 class NewReport extends Component {
@@ -48,6 +49,7 @@ class NewReport extends Component {
       filteredBrowsers: [],
       filteredVersions: [],
       filteredEnvironments: [],
+      filteredSimulators: [],
       errors: {}
     };
     this.selectStatus = this.selectStatus.bind(this);
@@ -56,6 +58,7 @@ class NewReport extends Component {
     this.selectVersion = this.selectVersion.bind(this);
     this.selectEnvironment = this.selectEnvironment.bind(this);
     this.selectOperatingSystem = this.selectOperatingSystem.bind(this);
+    this.selectSimulator = this.selectSimulator.bind(this);
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
@@ -76,6 +79,14 @@ class NewReport extends Component {
         return device.used === true;
       });
       update.filteredDevices = filteredDevices;
+    }
+
+    if (nextProps.simulators && nextProps.simulators.simulators && nextProps.simulators.simulators.simulators) {
+      var simulators = nextProps.simulators.simulators.simulators;
+      var filteredSimulators = simulators.filter(function(device) {
+        return device.used === true;
+      });
+      update.filteredSimulators = filteredSimulators;
     }
 
     if (nextProps.browsers && nextProps.browsers.browsers && nextProps.browsers.browsers.browsers) {
@@ -127,6 +138,7 @@ class NewReport extends Component {
     this.props.getVersions(projectId);
     this.props.getOperatingSystems(projectId);
     this.props.getEnvironments(projectId);
+    this.props.getSimulators(projectId);
     this.props.getStatuses();
   }
   selectStatus(value) {
@@ -145,6 +157,13 @@ class NewReport extends Component {
   }
   selectDevice(value) {
     this.setState({ device: value }, () => {
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
+    });
+  }
+  selectSimulator(value) {
+    this.setState({ simulator: value }, () => {
       if (this.state.submitPressed) {
         this.checkValidation();
       }
@@ -400,19 +419,7 @@ class NewReport extends Component {
                 <br />
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className={`report-details-row-full ${statusValueClass}`}>
-                <div className='report-details-row-full-title'>Comment</div>
-                <div className='report-details-row-full-value'>
-                  <Input
-                    placeholder={"Comment"}
-                    onChange={e => this.onChange(e)}
-                    name={"comment"}
-                    validationMsg={this.state.errors.comment}
-                  />
-                </div>
-              </div>
-            </div>
+
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Test Steps</div>
@@ -554,6 +561,32 @@ class NewReport extends Component {
                   />
                 </div>
               </div>
+              <div className={`report-details-row-half ${statusValueClass}`}>
+                <div className='report-details-row-half-value'>
+                  <SearchDropdown
+                    options={this.state.filteredSimulators}
+                    name={"simulator"}
+                    value={this.state.simulator}
+                    onChange={this.selectSimulator}
+                    placeholder={"Simulator"}
+                    validationMsg={this.state.errors.simulator}
+                    multiple={false}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='report-details-row'>
+              <div className={`report-details-row-full ${statusValueClass}`}>
+                <div className='report-details-row-full-title'>Comment</div>
+                <div className='report-details-row-full-value'>
+                  <Input
+                    placeholder={"Comment"}
+                    onChange={e => this.onChange(e)}
+                    name={"comment"}
+                    validationMsg={this.state.errors.comment}
+                  />
+                </div>
+              </div>
             </div>
             <div className='report-details-row'>
               <div className='report-details-row-full'>
@@ -606,6 +639,7 @@ const mapStateToProps = state => ({
   environments: state.environments,
   oss: state.oss,
   statuses: state.statuses,
+  simulators: state.simulators,
   auth: state.auth
 });
 
@@ -617,5 +651,6 @@ export default connect(mapStateToProps, {
   getEnvironments,
   getStatuses,
   getOperatingSystems,
+  getSimulators,
   createReport
 })(withRouter(NewReport));
