@@ -14,7 +14,6 @@ import Btn from "../../../../components/common/Btn";
 import Input from "../../../../components/common/Input";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
-import Checkbox from "../../../../components/common/Checkbox";
 import Header from "../../../../components/common/Header";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
 import { getEnvironment, editEnvironment, removeEnvironment } from "../../../../actions/environmentActions";
@@ -154,20 +153,20 @@ class EditEnvironment extends Component {
       content = <Spinner />;
     } else {
       content = (
-        <div className="main-content--content">
-          <div className="header">
-            <div className="header--title">Environment Information </div>
-            <div className="header--buttons">
-              <div className="header--buttons--primary"></div>
-              <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
-                <i className="fas fa-trash-alt"></i>
+        <div className='main-content--content'>
+          <div className='header'>
+            <div className='header--title'>Environment Information </div>
+            <div className='header--buttons'>
+              <div className='header--buttons--primary'></div>
+              <div className='header--buttons--secondary clickable' onClick={e => this.confirmModal([])}>
+                <i className='fas fa-trash-alt'></i>
               </div>
             </div>
           </div>
           <Input
-            type="text"
-            placeholder="Enter Environment Title"
-            label="Title*"
+            type='text'
+            placeholder='Enter Environment Title'
+            label='Title*'
             validationMsg={[this.state.errors.title, this.props.errors.title, this.props.errors.error]}
             value={this.state.title}
             onChange={e => this.onChange(e)}
@@ -175,32 +174,26 @@ class EditEnvironment extends Component {
             onKeyDown={this.submitFormOnEnterKey}
           />
 
-          <div className="flex-column-left mt-4">
+          <div className='flex-column-left mt-4'>
             <Btn
               className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-              label="Edit Environment"
-              type="text"
+              label='Edit Environment'
+              type='text'
               onClick={e => this.submitForm(e)}
             />
 
             <UnderlineAnchor link={`/${projectId}/Environments`} value={"Cancel"} />
           </div>
-          <Checkbox
-            label="Set environment as deprecated"
-            onClick={e => this.toggleDeprecated(e)}
-            name="deprecated"
-            value={this.state.deprecated}
-          />
         </div>
       );
     }
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className="main-content main-content-grid">
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fas fa-arrow-left"></i>}
+            icon={<i className='fas fa-arrow-left'></i>}
             title={"Back to All Environments"}
             history={this.props}
             link={`/${projectId}/Environments`}
@@ -224,7 +217,6 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { getEnvironment, editEnvironment, removeEnvironment, clearErrors }
-)(withRouter(EditEnvironment));
+export default connect(mapStateToProps, { getEnvironment, editEnvironment, removeEnvironment, clearErrors })(
+  withRouter(EditEnvironment)
+);
