@@ -154,14 +154,7 @@ class Report extends Component {
                 <br />
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className='report-details-row-full'>
-                <div className={`report-details-row-full ${report.status.title.toUpperCase()}-REPORT`}>
-                  <div className='report-details-row-full-title'>Comment</div>
-                  <div className='report-details-row-full-value'>{report.comment}</div>
-                </div>
-              </div>
-            </div>
+
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Test Steps</div>
@@ -258,6 +251,20 @@ class Report extends Component {
                 <div className='report-details-row-half-title'>Environment</div>
                 <div className='report-details-row-half-value'>
                   {report.reportsetup.environment ? report.reportsetup.environment.title : ""}
+                </div>
+              </div>
+              <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
+                <div className='report-details-row-half-title'>Simulator</div>
+                <div className='report-details-row-half-value'>
+                  {report.reportsetup.simulator ? report.reportsetup.simulator.title : ""}
+                </div>
+              </div>
+            </div>
+            <div className='report-details-row'>
+              <div className='report-details-row-full'>
+                <div className={`report-details-row-full ${report.status.title.toUpperCase()}-REPORT`}>
+                  <div className='report-details-row-full-title'>Comment</div>
+                  <div className='report-details-row-full-value'>{report.comment}</div>
                 </div>
               </div>
             </div>
