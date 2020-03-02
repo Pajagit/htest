@@ -6,7 +6,7 @@ module.exports = {
       "testsetupitems",
       [
         {
-          title: "Devices / Simulators"
+          title: "Devices"
         },
         {
           title: "Browsers"
@@ -21,7 +21,7 @@ module.exports = {
           title: "Environments"
         },
         {
-          title: "Aditional Conditions"
+          title: "Simulators"
         },
         {
           title: "Upload files"
