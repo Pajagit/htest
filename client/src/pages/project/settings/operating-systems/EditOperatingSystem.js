@@ -14,7 +14,6 @@ import Btn from "../../../../components/common/Btn";
 import Input from "../../../../components/common/Input";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
-import Checkbox from "../../../../components/common/Checkbox";
 import Header from "../../../../components/common/Header";
 import UnderlineAnchor from "../../../../components/common/UnderlineAnchor";
 import { getOperatingSystem, editOperatingSystem, removeOperatingSystem } from "../../../../actions/osActions";
@@ -182,12 +181,6 @@ class EditOperatingSystem extends Component {
 
             <UnderlineAnchor link={`/${projectId}/OperatingSystems`} value={"Cancel"} />
           </div>
-          <Checkbox
-            label='Set OS as deprecated'
-            onClick={e => this.toggleDeprecated(e)}
-            name='deprecated'
-            value={this.state.deprecated}
-          />
         </div>
       );
     }

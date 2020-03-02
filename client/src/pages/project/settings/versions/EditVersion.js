@@ -12,7 +12,6 @@ import { superAndProjectAdminPermissions } from "../../../../permissions/Permiss
 
 import Btn from "../../../../components/common/Btn";
 import Input from "../../../../components/common/Input";
-import Checkbox from "../../../../components/common/Checkbox";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import Header from "../../../../components/common/Header";
@@ -178,12 +177,6 @@ class EditVersion extends Component {
 
             <UnderlineAnchor link={`/${projectId}/Versions`} value={"Cancel"} />
           </div>
-          <Checkbox
-            label='Set version as deprecated'
-            onClick={e => this.toggleDeprecated(e)}
-            name='deprecated'
-            value={this.state.deprecated}
-          />
         </div>
       );
     }
