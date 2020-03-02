@@ -86,14 +86,13 @@ class NewReport extends Component {
       update.filteredBrowsers = filteredBrowsers;
     }
 
-    if (nextProps.oss && nextProps.oss.oss && nextProps.oss.oss.operatingsystems) {
-      var operatingsystems = nextProps.oss.oss.operatingsystems;
-      //   var filteredOperatingSystems = operatingsystems.filter(function(browser) {
-      //     return browser.used === true;
-      //   });
-      update.filteredOperatingSystems = operatingsystems;
+    if (nextProps.oss && nextProps.oss.oss && nextProps.oss.oss.oss) {
+      var oss = nextProps.oss.oss.oss;
+      var filteredoss = oss.filter(function(oss) {
+        return oss.used === true;
+      });
+      update.filteredOperatingSystems = filteredoss;
     }
-
     if (
       nextProps.environments &&
       nextProps.environments.environments &&
@@ -605,7 +604,6 @@ const mapStateToProps = state => ({
   browsers: state.browsers,
   versions: state.versions,
   environments: state.environments,
-  operatingsystems: state.oss,
   oss: state.oss,
   statuses: state.statuses,
   auth: state.auth
