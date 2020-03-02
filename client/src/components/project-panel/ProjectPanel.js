@@ -78,7 +78,7 @@ class ProjectPanel extends Component {
     if (this.state.settingsVisible) {
       settings = (
         <ProjectPanelDropdownItem
-          icon={<i className="fas fa-cog"></i>}
+          icon={<i className='fas fa-cog'></i>}
           title={"SETTINGS"}
           active={this.state.settingsUrl}
           settingsActive={this.state.settingsActive}
@@ -87,15 +87,20 @@ class ProjectPanel extends Component {
             {
               title: "PROJECT INFO",
               link: `/${projectId}/ProjectInfo`,
-              icon: <i className="fas fa-project-diagram"></i>
+              icon: <i className='fas fa-project-diagram'></i>
             },
-            { title: "GROUPS", link: `/${projectId}/Groups`, icon: <i className="fas fa-object-group"></i> },
-            { title: "DEVICES", link: `/${projectId}/Devices`, icon: <i className="fas fa-tablet-alt"></i> },
-            { title: "SIMULATORS", link: `/${projectId}/Simulators`, icon: <i className="fas fa-tablet-alt"></i> },
-            { title: "BROWSERS", link: `/${projectId}/Browsers`, icon: <i className="far fa-window-maximize"></i> },
-            { title: "VERSIONS", link: `/${projectId}/Versions`, icon: <i className="fas fa-code-branch"></i> },
-            { title: "ENVIRONMENTS", link: `/${projectId}/Environments`, icon: <i className="fab fa-dev"></i> },
-            { title: "TEST SETUP", link: `/${projectId}/TestSetup`, icon: <i className="fas fa-cogs"></i> }
+            { title: "GROUPS", link: `/${projectId}/Groups`, icon: <i className='fas fa-object-group'></i> },
+            { title: "DEVICES", link: `/${projectId}/Devices`, icon: <i className='fas fa-tablet-alt'></i> },
+            { title: "SIMULATORS", link: `/${projectId}/Simulators`, icon: <i className='fas fa-tablet-alt'></i> },
+            { title: "BROWSERS", link: `/${projectId}/Browsers`, icon: <i className='far fa-window-maximize'></i> },
+            { title: "VERSIONS", link: `/${projectId}/Versions`, icon: <i className='fas fa-code-branch'></i> },
+            { title: "ENVIRONMENTS", link: `/${projectId}/Environments`, icon: <i className='fab fa-dev'></i> },
+            {
+              title: "OPERATING SYS.",
+              link: `/${projectId}/OperatingSystems`,
+              icon: <i className='fab fa-ubuntu'></i>
+            },
+            { title: "TEST SETUP", link: `/${projectId}/TestSetup`, icon: <i className='fas fa-cogs'></i> }
           ]}
         />
       );
@@ -110,23 +115,23 @@ class ProjectPanel extends Component {
       }
     }
     return (
-      <div className="project-panel project-panel-grid">
-        <div className="project-panel-items">
+      <div className='project-panel project-panel-grid'>
+        <div className='project-panel-items'>
           <ProjectPanelHeader img={img} alt={title} title={title} />
           <ProjectPanelItem
-            icon={<i className="fas fa-clipboard-list"></i>}
+            icon={<i className='fas fa-clipboard-list'></i>}
             title={"TEST CASES"}
             active={this.state.testcasesUrl}
             link={`/${projectId}/TestCases`}
           />
           <ProjectPanelItem
-            icon={<i className="fas fa-file-alt"></i>}
+            icon={<i className='fas fa-file-alt'></i>}
             title={"REPORTS"}
             active={this.state.reportsUrl}
             link={`/${projectId}/Reports`}
           />
           <ProjectPanelItem
-            icon={<i className="far fa-chart-bar"></i>}
+            icon={<i className='far fa-chart-bar'></i>}
             title={"STATISTIC"}
             active={this.state.statisticsUrl}
             link={`/${projectId}/Statistics`}

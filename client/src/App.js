@@ -71,6 +71,10 @@ import EditVersion from "./pages/project/settings/versions/EditVersion";
 import Environments from "./pages/project/settings/environments/Environments";
 import NewEnvironment from "./pages/project/settings/environments/NewEnvironment";
 import EditEnvironment from "./pages/project/settings/environments/EditEnvironment";
+// OPERATING SYSTEMS
+import OperatingSystems from "./pages/project/settings/operating-systems/OperatingSystems";
+import NewOperatingSystem from "./pages/project/settings/operating-systems/NewOperatingSystem";
+import EditOperatingSystem from "./pages/project/settings/operating-systems/EditOperatingSystem";
 // TEST SETUP
 import TestSetup from "./pages/project/settings/test-setup/TestSetup";
 
@@ -80,7 +84,7 @@ import openSocket from "socket.io-client";
 import webSocket from "./configSocket/keys";
 var socket = openSocket(webSocket.webSocket);
 
-socket.on("refreshUserToken", function (data) {
+socket.on("refreshUserToken", function(data) {
   if (localStorage.jwtHtestToken) {
     const decoded = jwt_decode(localStorage.jwtHtestToken);
     if (decoded.id === parseInt(data)) {
@@ -149,50 +153,53 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-        <div className="App">
+        <div className='App'>
           <div>
-            <ToastContainer transition={Flip} position="bottom-right" />
+            <ToastContainer transition={Flip} position='bottom-right' />
           </div>
-          <Route exact path="/" component={Landing} />
-          <PrivateRoute exact path="/Projects" component={Projects} />
-          <PrivateRoute exact path="/:projectId/ProjectInfo" component={ProjectInfo} />
-          <PrivateRoute exact path="/:projectId/ProjectSetting" component={ProjectSetting} />
-          <PrivateRoute exact path="/:projectId/TestCase/:testcaseId" component={TestCase} />
-          <PrivateRoute exact path="/:projectId/CreateTestCase" component={NewTestCase} />
-          <PrivateRoute exact path="/:projectId/EditTestCase/:testcaseId" component={EditTestCase} />
-          <PrivateRoute exact path="/:projectId/TestCases" component={TestCases} />
-          <PrivateRoute exact path="/:projectId/Reports" component={Reports} />
-          <PrivateRoute exact path="/:projectId/NewReport/:testcaseId" component={NewReport} />
-          <PrivateRoute exact path="/:projectId/Report/:reportId" component={Report} />
-          <PrivateRoute exact path="/:projectId/Statistics" component={Statistics} />
-          <PrivateRoute exact path="/UserSettings" component={UserSettings} />
-          <PrivateRoute exact path="/AddUser" component={AddUser} />
-          <PrivateRoute exact path="/ProjectSettings" component={ProjectSettings} />
-          <PrivateRoute exact path="/DeviceSettings" component={DeviceSettings} />
-          <PrivateRoute exact path="/EditUser/:userId" component={EditUser} />
-          <PrivateRoute exact path="/EditProject/:projectId" component={EditProject} />
-          <PrivateRoute exact path="/CreateProject" component={NewProject} />
-          <PrivateRoute exact path="/:projectId/CreateNewGroup" component={NewGroup} />
-          <PrivateRoute exact path="/:projectId/EditGroup/:groupId" component={EditGroup} />
-          <PrivateRoute exact path="/:projectId/Groups" component={Groups} />
-          <PrivateRoute exact path="/:projectId/Devices" component={Devices} />
-          <PrivateRoute exact path="/:projectId/Simulators" component={Simulators} />
-          <PrivateRoute exact path="/:projectId/Browsers" component={Browsers} />
-          <PrivateRoute exact path="/:projectId/Versions" component={Versions} />
-          <PrivateRoute exact path="/:projectId/Environments" component={Environments} />
-          <PrivateRoute exact path="/:projectId/TestSetup" component={TestSetup} />
-          <PrivateRoute exact path="/Notifications" component={Notifications} />
-          <PrivateRoute exact path="/Statistics" component={GlobalStatistics} />
-          <PrivateRoute exact path="/AddDevice" component={NewDevice} />
-          <PrivateRoute exact path="/EditDevice/:deviceId" component={EditDevice} />
-          <PrivateRoute exact path="/:projectId/EditSimulator/:simulatorId" component={EditSimulator} />
-          <PrivateRoute exact path="/:projectId/NewSimulator" component={NewSimulator} />
-          <PrivateRoute exact path="/:projectId/NewBrowser" component={NewBrowser} />
-          <PrivateRoute exact path="/:projectId/EditBrowser/:browserId" component={EditBrowser} />
-          <PrivateRoute exact path="/:projectId/NewVersion" component={NewVersion} />
-          <PrivateRoute exact path="/:projectId/NewEnvironment" component={NewEnvironment} />
-          <PrivateRoute exact path="/:projectId/EditVersion/:versionId" component={EditVersion} />
-          <PrivateRoute exact path="/:projectId/EditEnvironment/:environmentId" component={EditEnvironment} />
+          <Route exact path='/' component={Landing} />
+          <PrivateRoute exact path='/Projects' component={Projects} />
+          <PrivateRoute exact path='/:projectId/ProjectInfo' component={ProjectInfo} />
+          <PrivateRoute exact path='/:projectId/ProjectSetting' component={ProjectSetting} />
+          <PrivateRoute exact path='/:projectId/TestCase/:testcaseId' component={TestCase} />
+          <PrivateRoute exact path='/:projectId/CreateTestCase' component={NewTestCase} />
+          <PrivateRoute exact path='/:projectId/EditTestCase/:testcaseId' component={EditTestCase} />
+          <PrivateRoute exact path='/:projectId/TestCases' component={TestCases} />
+          <PrivateRoute exact path='/:projectId/Reports' component={Reports} />
+          <PrivateRoute exact path='/:projectId/NewReport/:testcaseId' component={NewReport} />
+          <PrivateRoute exact path='/:projectId/Report/:reportId' component={Report} />
+          <PrivateRoute exact path='/:projectId/Statistics' component={Statistics} />
+          <PrivateRoute exact path='/UserSettings' component={UserSettings} />
+          <PrivateRoute exact path='/AddUser' component={AddUser} />
+          <PrivateRoute exact path='/ProjectSettings' component={ProjectSettings} />
+          <PrivateRoute exact path='/DeviceSettings' component={DeviceSettings} />
+          <PrivateRoute exact path='/EditUser/:userId' component={EditUser} />
+          <PrivateRoute exact path='/EditProject/:projectId' component={EditProject} />
+          <PrivateRoute exact path='/CreateProject' component={NewProject} />
+          <PrivateRoute exact path='/:projectId/CreateNewGroup' component={NewGroup} />
+          <PrivateRoute exact path='/:projectId/EditGroup/:groupId' component={EditGroup} />
+          <PrivateRoute exact path='/:projectId/Groups' component={Groups} />
+          <PrivateRoute exact path='/:projectId/Devices' component={Devices} />
+          <PrivateRoute exact path='/:projectId/Simulators' component={Simulators} />
+          <PrivateRoute exact path='/:projectId/Browsers' component={Browsers} />
+          <PrivateRoute exact path='/:projectId/OperatingSystems' component={OperatingSystems} />
+          <PrivateRoute exact path='/:projectId/NewOperatingSystem' component={NewOperatingSystem} />
+          <PrivateRoute exact path='/:projectId/EditOperatingSystem/:osId' component={EditOperatingSystem} />
+          <PrivateRoute exact path='/:projectId/Versions' component={Versions} />
+          <PrivateRoute exact path='/:projectId/Environments' component={Environments} />
+          <PrivateRoute exact path='/:projectId/TestSetup' component={TestSetup} />
+          <PrivateRoute exact path='/Notifications' component={Notifications} />
+          <PrivateRoute exact path='/Statistics' component={GlobalStatistics} />
+          <PrivateRoute exact path='/AddDevice' component={NewDevice} />
+          <PrivateRoute exact path='/EditDevice/:deviceId' component={EditDevice} />
+          <PrivateRoute exact path='/:projectId/EditSimulator/:simulatorId' component={EditSimulator} />
+          <PrivateRoute exact path='/:projectId/NewSimulator' component={NewSimulator} />
+          <PrivateRoute exact path='/:projectId/NewBrowser' component={NewBrowser} />
+          <PrivateRoute exact path='/:projectId/EditBrowser/:browserId' component={EditBrowser} />
+          <PrivateRoute exact path='/:projectId/NewVersion' component={NewVersion} />
+          <PrivateRoute exact path='/:projectId/NewEnvironment' component={NewEnvironment} />
+          <PrivateRoute exact path='/:projectId/EditVersion/:versionId' component={EditVersion} />
+          <PrivateRoute exact path='/:projectId/EditEnvironment/:environmentId' component={EditEnvironment} />
         </div>
       </Router>
     </Provider>
