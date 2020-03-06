@@ -162,8 +162,12 @@ class Report extends Component {
                   {report.testcase.steps.map((step, index) => (
                     <div key={index}>
                       <span>
-                        {`${index + 1}. `}
-                        {step.value}
+                        <b>
+                          {`Step ${index + 1}. `}
+                          {step.value}
+                        </b>
+                        <br />
+                        <i>{`Expected: ${step.expected_result}`}</i>
                       </span>
                     </div>
                   ))}
