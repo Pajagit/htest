@@ -29,12 +29,12 @@
         }
         margin-bottom: 1.3rem;
       }
-&--button{
-  position: absolute;
-    bottom: 2rem;
-    right: 2rem;
-    margin-top: 2rem;
-}
+      &--button {
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        margin-top: 2rem;
+      }
       &--author {
         padding-bottom: 0.5rem;
         color: #4a4a4a;
@@ -55,18 +55,22 @@
     padding: 1.5rem 2rem;
     &-container {
       &--item {
-
         display: flex;
         &-title {
-            margin-right: 0.5rem;
+          margin-right: 0.5rem;
           font-size: 1.4rem;
           color: #9b9b9b;
         }
         &-value {
           font-size: 1.4rem;
           color: #000;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 3; /* number of lines to show */
+          -webkit-box-orient: vertical;
         }
-        &-status{
+        &-status {
           bottom: 0;
           right: 0;
           background-color: red;

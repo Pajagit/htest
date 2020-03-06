@@ -430,6 +430,8 @@ class NewReport extends Component {
                         <div className='steps-class mb-2'>
                           {`${index + 1}. `}
                           {step.value}
+                          <br />
+                          <i>{!isEmpty(step.expected_result) ? `Expected: ${step.expected_result}` : ""}</i>
                         </div>
                       </span>
                     </React.Fragment>

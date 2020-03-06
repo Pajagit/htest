@@ -212,7 +212,7 @@ class Report extends Component {
                       <span>
                         {`${index + 1}. `}
                         <a href={link.value} target='_blank' rel='noopener noreferrer'>
-                          <span className='mr-1'>{link.value.substring(0, 50)}...</span>
+                          <span className='mr-1'>{link.value}</span>
                           <img className='testcase-details-item--value-img' src={openExternalBtn} alt='External link' />
                         </a>
                       </span>
