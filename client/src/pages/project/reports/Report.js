@@ -85,7 +85,7 @@ class Report extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Test Case Created</div>
                 <div className='report-details-row-half-value'>
-                  {moment(report.testcase_created_at).format("Do MMMM YYYY, h:mm:ss a")}
+                  {moment(report.testcase.created_at).format("Do MMMM YYYY, h:mm:ss a")}
                 </div>
               </div>
               <div className={`report-details-row-half ${report.status.title.toUpperCase()}-REPORT`}>
