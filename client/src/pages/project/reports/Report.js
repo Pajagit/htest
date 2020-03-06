@@ -159,15 +159,15 @@ class Report extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Test Steps</div>
                 <div className='report-details-row-half-value'>
-                  {report.testcase.steps.map((step, index) => (
+                  {report.testcase.steps.map((test_step, index) => (
                     <div key={index}>
                       <span>
                         <b>
                           {`Step ${index + 1}. `}
-                          {step.value}
+                          {test_step.value}
                         </b>
                         <br />
-                        <i>{`Expected: ${step.expected_result}`}</i>
+                        <i>{!isEmpty(test_step.expected_result) ? `Expected: ${test_step.expected_result}` : ""}</i>
                       </span>
                     </div>
                   ))}
