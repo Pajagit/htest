@@ -7,6 +7,7 @@ import Btn from "../../../components/common/Btn";
 import FullBtn from "../../../components/common/FullBtn";
 import Input from "../../../components/common/Input";
 import InputGroup from "../../../components/common/InputGroup";
+import InputGroupDouble from "../../../components/common/InputGroupDouble";
 import Textarea from "../../../components/common/Textarea";
 import Spinner from "../../../components/common/Spinner";
 import Switch from "../../../components/common/Switch";
@@ -183,13 +184,12 @@ class EditTestCase extends Component {
     formData.project_id = this.state.projectId;
     formData.title = this.state.title;
     formData.description = this.state.description;
-    formData.test_steps = testSteps;
+    formData.test_steps = this.state.test_steps;
     formData.expected_result = this.state.expected_result;
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.deprecated = this.state.deprecated;
     formData.links = links;
-
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
       this.props.editTestcase(this.state.testcaseId, formData, res => {
@@ -247,6 +247,14 @@ class EditTestCase extends Component {
       this.setState({ test_steps: enteredTestSteps }, () => {
         this.checkValidation();
       });
+    } else if (e.target.id === "expe") {
+      var enteredExpectedResult = this.state.test_steps;
+      enteredExpectedResult[e.target.name.substring(5)].expected_result = e.target.value;
+      this.setState({ test_steps: enteredExpectedResult }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
     }
     this.setState({ [e.target.name]: e.target.value }, () => {
       this.checkValidation();
@@ -274,11 +282,11 @@ class EditTestCase extends Component {
   }
   addColumnStep(e) {
     var test_steps = this.state.test_steps;
-    test_steps.push({ id: test_steps.length, value: "" });
+    test_steps.push({ id: test_steps.length, value: "", expected_result: "" });
     this.setState({ test_steps });
   }
   removeColumnStep(e) {
-    var indexToRemove = e.target.id.substring(5);
+    var indexToRemove = e.target.id.substring(10);
     var test_steps = this.state.test_steps;
     test_steps.splice(indexToRemove, 1);
     this.setState({ test_steps }, () => {
@@ -324,20 +332,20 @@ class EditTestCase extends Component {
       content = <Spinner />;
     } else {
       content = (
-        <div className="main-content--content">
-          <div className="header">
-            <div className="header--title">Edit Test Case </div>
-            <div className="header--buttons">
-              <div className="header--buttons--primary"></div>
-              <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
-                <i className="fas fa-trash-alt"></i>
+        <div className='main-content--content'>
+          <div className='header'>
+            <div className='header--title'>Edit Test Case </div>
+            <div className='header--buttons'>
+              <div className='header--buttons--primary'></div>
+              <div className='header--buttons--secondary clickable' onClick={e => this.confirmModal([])}>
+                <i className='fas fa-trash-alt'></i>
               </div>
             </div>
           </div>
           <Input
-            type="text"
-            placeholder="Enter Test Case Name"
-            label="Test case name*"
+            type='text'
+            placeholder='Enter Test Case Name'
+            label='Test case name*'
             validationMsg={this.state.errors.title}
             value={this.state.title}
             onChange={e => this.onChange(e)}
@@ -345,31 +353,31 @@ class EditTestCase extends Component {
             onKeyDown={this.submitFormOnEnterKey}
           />
           <Textarea
-            placeholder="Enter Test Case Description"
-            label="Description*"
+            placeholder='Enter Test Case Description'
+            label='Description*'
             validationMsg={this.state.errors.description}
             value={this.state.description}
             onChange={e => this.onChange(e)}
             name={"description"}
             onKeyDown={this.submitFormOnEnterKey}
           />
-          <InputGroup
-            type="text"
-            placeholder="Enter Test Steps Here"
-            label="Test steps*"
+          <InputGroupDouble
+            type='text'
+            placeholder={["Enter Test Steps Here", "Enter Expected Result Here"]}
+            label='Test steps*'
             validationMsg={this.state.errors.test_steps}
             values={this.state.test_steps}
             onChange={e => this.onChange(e)}
-            id={"step"}
-            addColumn={<FullBtn placeholder="Add test steps" onClick={e => this.addColumnStep(e)} />}
+            id={["step", "expe"]}
+            addColumn={<FullBtn placeholder='Add test steps' onClick={e => this.addColumnStep(e)} />}
             removeColumn={e => this.removeColumnStep(e)}
             required={true}
             onKeyDown={this.submitFormOnEnterKey}
           />
           <Input
-            type="text"
-            placeholder="Enter Result"
-            label="Expected Result*"
+            type='text'
+            placeholder='Enter Result'
+            label='Expected Result*'
             validationMsg={this.state.errors.expected_result}
             value={this.state.expected_result}
             onChange={e => this.onChange(e)}
@@ -385,7 +393,7 @@ class EditTestCase extends Component {
             validationMsg={this.state.errors.groups}
             multiple={true}
           />
-          <div className="group-grid">
+          <div className='group-grid'>
             {this.state.pinnedGroups.map((group, index) => (
               <Switch
                 key={index}
@@ -398,10 +406,10 @@ class EditTestCase extends Component {
             ))}
           </div>
           <Input
-            type="text"
-            addColumnPlaceholder="Add test steps"
-            placeholder="Enter Condition"
-            label="Precondition"
+            type='text'
+            addColumnPlaceholder='Add test steps'
+            placeholder='Enter Condition'
+            label='Precondition'
             name={"preconditions"}
             value={this.state.preconditions}
             validationMsg={this.state.errors.preconditions}
@@ -409,14 +417,14 @@ class EditTestCase extends Component {
             onKeyDown={this.submitFormOnEnterKey}
           />
           <InputGroup
-            type="text"
-            placeholder="Add Link here"
-            label="Links"
+            type='text'
+            placeholder='Add Link here'
+            label='Links'
             values={this.state.links}
             onChange={e => this.onChange(e)}
             id={"link"}
             validationMsg={this.state.errors.links}
-            addColumn={<FullBtn placeholder="Add links" onClick={e => this.addColumnLink(e)} />}
+            addColumn={<FullBtn placeholder='Add links' onClick={e => this.addColumnLink(e)} />}
             removeColumn={e => this.removeColumnLink(e)}
             required={false}
             disabled={false}
@@ -433,32 +441,32 @@ class EditTestCase extends Component {
             required={false}
             disabled={true}
           /> */}
-          <div className="flex-column-left mt-4">
+          <div className='flex-column-left mt-4'>
             <Btn
               className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-              label="Save Changes"
-              type="text"
+              label='Save Changes'
+              type='text'
               onClick={e => this.submitForm(e)}
             />
 
             <UnderlineAnchor link={`/${this.state.projectId}/Testcase/${this.state.testcaseId}`} value={"Cancel"} />
           </div>
           <Checkbox
-            label="Set old test case as deprecated"
+            label='Set old test case as deprecated'
             onClick={e => this.toggleDeprecated(e)}
-            name="deprecated"
+            name='deprecated'
             value={this.state.deprecated}
           />
         </div>
       );
     }
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className="main-content main-content-grid">
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fas fa-arrow-left"></i>}
+            icon={<i className='fas fa-arrow-left'></i>}
             title={"Back to Test Case"}
             history={this.props}
             link={`/${this.state.projectId}/TestCase/${this.state.testcaseId}`}
@@ -482,7 +490,6 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { getTestcase, editTestcase, getGroups, setTestcaseDeprecated }
-)(withRouter(EditTestCase));
+export default connect(mapStateToProps, { getTestcase, editTestcase, getGroups, setTestcaseDeprecated })(
+  withRouter(EditTestCase)
+);
