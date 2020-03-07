@@ -69,7 +69,8 @@ module.exports = Router({ mergeParams: true }).post(
           for (var i = 0; i < links.length; i++) {
             arrayLinks.push({
               test_case_id: testcase.id,
-              value: links[i]
+              value: links[i].value,
+              title: links[i].title
             });
           }
           Link.bulkCreate(arrayLinks).then(links => {
@@ -136,7 +137,7 @@ module.exports = Router({ mergeParams: true }).post(
             include: [
               {
                 model: Link,
-                attributes: ["id", "value"],
+                attributes: ["id", "value", "title"],
                 required: false
               },
               {

@@ -144,7 +144,7 @@ module.exports = {
                 },
                 {
                   model: Link,
-                  attributes: ["id", "value"],
+                  attributes: ["id", "value","title"],
                   required: false
                 },
                 {
@@ -299,7 +299,7 @@ module.exports = {
               },
               {
                 model: Link,
-                attributes: ["id", "value"],
+                attributes: ["id", "value", "title"],
                 required: false
               },
               {

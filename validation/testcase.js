@@ -89,8 +89,8 @@ module.exports = {
     // Links validation
     if (!isEmpty(data.links)) {
       for (var i = 0; i < data.links.length; i++) {
-        if (data.links[i].trim().length > linkLimit) {
-          errors.links = `Link can not be more than ${linkLimit} long (${data.links[i].length})`;
+        if (data.links[i].value.trim().length > linkLimit) {
+          errors.links = `Link can not be more than ${linkLimit} long (${data.links[i].value.length})`;
         }
       }
     }

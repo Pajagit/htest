@@ -29,7 +29,7 @@ module.exports = Router({ mergeParams: true }).get(
         include: [
           {
             model: Link,
-            attributes: ["id", "value"],
+            attributes: ["id", "value", "title"],
             required: false
           },
           {
