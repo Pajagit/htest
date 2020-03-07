@@ -99,7 +99,16 @@ module.exports = {
     if (!isEmpty(data.links)) {
       for (var i = 0; i < data.links.length; i++) {
         if (data.links[i].value.trim().length > linkLimit) {
-          errors.links = `Link can not be more than ${linkLimit} long (${data.links[i].value.length})`;
+          errors.links = `Link value can not be more than ${linkLimit} long (${data.links[i].value.length})`;
+        }
+      }
+      if (!errors.links) {
+        for (var i = 0; i < data.links.length; i++) {
+          if (data.links[i].title) {
+            if (data.links[i].title.trim().length > linkLimit) {
+              errors.links = `Link title can not be more than ${linkLimit} long (${data.links[i].title.length})`;
+            }
+          }
         }
       }
     }

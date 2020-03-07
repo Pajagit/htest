@@ -8,6 +8,7 @@ module.exports = {
     var commentLimit = 1000;
     var additionalPreconditionLimit = 1000;
     var stepLimit = 150;
+    var linkLimit = 150;
 
     if (!isEmpty(data.actual_result)) {
       if (data.actual_result.length > actualResultLimit) {
@@ -79,10 +80,20 @@ module.exports = {
       }
     }
 
+    // Links validation
     if (!isEmpty(data.links)) {
       for (var i = 0; i < data.links.length; i++) {
-        if (isEmpty(data.links[i].value)) {
-          errors.links = { message: "Link[" + i + "] value is required", position: i };
+        if (data.links[i].value.trim().length > linkLimit) {
+          errors.links = `Link value can not be more than ${linkLimit} long (${data.links[i].value.length})`;
+        }
+      }
+      if (!errors.links) {
+        for (var i = 0; i < data.links.length; i++) {
+          if (data.links[i].title) {
+            if (data.links[i].title.trim().length > linkLimit) {
+              errors.links = `Link title can not be more than ${linkLimit} long (${data.links[i].title.length})`;
+            }
+          }
         }
       }
     }
