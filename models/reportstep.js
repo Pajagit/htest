@@ -18,11 +18,15 @@ const ReportStep = sequelize.define(
     },
     step: {
       required: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.STRING
     },
     input_data: {
       required: false,
-      type: Sequelize.INTEGER
+      type: Sequelize.STRING
+    },
+    expected_result: {
+      required: false,
+      type: Sequelize.STRING
     }
   },
   { timestamps: false }
