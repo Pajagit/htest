@@ -13,6 +13,7 @@ function InputGroupDouble({
   addColumn,
   id,
   removeColumn,
+  keys,
   required,
   disabled,
   onKeyDown
@@ -29,7 +30,7 @@ function InputGroupDouble({
             <input
               type={type}
               placeholder={placeholder[0]}
-              value={value.value}
+              value={value[`${keys[0]}`]}
               className='form-element--input'
               onChange={onChange}
               disabled={disabled}
@@ -44,7 +45,7 @@ function InputGroupDouble({
             <input
               type={type}
               placeholder={placeholder[1]}
-              value={value.expected_result}
+              value={value[`${keys[1]}`]}
               className='form-element--input'
               onChange={onChange}
               disabled={disabled}

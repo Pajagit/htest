@@ -6,7 +6,6 @@ import { withRouter } from "react-router-dom";
 import Btn from "../../../components/common/Btn";
 import FullBtn from "../../../components/common/FullBtn";
 import Input from "../../../components//common/Input";
-import InputGroup from "../../../components//common/InputGroup";
 import InputGroupDouble from "../../../components//common/InputGroupDouble";
 import Textarea from "../../../components//common/Textarea";
 import Switch from "../../../components//common/Switch";
@@ -111,18 +110,14 @@ class NewTestCase extends Component {
     this.setState({ submitPressed: true });
     e.preventDefault();
     var formData = {};
-
-    var testSteps = filterStringArray(this.state.test_steps);
-    var links = filterStringArray(this.state.links);
     var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
     formData.title = this.state.title;
     formData.description = this.state.description;
-    formData.test_steps = testSteps;
     formData.expected_result = this.state.expected_result;
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.isDeprecated = this.state.isDeprecated;
-    formData.links = links;
+    formData.links = this.state.links;
     formData.project_id = this.state.projectId;
     formData.test_steps = this.state.test_steps;
     const { errors, isValid } = TestCaseValidation(formData);
@@ -161,10 +156,18 @@ class NewTestCase extends Component {
   }
 
   onChange(e) {
-    if (e.target.id === "link") {
+    if (e.target.id === "value") {
       var enteredLinks = this.state.links;
-      enteredLinks[e.target.name.substring(5)].value = e.target.value;
+      enteredLinks[e.target.name.substring(6)].value = e.target.value;
       this.setState({ links: enteredLinks }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else if (e.target.id === "title") {
+      var enteredLinkTitles = this.state.links;
+      enteredLinkTitles[e.target.name.substring(6)].title = e.target.value;
+      this.setState({ links: enteredLinkTitles }, () => {
         if (this.state.submitPressed) {
           this.checkValidation();
         }
@@ -256,11 +259,11 @@ class NewTestCase extends Component {
   }
   addColumnLink(e) {
     var links = this.state.links;
-    links.push({ id: links.length, value: "" });
+    links.push({ id: links.length, value: "", title: "" });
     this.setState({ links });
   }
   removeColumnLink(e) {
-    var indexToRemove = e.target.id.substring(5);
+    var indexToRemove = e.target.id.substring(12);
     var links = this.state.links;
     links.splice(indexToRemove, 1);
     this.setState({ links }, () => {
@@ -310,6 +313,7 @@ class NewTestCase extends Component {
                 validationMsg={this.state.errors.test_steps}
                 values={this.state.test_steps}
                 onChange={e => this.onChange(e)}
+                keys={["value", "expected_result"]}
                 id={["step", "expe"]}
                 addColumn={<FullBtn placeholder='Add test steps' onClick={e => this.addColumnStep(e)} />}
                 removeColumn={e => this.removeColumnStep(e)}
@@ -359,18 +363,18 @@ class NewTestCase extends Component {
                 onChange={e => this.onChange(e)}
                 onKeyDown={this.submitFormOnEnterKey}
               />
-              <InputGroup
+              <InputGroupDouble
                 type='text'
-                placeholder='Add Link here'
+                placeholder={["Enter Link Here", "Enter Link Title Here"]}
                 label='Links'
+                validationMsg={this.state.errors.links}
                 values={this.state.links}
                 onChange={e => this.onChange(e)}
-                id={"link"}
-                validationMsg={this.state.errors.links}
+                keys={["value", "title"]}
+                id={["value", "title"]}
                 addColumn={<FullBtn placeholder='Add links' onClick={e => this.addColumnLink(e)} />}
                 removeColumn={e => this.removeColumnLink(e)}
                 required={false}
-                disabled={false}
                 onKeyDown={this.submitFormOnEnterKey}
               />
 

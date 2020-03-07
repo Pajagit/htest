@@ -117,7 +117,7 @@ class TestCase extends Component {
               <span key={index}>
                 <div className='testcase-details-item--value'>
                   <a href={link.value} target='_blank' rel='noopener noreferrer'>
-                    <span className='mr-1'>{link.value}</span>{" "}
+                    <span className='mr-1'>{!isEmpty(link.title) ? link.title : link.value}</span>{" "}
                     <img className='testcase-details-item--value-img' src={openExternalBtn} alt='External link' />
                   </a>
                 </div>

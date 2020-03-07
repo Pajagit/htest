@@ -6,7 +6,6 @@ import { withRouter } from "react-router-dom";
 import Btn from "../../../components/common/Btn";
 import FullBtn from "../../../components/common/FullBtn";
 import Input from "../../../components/common/Input";
-import InputGroup from "../../../components/common/InputGroup";
 import InputGroupDouble from "../../../components/common/InputGroupDouble";
 import Textarea from "../../../components/common/Textarea";
 import Spinner from "../../../components/common/Spinner";
@@ -26,7 +25,6 @@ import { setTestcaseDeprecated } from "../../../actions/testcaseActions";
 
 import { editTestcase } from "../../../actions/testcaseActions";
 import { getGroups } from "../../../actions/groupsActions";
-import filterStringArray from "../../../utility/filterStringArray";
 import isEmpty from "../../../validation/isEmpty";
 import TestCaseValidation from "../../../validation/TestCaseValidation";
 import { writePermissions } from "../../../permissions/Permissions";
@@ -158,17 +156,15 @@ class EditTestCase extends Component {
   };
   checkValidation() {
     var formData = {};
-    var testSteps = filterStringArray(this.state.test_steps);
-    var links = filterStringArray(this.state.links);
     var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
     formData.title = this.state.title;
     formData.description = this.state.description;
-    formData.test_steps = testSteps;
+    formData.test_steps = this.state.test_steps;
     formData.expected_result = this.state.expected_result;
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.deprecated = this.state.deprecated;
-    formData.links = links;
+    formData.links = this.state.links;
 
     const { errors } = TestCaseValidation(formData);
 
@@ -177,9 +173,6 @@ class EditTestCase extends Component {
   submitForm(e) {
     e.preventDefault();
     var formData = {};
-
-    var testSteps = filterStringArray(this.state.test_steps);
-    var links = filterStringArray(this.state.links);
     var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
     formData.project_id = this.state.projectId;
     formData.title = this.state.title;
@@ -189,7 +182,7 @@ class EditTestCase extends Component {
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.deprecated = this.state.deprecated;
-    formData.links = links;
+    formData.links = this.state.links;
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
       this.props.editTestcase(this.state.testcaseId, formData, res => {
@@ -233,11 +226,21 @@ class EditTestCase extends Component {
   }
 
   onChange(e) {
-    if (e.target.id === "link") {
+    if (e.target.id === "value") {
       var enteredLinks = this.state.links;
-      enteredLinks[e.target.name.substring(5)].value = e.target.value;
+      enteredLinks[e.target.name.substring(6)].value = e.target.value;
       this.setState({ links: enteredLinks }, () => {
-        this.checkValidation();
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else if (e.target.id === "title") {
+      var enteredLinkTitles = this.state.links;
+      enteredLinkTitles[e.target.name.substring(6)].title = e.target.value;
+      this.setState({ links: enteredLinkTitles }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
       });
     }
 
@@ -295,15 +298,17 @@ class EditTestCase extends Component {
   }
   addColumnLink(e) {
     var links = this.state.links;
-    links.push({ id: links.length, value: "" });
+    links.push({ id: links.length, value: "", title: "" });
     this.setState({ links });
   }
   removeColumnLink(e) {
-    var indexToRemove = e.target.id.substring(5);
+    var indexToRemove = e.target.id.substring(12);
     var links = this.state.links;
     links.splice(indexToRemove, 1);
     this.setState({ links }, () => {
-      this.checkValidation();
+      if (this.state.submitPressed) {
+        this.checkValidation();
+      }
     });
   }
   confirmDeprecate = () => {
@@ -367,6 +372,7 @@ class EditTestCase extends Component {
             label='Test steps*'
             validationMsg={this.state.errors.test_steps}
             values={this.state.test_steps}
+            keys={["value", "expected_result"]}
             onChange={e => this.onChange(e)}
             id={["step", "expe"]}
             addColumn={<FullBtn placeholder='Add test steps' onClick={e => this.addColumnStep(e)} />}
@@ -416,18 +422,18 @@ class EditTestCase extends Component {
             onChange={e => this.onChange(e)}
             onKeyDown={this.submitFormOnEnterKey}
           />
-          <InputGroup
+          <InputGroupDouble
             type='text'
-            placeholder='Add Link here'
-            label='Links'
-            values={this.state.links}
-            onChange={e => this.onChange(e)}
-            id={"link"}
+            placeholder={["Enter Link Here", "Enter Link Title Here"]}
+            label='Test steps*'
             validationMsg={this.state.errors.links}
+            values={this.state.links}
+            keys={["value", "title"]}
+            onChange={e => this.onChange(e)}
+            id={["value", "title"]}
             addColumn={<FullBtn placeholder='Add links' onClick={e => this.addColumnLink(e)} />}
             removeColumn={e => this.removeColumnLink(e)}
             required={false}
-            disabled={false}
             onKeyDown={this.submitFormOnEnterKey}
           />
           {/* <InputGroupFile
