@@ -48,12 +48,21 @@ module.exports = {
         if (data.test_steps[i].value.trim().length > 0) {
           empty = false;
           if (data.test_steps[i].value.trim().length > testStepLimit) {
-            errors.test_steps = `Test step can not be more than ${testStepLimit} long (${data.test_steps[i].length})`;
+            errors.test_steps = `Test step can not be more than ${testStepLimit} long (${data.test_steps[i].value.length})`;
           }
         }
       }
       if (empty) {
         errors.test_steps = "There must be at least one test step";
+      } else {
+        for (var i = 0; i < data.test_steps.length; i++) {
+          if (data.test_steps[i].expected_result.trim().length > 0) {
+            empty = false;
+            if (data.test_steps[i].expected_result.trim().length > testStepLimit) {
+              errors.test_steps = `Expected result can not be more than ${testStepLimit} long (${data.test_steps[i].expected_result.length})`;
+            }
+          }
+        }
       }
     }
 
