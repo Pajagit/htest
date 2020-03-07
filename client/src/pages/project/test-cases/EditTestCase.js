@@ -425,7 +425,7 @@ class EditTestCase extends Component {
           <InputGroupDouble
             type='text'
             placeholder={["Enter Link Here", "Enter Link Title Here"]}
-            label='Test steps*'
+            label='Links*'
             validationMsg={this.state.errors.links}
             values={this.state.links}
             keys={["value", "title"]}
