@@ -91,7 +91,6 @@ class NewTestCase extends Component {
   checkValidation() {
     var formData = {};
     var testSteps = filterStringArray(this.state.test_steps);
-    var links = filterStringArray(this.state.links);
     var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
     formData.title = this.state.title;
     formData.description = this.state.description;
