@@ -67,7 +67,7 @@ const TestCaseValidation = testCase => {
 
   // Links validation
   var filteredLinksLimit = testCase.links.filter(function(link) {
-    return link !== "" && link.length > linkLimit;
+    return link.value !== "" && link.value.length > linkLimit;
   });
 
   if (filteredLinksLimit.length > 0) {
@@ -89,10 +89,11 @@ const TestCaseValidation = testCase => {
     disallow_auth: false
   };
   var filteredLinkUrl = testCase.links.filter(function(link) {
-    return validator.isURL(link, options) === false;
+    return validator.isURL(link.value, options) === false;
   });
+  console.log(filteredLinkUrl);
   if (filteredLinkUrl.length > 0) {
-    var invalidLinkValue = `"${filteredLinkUrl[0].substring(0, 20)}"`;
+    var invalidLinkValue = `"${filteredLinkUrl[0].value.substring(0, 20)}"`;
 
     errors.links = `${invalidLinkValue}... link is invalid`;
   }

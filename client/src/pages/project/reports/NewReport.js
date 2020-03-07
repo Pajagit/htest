@@ -14,7 +14,8 @@ import Btn from "../../../components/common/Btn";
 import UnderlineAnchor from "../../../components/common/UnderlineAnchor";
 import Input from "../../../components/common/Input";
 import FullBtn from "../../../components/common/FullBtn";
-import InputGroup from "../../../components/common/InputGroup";
+import InputGroupDouble from "../../../components/common/InputGroupDouble";
+import openExternalBtn from "../../../img/openExternalBtn.png";
 
 import SearchDropdown from "../../../components/common/SearchDropdown";
 import { superAndProjectAdminPermissions } from "../../../permissions/Permissions";
@@ -192,15 +193,15 @@ class NewReport extends Component {
   }
 
   addColumnLink(e) {
-    var links = this.state.reportLinks;
-    links.push({ id: links.length, value: "" });
-    this.setState({ links });
+    var reportLinks = this.state.reportLinks;
+    reportLinks.push({ id: reportLinks.length, value: "", title: "" });
+    this.setState({ reportLinks });
   }
   removeColumnLink(e) {
-    var indexToRemove = e.target.id.substring(5);
-    var links = this.state.reportLinks;
-    links.splice(indexToRemove, 1);
-    this.setState({ links }, () => {
+    var indexToRemove = e.target.id.substring(12);
+    var reportLinks = this.state.reportLinks;
+    reportLinks.splice(indexToRemove, 1);
+    this.setState({ reportLinks }, () => {
       if (this.state.submitPressed) {
         this.checkValidation();
       }
@@ -273,10 +274,18 @@ class NewReport extends Component {
         }
       });
     }
-    if (e.target.id === "link") {
-      var enteredLinks = this.state.links;
-      enteredLinks[e.target.name.substring(5)].value = e.target.value;
+    if (e.target.id === "value") {
+      var enteredLinks = this.state.reportLinks;
+      enteredLinks[e.target.name.substring(6)].value = e.target.value;
       this.setState({ reportLinks: enteredLinks }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else if (e.target.id === "title") {
+      var enteredLinkTitles = this.state.reportLinks;
+      enteredLinkTitles[e.target.name.substring(6)].title = e.target.value;
+      this.setState({ reportLinks: enteredLinkTitles }, () => {
         if (this.state.submitPressed) {
           this.checkValidation();
         }
@@ -466,7 +475,10 @@ class NewReport extends Component {
                     <div key={index}>
                       <span>
                         {`${index + 1}. `}
-                        {link.value}
+                        <a href={link.value} target='_blank' rel='noopener noreferrer'>
+                          <span className='mr-1'>{!isEmpty(link.title) ? link.title : link.value}</span>
+                          <img className='testcase-details-item--value-img' src={openExternalBtn} alt='External link' />
+                        </a>
                       </span>
                     </div>
                   ))}
@@ -475,18 +487,18 @@ class NewReport extends Component {
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-title'>Links</div>
                 <div className='report-details-row-half-value'>
-                  <InputGroup
+                  <InputGroupDouble
                     type='text'
-                    placeholder='Add Link here'
-                    // label='Links'
+                    placeholder={["Enter Link Here", "Enter Link Title Here"]}
+                    label='Links'
+                    validationMsg={this.state.errors.links}
                     values={this.state.reportLinks}
                     onChange={e => this.onChange(e)}
-                    id={"link"}
-                    validationMsg={this.state.errors.links}
+                    keys={["value", "title"]}
+                    id={["value", "title"]}
                     addColumn={<FullBtn placeholder='Add links' onClick={e => this.addColumnLink(e)} />}
                     removeColumn={e => this.removeColumnLink(e)}
                     required={false}
-                    disabled={false}
                     onKeyDown={this.submitFormOnEnterKey}
                   />
                 </div>

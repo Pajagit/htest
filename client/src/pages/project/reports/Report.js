@@ -20,7 +20,6 @@ class Report extends Component {
     this.state = {
       isValid: false,
       value: null,
-      //   user: this.props.auth.user,
       selectedUsers: [],
       users: [],
       width: 0,
@@ -196,7 +195,7 @@ class Report extends Component {
                       <span>
                         {`${index + 1}. `}
                         <a href={link.value} target='_blank' rel='noopener noreferrer'>
-                          <span className='mr-1'>{link.value}</span>
+                          <span className='mr-1'>{!isEmpty(link.title) ? link.title : link.value}</span>
                           <img className='testcase-details-item--value-img' src={openExternalBtn} alt='External link' />
                         </a>
                       </span>
@@ -212,7 +211,7 @@ class Report extends Component {
                       <span>
                         {`${index + 1}. `}
                         <a href={link.value} target='_blank' rel='noopener noreferrer'>
-                          <span className='mr-1'>{link.value}</span>
+                          <span className='mr-1'>{!isEmpty(link.title) ? link.title : link.value}</span>
                           <img className='testcase-details-item--value-img' src={openExternalBtn} alt='External link' />
                         </a>
                       </span>
