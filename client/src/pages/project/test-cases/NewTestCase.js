@@ -100,7 +100,7 @@ class NewTestCase extends Component {
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.isDeprecated = this.state.isDeprecated;
-    formData.links = links;
+    formData.links = this.state.links;
 
     const { errors } = TestCaseValidation(formData);
 
