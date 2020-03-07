@@ -103,7 +103,7 @@ class NewTestCase extends Component {
 
     this.setState({ errors });
   }
-  submitForm(e) {
+  submitForm(e, addToReport) {
     this.setState({ submitPressed: true });
     e.preventDefault();
     var formData = {};
@@ -143,7 +143,11 @@ class NewTestCase extends Component {
       } else {
         this.props.createTestCase(formData, res => {
           if (res.status === 200) {
-            this.props.history.push(`/${this.state.projectId}/TestCase/${res.data.id}`);
+            if (!addToReport) {
+              this.props.history.push(`/${this.state.projectId}/TestCase/${res.data.id}`);
+            } else {
+              this.props.history.push(`/${this.state.projectId}/NewReport/${res.data.id}`);
+            }
             successToast("Test case added successfully");
           } else {
             failToast("Test case adding failed");
@@ -383,9 +387,16 @@ class NewTestCase extends Component {
                   className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1`}
                   label='Save Test Case'
                   type='text'
-                  onClick={e => this.submitForm(e)}
+                  disabled={false}
+                  onClick={e => this.submitForm(e, false)}
                 />
-                <Btn className='btn btn-primary mr-2 mb-1' label='Add To Report' type='text' />
+                <Btn
+                  className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1`}
+                  label='Add To Report'
+                  type='text'
+                  disabled={this.state.addNew}
+                  onClick={e => this.submitForm(e, true)}
+                />
                 <UnderlineAnchor link={"TestCases"} value={"Cancel"} />
               </div>
               <Checkbox

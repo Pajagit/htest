@@ -226,7 +226,7 @@ class NewReport extends Component {
 
     this.setState({ errors });
   }
-  submitForm(e) {
+  submitForm(e, openTestCase) {
     this.setState({ submitPressed: true });
     e.preventDefault();
     var formData = {};
@@ -248,9 +248,13 @@ class NewReport extends Component {
     if (isValid) {
       this.props.createReport(formData, res => {
         if (res.status === 200) {
-          this.props.history.push(
-            `/${this.props.match.params.projectId}/TestCase/${this.props.match.params.testcaseId}`
-          );
+          if (openTestCase) {
+            this.props.history.push(
+              `/${this.props.match.params.projectId}/TestCase/${this.props.match.params.testcaseId}`
+            );
+          } else {
+            this.props.history.push(`/${this.props.match.params.projectId}/Report/${res.data.id}`);
+          }
           successToast("Report created successfully");
         } else {
           failToast("Report creating failed");
@@ -608,9 +612,15 @@ class NewReport extends Component {
                   <div className='flex-column-left mt-4'>
                     <Btn
                       className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1 ml-2`}
-                      label='Create Report'
+                      label='Save And Open Report'
                       type='text'
-                      onClick={e => this.submitForm(e)}
+                      onClick={e => this.submitForm(e, false)}
+                    />
+                    <Btn
+                      className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1 ml-2`}
+                      label='Save And Open Test Case'
+                      type='text'
+                      onClick={e => this.submitForm(e, true)}
                     />
                     <UnderlineAnchor
                       link={`/${this.props.match.params.projectId}/TestCase/${this.props.match.params.testcaseId}`}

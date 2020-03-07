@@ -13,7 +13,7 @@ import SearchBtn from "../../../components/common/SearchBtn";
 import TestCaseContainer from "../../../components/test-cases/TestCaseContainer";
 import { getGroups } from "../../../actions/groupsActions";
 import { getUsers } from "../../../actions/userActions";
-import { getProjectSettings, editProjectSettings, clearSettings } from "../../../actions/settingsActions";
+import { getTestcaseSettings, editProjectSettings, clearSettings } from "../../../actions/settingsActions";
 import { writePermissions } from "../../../permissions/Permissions";
 import { projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import { getTestcases } from "../../../actions/testcaseActions";
@@ -45,7 +45,7 @@ class TestCases extends Component {
       activeDateTo: "",
       testcaseFilters: {},
       searchTerm: "",
-      settings: this.props.settings.settings,
+      settings: this.props.settings.testcase_settings,
       selectedGroupFilters: [],
       listViewActivity: "",
       disabledAlready: false,
@@ -82,7 +82,7 @@ class TestCases extends Component {
       var usersWithTestcases = [];
       if (nextProps.users && nextProps.users.users) {
         if (nextProps.users.users !== prevState.users) {
-          nextProps.users.users.map(function (item) {
+          nextProps.users.users.map(function(item) {
             return usersWithTestcases.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
           });
           update.usersWithTestcases = usersWithTestcases;
@@ -104,7 +104,7 @@ class TestCases extends Component {
       this.props.getGroups(projectId);
       var has_testcases = true;
       this.props.getUsers(has_testcases, projectId);
-      this.props.getProjectSettings(this.props.match.params.projectId);
+      this.props.getTestcaseSettings(this.props.match.params.projectId);
 
       this.updateWindowDimensions();
       window.addEventListener("resize", this.updateWindowDimensions);
@@ -215,7 +215,7 @@ class TestCases extends Component {
     this.setState({ searchTerm: "" });
   }
   removeGroupFilter(e) {
-    var groups = this.props.filters.selectedGroupFilters.filter(function (item) {
+    var groups = this.props.filters.selectedGroupFilters.filter(function(item) {
       return item["id"] !== e;
     });
 
@@ -234,7 +234,7 @@ class TestCases extends Component {
     });
   }
   removeUser(e) {
-    var selectedUsers = this.state.selectedUsers.filter(function (item) {
+    var selectedUsers = this.state.selectedUsers.filter(function(item) {
       return item["id"] !== e;
     });
 
@@ -396,11 +396,11 @@ class TestCases extends Component {
         <Tag title={"Reset all"} color={"RESET_COLOR"} isRemovable={true} onClickRemove={e => this.resetFilters()} />
       );
     }
-    var filters = <div className="padding"></div>;
+    var filters = <div className='padding'></div>;
     if (this.props.filters.showFilters) {
       filters = (
         <div>
-          <div className="testcase-grid">
+          <div className='testcase-grid'>
             <SearchDropdown
               value={this.props.filters.selectedGroupFilters}
               options={this.state.projectGroups}
@@ -456,7 +456,7 @@ class TestCases extends Component {
             />
           </div>
 
-          <div className="active-filter-container">
+          <div className='active-filter-container'>
             {this.props.filters.selectedGroupFilters &&
               this.props.filters.selectedGroupFilters.map((group, index) => (
                 <Tag
@@ -490,34 +490,35 @@ class TestCases extends Component {
       addTestCase = (
         <BtnAnchorResponsive
           type={"text"}
-          label="Add New"
+          label='Add New'
           className={"a-btn-responsive a-btn-primary"}
           link={`/${this.props.match.params.projectId}/CreateTestCase`}
         />
       );
     }
     if (!this.state.listViewActivity) {
-      var listView = <div className="view-options">
-        <div
-          className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
-          onClick={e => this.setViewList(e)}
-        >
-          <i className="fas fa-bars "></i>
+      var listView = (
+        <div className='view-options'>
+          <div
+            className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
+            onClick={e => this.setViewList(e)}
+          >
+            <i className='fas fa-bars '></i>
+          </div>
+          <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
+            <i className='fas fa-th '></i>
+          </div>
         </div>
-        <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
-          <i className="fas fa-th "></i>
-        </div>
-      </div>
+      );
     }
 
-
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className="main-content main-content-grid">
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fas fa-clipboard-list"></i>}
+            icon={<i className='fas fa-clipboard-list'></i>}
             title={"Test Cases"}
             // link={"CreateTestCase"}
             canGoBack={false}
@@ -566,18 +567,22 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { getGroups, getUsers, getProjectSettings, editProjectSettings, getTestcases, clearSettings }
-)(withRouter(TestCases));
+export default connect(mapStateToProps, {
+  getGroups,
+  getUsers,
+  getTestcaseSettings,
+  editProjectSettings,
+  getTestcases,
+  clearSettings
+})(withRouter(TestCases));
 
-const getSettings = state => state.settings.settings;
+const getSettings = state => state.settings.testcase_settings;
 const getUsersProps = state => state.users;
 const getGroupsProps = state => state.groups;
 
 const filterSelector = createSelector(
   [getSettings, getUsersProps, getGroupsProps],
-  (settings, users, groups) => {
+  (testcase_settings, users, groups) => {
     var dateFrom = "";
     var selectedDateTimestampFrom = "";
     var selectedDateFrom = "";
@@ -597,13 +602,13 @@ const filterSelector = createSelector(
 
     var activeFilters = false;
 
-    if (settings) {
+    if (testcase_settings) {
       if (groups) {
         if (groups.groups) {
           var selectedGroup = [];
-          groups.groups.map(function (item) {
-            if (settings && settings.groups) {
-              if (settings.groups.includes(item.id)) {
+          groups.groups.map(function(item) {
+            if (testcase_settings && testcase_settings.groups) {
+              if (testcase_settings.groups.includes(item.id)) {
                 selectedGroup.push({ id: item.id, title: item.title, color: item.color });
               }
             }
@@ -616,9 +621,9 @@ const filterSelector = createSelector(
       if (users) {
         if (users.users) {
           var selectedUsersObjects = [];
-          users.users.map(function (item) {
-            if (settings && settings.users) {
-              if (settings.users.includes(item.id)) {
+          users.users.map(function(item) {
+            if (testcase_settings && testcase_settings.users) {
+              if (testcase_settings.users.includes(item.id)) {
                 selectedUsersObjects.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
               }
             }
@@ -628,28 +633,28 @@ const filterSelector = createSelector(
         }
       }
 
-      if (settings.date_from) {
-        dateFrom = settings.date_from;
-        selectedDateTimestampFrom = moment(settings.date_from)._d;
-        selectedDateFrom = moment(settings.date_from).format(" Do MMM YY");
-        selectedDateFromFormated = moment(settings.date_from).format("YYYY-MM-DD HH:mm:ss");
+      if (testcase_settings.date_from) {
+        dateFrom = testcase_settings.date_from;
+        selectedDateTimestampFrom = moment(testcase_settings.date_from)._d;
+        selectedDateFrom = moment(testcase_settings.date_from).format(" Do MMM YY");
+        selectedDateFromFormated = moment(testcase_settings.date_from).format("YYYY-MM-DD HH:mm:ss");
       }
-      if (settings.date_to) {
-        dateTo = settings.date_to;
-        selectedDateTimestampTo = moment(settings.date_to)._d;
-        selectedDateTo = moment(settings.date_to).format(" Do MMM YY");
-        selectedDateToFormated = moment(settings.date_to)
+      if (testcase_settings.date_to) {
+        dateTo = testcase_settings.date_to;
+        selectedDateTimestampTo = moment(testcase_settings.date_to)._d;
+        selectedDateTo = moment(testcase_settings.date_to).format(" Do MMM YY");
+        selectedDateToFormated = moment(testcase_settings.date_to)
           .add(21, "hours")
           .add(59, "minutes")
           .add(59, "seconds")
           .format("YYYY-MM-DD HH:mm:ss");
       }
-      if (settings.view_mode) {
-        viewMode = settings.view_mode;
+      if (testcase_settings.view_mode) {
+        viewMode = testcase_settings.view_mode;
       }
-      showFilters = settings.show_filters;
-      if (settings.search_term !== null) {
-        searchTerm = settings.search_term;
+      showFilters = testcase_settings.show_filters;
+      if (testcase_settings.search_term !== null) {
+        searchTerm = testcase_settings.search_term;
       }
 
       if (
