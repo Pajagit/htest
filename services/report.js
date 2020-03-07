@@ -61,7 +61,8 @@ module.exports = {
           arrayReportSteps.push({
             report_id: report.id,
             step: report_steps[i].step,
-            input_data: report_steps[i].input_data
+            input_data: report_steps[i].input_data,
+            expected_result: report_steps[i].expected_result
           });
         }
         ReportStep.bulkCreate(arrayReportSteps).then(reportsteps => {
@@ -143,7 +144,7 @@ module.exports = {
                 },
                 {
                   model: Link,
-                  attributes: ["id", "value"],
+                  attributes: ["id", "value","title"],
                   required: false
                 },
                 {
@@ -170,7 +171,7 @@ module.exports = {
             {
               model: ReportStep,
               as: "steps",
-              attributes: ["id", ["step", "value"], "input_data"],
+              attributes: ["id", ["step", "value"], "input_data", "expected_result"],
               required: false
             },
             {
@@ -217,7 +218,10 @@ module.exports = {
               ]
             }
           ],
-          order: [[{ model: ReportStep, as: "steps" }, "id", "ASC"]]
+          order: [
+            [{ model: ReportStep, as: "steps" }, "id", "ASC"],
+            [{ model: TestCase, as: "testcase" }, { model: TestStep, as: "test_steps" }, "id", "ASC"]
+          ]
         }).then(report => {
           if (report) {
             var report_obj = {};
@@ -295,14 +299,15 @@ module.exports = {
               },
               {
                 model: Link,
-                attributes: ["id", "value"],
+                attributes: ["id", "value", "title"],
                 required: false
               },
               {
                 model: TestStep,
                 attributes: ["id", ["title", "value"], "expected_result"],
                 required: false,
-                as: "test_steps"
+                as: "test_steps",
+                order: [{ model: TestStep, as: "test_steps" }, "id", "ASC"]
               }
             ],
             order: [[{ model: TestStep, as: "test_steps" }, "id", "ASC"]]
@@ -327,7 +332,7 @@ module.exports = {
           },
           {
             model: ReportStep,
-            attributes: ["id", ["step", "value"], "input_data"],
+            attributes: ["id", ["step", "value"], "input_data", "expected_result"],
             as: "steps",
             required: false
           },
@@ -370,7 +375,10 @@ module.exports = {
             ]
           }
         ],
-        order: [[{ model: ReportStep, as: "steps" }, "id", "ASC"]]
+        order: [
+          [{ model: ReportStep, as: "steps" }, "id", "ASC"],
+          [{ model: TestCase, as: "testcase" }, { model: TestStep, as: "test_steps" }, "id", "ASC"]
+        ]
       }).then(report => {
         if (report) {
           var report_obj = {};

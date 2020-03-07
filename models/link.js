@@ -1,10 +1,10 @@
-'use strict';
-const { Pool } = require('pg');
-const Sequelize = require('sequelize');
-const pgURI = require('../config/keys').postgresURI;
+"use strict";
+const { Pool } = require("pg");
+const Sequelize = require("sequelize");
+const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 const Link = sequelize.define(
-  'links',
+  "links",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -21,12 +21,16 @@ const Link = sequelize.define(
       required: true,
       foreignKey: true,
       references: {
-        model: 'testcases',
-        key: 'id'
+        model: "testcases",
+        key: "id"
       }
+    },
+    title: {
+      type: Sequelize.STRING,
+      required: false
     }
   },
-  {timestamps: false}
+  { timestamps: false }
 );
 Link.associate = function(models) {
   // associations can be defined here
