@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addColumn("links", "title", {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(150),
       allowNull: true
     });
   },
