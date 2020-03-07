@@ -1,21 +1,40 @@
 import axios from "axios";
 
-import { GET_PROJECT_SETTINGS, SETTINGS_LOADING, CLEAR_SETTINGS } from "./types";
+import { GET_TESTCASE_SETTINGS, GET_REPORT_SETTINGS, SETTINGS_LOADING, CLEAR_SETTINGS } from "./types";
 
 // Get User Settings
-export const getProjectSettings = project_id => dispatch => {
+export const getTestcaseSettings = project_id => dispatch => {
   dispatch(setSettingsLoading());
   axios
     .get(`/api/projects/project/${project_id}/settings`)
     .then(res => {
       dispatch({
-        type: GET_PROJECT_SETTINGS,
+        type: GET_TESTCASE_SETTINGS,
         payload: res.data
       });
     })
     .catch(err =>
       dispatch({
-        type: GET_PROJECT_SETTINGS,
+        type: GET_TESTCASE_SETTINGS,
+        payload: {}
+      })
+    );
+};
+
+// Get User Settings
+export const getReportSettings = project_id => dispatch => {
+  dispatch(setSettingsLoading());
+  axios
+    .get(`/api/projects/project/${project_id}/settings`)
+    .then(res => {
+      dispatch({
+        type: GET_REPORT_SETTINGS,
+        payload: res.data
+      });
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_REPORT_SETTINGS,
         payload: {}
       })
     );
@@ -27,13 +46,13 @@ export const editProjectSettings = (project_id, settingsData) => dispatch => {
     .put(`/api/projects/project/${project_id}/settings`, settingsData)
     .then(res => {
       dispatch({
-        type: GET_PROJECT_SETTINGS,
+        type: GET_TESTCASE_SETTINGS,
         payload: res.data
       });
     })
     .catch(err =>
       dispatch({
-        type: GET_PROJECT_SETTINGS,
+        type: GET_TESTCASE_SETTINGS,
         payload: {}
       })
     );

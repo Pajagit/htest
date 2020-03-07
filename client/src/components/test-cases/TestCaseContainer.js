@@ -16,8 +16,8 @@ class TestCaseContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settings: this.props.settings.settings,
-      filters: this.props.settings.settings,
+      settings: this.props.settings.testcase_settings,
+      filters: this.props.settings.testcase_settings,
       testcases: this.props.testcases.testcases,
       initialRender: true,
       projectId: null,
@@ -29,12 +29,12 @@ class TestCaseContainer extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.settings && nextProps.settings.settings) {
-      if (nextProps.settings.settings !== prevState.settings) {
-        update.settings = nextProps.settings.settings;
+    if (nextProps.settings && nextProps.settings.testcase_settings) {
+      if (nextProps.settings.testcase_settings !== prevState.settings) {
+        update.settings = nextProps.settings.testcase_settings;
         if (prevState.initialRender) {
           update.initialRender = false;
-          nextProps.getTestcases(nextProps.match.params.projectId, nextProps.settings.settings, 1);
+          nextProps.getTestcases(nextProps.match.params.projectId, nextProps.settings.testcase_settings, 1);
         }
       }
     }
@@ -120,11 +120,10 @@ class TestCaseContainer extends Component {
               history={this.props.history}
               onClick={e => this.props.history.push(`/${projectId}/TestCase/${testcase.id}`)}
               isValidWrite={this.props.isValidWrite}
-              onClickAddReport={(e) => {
+              onClickAddReport={e => {
                 e.stopPropagation();
-                this.props.history.push(`/${projectId}/NewReport/${testcase.id}`)
+                this.props.history.push(`/${projectId}/NewReport/${testcase.id}`);
               }}
-
             ></PortraitTestCase>
           </React.Fragment>
         ));
@@ -173,11 +172,11 @@ class TestCaseContainer extends Component {
         (this.state.settings && this.state.settings.date_to !== null)
       ) {
         content = (
-          <div className="testcase-container-no-content padding">There are no test cases matching selected filters</div>
+          <div className='testcase-container-no-content padding'>There are no test cases matching selected filters</div>
         );
       } else {
         content = (
-          <div className="testcase-container-no-content padding">There are no test cases created for this project</div>
+          <div className='testcase-container-no-content padding'>There are no test cases created for this project</div>
         );
       }
     }
