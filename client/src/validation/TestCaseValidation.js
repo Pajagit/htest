@@ -88,7 +88,7 @@ const TestCaseValidation = testCase => {
   }
 
   var filteredLinkTitlesLimit = testCase.links.filter(function(link) {
-    return link.title !== "" && link.title.length > linkLimit;
+    return !isEmpty(link.title) && link.title.length > linkLimit;
   });
 
   if (filteredLinkTitlesLimit.length > 0) {

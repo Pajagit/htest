@@ -33,7 +33,7 @@ class NewTestCase extends Component {
       submitPressed: false,
       addNew: false,
       options: "",
-      value: null,
+      value: "",
       title: "",
       user: this.props.auth.user,
       description: "",
@@ -116,7 +116,10 @@ class NewTestCase extends Component {
     formData.isDeprecated = this.state.isDeprecated;
     formData.links = this.state.links;
     formData.project_id = this.state.projectId;
-    formData.test_steps = this.state.test_steps;
+    var test_steps = this.state.test_steps;
+    let filteredEmptySteps = test_steps.filter(o => o.value !== "");
+    formData.test_steps = filteredEmptySteps;
+
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
       if (this.state.addNew) {

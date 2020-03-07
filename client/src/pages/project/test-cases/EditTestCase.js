@@ -39,7 +39,7 @@ class EditTestCase extends Component {
       testcaseId: null,
       projectId: null,
       options: "",
-      value: null,
+      value: "",
       arrayValue: [],
       user: this.props.auth.user,
       title: "",
@@ -105,8 +105,11 @@ class EditTestCase extends Component {
           update.preconditions = !isEmpty(testcase.preconditions) ? testcase.preconditions : "";
           update.title = !isEmpty(testcase.title) ? testcase.title : "";
           update.testcaseId = nextProps.match.params.testcaseId;
-          update.links = testcase.links;
+
           update.projectId = nextProps.match.params.projectId;
+          var links = testcase.links;
+          let filteredEmptyLinks = links.filter(o => o.value);
+          update.links = filteredEmptyLinks;
 
           var filteredNotPinnedSelectedGroups = testcase.groups.filter(function(group) {
             return group.pinned === false;
@@ -177,12 +180,18 @@ class EditTestCase extends Component {
     formData.project_id = this.state.projectId;
     formData.title = this.state.title;
     formData.description = this.state.description;
-    formData.test_steps = this.state.test_steps;
     formData.expected_result = this.state.expected_result;
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
     formData.deprecated = this.state.deprecated;
-    formData.links = this.state.links;
+    var test_steps = this.state.test_steps;
+    let filteredEmptySteps = test_steps.filter(o => o.value !== "");
+    formData.test_steps = filteredEmptySteps;
+
+    var links = this.state.links;
+    let filteredEmptyLinks = links.filter(o => o.value !== "");
+    formData.links = filteredEmptyLinks;
+
     const { errors, isValid } = TestCaseValidation(formData);
     if (isValid) {
       this.props.editTestcase(this.state.testcaseId, formData, res => {
