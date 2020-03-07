@@ -36,7 +36,7 @@ function InputGroupDouble({
               disabled={disabled}
               name={`${id[0]}-${index}`}
               onKeyDown={onKeyDown}
-              id={id[0]}
+              id={[id[0], value[keys[0]]]}
             />
             {required === false ? <RemoveDoubleColumn index={`${id}-${index}`} onClick={removeColumn} /> : ""}
             {values.length > 1 ? <RemoveDoubleColumn index={`${id}-${index}`} onClick={removeColumn} /> : ""}
@@ -51,7 +51,7 @@ function InputGroupDouble({
               disabled={disabled}
               name={`${id[1]}-${index}`}
               onKeyDown={onKeyDown}
-              id={id[1]}
+              id={[id[1], value[keys[1]]]}
             />
           </div>
           <br />
