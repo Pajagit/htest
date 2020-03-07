@@ -21,7 +21,6 @@ import failToast from "../../../toast/failToast";
 import TestCaseValidation from "../../../validation/TestCaseValidation";
 import checkIfElemInObjInArray from "../../../utility/checkIfElemInObjInArray";
 import getIdsFromObjArray from "../../../utility/getIdsFromObjArray";
-import filterStringArray from "../../../utility/filterStringArray";
 import { writePermissions } from "../../../permissions/Permissions";
 import { getGroups } from "../../../actions/groupsActions";
 import { createTestCase } from "../../../actions/testcaseActions";
@@ -90,12 +89,10 @@ class NewTestCase extends Component {
   }
   checkValidation() {
     var formData = {};
-    var testSteps = filterStringArray(this.state.test_steps);
-    var links = filterStringArray(this.state.links);
     var groups = getIdsFromObjArray(this.state.selectedGroupsObjects);
     formData.title = this.state.title;
     formData.description = this.state.description;
-    formData.test_steps = testSteps;
+    formData.test_steps = this.state.test_steps;
     formData.expected_result = this.state.expected_result;
     formData.groups = groups;
     formData.preconditions = this.state.preconditions;
