@@ -156,7 +156,7 @@ class NewTestCase extends Component {
   }
 
   onChange(e) {
-    if (e.target.id === "value") {
+    if (e.target.id.substring(0, 5) === "value") {
       var enteredLinks = this.state.links;
       enteredLinks[e.target.name.substring(6)].value = e.target.value;
       this.setState({ links: enteredLinks }, () => {
@@ -164,7 +164,7 @@ class NewTestCase extends Component {
           this.checkValidation();
         }
       });
-    } else if (e.target.id === "title") {
+    } else if (e.target.id.substring(0, 5) === "title") {
       var enteredLinkTitles = this.state.links;
       enteredLinkTitles[e.target.name.substring(6)].title = e.target.value;
       this.setState({ links: enteredLinkTitles }, () => {
@@ -172,7 +172,7 @@ class NewTestCase extends Component {
           this.checkValidation();
         }
       });
-    } else if (e.target.id === "step") {
+    } else if (e.target.id.substring(0, 4) === "step") {
       var enteredTestSteps = this.state.test_steps;
       enteredTestSteps[e.target.name.substring(5)].value = e.target.value;
       this.setState({ test_steps: enteredTestSteps }, () => {
@@ -180,7 +180,7 @@ class NewTestCase extends Component {
           this.checkValidation();
         }
       });
-    } else if (e.target.id === "expe") {
+    } else if (e.target.id.substring(0, 4) === "expe") {
       var enteredExpectedResult = this.state.test_steps;
       enteredExpectedResult[e.target.name.substring(5)].expected_result = e.target.value;
       this.setState({ test_steps: enteredExpectedResult }, () => {

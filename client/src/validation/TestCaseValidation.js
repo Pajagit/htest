@@ -91,7 +91,6 @@ const TestCaseValidation = testCase => {
   var filteredLinkUrl = testCase.links.filter(function(link) {
     return validator.isURL(link.value, options) === false;
   });
-  console.log(filteredLinkUrl);
   if (filteredLinkUrl.length > 0) {
     var invalidLinkValue = `"${filteredLinkUrl[0].value.substring(0, 20)}"`;
 

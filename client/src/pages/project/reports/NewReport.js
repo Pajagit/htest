@@ -274,7 +274,7 @@ class NewReport extends Component {
         }
       });
     }
-    if (e.target.id === "value") {
+    if (e.target.id.substring(0, 5) === "value") {
       var enteredLinks = this.state.reportLinks;
       enteredLinks[e.target.name.substring(6)].value = e.target.value;
       this.setState({ reportLinks: enteredLinks }, () => {
@@ -282,7 +282,7 @@ class NewReport extends Component {
           this.checkValidation();
         }
       });
-    } else if (e.target.id === "title") {
+    } else if (e.target.id.substring(0, 5) === "title") {
       var enteredLinkTitles = this.state.reportLinks;
       enteredLinkTitles[e.target.name.substring(6)].title = e.target.value;
       this.setState({ reportLinks: enteredLinkTitles }, () => {
