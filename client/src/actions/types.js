@@ -65,3 +65,5 @@ export const GET_OFFICES = "GET_OFFICES";
 export const GET_MOBILE_OS = "GET_MOBILE_OS";
 
 export const GET_STATUSES = "GET_STATUSES";
+
+export const GET_TESTCASE_SETUP = "GET_TESTCASE_SETUP";

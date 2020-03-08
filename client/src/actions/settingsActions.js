@@ -25,7 +25,7 @@ export const getTestcaseSettings = project_id => dispatch => {
 export const getReportSettings = project_id => dispatch => {
   dispatch(setSettingsLoading());
   axios
-    .get(`/api/projects/project/${project_id}/settings`)
+    .get(`/api/projects/project/${project_id}/report-settings`)
     .then(res => {
       dispatch({
         type: GET_REPORT_SETTINGS,

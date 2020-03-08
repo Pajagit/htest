@@ -12,7 +12,12 @@ import SearchBtn from "../../../components/common/SearchBtn";
 import ReportCointainer from "../../../components/reports/ReportCointainer";
 import { getGroups } from "../../../actions/groupsActions";
 import { getUsers } from "../../../actions/userActions";
-import { getReportSettings, editProjectSettings, clearSettings } from "../../../actions/settingsActions";
+import {
+  getReportSettings,
+  editProjectSettings,
+  getTestcaseSettings,
+  clearSettings
+} from "../../../actions/settingsActions";
 import { getStatuses } from "../../../actions/statusActions";
 import { getDevices } from "../../../actions/deviceActions";
 import { getEnvironments } from "../../../actions/environmentActions";
@@ -141,7 +146,7 @@ class Reports extends Component {
       this.props.getDevices(null, projectId);
       var has_testcases = true;
       this.props.getUsers(has_testcases, projectId);
-      this.props.getReportSettings(this.props.match.params.projectId);
+      this.props.getTestcaseSettings(this.props.match.params.projectId);
 
       this.updateWindowDimensions();
       window.addEventListener("resize", this.updateWindowDimensions);
@@ -649,6 +654,7 @@ export default connect(mapStateToProps, {
   getDevices,
   getBrowsers,
   getOperatingSystems,
+  getTestcaseSettings,
   getEnvironments,
   getVersions,
   editProjectSettings,
