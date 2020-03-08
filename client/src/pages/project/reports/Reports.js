@@ -19,7 +19,7 @@ import { getEnvironments } from "../../../actions/environmentActions";
 import { getVersions } from "../../../actions/versionAction";
 import { getBrowsers } from "../../../actions/browserActions";
 import { getOperatingSystems } from "../../../actions/osActions";
-import { writePermissions, superAndProjectAdminPermissions } from "../../../permissions/Permissions";
+import { writePermissions, projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import { getTestcases } from "../../../actions/testcaseActions";
 import getidsFromObjectArray from "../../../utility/getIdsFromObjArray";
 
@@ -73,7 +73,7 @@ class Reports extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = superAndProjectAdminPermissions(
+      var { isValid } = projectIdAndSuperAdminPermission(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
