@@ -7,6 +7,8 @@ module.exports = {
     var actualResultLimit = 1000;
     var commentLimit = 1000;
     var additionalPreconditionLimit = 1000;
+    var stepLimit = 150;
+    var linkLimit = 150;
 
     if (!isEmpty(data.actual_result)) {
       if (data.actual_result.length > actualResultLimit) {
@@ -78,10 +80,49 @@ module.exports = {
       }
     }
 
+    // Links validation
     if (!isEmpty(data.links)) {
       for (var i = 0; i < data.links.length; i++) {
-        if (isEmpty(data.links[i].value)) {
-          errors.links = { message: "Link[" + i + "] value is required", position: i };
+        if (data.links[i].value.trim().length > linkLimit) {
+          errors.links = `Link value can not be more than ${linkLimit} long (${data.links[i].value.length})`;
+        }
+      }
+      if (!errors.links) {
+        for (var i = 0; i < data.links.length; i++) {
+          if (data.links[i].title) {
+            if (data.links[i].title.trim().length > linkLimit) {
+              errors.links = `Link title can not be more than ${linkLimit} long (${data.links[i].title.length})`;
+            }
+          }
+        }
+      }
+    }
+
+    // Steps validation
+    if (data.steps) {
+      if (data.steps.length > 0) {
+        var error = false;
+        for (var i = 0; i < data.steps.length; i++) {
+          if (data.steps[i].input_data) {
+            if (data.steps[i].input_data.trim().length > 0) {
+              if (data.steps[i].input_data.trim().length > stepLimit) {
+                error = true;
+
+                errors.steps = `Input data can not be more than ${stepLimit} long (${data.steps[i].input_data.length})`;
+              }
+            }
+          }
+        }
+        if (!error) {
+          for (var i = 0; i < data.steps.length; i++) {
+            if (data.steps[i].expected_result) {
+              if (data.steps[i].expected_result.trim().length > 0) {
+                if (data.steps[i].expected_result.trim().length > stepLimit) {
+                  errors.steps = `Expected result can not be more than ${stepLimit} long (${data.steps[i].expected_result.length})`;
+                }
+              }
+            }
+          }
         }
       }
     }

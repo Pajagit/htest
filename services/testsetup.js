@@ -113,5 +113,48 @@ module.exports = {
         }
       });
     });
+  },
+  getProjecttestSetupItems: async function(project_id) {
+    return new Promise((resolve, reject) => {
+      TestSetupItem.findAll({
+        attributes: ["id", "title"],
+        include: [
+          {
+            model: Project,
+            attributes: ["id"],
+            through: {
+              attributes: []
+            },
+            as: "projects",
+            required: true,
+            where: { id: project_id }
+          }
+        ],
+        order: [["title", "ASC"]]
+      }).then(testSetupItems => {
+        if (testSetupItems) {
+          var projectTestSetup = Array();
+          testSetupItems.forEach(testSetupItem => {
+            var projectTestSetupItem = {};
+            projectTestSetupItem.id = testSetupItem.id;
+            projectTestSetupItem.title = testSetupItem.title;
+            var used = false;
+            if (testSetupItem.projects.length > 0) {
+              testSetupItem.projects.forEach(project => {
+                if (project.id == project_id) {
+                  used = true;
+                }
+              });
+            }
+            projectTestSetupItem.used = used;
+            projectTestSetup.push(projectTestSetupItem);
+          });
+
+          resolve(projectTestSetup);
+        } else {
+          resolve(false);
+        }
+      });
+    });
   }
 };

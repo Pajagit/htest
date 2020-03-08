@@ -14,11 +14,11 @@ module.exports = {
         references: { model: "reports", key: "id" }
       },
       title: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
         allowNull: true
       },
       value: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
         allowNull: false
       }
     });

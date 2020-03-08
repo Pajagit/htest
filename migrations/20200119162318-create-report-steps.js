@@ -9,11 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       step: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
         allowNull: false
       },
       input_data: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
         allowNull: true
       },
       report_id: {

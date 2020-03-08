@@ -6,7 +6,7 @@ const ProjectController = require("../../../controllers/project");
 // @desc Update project settings by id
 // @access Private
 module.exports = Router({ mergeParams: true }).put(
-  "/projects/project/:id/settings",
+  "/projects/project/:id/testcase-settings",
   passport.authenticate("jwt", { session: false }),
   ProjectController.updateProjectSettings
 );
