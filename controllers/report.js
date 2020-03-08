@@ -198,20 +198,19 @@ module.exports = {
   },
   getReportSetup: async function(req, res) {
     if (isNaN(req.params.id)) {
-      return res.status(400).json({ error: "Testcase id is not a valid number" });
+      return res.status(400).json({ error: "Project id is not a valid number" });
     }
-    var testcase_exists = await TestcaseService.checkIfTestcaseExist(req.params.id);
-    if (!testcase_exists) {
-      return res.status(400).json({ error: "Testcase doesn't exist" });
+    var project_exists = await ProjectService.checkIfProjectExist(req.params.id);
+    if (!project_exists) {
+      return res.status(400).json({ error: "Project doesn't exist" });
     }
 
-    var testcase_project = await TestcaseService.getTestcaseProject(req.params.id);
-    var canGetTestcase = await UserService.getTestCase(req.user, testcase_project.project_id);
+    var canGetTestcase = await UserService.getTestCase(req.user, req.params.id);
     if (!canGetTestcase) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    var testSetupItems = await TestSetupService.getProjecttestSetupItems(testcase_project.project_id);
+    var testSetupItems = await TestSetupService.getProjecttestSetupItems(req.params.id);
     var setupObject = {};
     var devices = false;
     var browsers = false;
@@ -255,26 +254,26 @@ module.exports = {
       setupObject.devices = devicesAll.devices;
     }
     if (browsers) {
-      var browsersAll = await BrowserService.getAllBrowsers(testcase_project.project_id);
+      var browsersAll = await BrowserService.getAllBrowsers(req.params.id);
       setupObject.browsers = browsersAll.browsers;
     }
     if (environments) {
-      var environmentsAll = await EnvironmentService.getAllEnvironments(testcase_project.project_id);
+      var environmentsAll = await EnvironmentService.getAllEnvironments(req.params.id);
       setupObject.environments = environmentsAll.environments;
     }
     if (operatingsystems) {
-      var ossAll = await OSService.getAllOperatingSystems(testcase_project.project_id);
+      var ossAll = await OSService.getAllOperatingSystems(req.params.id);
       setupObject.operatingsystems = ossAll.oss;
     }
     if (simulators) {
       var whereStatement = {};
       whereStatement.deprecated = false;
-      whereStatement.project_id = testcase_project.project_id;
+      whereStatement.project_id = req.params.id;
       var simulatorsAll = await SimulatorService.getAllSimulators(whereStatement);
       setupObject.simulators = simulatorsAll.simulators;
     }
     if (versions) {
-      var versionsAll = await VersionService.getAllVersions(testcase_project.project_id);
+      var versionsAll = await VersionService.getAllVersions(req.params.id);
       setupObject.versions = versionsAll.versions;
     }
     return res.status(200).json(setupObject);

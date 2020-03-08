@@ -2,11 +2,11 @@ const Router = require("express").Router;
 const passport = require("passport");
 const ReportController = require("../../../controllers/report");
 
-// @route GET api/testcases/testcase/:id/setup
+// @route GET api/projects/project/:id/setup
 // @desc Get reports setup
 // @access public
 module.exports = Router({ mergeParams: true }).get(
-  "/testcases/testcase/:id/setup",
+  "/projects/project/:id/report-setup",
   passport.authenticate("jwt", { session: false }),
   ReportController.getReportSetup
 );
