@@ -13,6 +13,7 @@ const VersionService = require("../services/version");
 const DeviceService = require("../services/device");
 const SimulatorService = require("../services/simulator");
 const OSService = require("../services/operatingsystem");
+const TestSetupService = require("../services/testsetup");
 
 const validateReportInput = require("../validation/report").validateReportInput;
 const validateGetReports = require("../validation/report").validateGetReports;
@@ -194,5 +195,88 @@ module.exports = {
     } else {
       return res.status(500).json({ error: "Something went wrong" });
     }
+  },
+  getReportSetup: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Testcase id is not a valid number" });
+    }
+    var testcase_exists = await TestcaseService.checkIfTestcaseExist(req.params.id);
+    if (!testcase_exists) {
+      return res.status(400).json({ error: "Testcase doesn't exist" });
+    }
+
+    var testcase_project = await TestcaseService.getTestcaseProject(req.params.id);
+    var canGetTestcase = await UserService.getTestCase(req.user, testcase_project.project_id);
+    if (!canGetTestcase) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    var testSetupItems = await TestSetupService.getProjecttestSetupItems(testcase_project.project_id);
+    var setupObject = {};
+    var devices = false;
+    var browsers = false;
+    var environments = false;
+    var operatingsystems = false;
+    var simulators = false;
+    var versions = false;
+
+    testSetupItems.forEach(item => {
+      if (item.title == "Devices") {
+        devices = true;
+      }
+      if (item.title == "Browsers") {
+        browsers = true;
+      }
+      if (item.title == "Environments") {
+        environments = true;
+      }
+      if (item.title == "Operating Systems") {
+        operatingsystems = true;
+      }
+      if (item.title == "Simulators") {
+        simulators = true;
+      }
+      if (item.title == "Versions") {
+        versions = true;
+      }
+    });
+    setupObject.setup = {};
+    setupObject.setup.devices = devices;
+    setupObject.setup.browsers = browsers;
+    setupObject.setup.environments = environments;
+    setupObject.setup.operatingsystems = operatingsystems;
+    setupObject.setup.simulators = simulators;
+    setupObject.setup.versions = versions;
+
+    if (devices) {
+      var whereStatement = {};
+      whereStatement.deprecated = false;
+      var devicesAll = await DeviceService.getAllDevices(whereStatement);
+      setupObject.devices = devicesAll.devices;
+    }
+    if (browsers) {
+      var browsersAll = await BrowserService.getAllBrowsers(testcase_project.project_id);
+      setupObject.browsers = browsersAll.browsers;
+    }
+    if (environments) {
+      var environmentsAll = await EnvironmentService.getAllEnvironments(testcase_project.project_id);
+      setupObject.environments = environmentsAll.environments;
+    }
+    if (operatingsystems) {
+      var ossAll = await OSService.getAllOperatingSystems(testcase_project.project_id);
+      setupObject.operatingsystems = ossAll.oss;
+    }
+    if (simulators) {
+      var whereStatement = {};
+      whereStatement.deprecated = false;
+      whereStatement.project_id = testcase_project.project_id;
+      var simulatorsAll = await SimulatorService.getAllSimulators(whereStatement);
+      setupObject.simulators = simulatorsAll.simulators;
+    }
+    if (versions) {
+      var versionsAll = await VersionService.getAllVersions(testcase_project.project_id);
+      setupObject.versions = versionsAll.versions;
+    }
+    return res.status(200).json(setupObject);
   }
 };

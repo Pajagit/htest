@@ -6,7 +6,7 @@ import { GET_TESTCASE_SETTINGS, GET_REPORT_SETTINGS, SETTINGS_LOADING, CLEAR_SET
 export const getTestcaseSettings = project_id => dispatch => {
   dispatch(setSettingsLoading());
   axios
-    .get(`/api/projects/project/${project_id}/settings`)
+    .get(`/api/projects/project/${project_id}/testcase-settings`)
     .then(res => {
       dispatch({
         type: GET_TESTCASE_SETTINGS,
@@ -43,7 +43,7 @@ export const getReportSettings = project_id => dispatch => {
 // Get User Settings
 export const editProjectSettings = (project_id, settingsData) => dispatch => {
   axios
-    .put(`/api/projects/project/${project_id}/settings`, settingsData)
+    .put(`/api/projects/project/${project_id}/testcase-settings`, settingsData)
     .then(res => {
       dispatch({
         type: GET_TESTCASE_SETTINGS,

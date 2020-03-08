@@ -3,7 +3,7 @@ const Sequelize = require("sequelize");
 const pgURI = require("../config/keys").postgresURI;
 const sequelize = new Sequelize(pgURI);
 const ProjectSettings = sequelize.define(
-  "projectsettings",
+  "testcasesettings",
   {
     id: {
       type: Sequelize.INTEGER,
