@@ -65,6 +65,7 @@ class Reports extends Component {
       settings: this.props.settings.report_settings,
       selectedGroups: [],
       listViewActivity: "",
+      initialLoad: false,
       disabledAlready: false,
       width: 0,
       height: 0
@@ -111,7 +112,12 @@ class Reports extends Component {
           update.usersWithTestcases = usersWithTestcases;
         }
       }
-
+      if (nextProps.filters && nextProps.filters.searchTerm && !prevState.initialLoad) {
+        if (nextProps.filters.searchTerm !== prevState.searchTerm) {
+          update.initialLoad = true;
+          update.searchTerm = nextProps.filters.searchTerm;
+        }
+      }
       if (nextProps.statuses && nextProps.statuses.statuses) {
         update.statuses = nextProps.statuses.statuses;
       }
@@ -1028,7 +1034,7 @@ class Reports extends Component {
               <SearchBtn
                 name={"search"}
                 searchActive={this.props.filters.searchTerm}
-                value={this.state.searchTerm !== null ? this.state.searchTerm : this.props.filters.searchTerm}
+                value={this.state.searchTerm}
                 onChange={e => this.handleChange(e)}
                 onKeyDown={this.handleKeyDown}
               />
