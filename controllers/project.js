@@ -176,6 +176,21 @@ module.exports = {
       return res.status(500).json({ error: "Something went wrong" });
     }
   },
+  getReportSettings: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Project id is not valid number" });
+    }
+    var project_exists = await ProjectService.checkIfProjectExist(req.params.id);
+    if (!project_exists) {
+      return res.status(404).json({ error: "Project doesn't exist" });
+    }
+    var settings = await ProjectService.getReportSettings(req.params.id, req.user);
+    if (settings) {
+      return res.status(200).json(settings);
+    } else {
+      return res.status(500).json({ error: "Something went wrong" });
+    }
+  },
   updateProjectSettings: async function(req, res) {
     if (isNaN(req.params.id)) {
       return res.status(400).json({ error: "Project id is not valid number" });
@@ -220,6 +235,73 @@ module.exports = {
     var updateSettings = await ProjectService.updateProjectSettings(req.user.id, req.params.id, settingsObj);
     if (updateSettings) {
       var settings = await ProjectService.getSettings(req.params.id, req.user);
+      return res.status(200).json(settings);
+    } else {
+      return res.status(500).json({ error: "Something went wrong" });
+    }
+  },
+  updateReportSettings: async function(req, res) {
+    if (isNaN(req.params.id)) {
+      return res.status(400).json({ error: "Project id is not valid number" });
+    }
+    var project_exists = await ProjectService.checkIfProjectExist(req.params.id);
+    if (!project_exists) {
+      return res.status(404).json({ error: "Project doesn't exist" });
+    }
+
+    const { errors, isValid } = validateSettingsInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    var settingsObj = {};
+
+    if (req.body.groups) {
+      settingsObj.groups = req.body.groups;
+    }
+    if (req.body.users) {
+      settingsObj.users = req.body.users;
+    }
+    if (req.body.devices) {
+      settingsObj.devices = req.body.devices;
+    }
+    if (req.body.simulators) {
+      settingsObj.simulators = req.body.simulators;
+    }
+    if (req.body.browsers) {
+      settingsObj.browsers = req.body.browsers;
+    }
+    if (req.body.versions) {
+      settingsObj.versions = req.body.versions;
+    }
+    if (req.body.environments) {
+      settingsObj.environments = req.body.environments;
+    }
+    if (req.body.operatingsystems) {
+      settingsObj.operatingsystems = req.body.operatingsystems;
+    }
+    if (req.body.date_from !== "undefined") {
+      settingsObj.date_from = req.body.date_from;
+    }
+    if (req.body.date_to !== "undefined") {
+      settingsObj.date_to = req.body.date_to;
+    }
+    if (req.body.search_term !== "undefined") {
+      settingsObj.search_term = req.body.search_term;
+    }
+    if (req.body.view_mode !== "undefined") {
+      settingsObj.view_mode = req.body.view_mode;
+    }
+    if (req.body.show_filters !== "undefined") {
+      settingsObj.show_filters = req.body.show_filters;
+    }
+    settingsObj.project_id = req.params.id;
+
+    var updateSettings = await ProjectService.updateReportSettings(req.user.id, req.params.id, settingsObj);
+    if (updateSettings) {
+      var settings = await ProjectService.getReportSettings(req.params.id, req.user);
       return res.status(200).json(settings);
     } else {
       return res.status(500).json({ error: "Something went wrong" });
