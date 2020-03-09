@@ -264,6 +264,9 @@ module.exports = {
     if (req.body.users) {
       settingsObj.users = req.body.users;
     }
+    if (req.body.statuses) {
+      settingsObj.statuses = req.body.statuses;
+    }
     if (req.body.devices) {
       settingsObj.devices = req.body.devices;
     }

@@ -96,6 +96,7 @@ module.exports = {
         attributes: [
           "groups",
           "users",
+          "statuses",
           "devices",
           "simulators",
           "operatingsystems",
@@ -117,6 +118,7 @@ module.exports = {
         var settings_obj = {};
         settings_obj.groups = [];
         settings_obj.users = [];
+        settings_obj.statuses = [];
         settings_obj.devices = [];
         settings_obj.simulators = [];
         settings_obj.browsers = [];
@@ -133,6 +135,7 @@ module.exports = {
         if (settings) {
           settings_obj.groups = settings.groups;
           settings_obj.users = settings.users;
+          settings_obj.statuses = settings.statuses;
           settings_obj.devices = settings.devices;
           settings_obj.simulators = settings.simulators;
           settings_obj.operatingsystems = settings.operatingsystems;
