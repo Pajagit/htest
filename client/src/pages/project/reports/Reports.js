@@ -675,6 +675,13 @@ class Reports extends Component {
     testcase.search_term = "";
     testcase.users = [];
     testcase.groups = [];
+    testcase.statuses = [];
+    testcase.devices = [];
+    testcase.simulators = [];
+    testcase.browsers = [];
+    testcase.operatingsystems = [];
+    testcase.environments = [];
+    testcase.versions = [];
 
     this.props.getReports(
       this.props.match.params.projectId
@@ -753,6 +760,13 @@ class Reports extends Component {
 
     var resetFiltersTag = "";
     if (
+      !isEmpty(this.props.filters.selectedStatuses) ||
+      !isEmpty(this.props.filters.selectedDevices) ||
+      !isEmpty(this.props.filters.selectedSimulators) ||
+      !isEmpty(this.props.filters.selectedBrowsers) ||
+      !isEmpty(this.props.filters.selectedOss) ||
+      !isEmpty(this.props.filters.selectedEnvironments) ||
+      !isEmpty(this.props.filters.selectedVersions) ||
       !isEmpty(this.props.filters.selectedUsers) ||
       !isEmpty(this.props.filters.selectedGroups) ||
       this.props.filters.selectedDateTimestampFrom !== "" ||
