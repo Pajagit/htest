@@ -51,6 +51,7 @@ class NewReport extends Component {
       filteredBrowsers: [],
       filteredVersions: [],
       filteredEnvironments: [],
+      currentTime: moment().format("Do MMMM YYYY, h:mm:ss a"),
       filteredSimulators: [],
       errors: {}
     };
@@ -81,7 +82,6 @@ class NewReport extends Component {
       // var filteredDevices = devices.filter(function(device) {
       //   return device.used === true;
       // });
-      console.log(nextProps.testcaseSetup.testcase_setup);
       update.filteredDevices = nextProps.testcaseSetup.testcase_setup.devices;
       update.filteredSimulators = nextProps.testcaseSetup.testcase_setup.simulators;
       update.filteredBrowsers = nextProps.testcaseSetup.testcase_setup.browsers;
@@ -98,16 +98,16 @@ class NewReport extends Component {
   }
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
-    var projectId = this.props.match.params.projectId;
     this.props.getTestcase(testcaseId);
-    // this.props.getDevices(null, projectId);
-    // this.props.getBrowsers(projectId);
-    // this.props.getVersions(projectId);
-    // this.props.getOperatingSystems(projectId);
-    // this.props.getEnvironments(projectId);
-    // this.props.getSimulators(projectId);
     this.props.getTestcaseSetup(testcaseId);
     this.props.getStatuses();
+    this.interval = setInterval(this.updateCurrentTime.bind(this), 1000);
+  }
+  updateCurrentTime() {
+    this.setState({ currentTime: moment().format("Do MMMM YYYY, h:mm:ss a") });
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
   selectStatus(value) {
     this.setState({ status: value }, () => {
@@ -323,9 +323,7 @@ class NewReport extends Component {
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-title'>Reported</div>
-                <div className='report-details-row-half-value'>
-                  {moment(testcase.created_at).format("Do MMMM YYYY, h:mm:ss a")}
-                </div>
+                <div className='report-details-row-half-value'>{this.state.currentTime}</div>
               </div>
             </div>
             <div className='report-details-row'>
