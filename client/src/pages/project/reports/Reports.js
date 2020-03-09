@@ -788,33 +788,6 @@ class Reports extends Component {
       filters = (
         <div>
           <div className='testcase-grid'>
-            <SearchDropdown
-              value={this.props.filters.selectedStatuses}
-              options={this.state.statuses}
-              onChange={this.selectMultipleOptionStatuses}
-              label={"Status"}
-              placeholder={"Statuses"}
-              multiple={true}
-            />
-            <SearchDropdown
-              value={this.props.filters.selectedGroups}
-              options={this.state.projectGroups}
-              onChange={this.selectMultipleOptionGroups}
-              label={"Test Groups"}
-              placeholder={"Groups"}
-              multiple={true}
-            />
-
-            <SearchDropdown
-              value={this.props.filters.selectedUsers}
-              options={this.state.usersWithTestcases}
-              onChange={this.selectMultipleOptionUsers}
-              label={"Select User"}
-              placeholder={"Users"}
-              multiple={true}
-              numberDisplayed={2}
-            />
-
             <Datepicker
               forwardRef={node => (this.node = node)}
               showdatepicker={this.state.showDatepickerFrom}
@@ -849,6 +822,33 @@ class Reports extends Component {
                 });
               }}
             />
+            <SearchDropdown
+              value={this.props.filters.selectedStatuses}
+              options={this.state.statuses}
+              onChange={this.selectMultipleOptionStatuses}
+              label={"Status"}
+              placeholder={"Statuses"}
+              multiple={true}
+            />
+            <SearchDropdown
+              value={this.props.filters.selectedGroups}
+              options={this.state.projectGroups}
+              onChange={this.selectMultipleOptionGroups}
+              label={"Test Groups"}
+              placeholder={"Groups"}
+              multiple={true}
+            />
+
+            <SearchDropdown
+              value={this.props.filters.selectedUsers}
+              options={this.state.usersWithTestcases}
+              onChange={this.selectMultipleOptionUsers}
+              label={"Select User"}
+              placeholder={"Users"}
+              multiple={true}
+              numberDisplayed={2}
+            />
+
             <SearchDropdown
               value={this.props.filters.selectedDevices}
               options={this.state.projectDevices}
@@ -1293,7 +1293,14 @@ const filterSelector = createSelector(
         !isEmpty(selectedUsers) ||
         !isEmpty(selectedGroups) ||
         selectedDateTimestampFrom !== "" ||
-        selectedDateTimestampTo !== ""
+        selectedDateTimestampTo !== "" ||
+        !isEmpty(selectedStatuses) ||
+        !isEmpty(selectedDevices) ||
+        !isEmpty(selectedSimulators) ||
+        !isEmpty(selectedBrowsers) ||
+        !isEmpty(selectedOss) ||
+        !isEmpty(selectedEnvironments) ||
+        !isEmpty(selectedVersions)
       ) {
         activeFilters = true;
       }
