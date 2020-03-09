@@ -17,8 +17,8 @@ class ReportContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settings: this.props.settings.testcase_settings,
-      filters: this.props.settings.testcase_settings,
+      settings: this.props.settings.report_settings,
+      filters: this.props.settings.report_settings,
       reports: this.props.reports.reports,
       initialRender: true,
       projectId: null,
@@ -30,9 +30,9 @@ class ReportContainer extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.settings && nextProps.settings.testcase_settings) {
-      if (nextProps.settings.testcase_settings !== prevState.settings) {
-        update.settings = nextProps.settings.testcase_settings;
+    if (nextProps.settings && nextProps.settings.report_settings) {
+      if (nextProps.settings.report_settings !== prevState.settings) {
+        update.settings = nextProps.settings.report_settings;
         if (prevState.initialRender) {
           update.initialRender = false;
 

@@ -1,4 +1,10 @@
-import { GET_TESTCASE_SETTINGS, GET_REPORT_SETTINGS, SETTINGS_LOADING, CLEAR_SETTINGS } from "../actions/types";
+import {
+  GET_TESTCASE_SETTINGS,
+  GET_REPORT_SETTINGS,
+  SETTINGS_LOADING,
+  CLEAR_TESTCASE_SETTINGS,
+  CLEAR_REPORT_SETTINGS
+} from "../actions/types";
 
 const initialState = {
   testcase_settings: null,
@@ -25,8 +31,18 @@ export default function(state = initialState, action) {
         report_settings: action.payload,
         loading: false
       };
-    case CLEAR_SETTINGS:
-      return initialState;
+    case CLEAR_TESTCASE_SETTINGS:
+      return {
+        ...state,
+        testcase_settings: null,
+        loading: false
+      };
+    case CLEAR_REPORT_SETTINGS:
+      return {
+        ...state,
+        report_settings: null,
+        loading: false
+      };
     default:
       return state;
   }
