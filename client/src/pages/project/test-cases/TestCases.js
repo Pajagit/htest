@@ -50,6 +50,7 @@ class TestCases extends Component {
       listViewActivity: "",
       disabledAlready: false,
       width: 0,
+      initialLoad: false,
       height: 0
     };
     this.filterBtn = this.filterBtn.bind(this);
@@ -88,7 +89,12 @@ class TestCases extends Component {
           update.usersWithTestcases = usersWithTestcases;
         }
       }
-
+      if (nextProps.filters && nextProps.filters.searchTerm && !prevState.initialLoad) {
+        if (nextProps.filters.searchTerm !== prevState.searchTerm) {
+          update.initialLoad = true;
+          update.searchTerm = nextProps.filters.searchTerm;
+        }
+      }
       if (nextProps.groups && nextProps.groups.groups) {
         update.projectGroups = nextProps.groups.groups;
       }
@@ -532,7 +538,7 @@ class TestCases extends Component {
               <SearchBtn
                 name={"search"}
                 searchActive={this.props.filters.searchTerm}
-                value={this.state.searchTerm !== null ? this.state.searchTerm : this.props.filters.searchTerm}
+                value={this.state.searchTerm}
                 onChange={e => this.handleChange(e)}
                 onKeyDown={this.handleKeyDown}
               />
