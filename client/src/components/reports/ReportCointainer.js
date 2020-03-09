@@ -151,7 +151,7 @@ class ReportContainer extends Component {
         reports.reports.map((report, index) => (
           <React.Fragment key={index}>
             <LandscapeReport
-              title={report.title}
+              title={report.testcase.title}
               tags={report.groups.map((group, groupIndex) => (
                 <React.Fragment key={groupIndex}>
                   <Tag title={group.title} color={group.color.title} isRemovable={false} />
