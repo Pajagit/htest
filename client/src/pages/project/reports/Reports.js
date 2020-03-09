@@ -23,9 +23,10 @@ import { getDevices } from "../../../actions/deviceActions";
 import { getEnvironments } from "../../../actions/environmentActions";
 import { getVersions } from "../../../actions/versionAction";
 import { getBrowsers } from "../../../actions/browserActions";
+import { getSimulators } from "../../../actions/simulatorActions";
 import { getOperatingSystems } from "../../../actions/osActions";
 import { writePermissions, projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
-import { getTestcases } from "../../../actions/testcaseActions";
+import { getReports } from "../../../actions/reportActions";
 import getidsFromObjectArray from "../../../utility/getIdsFromObjArray";
 
 import SearchDropdown from "../../../components/common/SearchDropdown";
@@ -51,6 +52,7 @@ class Reports extends Component {
       projectEnvironments: [],
       projectBrowsers: [],
       projectVersions: [],
+      projectSimulators: [],
       projectOss: [],
       statuses: [],
       showDatepickerFrom: false,
@@ -61,7 +63,7 @@ class Reports extends Component {
       testcaseFilters: {},
       searchTerm: "",
       settings: this.props.settings.report_settings,
-      selectedGroupFilters: [],
+      selectedGroups: [],
       listViewActivity: "",
       disabledAlready: false,
       width: 0,
@@ -69,7 +71,14 @@ class Reports extends Component {
     };
     this.filterBtn = this.filterBtn.bind(this);
     this.selectMultipleOptionGroups = this.selectMultipleOptionGroups.bind(this);
+    this.selectMultipleOptionStatuses = this.selectMultipleOptionStatuses.bind(this);
+    this.selectMultipleOptionDevices = this.selectMultipleOptionDevices.bind(this);
     this.selectMultipleOptionUsers = this.selectMultipleOptionUsers.bind(this);
+    this.selectMultipleOptionEnvironments = this.selectMultipleOptionEnvironments.bind(this);
+    this.selectMultipleOptionVersions = this.selectMultipleOptionVersions.bind(this);
+    this.selectMultipleOptionBrowsers = this.selectMultipleOptionBrowsers.bind(this);
+    this.selectMultipleOptionSimulators = this.selectMultipleOptionSimulators.bind(this);
+    this.selectMultipleOptionOss = this.selectMultipleOptionOss.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -112,8 +121,12 @@ class Reports extends Component {
       if (nextProps.devices && nextProps.devices.devices) {
         update.projectDevices = nextProps.devices.devices.devices;
       }
+
       if (nextProps.browsers && nextProps.browsers.browsers) {
         update.projectBrowsers = nextProps.browsers.browsers.browsers;
+      }
+      if (nextProps.simulators && nextProps.simulators.simulators) {
+        update.projectSimulators = nextProps.simulators.simulators.simulators;
       }
       if (nextProps.oss && nextProps.oss.oss) {
         update.projectOss = nextProps.oss.oss.oss;
@@ -143,6 +156,7 @@ class Reports extends Component {
       this.props.getStatuses();
       this.props.getEnvironments(projectId);
       this.props.getVersions(projectId);
+      this.props.getSimulators(projectId);
       this.props.getDevices(null, projectId);
       var has_testcases = true;
       this.props.getUsers(has_testcases, projectId);
@@ -185,14 +199,17 @@ class Reports extends Component {
 
   triggerChange = e => {
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.date_from =
       this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = this.state.searchTerm;
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
 
     this.props.editReportSettings(this.props.match.params.projectId, { search_term: this.state.searchTerm });
   };
@@ -216,47 +233,131 @@ class Reports extends Component {
   selectMultipleOptionUsers(value) {
     this.setState({ selectedUsers: value }, () => {
       var testcase = {};
-      testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+      testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
       testcase.users = getidsFromObjectArray(this.state.selectedUsers);
       testcase.date_from = this.props.filters.selectedDateFromFormated;
       testcase.date_to = this.props.filters.selectedDateToFormated;
       testcase.search_term = this.state.searchTerm;
-      this.props.getTestcases(this.props.match.params.projectId, testcase);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
       this.props.editReportSettings(this.props.match.params.projectId, { users: testcase.users });
     });
   }
 
   selectMultipleOptionGroups(value) {
-    this.setState({ selectedGroupFilters: value }, () => {
+    this.setState({ selectedGroups: value }, () => {
       var testcase = {};
-      testcase.groups = getidsFromObjectArray(this.state.selectedGroupFilters);
-      testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-      testcase.date_from =
-        this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-      testcase.date_to =
-        this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-      testcase.search_term = this.state.searchTerm;
-      this.props.getTestcases(this.props.match.params.projectId, testcase);
+      testcase.groups = getidsFromObjectArray(this.state.selectedGroups);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
       this.props.editReportSettings(this.props.match.params.projectId, { groups: testcase.groups });
+    });
+  }
+  selectMultipleOptionStatuses(value) {
+    this.setState({ selectedStatuses: value }, () => {
+      var testcase = {};
+      testcase.statuses = getidsFromObjectArray(this.state.selectedStatuses);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
+      this.props.editReportSettings(this.props.match.params.projectId, { statuses: testcase.statuses });
+    });
+  }
+
+  selectMultipleOptionDevices(value) {
+    this.setState({ selectedDevices: value }, () => {
+      var testcase = {};
+      testcase.devices = getidsFromObjectArray(this.state.selectedDevices);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
+      this.props.editReportSettings(this.props.match.params.projectId, { devices: testcase.devices });
+    });
+  }
+  selectMultipleOptionBrowsers(value) {
+    this.setState({ selectedBrowsers: value }, () => {
+      var testcase = {};
+      testcase.browsers = getidsFromObjectArray(this.state.selectedBrowsers);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
+      this.props.editReportSettings(this.props.match.params.projectId, { browsers: testcase.browsers });
+    });
+  }
+
+  selectMultipleOptionOss(value) {
+    this.setState({ selectedOss: value }, () => {
+      var testcase = {};
+      testcase.operatingsystems = getidsFromObjectArray(this.state.selectedOss);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
+      this.props.editReportSettings(this.props.match.params.projectId, { operatingsystems: testcase.operatingsystems });
+    });
+  }
+
+  selectMultipleOptionEnvironments(value) {
+    this.setState({ selectedEnvironments: value }, () => {
+      var testcase = {};
+      testcase.environments = getidsFromObjectArray(this.state.selectedEnvironments);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
+      this.props.editReportSettings(this.props.match.params.projectId, { environments: testcase.environments });
+    });
+  }
+
+  selectMultipleOptionVersions(value) {
+    this.setState({ selectedVersions: value }, () => {
+      var testcase = {};
+      testcase.versions = getidsFromObjectArray(this.state.selectedVersions);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
+      this.props.editReportSettings(this.props.match.params.projectId, { versions: testcase.versions });
+    });
+  }
+  selectMultipleOptionSimulators(value) {
+    this.setState({ selectedSimulators: value }, () => {
+      var testcase = {};
+      testcase.simulators = getidsFromObjectArray(this.state.selectedSimulators);
+      this.props.getReports(
+        this.props.match.params.projectId
+        // , testcase
+      );
+      this.props.editReportSettings(this.props.match.params.projectId, { simulators: testcase.simulators });
     });
   }
 
   removeSearchTerm() {
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.date_from =
       this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = "";
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
 
     this.props.editReportSettings(this.props.match.params.projectId, { search_term: null });
     this.setState({ searchTerm: "" });
   }
   removeGroupFilter(e) {
-    var groups = this.props.filters.selectedGroupFilters.filter(function(item) {
+    var groups = this.props.filters.selectedGroups.filter(function(item) {
       return item["id"] !== e;
     });
 
@@ -268,9 +369,12 @@ class Reports extends Component {
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = this.state.searchTerm;
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
 
-    this.setState({ selectedGroupFilters: groups }, () => {
+    this.setState({ selectedGroups: groups }, () => {
       this.props.editReportSettings(this.props.match.params.projectId, testcase);
     });
   }
@@ -280,62 +384,280 @@ class Reports extends Component {
     });
 
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
     testcase.users = getidsFromObjectArray(selectedUsers);
     testcase.date_from =
       this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = "";
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
 
     this.setState({ selectedUsers }, () => {
       this.props.editReportSettings(this.props.match.params.projectId, testcase);
     });
   }
 
+  removeDevice(e) {
+    var selectedDevices = this.props.filters.selectedUsers.filter(function(item) {
+      return item["id"] !== e;
+    });
+
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.devices = getidsFromObjectArray(selectedDevices);
+    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
+    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
+    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
+
+    this.setState({ selectedDevices }, () => {
+      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    });
+  }
+
+  removeBrowser(e) {
+    var selectedBrowsers = this.props.filters.selectedBrowsers.filter(function(item) {
+      return item["id"] !== e;
+    });
+
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
+    testcase.browsers = getidsFromObjectArray(selectedBrowsers);
+    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
+    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
+
+    this.setState({ selectedBrowsers }, () => {
+      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    });
+  }
+
+  removeEnvironment(e) {
+    var selectedEnvironments = this.props.filters.selectedEnvironments.filter(function(item) {
+      return item["id"] !== e;
+    });
+
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
+    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
+    testcase.environments = getidsFromObjectArray(selectedEnvironments);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
+    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
+
+    this.setState({ selectedEnvironments }, () => {
+      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    });
+  }
+
+  removeOs(e) {
+    var selectedOss = this.props.filters.selectedOss.filter(function(item) {
+      return item["id"] !== e;
+    });
+
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
+    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
+    testcase.operatingsystems = getidsFromObjectArray(selectedOss);
+    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
+    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
+    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
+
+    this.setState({ selectedOss }, () => {
+      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    });
+  }
+  removeVersion(e) {
+    var selectedVersions = this.props.filters.selectedVersions.filter(function(item) {
+      return item["id"] !== e;
+    });
+
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
+    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
+    testcase.versions = getidsFromObjectArray(selectedVersions);
+    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
+
+    this.setState({ selectedVersions }, () => {
+      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    });
+  }
+
+  removeStatus(e) {
+    var selectedStatuses = this.props.filters.selectedStatuses.filter(function(item) {
+      return item["id"] !== e;
+    });
+
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
+    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
+    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
+    testcase.statuses = getidsFromObjectArray(selectedStatuses);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
+
+    this.setState({ selectedStatuses }, () => {
+      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    });
+  }
+
+  removeSimulator(e) {
+    var selectedSimulators = this.props.filters.selectedSimulators.filter(function(item) {
+      return item["id"] !== e;
+    });
+
+    var testcase = {};
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
+    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
+    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
+    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
+    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
+    testcase.simulators = getidsFromObjectArray(selectedSimulators);
+    testcase.date_from =
+      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+    testcase.date_to =
+      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+    testcase.search_term = "";
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
+
+    this.setState({ selectedSimulators }, () => {
+      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    });
+  }
+
   removeFromDate() {
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.date_from = null;
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = "";
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
     this.props.editReportSettings(this.props.match.params.projectId, { date_from: null });
   }
   setFromDate(day) {
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.date_from = moment(day).format("YYYY-MM-DD HH:mm:ss");
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = this.state.searchTerm;
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
   }
   setToDate(day) {
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.date_from =
       this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
     testcase.date_to = moment(day).format("YYYY-MM-DD HH:mm:ss");
 
     testcase.search_term = this.state.searchTerm;
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
   }
 
   removeToDate() {
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
+    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.date_from =
       this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
     testcase.date_to = null;
     testcase.search_term = "";
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
     this.props.editReportSettings(this.props.match.params.projectId, { date_to: null });
   }
 
@@ -354,7 +676,10 @@ class Reports extends Component {
     testcase.users = [];
     testcase.groups = [];
 
-    this.props.getTestcases(this.props.match.params.projectId, testcase);
+    this.props.getReports(
+      this.props.match.params.projectId
+      // , testcase
+    );
     this.props.editReportSettings(this.props.match.params.projectId, testcase);
   }
 
@@ -425,10 +750,11 @@ class Reports extends Component {
         />
       );
     }
+
     var resetFiltersTag = "";
     if (
       !isEmpty(this.props.filters.selectedUsers) ||
-      !isEmpty(this.props.filters.selectedGroupFilters) ||
+      !isEmpty(this.props.filters.selectedGroups) ||
       this.props.filters.selectedDateTimestampFrom !== "" ||
       this.props.filters.selectedDateTimestampTo !== "" ||
       !isEmpty(this.props.filters.searchTerm)
@@ -443,15 +769,15 @@ class Reports extends Component {
         <div>
           <div className='testcase-grid'>
             <SearchDropdown
-              value={this.props.filters.selectedGroupFilters}
+              value={this.props.filters.selectedStatuses}
               options={this.state.statuses}
-              onChange={this.selectMultipleOptionGroups}
+              onChange={this.selectMultipleOptionStatuses}
               label={"Status"}
               placeholder={"Statuses"}
               multiple={true}
             />
             <SearchDropdown
-              value={this.props.filters.selectedGroupFilters}
+              value={this.props.filters.selectedGroups}
               options={this.state.projectGroups}
               onChange={this.selectMultipleOptionGroups}
               label={"Test Groups"}
@@ -506,7 +832,7 @@ class Reports extends Component {
             <SearchDropdown
               value={this.props.filters.selectedDevices}
               options={this.state.projectDevices}
-              onChange={this.selectMultipleOptionGroups}
+              onChange={this.selectMultipleOptionDevices}
               label={"Device"}
               placeholder={"Devices"}
               multiple={true}
@@ -514,7 +840,7 @@ class Reports extends Component {
             <SearchDropdown
               value={this.props.filters.selectedBrowsers}
               options={this.state.projectBrowsers}
-              onChange={this.selectMultipleOptionGroups}
+              onChange={this.selectMultipleOptionBrowsers}
               label={"Browser"}
               placeholder={"Browsers"}
               multiple={true}
@@ -522,7 +848,7 @@ class Reports extends Component {
             <SearchDropdown
               value={this.props.filters.selectedOss}
               options={this.state.projectOss}
-              onChange={this.selectMultipleOptionGroups}
+              onChange={this.selectMultipleOptionOss}
               label={"Operating System"}
               placeholder={"Operating Systems"}
               multiple={true}
@@ -530,7 +856,7 @@ class Reports extends Component {
             <SearchDropdown
               value={this.props.filters.selectedEnvironments}
               options={this.state.projectEnvironments}
-              onChange={this.selectMultipleOptionGroups}
+              onChange={this.selectMultipleOptionEnvironments}
               label={"Environment"}
               placeholder={"Environments"}
               multiple={true}
@@ -538,16 +864,24 @@ class Reports extends Component {
             <SearchDropdown
               value={this.props.filters.selectedVersions}
               options={this.state.projectVersions}
-              onChange={this.selectMultipleOptionGroups}
+              onChange={this.selectMultipleOptionVersions}
               label={"Version"}
               placeholder={"Versions"}
+              multiple={true}
+            />
+            <SearchDropdown
+              value={this.props.filters.selectedSimulators}
+              options={this.state.projectSimulators}
+              onChange={this.selectMultipleOptionSimulators}
+              label={"Simulators"}
+              placeholder={"Simulators"}
               multiple={true}
             />
           </div>
 
           <div className='active-filter-container'>
-            {this.props.filters.selectedGroupFilters &&
-              this.props.filters.selectedGroupFilters.map((group, index) => (
+            {this.props.filters.selectedGroups &&
+              this.props.filters.selectedGroups.map((group, index) => (
                 <Tag
                   key={index}
                   title={group.title}
@@ -564,6 +898,76 @@ class Reports extends Component {
                   color={"USER_COLOR"}
                   isRemovable={true}
                   onClickRemove={e => this.removeUser(user.id)}
+                />
+              ))}
+            {this.props.filters.selectedDevices &&
+              this.props.filters.selectedDevices.map((device, index) => (
+                <Tag
+                  key={index}
+                  title={device.title}
+                  color={"SETUP_COLOR"}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeDevice(device.id)}
+                />
+              ))}
+            {this.props.filters.selectedBrowsers &&
+              this.props.filters.selectedBrowsers.map((browser, index) => (
+                <Tag
+                  key={index}
+                  title={browser.title}
+                  color={"SETUP_COLOR"}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeBrowser(browser.id)}
+                />
+              ))}
+            {this.props.filters.selectedOss &&
+              this.props.filters.selectedOss.map((os, index) => (
+                <Tag
+                  key={index}
+                  title={os.title}
+                  color={"SETUP_COLOR"}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeOs(os.id)}
+                />
+              ))}
+            {this.props.filters.selectedEnvironments &&
+              this.props.filters.selectedEnvironments.map((environment, index) => (
+                <Tag
+                  key={index}
+                  title={environment.title}
+                  color={"SETUP_COLOR"}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeEnvironment(environment.id)}
+                />
+              ))}
+            {this.props.filters.selectedVersions &&
+              this.props.filters.selectedVersions.map((version, index) => (
+                <Tag
+                  key={index}
+                  title={version.title}
+                  color={"SETUP_COLOR"}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeVersion(version.id)}
+                />
+              ))}
+            {this.props.filters.selectedStatuses &&
+              this.props.filters.selectedStatuses.map((status, index) => (
+                <Tag
+                  key={index}
+                  title={status.title}
+                  color={"SETUP_COLOR"}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeStatus(status.id)}
+                />
+              ))}
+            {this.props.filters.selectedSimulators &&
+              this.props.filters.selectedSimulators.map((simulator, index) => (
+                <Tag
+                  key={index}
+                  title={simulator.title}
+                  color={"SETUP_COLOR"}
+                  isRemovable={true}
+                  onClickRemove={e => this.removeSimulator(simulator.id)}
                 />
               ))}
             {fromDate}
@@ -639,6 +1043,7 @@ const mapStateToProps = state => ({
   statuses: state.statuses,
   versions: state.versions,
   users: state.users,
+  simulators: state.simulators,
   devices: state.devices,
   oss: state.oss,
   environments: state.environments,
@@ -652,12 +1057,13 @@ export default connect(mapStateToProps, {
   getReportSettings,
   getDevices,
   getBrowsers,
+  getSimulators,
   getOperatingSystems,
   getTestcaseSettings,
   getEnvironments,
   getVersions,
   editReportSettings,
-  getTestcases,
+  getReports,
   getStatuses,
   clearReportSettings
 })(withRouter(Reports));
@@ -667,6 +1073,8 @@ const getUsersProps = state => state.users;
 const getGroupsProps = state => state.groups;
 const getDeviceProps = state => state.devices;
 const getBrowserProps = state => state.browsers;
+const getSimulatorProps = state => state.simulators;
+const getStatusProps = state => state.statuses;
 const getEnvironmentProps = state => state.environments;
 const getOsProps = state => state.oss;
 const getVersionProps = state => state.versions;
@@ -680,9 +1088,11 @@ const filterSelector = createSelector(
     getBrowserProps,
     getOsProps,
     getEnvironmentProps,
-    getVersionProps
+    getVersionProps,
+    getStatusProps,
+    getSimulatorProps
   ],
-  (report_settings, users, groups, devices, browsers, oss, environments, versions) => {
+  (report_settings, users, groups, devices, browsers, oss, environments, versions, statuses, simulators) => {
     var dateFrom = "";
     var selectedDateTimestampFrom = "";
     var selectedDateFrom = "";
@@ -702,15 +1112,17 @@ const filterSelector = createSelector(
     var selectedBrowsers = [];
     var selectedOss = [];
     var selectedEnvironments = [];
-    var selectedGroupFilters = [];
+    var selectedGroups = [];
+    var selectedSimulators = [];
     var selectedVersions = [];
+    var selectedStatuses = [];
 
     var activeFilters = false;
 
     if (report_settings) {
       if (devices) {
         if (devices.devices) {
-          var selectedDevices = [];
+          selectedDevices = [];
           devices.devices.devices.map(function(item) {
             if (report_settings && report_settings.devices) {
               if (report_settings.devices.includes(item.id)) {
@@ -719,13 +1131,12 @@ const filterSelector = createSelector(
             }
             return selectedDevices;
           });
-          selectedDevices = selectedDevices;
         }
       }
 
       if (browsers) {
         if (browsers.browsers) {
-          var selectedBrowsers = [];
+          selectedBrowsers = [];
           browsers.browsers.browsers.map(function(item) {
             if (report_settings && report_settings.browsers) {
               if (report_settings.browsers.includes(item.id)) {
@@ -734,13 +1145,39 @@ const filterSelector = createSelector(
             }
             return selectedBrowsers;
           });
-          selectedBrowsers = selectedBrowsers;
+        }
+      }
+      if (simulators) {
+        if (simulators.simulators) {
+          selectedSimulators = [];
+          simulators.simulators.simulators.map(function(item) {
+            if (report_settings && report_settings.simulators) {
+              if (report_settings.simulators.includes(item.id)) {
+                selectedSimulators.push({ id: item.id, title: item.title });
+              }
+            }
+            return selectedSimulators;
+          });
+        }
+      }
+
+      if (statuses) {
+        if (statuses.statuses) {
+          selectedStatuses = [];
+          statuses.statuses.map(function(item) {
+            if (report_settings && report_settings.statuses) {
+              if (report_settings.statuses.includes(item.id)) {
+                selectedStatuses.push({ id: item.id, title: item.title });
+              }
+            }
+            return selectedStatuses;
+          });
         }
       }
 
       if (versions) {
         if (versions.versions) {
-          var selectedVersions = [];
+          selectedVersions = [];
           versions.versions.versions.map(function(item) {
             if (report_settings && report_settings.versions) {
               if (report_settings.versions.includes(item.id)) {
@@ -749,13 +1186,12 @@ const filterSelector = createSelector(
             }
             return selectedVersions;
           });
-          selectedVersions = selectedVersions;
         }
       }
 
       if (environments) {
         if (environments.environments) {
-          var selectedEnvironments = [];
+          selectedEnvironments = [];
           environments.environments.environments.map(function(item) {
             if (report_settings && report_settings.environments) {
               if (report_settings.environments.includes(item.id)) {
@@ -764,13 +1200,12 @@ const filterSelector = createSelector(
             }
             return selectedEnvironments;
           });
-          selectedEnvironments = selectedEnvironments;
         }
       }
 
       if (oss) {
         if (oss.oss) {
-          var selectedOss = [];
+          selectedOss = [];
           oss.oss.oss.map(function(item) {
             if (report_settings && report_settings.operatingsystems) {
               if (report_settings.operatingsystems.includes(item.id)) {
@@ -779,21 +1214,19 @@ const filterSelector = createSelector(
             }
             return selectedOss;
           });
-          selectedOss = selectedOss;
         }
       }
       if (groups) {
         if (groups.groups) {
-          var selectedGroup = [];
+          selectedGroups = [];
           groups.groups.map(function(item) {
             if (report_settings && report_settings.groups) {
               if (report_settings.groups.includes(item.id)) {
-                selectedGroup.push({ id: item.id, title: item.title, color: item.color });
+                selectedGroups.push({ id: item.id, title: item.title, color: item.color });
               }
             }
-            return selectedGroup;
+            return selectedGroups;
           });
-          selectedGroupFilters = selectedGroup;
         }
       }
 
@@ -838,7 +1271,7 @@ const filterSelector = createSelector(
 
       if (
         !isEmpty(selectedUsers) ||
-        !isEmpty(selectedGroupFilters) ||
+        !isEmpty(selectedGroups) ||
         selectedDateTimestampFrom !== "" ||
         selectedDateTimestampTo !== ""
       ) {
@@ -855,11 +1288,13 @@ const filterSelector = createSelector(
         showFilters,
         searchTerm,
         selectedUsers,
-        selectedGroupFilters,
+        selectedGroups,
         selectedDevices,
         selectedEnvironments,
+        selectedSimulators,
         selectedOss,
         selectedVersions,
+        selectedStatuses,
         selectedBrowsers,
         activeFilters,
         selectedDateFromFormated,
