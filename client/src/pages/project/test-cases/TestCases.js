@@ -13,7 +13,7 @@ import SearchBtn from "../../../components/common/SearchBtn";
 import TestCaseContainer from "../../../components/test-cases/TestCaseContainer";
 import { getGroups } from "../../../actions/groupsActions";
 import { getUsers } from "../../../actions/userActions";
-import { getTestcaseSettings, editProjectSettings, clearSettings } from "../../../actions/settingsActions";
+import { getTestcaseSettings, editTestcaseSettings, clearTestcaseSettings } from "../../../actions/settingsActions";
 import { writePermissions } from "../../../permissions/Permissions";
 import { projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import { getTestcases } from "../../../actions/testcaseActions";
@@ -114,7 +114,6 @@ class TestCases extends Component {
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClick, false);
     window.removeEventListener("resize", this.updateWindowDimensions);
-    this.props.clearSettings();
   }
 
   updateWindowDimensions() {
@@ -153,7 +152,7 @@ class TestCases extends Component {
     testcase.search_term = this.state.searchTerm;
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
-    this.props.editProjectSettings(this.props.match.params.projectId, { search_term: this.state.searchTerm });
+    this.props.editTestcaseSettings(this.props.match.params.projectId, { search_term: this.state.searchTerm });
   };
 
   handleClick = e => {
@@ -181,7 +180,7 @@ class TestCases extends Component {
       testcase.date_to = this.props.filters.selectedDateToFormated;
       testcase.search_term = this.state.searchTerm;
       this.props.getTestcases(this.props.match.params.projectId, testcase);
-      this.props.editProjectSettings(this.props.match.params.projectId, { users: testcase.users });
+      this.props.editTestcaseSettings(this.props.match.params.projectId, { users: testcase.users });
     });
   }
 
@@ -196,7 +195,7 @@ class TestCases extends Component {
         this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
       testcase.search_term = this.state.searchTerm;
       this.props.getTestcases(this.props.match.params.projectId, testcase);
-      this.props.editProjectSettings(this.props.match.params.projectId, { groups: testcase.groups });
+      this.props.editTestcaseSettings(this.props.match.params.projectId, { groups: testcase.groups });
     });
   }
 
@@ -211,7 +210,7 @@ class TestCases extends Component {
     testcase.search_term = "";
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
-    this.props.editProjectSettings(this.props.match.params.projectId, { search_term: null });
+    this.props.editTestcaseSettings(this.props.match.params.projectId, { search_term: null });
     this.setState({ searchTerm: "" });
   }
   removeGroupFilter(e) {
@@ -230,7 +229,7 @@ class TestCases extends Component {
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
     this.setState({ selectedGroupFilters: groups }, () => {
-      this.props.editProjectSettings(this.props.match.params.projectId, testcase);
+      this.props.editTestcaseSettings(this.props.match.params.projectId, testcase);
     });
   }
   removeUser(e) {
@@ -249,7 +248,7 @@ class TestCases extends Component {
     this.props.getTestcases(this.props.match.params.projectId, testcase);
 
     this.setState({ selectedUsers }, () => {
-      this.props.editProjectSettings(this.props.match.params.projectId, testcase);
+      this.props.editTestcaseSettings(this.props.match.params.projectId, testcase);
     });
   }
 
@@ -262,7 +261,7 @@ class TestCases extends Component {
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = "";
     this.props.getTestcases(this.props.match.params.projectId, testcase);
-    this.props.editProjectSettings(this.props.match.params.projectId, { date_from: null });
+    this.props.editTestcaseSettings(this.props.match.params.projectId, { date_from: null });
   }
   setFromDate(day) {
     var testcase = {};
@@ -295,7 +294,7 @@ class TestCases extends Component {
     testcase.date_to = null;
     testcase.search_term = "";
     this.props.getTestcases(this.props.match.params.projectId, testcase);
-    this.props.editProjectSettings(this.props.match.params.projectId, { date_to: null });
+    this.props.editTestcaseSettings(this.props.match.params.projectId, { date_to: null });
   }
 
   filterBtn() {
@@ -303,7 +302,7 @@ class TestCases extends Component {
     var testcase = {};
     testcase.show_filters = showFilters;
 
-    this.props.editProjectSettings(this.props.match.params.projectId, testcase);
+    this.props.editTestcaseSettings(this.props.match.params.projectId, testcase);
   }
   resetFilters() {
     var testcase = {};
@@ -314,21 +313,21 @@ class TestCases extends Component {
     testcase.groups = [];
 
     this.props.getTestcases(this.props.match.params.projectId, testcase);
-    this.props.editProjectSettings(this.props.match.params.projectId, testcase);
+    this.props.editTestcaseSettings(this.props.match.params.projectId, testcase);
   }
 
   setViewList(e) {
     var view_mode = 2;
-    this.props.editProjectSettings(this.props.match.params.projectId, { view_mode });
+    this.props.editTestcaseSettings(this.props.match.params.projectId, { view_mode });
   }
 
   setViewGrid(e) {
     var view_mode = 1;
-    this.props.editProjectSettings(this.props.match.params.projectId, { view_mode });
+    this.props.editTestcaseSettings(this.props.match.params.projectId, { view_mode });
   }
   disableListView() {
     var view_mode = 1;
-    this.props.editProjectSettings(this.props.match.params.projectId, { view_mode });
+    this.props.editTestcaseSettings(this.props.match.params.projectId, { view_mode });
     this.setState({ listViewActivity: "disabled", disabledAlready: true });
   }
   enableListView() {
@@ -432,7 +431,7 @@ class TestCases extends Component {
               timestamp={this.props.filters.selectedDateTimestampFrom}
               onDayClick={day => {
                 this.setFromDate(day);
-                this.props.editProjectSettings(this.props.match.params.projectId, {
+                this.props.editTestcaseSettings(this.props.match.params.projectId, {
                   date_from: moment(day).format("YYYY-MM-DD HH:mm:ss")
                 });
               }}
@@ -449,7 +448,7 @@ class TestCases extends Component {
               timestamp={this.props.filters.selectedDateTimestampTo}
               onDayClick={day => {
                 this.setToDate(day);
-                this.props.editProjectSettings(this.props.match.params.projectId, {
+                this.props.editTestcaseSettings(this.props.match.params.projectId, {
                   date_to: moment(day).format("YYYY-MM-DD HH:mm:ss")
                 });
               }}
@@ -520,7 +519,6 @@ class TestCases extends Component {
           <Header
             icon={<i className='fas fa-clipboard-list'></i>}
             title={"Test Cases"}
-            // link={"CreateTestCase"}
             canGoBack={false}
             addBtn={addTestCase}
             filterBtn={
@@ -571,9 +569,9 @@ export default connect(mapStateToProps, {
   getGroups,
   getUsers,
   getTestcaseSettings,
-  editProjectSettings,
+  editTestcaseSettings,
   getTestcases,
-  clearSettings
+  clearTestcaseSettings
 })(withRouter(TestCases));
 
 const getSettings = state => state.settings.testcase_settings;

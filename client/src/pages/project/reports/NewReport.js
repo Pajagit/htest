@@ -18,12 +18,13 @@ import InputGroupDouble from "../../../components/common/InputGroupDouble";
 import openExternalBtn from "../../../img/openExternalBtn.png";
 
 import SearchDropdown from "../../../components/common/SearchDropdown";
-import { superAndProjectAdminPermissions } from "../../../permissions/Permissions";
+import { projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import ReportValidation from "../../../validation/ReportValidation";
 import successToast from "../../../toast/successToast";
 import failToast from "../../../toast/failToast";
 
 import { getTestcase } from "../../../actions/testcaseActions";
+import { getTestcaseSetup } from "../../../actions/testcaseSetup";
 import { getDevices } from "../../../actions/deviceActions";
 import { getBrowsers } from "../../../actions/browserActions";
 import { getVersions } from "../../../actions/versionAction";
@@ -50,6 +51,7 @@ class NewReport extends Component {
       filteredBrowsers: [],
       filteredVersions: [],
       filteredEnvironments: [],
+      currentTime: moment().format("Do MMMM YYYY, h:mm:ss a"),
       filteredSimulators: [],
       errors: {}
     };
@@ -64,65 +66,29 @@ class NewReport extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = superAndProjectAdminPermissions(
+      var { isValid } = projectIdAndSuperAdminPermission(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
       if (!isValid) {
-        nextProps.history.push(`${this.props.match.params.projectId}/Testcase/${this.props.match.params.testcaseId}`);
+        nextProps.history.push(`/${nextProps.match.params.projectId}/Testcase/${nextProps.match.params.testcaseId}`);
       }
     }
 
-    if (nextProps.devices && nextProps.devices.devices && nextProps.devices.devices.devices) {
-      var devices = nextProps.devices.devices.devices;
-      var filteredDevices = devices.filter(function(device) {
-        return device.used === true;
-      });
-      update.filteredDevices = filteredDevices;
-    }
+    if (nextProps.testcaseSetup && nextProps.testcaseSetup.testcase_setup) {
+      // Code to filter only used devices
+      // var devices = nextProps.testcaseSetup.testcase_setup.devices;
+      // var filteredDevices = devices.filter(function(device) {
+      //   return device.used === true;
+      // });
+      update.filteredDevices = nextProps.testcaseSetup.testcase_setup.devices;
+      update.filteredSimulators = nextProps.testcaseSetup.testcase_setup.simulators;
+      update.filteredBrowsers = nextProps.testcaseSetup.testcase_setup.browsers;
+      update.filteredOperatingSystems = nextProps.testcaseSetup.testcase_setup.operatingsystems;
+      update.filteredEnvironments = nextProps.testcaseSetup.testcase_setup.environments;
 
-    if (nextProps.simulators && nextProps.simulators.simulators && nextProps.simulators.simulators.simulators) {
-      var simulators = nextProps.simulators.simulators.simulators;
-      var filteredSimulators = simulators.filter(function(device) {
-        return device.used === true;
-      });
-      update.filteredSimulators = filteredSimulators;
-    }
-
-    if (nextProps.browsers && nextProps.browsers.browsers && nextProps.browsers.browsers.browsers) {
-      var browsers = nextProps.browsers.browsers.browsers;
-      var filteredBrowsers = browsers.filter(function(browser) {
-        return browser.used === true;
-      });
-      update.filteredBrowsers = filteredBrowsers;
-    }
-
-    if (nextProps.oss && nextProps.oss.oss && nextProps.oss.oss.oss) {
-      var oss = nextProps.oss.oss.oss;
-      var filteredoss = oss.filter(function(oss) {
-        return oss.used === true;
-      });
-      update.filteredOperatingSystems = filteredoss;
-    }
-    if (
-      nextProps.environments &&
-      nextProps.environments.environments &&
-      nextProps.environments.environments.environments
-    ) {
-      var environments = nextProps.environments.environments.environments;
-      var filteredEnvironments = environments.filter(function(environment) {
-        return environment.used === true;
-      });
-      update.filteredEnvironments = filteredEnvironments;
-    }
-
-    if (nextProps.versions && nextProps.versions.versions && nextProps.versions.versions.versions) {
-      var versions = nextProps.versions.versions.versions;
-      var filteredVersions = versions.filter(function(version) {
-        return version.used === true;
-      });
-      const versionsMap = filteredVersions.map(function(row) {
+      const versionsMap = nextProps.testcaseSetup.testcase_setup.versions.map(function(row) {
         return { id: row.id, title: row.version };
       });
       update.filteredVersions = versionsMap;
@@ -132,15 +98,16 @@ class NewReport extends Component {
   }
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
-    var projectId = this.props.match.params.projectId;
     this.props.getTestcase(testcaseId);
-    this.props.getDevices(null, projectId);
-    this.props.getBrowsers(projectId);
-    this.props.getVersions(projectId);
-    this.props.getOperatingSystems(projectId);
-    this.props.getEnvironments(projectId);
-    this.props.getSimulators(projectId);
+    this.props.getTestcaseSetup(testcaseId);
     this.props.getStatuses();
+    this.interval = setInterval(this.updateCurrentTime.bind(this), 1000);
+  }
+  updateCurrentTime() {
+    this.setState({ currentTime: moment().format("Do MMMM YYYY, h:mm:ss a") });
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
   selectStatus(value) {
     this.setState({ status: value }, () => {
@@ -356,9 +323,7 @@ class NewReport extends Component {
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-title'>Reported</div>
-                <div className='report-details-row-half-value'>
-                  {moment(testcase.created_at).format("Do MMMM YYYY, h:mm:ss a")}
-                </div>
+                <div className='report-details-row-half-value'>{this.state.currentTime}</div>
               </div>
             </div>
             <div className='report-details-row'>
@@ -662,6 +627,7 @@ const mapStateToProps = state => ({
   versions: state.versions,
   environments: state.environments,
   oss: state.oss,
+  testcaseSetup: state.testcaseSetup,
   statuses: state.statuses,
   simulators: state.simulators,
   auth: state.auth
@@ -672,6 +638,7 @@ export default connect(mapStateToProps, {
   getDevices,
   getBrowsers,
   getVersions,
+  getTestcaseSetup,
   getEnvironments,
   getStatuses,
   getOperatingSystems,
