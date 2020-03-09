@@ -43,6 +43,10 @@ const ReportSettings = sequelize.define(
       required: false,
       type: Sequelize.ARRAY(Sequelize.INTEGER)
     },
+    statuses: {
+      required: false,
+      type: Sequelize.ARRAY(Sequelize.INTEGER)
+    },
     date_from: {
       required: false,
       type: Sequelize.DATE
