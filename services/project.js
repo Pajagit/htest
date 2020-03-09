@@ -4,6 +4,8 @@ const User = require("../models/user");
 const Role = require("../models/role");
 const Project = require("../models/project");
 const ProjectSettings = require("../models/projectsettings");
+const ReportSettings = require("../models/reportsetting");
+
 const UserSettings = require("../models/usersettings");
 const UserRoleProject = require("../models/userroleproject");
 const paginate = require("../utils/pagination").paginate;
@@ -88,6 +90,66 @@ module.exports = {
       });
     });
   },
+  getReportSettings: async function(project_id, user) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.findOne({
+        attributes: [
+          "groups",
+          "users",
+          "devices",
+          "simulators",
+          "operatingsystems",
+          "environments",
+          "versions",
+          "browsers",
+          "date_from",
+          "date_to",
+          "search_term",
+          "project_id",
+          "view_mode",
+          "show_filters"
+        ],
+        where: {
+          user_id: user.id,
+          project_id: project_id
+        }
+      }).then(settings => {
+        var settings_obj = {};
+        settings_obj.groups = [];
+        settings_obj.users = [];
+        settings_obj.devices = [];
+        settings_obj.simulators = [];
+        settings_obj.browsers = [];
+        settings_obj.operatingsystems = [];
+        settings_obj.environments = [];
+        settings_obj.versions = [];
+        settings_obj.date_from = null;
+        settings_obj.date_to = null;
+        settings_obj.search_term = null;
+        settings_obj.view_mode = 1;
+        settings_obj.show_filters = true;
+        settings_obj.project_id = null;
+
+        if (settings) {
+          settings_obj.groups = settings.groups;
+          settings_obj.users = settings.users;
+          settings_obj.devices = settings.devices;
+          settings_obj.simulators = settings.simulators;
+          settings_obj.operatingsystems = settings.operatingsystems;
+          settings_obj.environments = settings.environments;
+          settings_obj.versions = settings.versions;
+          settings_obj.browsers = settings.browsers;
+          settings_obj.date_from = settings.date_from;
+          settings_obj.date_to = settings.date_to;
+          settings_obj.search_term = settings.search_term;
+          settings_obj.view_mode = settings.view_mode;
+          settings_obj.show_filters = settings.show_filters;
+          settings_obj.project_id = settings.project_id;
+        }
+        resolve(settings_obj);
+      });
+    });
+  },
   updateProjectSettings: async function(user_id, project_id, settings_obj) {
     return new Promise((resolve, reject) => {
       ProjectSettings.findOne({
@@ -116,6 +178,44 @@ module.exports = {
           settings_obj.user_id = user_id;
           settings_obj.project_id = project_id;
           ProjectSettings.create(settings_obj).then(created_setting => {
+            if (created_setting) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
+        }
+      });
+    });
+  },
+  updateReportSettings: async function(user_id, project_id, settings_obj) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.findOne({
+        where: {
+          user_id: user_id,
+          project_id: project_id
+        }
+      }).then(settings => {
+        if (settings) {
+          ReportSettings.update(settings_obj, {
+            where: {
+              id: settings.id,
+              user_id: user_id,
+              project_id: project_id
+            },
+            returning: true,
+            plain: true
+          }).then(updated_settings => {
+            if (updated_settings) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          });
+        } else {
+          settings_obj.user_id = user_id;
+          settings_obj.project_id = project_id;
+          ReportSettings.create(settings_obj).then(created_setting => {
             if (created_setting) {
               resolve(true);
             } else {
@@ -239,7 +339,10 @@ module.exports = {
               required: false
             }
           ],
-          order: [["id", "DESC"], [User, "id", "ASC"]]
+          order: [
+            ["id", "DESC"],
+            [User, "id", "ASC"]
+          ]
         })
           .then(projects => {
             resolve({ projects, pages, page: Number(page) });
@@ -289,7 +392,10 @@ module.exports = {
             required: false
           }
         ],
-        order: [["id", "DESC"], [User, "id", "ASC"]]
+        order: [
+          ["id", "DESC"],
+          [User, "id", "ASC"]
+        ]
       })
         .then(projects_and_count => {
           var page = 1;
@@ -329,7 +435,10 @@ module.exports = {
             required: false
           }
         ],
-        order: [["id", "DESC"], [User, "id", "ASC"]]
+        order: [
+          ["id", "DESC"],
+          [User, "id", "ASC"]
+        ]
       })
         .then(project => {
           resolve(project);
