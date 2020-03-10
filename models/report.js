@@ -103,4 +103,9 @@ Report.belongsTo(User, {
   as: "user"
 });
 
+User.hasMany(Report, {
+  foreignKey: "user_id",
+  targetKey: "id"
+});
+
 module.exports = Report;

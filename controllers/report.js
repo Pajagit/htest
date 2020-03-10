@@ -14,6 +14,7 @@ const DeviceService = require("../services/device");
 const SimulatorService = require("../services/simulator");
 const OSService = require("../services/operatingsystem");
 const TestSetupService = require("../services/testsetup");
+const GroupService = require("../services/group");
 
 const validateReportInput = require("../validation/report").validateReportInput;
 const validateGetReports = require("../validation/report").validateGetReports;
@@ -304,6 +305,15 @@ module.exports = {
 
     var versionsAll = await VersionService.getAllVersions(req.params.id);
     setupObject.versions = versionsAll.versions;
+
+    var groupsAll = await GroupService.getAllProjectGroups(req.params.id);
+    setupObject.groups = groupsAll;
+
+    var statusesAll = await ReportService.getReportStatuses();
+    setupObject.statuses = statusesAll;
+
+    var usersAll = await UserService.getUsersWithReports(req.params.id);
+    setupObject.users = usersAll;
 
     return res.status(200).json(setupObject);
   }
