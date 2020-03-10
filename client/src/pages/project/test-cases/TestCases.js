@@ -49,6 +49,7 @@ class TestCases extends Component {
       selectedGroupFilters: [],
       listViewActivity: "",
       disabledAlready: false,
+      view_mode: 1,
       width: 0,
       initialLoad: false,
       height: 0
@@ -333,7 +334,9 @@ class TestCases extends Component {
   }
   disableListView() {
     var view_mode = 1;
-    this.props.editTestcaseSettings(this.props.match.params.projectId, { view_mode });
+    if (this.state.view_mode !== 1) {
+      this.props.editTestcaseSettings(this.props.match.params.projectId, { view_mode });
+    }
     this.setState({ listViewActivity: "disabled", disabledAlready: true });
   }
   enableListView() {

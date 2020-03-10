@@ -408,7 +408,7 @@ class Reports extends Component {
   }
 
   removeDevice(e) {
-    var selectedDevices = this.props.filters.selectedUsers.filter(function(item) {
+    var selectedDevices = this.props.filters.selectedDevices.filter(function(item) {
       return item["id"] !== e;
     });
 
