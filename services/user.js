@@ -4,9 +4,10 @@ const User = require("../models/user");
 const Project = require("../models/project");
 const UserRoleProject = require("../models/userroleproject");
 const Role = require("../models/role");
+const Report = require("../models/report");
+const Testcase = require("../models/testcase");
 const UserSettings = require("../models/usersettings");
 const ProjectSettings = require("../models/projectsettings");
-
 const getLocalTimestamp = require("../utils/dateFunctions").getLocalTimestamp;
 
 module.exports = {
@@ -55,6 +56,50 @@ module.exports = {
           resolve(true);
         } else {
           resolve(false);
+        }
+      });
+    });
+  },
+  getUsersWithReports: async function(project_id) {
+    return new Promise((resolve, reject) => {
+      var whereCondition = {};
+      var includeArray = [
+        {
+          model: Project,
+          attributes: ["id", "title"],
+          through: {
+            attributes: []
+          },
+          as: "projects",
+          required: false
+        }
+      ];
+      // if (project_id) {
+      //   whereCondition.project_id = project_id;
+      // }
+      includeArray.push({
+        model: Report,
+        where: whereCondition,
+        attributes: [],
+        required: true,
+        include: [{ model: Testcase, as: "testcase", where: { project_id: project_id }, required: true }]
+      });
+      User.findAll({
+        attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "active", "last_login"],
+
+        include: includeArray,
+        order: [
+          ["id", "DESC"],
+          [Project, "id", "ASC"]
+        ]
+      }).then(users => {
+        if (users) {
+          users.forEach(user => {
+            user.last_login = getLocalTimestamp(user.last_login);
+          });
+          resolve(users);
+        } else {
+          resolve([]);
         }
       });
     });
