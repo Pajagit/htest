@@ -56,7 +56,7 @@ module.exports = {
         errors.test_steps = "There must be at least one test step";
       } else {
         for (var i = 0; i < data.test_steps.length; i++) {
-          if (data.test_steps[i].expected_result.trim().length > 0) {
+          if (data.test_steps[i].expected_result && data.test_steps[i].expected_result.trim().length > 0) {
             empty = false;
             if (data.test_steps[i].expected_result.trim().length > testStepLimit) {
               errors.test_steps = `Expected result can not be more than ${testStepLimit} long (${data.test_steps[i].expected_result.length})`;

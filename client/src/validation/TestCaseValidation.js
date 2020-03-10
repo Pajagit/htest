@@ -41,7 +41,7 @@ const TestCaseValidation = testCase => {
   });
 
   var filteredExpectedLimit = testCase.test_steps.filter(function(test_step) {
-    return test_step.expected_result !== "" && test_step.expected_result.length > testStepLimit;
+    return !isEmpty(test_step.expected_result) && test_step.expected_result.length > testStepLimit;
   });
 
   if (filteredTestSteps.length === 0) {

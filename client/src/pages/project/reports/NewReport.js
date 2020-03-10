@@ -227,8 +227,6 @@ class NewReport extends Component {
           failToast("Report creating failed");
         }
       });
-    } else {
-      console.log(errors);
     }
   }
   onChange(e) {
@@ -281,26 +279,26 @@ class NewReport extends Component {
       var statusValueClass = `${this.state.status !== null ? this.state.status.title.toUpperCase() : ""}-REPORT`;
       content = (
         <div>
-          <div className='report-details'>
-            <div className='report-details-row'>
-              <div className='report-details-row-half'>
-                <div className='report-details-row-half-header'>
-                  <div className='report-details-row-half-header-value'>Test Case</div>
+          <div className="report-details">
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-header">
+                  <div className="report-details-row-half-header-value">Test Case</div>
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass} `}>
-                <div className='report-details-row-half-header'>
-                  <div className='report-details-row-half-header-value'>Report</div>
+                <div className="report-details-row-half-header">
+                  <div className="report-details-row-half-header-value">Report</div>
                 </div>
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className='report-details-row-half'>
-                <div className='report-details-row-half-title'>Title</div>
-                <div className='report-details-row-half-value'>{testcase.title}</div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Title</div>
+                <div className="report-details-row-half-value">{testcase.title}</div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <SearchDropdown
                     options={statuses}
                     name={"report_status"}
@@ -314,28 +312,28 @@ class NewReport extends Component {
                 </div>
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className='report-details-row-half'>
-                <div className='report-details-row-half-title'>Test Case Created</div>
-                <div className='report-details-row-half-value'>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Test Case Created</div>
+                <div className="report-details-row-half-value">
                   {moment(testcase.date).format("Do MMMM YYYY, h:mm:ss a")}
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-title'>Reported</div>
-                <div className='report-details-row-half-value'>{this.state.currentTime}</div>
+                <div className="report-details-row-half-title">Reported</div>
+                <div className="report-details-row-half-value">{this.state.currentTime}</div>
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className='report-details-row-half'>
-                <div className='report-details-row-half-title'>Created By</div>
-                <div className='report-details-row-half-value'>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Created By</div>
+                <div className="report-details-row-half-value">
                   {testcase.author.first_name + " " + testcase.author.last_name + " - " + testcase.author.email}
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-title'>Tested By</div>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-title">Tested By</div>
+                <div className="report-details-row-half-value">
                   {this.props.auth.user.first_name +
                     " " +
                     this.props.auth.user.last_name +
@@ -345,13 +343,13 @@ class NewReport extends Component {
               </div>
             </div>
 
-            <div className='report-details-row'>
-              <div className='report-details-row-half'>
-                <div className='report-details-row-half-title'>Precondition</div>
-                <div className='report-details-row-half-value'>{testcase.preconditions}</div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Precondition</div>
+                <div className="report-details-row-half-value">{testcase.preconditions}</div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <Input
                     placeholder={"Report Precondition"}
                     onChange={e => this.onChange(e)}
@@ -361,13 +359,13 @@ class NewReport extends Component {
                 </div>
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className='report-details-row-half'>
-                <div className='report-details-row-half-title'>Expected Result</div>
-                <div className='report-details-row-half-value'>{testcase.expected_result}</div>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Expected Result</div>
+                <div className="report-details-row-half-value">{testcase.expected_result}</div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <Input
                     placeholder={"Actual Result"}
                     onChange={e => this.onChange(e)}
@@ -378,16 +376,16 @@ class NewReport extends Component {
               </div>
             </div>
 
-            <div className='report-details-row'>
-              <div className='report-details-row-full'>
-                <div className='report-details-row-full-title'>Description</div>
-                <div className='report-details-row-full-value'>{testcase.description}</div>
+            <div className="report-details-row">
+              <div className="report-details-row-full">
+                <div className="report-details-row-full-title">Description</div>
+                <div className="report-details-row-full-value">{testcase.description}</div>
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className='report-details-row-full'>
-                <div className='report-details-row-full-title'>Groups</div>
-                <div className='report-details-row-full-value'>
+            <div className="report-details-row">
+              <div className="report-details-row-full">
+                <div className="report-details-row-full-title">Groups</div>
+                <div className="report-details-row-full-value">
                   {testcase.groups.map((group, groupIndex) => (
                     <React.Fragment key={groupIndex}>
                       <Tag title={group.title} color={group.color} isRemovable={false} />
@@ -398,14 +396,14 @@ class NewReport extends Component {
               </div>
             </div>
 
-            <div className='report-details-row'>
-              <div className='report-details-row-half'>
-                <div className='report-details-row-half-title'>Test Steps</div>
-                <div className='report-details-row-half-value'>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Test Steps</div>
+                <div className="report-details-row-half-value">
                   {testcase.test_steps.map((step, index) => (
                     <React.Fragment key={index}>
                       <span key={index}>
-                        <div className='steps-class mb-2'>
+                        <div className="steps-class mb-2">
                           {`${index + 1}. `}
                           {step.value}
                           <br />
@@ -417,10 +415,10 @@ class NewReport extends Component {
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-title'>Steps Input Data</div>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-title">Steps Input Data</div>
+                <div className="report-details-row-half-value">
                   {testcase.test_steps.map((step, index) => (
-                    <div key={index} className='steps-class'>
+                    <div key={index} className="steps-class">
                       <span>
                         <Input
                           placeholder={`${index + 1}. Input Data`}
@@ -436,17 +434,17 @@ class NewReport extends Component {
                 </div>
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className='report-details-row-half'>
-                <div className='report-details-row-half-title'>Links</div>
-                <div className='report-details-row-half-value'>
+            <div className="report-details-row">
+              <div className="report-details-row-half">
+                <div className="report-details-row-half-title">Links</div>
+                <div className="report-details-row-half-value">
                   {testcase.links.map((link, index) => (
                     <div key={index}>
                       <span>
                         {`${index + 1}. `}
-                        <a href={link.value} target='_blank' rel='noopener noreferrer'>
-                          <span className='mr-1'>{!isEmpty(link.title) ? link.title : link.value}</span>
-                          <img className='testcase-details-item--value-img' src={openExternalBtn} alt='External link' />
+                        <a href={link.value} target="_blank" rel="noopener noreferrer">
+                          <span className="mr-1">{!isEmpty(link.title) ? link.title : link.value}</span>
+                          <img className="testcase-details-item--value-img" src={openExternalBtn} alt="External link" />
                         </a>
                       </span>
                     </div>
@@ -454,18 +452,18 @@ class NewReport extends Component {
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-title'>Links</div>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-title">Links</div>
+                <div className="report-details-row-half-value">
                   <InputGroupDouble
-                    type='text'
+                    type="text"
                     placeholder={["Enter Link Here", "Enter Link Title Here"]}
-                    label='Links'
+                    label="Links"
                     validationMsg={this.state.errors.links}
                     values={this.state.reportLinks}
                     onChange={e => this.onChange(e)}
                     keys={["value", "title"]}
                     id={["value", "title"]}
-                    addColumn={<FullBtn placeholder='Add links' onClick={e => this.addColumnLink(e)} />}
+                    addColumn={<FullBtn placeholder="Add links" onClick={e => this.addColumnLink(e)} />}
                     removeColumn={e => this.removeColumnLink(e)}
                     required={false}
                     onKeyDown={this.submitFormOnEnterKey}
@@ -474,9 +472,9 @@ class NewReport extends Component {
               </div>
             </div>
 
-            <div className='report-details-row'>
+            <div className="report-details-row">
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <SearchDropdown
                     options={this.state.filteredDevices}
                     name={"device"}
@@ -489,7 +487,7 @@ class NewReport extends Component {
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <SearchDropdown
                     options={this.state.filteredBrowsers}
                     name={"browser"}
@@ -502,9 +500,9 @@ class NewReport extends Component {
                 </div>
               </div>
             </div>
-            <div className='report-details-row'>
+            <div className="report-details-row">
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <SearchDropdown
                     options={this.state.filteredVersions}
                     name={"version"}
@@ -517,7 +515,7 @@ class NewReport extends Component {
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <SearchDropdown
                     options={this.state.filteredOperatingSystems}
                     name={"operating_systems"}
@@ -530,9 +528,9 @@ class NewReport extends Component {
                 </div>
               </div>
             </div>
-            <div className='report-details-row'>
+            <div className="report-details-row">
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <SearchDropdown
                     options={this.state.filteredEnvironments}
                     name={"environment"}
@@ -545,7 +543,7 @@ class NewReport extends Component {
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
-                <div className='report-details-row-half-value'>
+                <div className="report-details-row-half-value">
                   <SearchDropdown
                     options={this.state.filteredSimulators}
                     name={"simulator"}
@@ -558,10 +556,10 @@ class NewReport extends Component {
                 </div>
               </div>
             </div>
-            <div className='report-details-row'>
+            <div className="report-details-row">
               <div className={`report-details-row-full ${statusValueClass}`}>
-                <div className='report-details-row-full-title'>Comment</div>
-                <div className='report-details-row-full-value'>
+                <div className="report-details-row-full-title">Comment</div>
+                <div className="report-details-row-full-value">
                   <Input
                     placeholder={"Comment"}
                     onChange={e => this.onChange(e)}
@@ -571,20 +569,20 @@ class NewReport extends Component {
                 </div>
               </div>
             </div>
-            <div className='report-details-row'>
-              <div className='report-details-row-full'>
-                <div className='report-details-row-full-title'>
-                  <div className='flex-column-left mt-4'>
+            <div className="report-details-row">
+              <div className="report-details-row-full">
+                <div className="report-details-row-full-title">
+                  <div className="flex-column-left mt-4">
                     <Btn
                       className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1 ml-2`}
-                      label='Save And Open Report'
-                      type='text'
+                      label="Save And Open Report"
+                      type="text"
                       onClick={e => this.submitForm(e, false)}
                     />
                     <Btn
                       className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1 ml-2`}
-                      label='Save And Open Test Case'
-                      type='text'
+                      label="Save And Open Test Case"
+                      type="text"
                       onClick={e => this.submitForm(e, true)}
                     />
                     <UnderlineAnchor
@@ -600,12 +598,12 @@ class NewReport extends Component {
       );
     }
     return (
-      <div className='wrapper'>
+      <div className="wrapper">
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className='main-content main-content-grid'>
+        <div className="main-content main-content-grid">
           <Header
-            icon={<i className='fas fa-arrow-left'></i>}
+            icon={<i className="fas fa-arrow-left"></i>}
             title={"Back to All Reports"}
             link={`/${this.props.match.params.projectId}/TestCase/${this.props.match.params.testcaseId}`}
             canGoBack={true}
