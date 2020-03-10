@@ -278,5 +278,33 @@ module.exports = {
       setupObject.versions = versionsAll.versions;
     }
     return res.status(200).json(setupObject);
+  },
+  getReportFilterSetup: async function(req, res) {
+    var setupObject = {};
+
+    var whereStatement = {};
+    whereStatement.deprecated = false;
+    var devicesAll = await DeviceService.getAllDevices(whereStatement);
+    setupObject.devices = devicesAll.devices;
+
+    var browsersAll = await BrowserService.getAllBrowsers(req.params.id);
+    setupObject.browsers = browsersAll.browsers;
+
+    var environmentsAll = await EnvironmentService.getAllEnvironments(req.params.id);
+    setupObject.environments = environmentsAll.environments;
+
+    var ossAll = await OSService.getAllOperatingSystems(req.params.id);
+    setupObject.operatingsystems = ossAll.oss;
+
+    var whereStatement = {};
+    whereStatement.deprecated = false;
+    whereStatement.project_id = req.params.id;
+    var simulatorsAll = await SimulatorService.getAllSimulators(whereStatement);
+    setupObject.simulators = simulatorsAll.simulators;
+
+    var versionsAll = await VersionService.getAllVersions(req.params.id);
+    setupObject.versions = versionsAll.versions;
+
+    return res.status(200).json(setupObject);
   }
 };
