@@ -283,10 +283,63 @@ module.exports = {
   getReportFilterSetup: async function(req, res) {
     var setupObject = {};
 
+    var testSetupItems = await TestSetupService.getProjecttestSetupItems(req.params.id);
+    var devices = false;
+    var browsers = false;
+    var environments = false;
+    var operatingsystems = false;
+    var simulators = false;
+    var versions = false;
+
+    testSetupItems.forEach(item => {
+      if (item.title == "Devices") {
+        devices = true;
+      }
+      if (item.title == "Browsers") {
+        browsers = true;
+      }
+      if (item.title == "Environments") {
+        environments = true;
+      }
+      if (item.title == "Operating Systems") {
+        operatingsystems = true;
+      }
+      if (item.title == "Simulators") {
+        simulators = true;
+      }
+      if (item.title == "Versions") {
+        versions = true;
+      }
+    });
+
+    setupObject.setup = {};
+    setupObject.setup.devices = devices;
+    setupObject.setup.browsers = browsers;
+    setupObject.setup.environments = environments;
+    setupObject.setup.operatingsystems = operatingsystems;
+    setupObject.setup.simulators = simulators;
+    setupObject.setup.versions = versions;
+
     var whereStatement = {};
     whereStatement.deprecated = false;
-    var devicesAll = await DeviceService.getAllDevices(whereStatement);
-    setupObject.devices = devicesAll.devices;
+    var devicesArr = await DeviceService.getAllDevices(whereStatement, req.params.id);
+    var devicesAll = [];
+    for (var i = 0; i < devicesArr.devices.length; i++) {
+      var deviceObj = {};
+      deviceObj.id = devicesArr.devices[i].id;
+      deviceObj.title = devicesArr.devices[i].title;
+      deviceObj.dpi = devicesArr.devices[i].dpi;
+      deviceObj.resolution = devicesArr.devices[i].resolution;
+      deviceObj.udid = devicesArr.devices[i].udid;
+      deviceObj.screen_size = devicesArr.devices[i].screen_size;
+      deviceObj.retina = devicesArr.devices[i].retina;
+      deviceObj.os = devicesArr.devices[i].os;
+
+      deviceObj.used = await DeviceService.checkIfUsed(devicesArr.devices[i].id, req.params.id);
+      devicesAll.push(deviceObj);
+    }
+
+    setupObject.devices = devicesAll;
 
     var browsersAll = await BrowserService.getAllBrowsers(req.params.id);
     setupObject.browsers = browsersAll.browsers;

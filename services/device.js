@@ -114,6 +114,26 @@ module.exports = {
       });
     });
   },
+  // getUsedForllDevices: async function(devices, project_id) {
+  //   return new Promise((resolve, reject) => {
+  //     var devicesAll = [];
+  //     for (var i = 0; i < devices.length; i++) {
+  //       var deviceObj = {};
+  //       deviceObj.id = device.id;
+  //       deviceObj.title = device.title;
+  //       deviceObj.dpi = device.dpi;
+  //       deviceObj.resolution = device.resolution;
+  //       deviceObj.udid = device.udid;
+  //       deviceObj.screen_size = device.screen_size;
+  //       deviceObj.retina = device.retina;
+  //       deviceObj.os = device.os;
+
+  //       deviceObj.used = await checkIfUsed()
+  //     }
+
+  //     resolve(devicesAll);
+  //   });
+  // },
   returnCreatedOrUpdatedDevice: async function(createdOrUpdatedDevice) {
     return new Promise((resolve, reject) => {
       if (createdOrUpdatedDevice) {
@@ -250,6 +270,22 @@ module.exports = {
           resolve(true);
         } else {
           resolve(false);
+        }
+      });
+    });
+  },
+  getProjectDevices: async function(project_id) {
+    return new Promise((resolve, reject) => {
+      ProjectDevice.findOne({
+        where: {
+          project_id: project_id,
+          device_id: id
+        }
+      }).then(device => {
+        if (device) {
+          resolve(device);
+        } else {
+          resolve([]);
         }
       });
     });

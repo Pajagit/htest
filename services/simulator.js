@@ -31,7 +31,7 @@ module.exports = {
   getAllSimulators: async function(whereStatement) {
     return new Promise((resolve, reject) => {
       Simulator.findAll({
-        attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os"],
+        attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os", "used"],
         where: whereStatement,
         order: [["title", "ASC"]]
       }).then(simulators => {
