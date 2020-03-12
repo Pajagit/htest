@@ -5,7 +5,7 @@ const ReportControler = require("../../../controllers/report");
 // @route GET api/reports
 // @desc all reports route
 // @access public
-module.exports = Router({ mergeParams: true }).get(
+module.exports = Router({ mergeParams: true }).post(
   "/reports",
   passport.authenticate("jwt", { session: false }),
   ReportControler.getAllReports
