@@ -719,8 +719,8 @@ module.exports = {
         order: [["id", "desc"]]
       }).then(reportsArr => {
         if (reportsArr.length == 0) {
-          var page = 1;
-          var pages = 0;
+          var page = Number(1);
+          var pages = Number(0);
           var reports = [];
 
           resolve({ reports, page, pages });
@@ -758,10 +758,10 @@ module.exports = {
               reportsCount = reportsCount - 1;
             }
             if (reportsCount == 0) {
-              var page = 1;
-              var pages = 0;
+              var page = Number(1);
+              var pages = Number(0);
               if (reports.length > 0) {
-                page = pageNo;
+                page = Number(pageNo);
 
                 pages = Math.ceil(count / pageSize);
               }
