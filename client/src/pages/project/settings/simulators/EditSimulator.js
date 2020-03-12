@@ -20,7 +20,7 @@ import SearchDropdown from "../../../../components/common/SearchDropdown";
 import Spinner from "../../../../components/common/Spinner";
 import Switch from "../../../../components/common/Switch";
 import GlobalPanel from "../../../../components/global-panel/GlobalPanel";
-import SettingPanel from "../../../../components/settings-panel/SettingPanel";
+import ProjectPanel from "../../../../components/project-panel/ProjectPanel";
 import Confirm from "../../../../components/common/Confirm";
 import Header from "../../../../components/common/Header";
 
@@ -189,23 +189,23 @@ class EditSimulator extends Component {
       content = <Spinner />;
     } else {
       content = (
-        <div className="main-content--content">
-          <div className="header">
-            <div className="header--title">Simulator Information </div>
-            <div className="header--buttons">
-              <div className="header--buttons--primary">
-                <div className="header--buttons--secondary clickable" onClick={e => this.confirmModal([])}>
-                  <i className="fas fa-trash-alt"></i>
+        <div className='main-content--content'>
+          <div className='header'>
+            <div className='header--title'>Simulator Information </div>
+            <div className='header--buttons'>
+              <div className='header--buttons--primary'>
+                <div className='header--buttons--secondary clickable' onClick={e => this.confirmModal([])}>
+                  <i className='fas fa-trash-alt'></i>
                 </div>
               </div>
-              <div className="header--buttons--secondary"></div>
+              <div className='header--buttons--secondary'></div>
             </div>
           </div>
           <div>
             <Input
-              type="text"
-              placeholder="Enter Simulator Title Here"
-              label="Title*"
+              type='text'
+              placeholder='Enter Simulator Title Here'
+              label='Title*'
               validationMsg={[this.state.errors.title, this.props.errors.error]}
               value={this.state.title}
               onChange={e => this.onChange(e)}
@@ -223,9 +223,9 @@ class EditSimulator extends Component {
               multiple={false}
             />
             <Input
-              type="text"
-              placeholder="Enter Simulator Resolution Here"
-              label="Resolution"
+              type='text'
+              placeholder='Enter Simulator Resolution Here'
+              label='Resolution'
               validationMsg={this.state.errors.resolution}
               value={this.state.resolution}
               onChange={e => this.onChange(e)}
@@ -233,9 +233,9 @@ class EditSimulator extends Component {
               onKeyDown={this.submitFormOnEnterKey}
             />
             <Input
-              type="text"
-              placeholder="Enter Simulator Screen Size Here"
-              label="Screen Size"
+              type='text'
+              placeholder='Enter Simulator Screen Size Here'
+              label='Screen Size'
               validationMsg={this.state.errors.screen_size}
               value={this.state.screen_size}
               onChange={e => this.onChange(e)}
@@ -243,9 +243,9 @@ class EditSimulator extends Component {
               onKeyDown={this.submitFormOnEnterKey}
             />
             <Input
-              type="text"
-              placeholder="Enter Simulator dpi Here"
-              label="Pixels Per Inch"
+              type='text'
+              placeholder='Enter Simulator dpi Here'
+              label='Pixels Per Inch'
               validationMsg={this.state.errors.dpi}
               value={this.state.dpi}
               onChange={e => this.onChange(e)}
@@ -266,11 +266,11 @@ class EditSimulator extends Component {
               onClick={e => this.setState({ emulator: !this.state.emulator })}
               name={"emulator"}
             />
-            <div className="flex-column-left mt-4">
+            <div className='flex-column-left mt-4'>
               <Btn
                 className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
-                label="Edit Simulator"
-                type="text"
+                label='Edit Simulator'
+                type='text'
                 onClick={e => this.submitForm(e)}
               />
 
@@ -281,12 +281,12 @@ class EditSimulator extends Component {
       );
     }
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
-        <SettingPanel props={this.props} />
-        <div className="main-content main-content-grid">
+        <ProjectPanel projectId={this.props.match.params.projectId} />
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fas fa-arrow-left"></i>}
+            icon={<i className='fas fa-arrow-left'></i>}
             title={"Back To Simulators"}
             history={this.props}
             canGoBack={true}
@@ -313,7 +313,11 @@ const mapStateToProps = state => ({
   mobileOSs: state.mobileOSs
 });
 
-export default connect(
-  mapStateToProps,
-  { getSimulator, editSimulator, getMobileOs, removeSimulator, getOffices, clearErrors }
-)(withRouter(EditSimulator));
+export default connect(mapStateToProps, {
+  getSimulator,
+  editSimulator,
+  getMobileOs,
+  removeSimulator,
+  getOffices,
+  clearErrors
+})(withRouter(EditSimulator));
