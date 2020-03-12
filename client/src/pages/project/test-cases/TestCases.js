@@ -334,9 +334,8 @@ class TestCases extends Component {
   }
   disableListView() {
     var view_mode = 1;
-    if (this.state.view_mode !== 1) {
-      this.props.editTestcaseSettings(this.props.match.params.projectId, { view_mode });
-    }
+    this.props.editTestcaseSettings(this.props.match.params.projectId, { view_mode });
+
     this.setState({ listViewActivity: "disabled", disabledAlready: true });
   }
   enableListView() {
@@ -404,11 +403,11 @@ class TestCases extends Component {
         <Tag title={"Reset all"} color={"RESET_COLOR"} isRemovable={true} onClickRemove={e => this.resetFilters()} />
       );
     }
-    var filters = <div className='padding'></div>;
+    var filters = <div className="padding"></div>;
     if (this.props.filters.showFilters) {
       filters = (
         <div>
-          <div className='testcase-grid'>
+          <div className="testcase-grid">
             <SearchDropdown
               value={this.props.filters.selectedGroupFilters}
               options={this.state.projectGroups}
@@ -464,7 +463,7 @@ class TestCases extends Component {
             />
           </div>
 
-          <div className='active-filter-container'>
+          <div className="active-filter-container">
             {this.props.filters.selectedGroupFilters &&
               this.props.filters.selectedGroupFilters.map((group, index) => (
                 <Tag
@@ -498,7 +497,7 @@ class TestCases extends Component {
       addTestCase = (
         <BtnAnchorResponsive
           type={"text"}
-          label='Add New'
+          label="Add New"
           className={"a-btn-responsive a-btn-primary"}
           link={`/${this.props.match.params.projectId}/CreateTestCase`}
         />
@@ -506,27 +505,27 @@ class TestCases extends Component {
     }
     if (!this.state.listViewActivity) {
       var listView = (
-        <div className='view-options'>
+        <div className="view-options">
           <div
             className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
             onClick={e => this.setViewList(e)}
           >
-            <i className='fas fa-bars '></i>
+            <i className="fas fa-bars "></i>
           </div>
           <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
-            <i className='fas fa-th '></i>
+            <i className="fas fa-th "></i>
           </div>
         </div>
       );
     }
 
     return (
-      <div className='wrapper'>
+      <div className="wrapper">
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className='main-content main-content-grid'>
+        <div className="main-content main-content-grid">
           <Header
-            icon={<i className='fas fa-clipboard-list'></i>}
+            icon={<i className="fas fa-clipboard-list"></i>}
             title={"Test Cases"}
             canGoBack={false}
             addBtn={addTestCase}
