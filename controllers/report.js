@@ -178,21 +178,40 @@ module.exports = {
     if (!canGetReports) {
       return res.status(403).json({ message: "Forbidden" });
     }
+    var requestObject = {};
+
+    requestObject.groups = req.body.groups ? req.body.groups : [];
+    requestObject.statuses = req.body.statuses ? req.body.statuses : [];
+    requestObject.devices = req.body.devices ? req.body.devices : [];
+    requestObject.browsers = req.body.browsers ? req.body.browsers : [];
+    requestObject.versions = req.body.versions ? req.body.versions : [];
+    requestObject.environments = req.body.environments ? req.body.environments : [];
+    requestObject.simulators = req.body.simulators ? req.body.simulators : [];
+    requestObject.operating_systems = req.body.operating_systems ? req.body.operating_systems : [];
+
+    requestObject.users = req.body.users ? req.body.users : [];
+    requestObject.date_from = req.body.date_from ? req.body.date_from : "";
+    requestObject.date_to = req.body.date_to ? req.body.date_to : "";
+    requestObject.search_term = req.body.search_term ? req.body.search_term : "";
+    requestObject.page = page = req.query.page;
+    requestObject.page_size = pageSize = req.query.page_size;
     if (req.query.page >= 0 && req.query.page_size) {
-      var reports = await ReportService.getAllReportsPaginated(
+      var reports = await ReportService.getReportsIds(
         req.query.project_id,
         req.query.page,
-        req.query.page_size
+        req.query.page_size,
+        requestObject
       );
-      if (reports.reports.length > 0) {
-        var reportsWithGroups = await ReportService.getAllReportsWithGroups(reports.reports);
-        reports.reports = reportsWithGroups;
-      }
+      var reportsAll = await ReportService.getAllReportsPaginatedWithGgroups(
+        reports.report_ids,
+        req.query.page,
+        req.query.page_size,
+        reports.count
+      );
     } else {
-      var reports = await ReportService.getAllReports(req.query.project_id);
     }
-    if (reports) {
-      return res.status(200).json(reports);
+    if (reportsAll) {
+      return res.status(200).json(reportsAll);
     } else {
       return res.status(500).json({ error: "Something went wrong" });
     }

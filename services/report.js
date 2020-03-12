@@ -1,4 +1,6 @@
 const Sequelize = require("sequelize");
+const pgURI = require("../config/keys").postgresURI;
+const sequelize = new Sequelize(pgURI);
 const Op = Sequelize.Op;
 const Report = require("../models/report");
 const ReportSetup = require("../models/reportsetup");
@@ -144,7 +146,7 @@ module.exports = {
                 },
                 {
                   model: Link,
-                  attributes: ["id", "value","title"],
+                  attributes: ["id", "value", "title"],
                   required: false
                 },
                 {
@@ -432,6 +434,340 @@ module.exports = {
           resolve(report.testcase.project_id);
         } else {
           resolve(false);
+        }
+      });
+    });
+  },
+  getReportsIds: async function(project_id, page, pageSize, requestObject) {
+    return new Promise((resolve, reject) => {
+      groupCondition = " ";
+      statusCondition = " ";
+      devicesCondition = " ";
+      simulatorsCondition = " ";
+      browsersCondition = " ";
+      operating_systemsCondition = " ";
+      versionsCondition = " ";
+      environmentsCondition = " ";
+
+      userCondition = " ";
+      dateToCondition = " ";
+      dateFromCondition = " ";
+      searchTermCondition = " ";
+      limitOffsetCondition = " ";
+
+      if (requestObject.statuses) {
+        if (requestObject.statuses.length > 0) {
+          var statusesString = "";
+          for (var i = 0; i < requestObject.statuses.length; i++) {
+            if (i + 1 == requestObject.statuses.length) {
+              statusesString = statusesString + ` ${requestObject.statuses[i]} `;
+            } else {
+              statusesString = statusesString + ` ${requestObject.statuses[i]}, `;
+            }
+          }
+
+          statusCondition = statusCondition + ` and "status_id" in (${statusesString})`;
+        }
+      }
+
+      if (requestObject.devices) {
+        if (requestObject.devices.length > 0) {
+          var devicesString = "";
+          for (var i = 0; i < requestObject.devices.length; i++) {
+            if (i + 1 == requestObject.devices.length) {
+              devicesString = devicesString + ` ${requestObject.devices[i]} `;
+            } else {
+              devicesString = devicesString + ` ${requestObject.devices[i]}, `;
+            }
+          }
+
+          devicesCondition =
+            devicesCondition +
+            ` and "id" in (select "report_id" from "reportsetups" where "report_id"="reports"."id" and "device_id" in (${devicesString}))`;
+        }
+      }
+
+      if (requestObject.browsers) {
+        if (requestObject.browsers.length > 0) {
+          var browsersString = "";
+          for (var i = 0; i < requestObject.browsers.length; i++) {
+            if (i + 1 == requestObject.browsers.length) {
+              browsersString = browsersString + ` ${requestObject.browsers[i]} `;
+            } else {
+              browsersString = browsersString + ` ${requestObject.browsers[i]}, `;
+            }
+          }
+
+          browsersCondition =
+            browsersCondition +
+            ` and "id" in (select "report_id" from "reportsetups" where "report_id"="reports"."id" and "browser_id" in (${browsersString}))`;
+        }
+      }
+      if (requestObject.versions) {
+        if (requestObject.versions.length > 0) {
+          var versionsString = "";
+          for (var i = 0; i < requestObject.versions.length; i++) {
+            if (i + 1 == requestObject.versions.length) {
+              versionsString = versionsString + ` ${requestObject.versions[i]} `;
+            } else {
+              versionsString = versionsString + ` ${requestObject.versions[i]}, `;
+            }
+          }
+
+          versionsCondition =
+            versionsCondition +
+            ` and "id" in (select "report_id" from "reportsetups" where "report_id"="reports"."id" and "version_id" in (${versionsString}))`;
+        }
+      }
+
+      if (requestObject.environments) {
+        if (requestObject.environments.length > 0) {
+          var environmentsString = "";
+          for (var i = 0; i < requestObject.environments.length; i++) {
+            if (i + 1 == requestObject.environments.length) {
+              environmentsString = environmentsString + ` ${requestObject.environments[i]} `;
+            } else {
+              environmentsString = environmentsString + ` ${requestObject.environments[i]}, `;
+            }
+          }
+
+          environmentsCondition =
+            environmentsCondition +
+            ` and "id" in (select "report_id" from "reportsetups" where "report_id"="reports"."id" and "environment_id" in (${environmentsString}))`;
+        }
+      }
+
+      if (requestObject.simulators) {
+        if (requestObject.simulators.length > 0) {
+          var simulatorsString = "";
+          for (var i = 0; i < requestObject.simulators.length; i++) {
+            if (i + 1 == requestObject.simulators.length) {
+              simulatorsString = simulatorsString + ` ${requestObject.simulators[i]} `;
+            } else {
+              simulatorsString = simulatorsString + ` ${requestObject.simulators[i]}, `;
+            }
+          }
+
+          simulatorsCondition =
+            simulatorsCondition +
+            ` and "id" in (select "report_id" from "reportsetups" where "report_id"="reports"."id" and "simulator_id" in (${simulatorsString}))`;
+        }
+      }
+
+      if (requestObject.operating_systems) {
+        if (requestObject.operating_systems.length > 0) {
+          var operating_systemsString = "";
+          for (var i = 0; i < requestObject.operating_systems.length; i++) {
+            if (i + 1 == requestObject.operating_systems.length) {
+              operating_systemsString = operating_systemsString + ` ${requestObject.operating_systems[i]} `;
+            } else {
+              operating_systemsString = operating_systemsString + ` ${requestObject.operating_systems[i]}, `;
+            }
+          }
+
+          operating_systemsCondition =
+            operating_systemsCondition +
+            ` and "id" in (select "report_id" from "reportsetups" where "report_id"="reports"."id" and "operating_system_id" in (${operating_systemsString}))`;
+        }
+      }
+
+      if (requestObject.groups) {
+        if (requestObject.groups.length > 0) {
+          requestObject.groups.forEach(group => {
+            groupCondition =
+              groupCondition +
+              ` and "test_case_id" in (select "test_case_id" from "grouptestcases" where "group_id" = ${group})`;
+          });
+        }
+      }
+      if (requestObject.date_to) {
+        dateToCondition = ` and "created_at" <= '${requestObject.date_to}'`;
+      }
+      if (requestObject.date_from) {
+        dateFromCondition = ` and "created_at" >= '${requestObject.date_from}'`;
+      }
+      if (requestObject.search_term) {
+        if (requestObject.search_term.length > 0) {
+          searchTermCondition = `  and "test_case_id" in (select "id" from "testcases" where "title" ilike '%${requestObject.search_term}%')`;
+        }
+      }
+      if (requestObject.users) {
+        if (requestObject.users.length > 0) {
+          userCondition = `and "user_id" in (${requestObject.users})`;
+        }
+      }
+      if (page >= 0 && pageSize) {
+        limitOffsetCondition = `offset ${(page - 1) * pageSize} limit ${pageSize}`;
+      }
+      sequelize
+        .query(
+          `select "id" from "reports" where "test_case_id" in (select "id" from "testcases" where "project_id"=${project_id}) ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition} ${statusCondition} ${devicesCondition} ${browsersCondition} ${versionsCondition} ${environmentsCondition} ${operating_systemsCondition} ${simulatorsCondition}  order by "created_at" desc ${limitOffsetCondition}`,
+          { type: sequelize.QueryTypes.SELECT }
+        )
+        .then(reports => {
+          sequelize
+            .query(
+              `select count("id") from "reports" where "test_case_id" in (select "id" from "testcases" where "project_id"=${project_id}) ${groupCondition} ${userCondition} ${dateToCondition} ${dateFromCondition} ${searchTermCondition} ${statusCondition} ${devicesCondition} ${browsersCondition} ${versionsCondition} ${environmentsCondition} ${operating_systemsCondition} ${simulatorsCondition}`,
+              { type: sequelize.QueryTypes.SELECT }
+            )
+            .then(count => {
+              var report_ids = [];
+              if (reports) {
+                reports.forEach(reports_id => {
+                  report_ids.push(reports_id.id);
+                });
+              }
+              resolve({ report_ids: report_ids, count: count[0].count });
+            });
+        });
+    });
+  },
+  getAllReportsPaginatedWithGgroups: async function(report_ids, pageNo, pageSize, count) {
+    return new Promise((resolve, reject) => {
+      Report.findAll({
+        where: {
+          id: {
+            [Op.in]: report_ids
+          }
+        },
+        include: [
+          {
+            model: TestCase,
+            as: "testcase",
+            attributes: ["id", "project_id", "title", "description", "preconditions", "expected_result", "created_at"],
+            required: true,
+
+            include: [
+              {
+                model: Group,
+                attributes: ["id", "title"],
+                through: {
+                  attributes: []
+                },
+                as: "groups",
+                required: true,
+                include: [
+                  {
+                    model: Color,
+                    as: "color",
+                    attributes: ["title"],
+                    required: true
+                  }
+                ]
+              },
+              {
+                model: User,
+                attributes: ["id", "first_name", "last_name", "email", "position"],
+                required: true,
+                as: "user"
+              }
+            ]
+          },
+          {
+            model: Status,
+            as: "status",
+            attributes: ["title"],
+            required: true
+          },
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "first_name", "last_name", "email", "position"],
+            required: true
+          },
+
+          {
+            model: ReportSetup,
+            as: "reportsetup",
+            attributes: ["id"],
+            required: true,
+            include: [
+              {
+                model: Browser,
+                as: "browser",
+                required: false
+              },
+              {
+                model: Environment,
+                as: "environment",
+                required: false
+              },
+              {
+                model: Device,
+                as: "device",
+                required: false
+              },
+              {
+                model: Simulator,
+                as: "simulator",
+                required: false
+              },
+              {
+                model: Version,
+                as: "version",
+                required: false
+              },
+              {
+                model: OperatingSystem,
+                as: "operatingsystem",
+                required: false
+              }
+            ]
+          }
+        ],
+        attributes: ["id", "actual_result", "created_at", "comment", "additional_precondition"],
+        order: [["id", "desc"]]
+      }).then(reportsArr => {
+        if (reportsArr.length == 0) {
+          var page = 1;
+          var pages = 0;
+          var reports = [];
+
+          resolve({ reports, page, pages });
+        } else {
+          var reports = Array();
+
+          var reportsCount = reportsArr.length;
+
+          reportsArr.forEach(report => {
+            var report_obj = {};
+            report_obj.testcase = {};
+            report_obj.id = report.id;
+            report_obj.actual_result = report.actual_result;
+            report_obj.testcase.description = report.testcase.description;
+            report_obj.testcase.preconditions = report.testcase.preconditions;
+            report_obj.testcase.expected_result = report.testcase.expected_result;
+            report_obj.created_at = report.created_at;
+            report_obj.comment = report.comment;
+            report_obj.additional_precondition = report.additional_precondition;
+            report_obj.testcase.id = report.testcase.id;
+            report_obj.testcase.title = report.testcase.title;
+            report_obj.testcase.project_id = report.testcase.project_id;
+            report_obj.status = report.status;
+            report_obj.user = report.user;
+            report_obj.steps = report.steps;
+            report_obj.reportsetup = report.reportsetup;
+            report_obj.testcase.groups = report.testcase.groups;
+            report_obj.testcase.user = report.testcase.user;
+            report_obj.testcase.created_at = report.testcase.created_at;
+            report_obj.links = report.links;
+            report_obj.testcase.links = report.testcase.links;
+
+            reports.push(report_obj);
+            if (reportsCount > 0) {
+              reportsCount = reportsCount - 1;
+            }
+            if (reportsCount == 0) {
+              var page = 1;
+              var pages = 0;
+              if (reports.length > 0) {
+                page = pageNo;
+
+                pages = Math.ceil(count / pageSize);
+              }
+              resolve({ reports, page, pages });
+            }
+          });
         }
       });
     });
