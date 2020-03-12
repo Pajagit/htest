@@ -644,14 +644,7 @@ class Reports extends Component {
                 });
               }}
             />
-            <SearchDropdown
-              value={this.props.filters.selectedStatuses}
-              options={this.state.statuses}
-              onChange={this.selectMultipleOptionStatuses}
-              label={"Status"}
-              placeholder={"Statuses"}
-              multiple={true}
-            />
+
             <SearchDropdown
               value={this.props.filters.selectedGroups}
               options={this.state.projectGroups}
@@ -670,7 +663,14 @@ class Reports extends Component {
               multiple={true}
               numberDisplayed={1}
             />
-
+            <SearchDropdown
+              value={this.props.filters.selectedStatuses}
+              options={this.state.statuses}
+              onChange={this.selectMultipleOptionStatuses}
+              label={"Status"}
+              placeholder={"Statuses"}
+              multiple={true}
+            />
             <SearchDropdown
               value={this.props.filters.selectedDevices}
               options={this.state.projectDevices}
