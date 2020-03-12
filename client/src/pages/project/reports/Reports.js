@@ -474,12 +474,12 @@ class Reports extends Component {
   }
   setFromDate(day) {
     var filters = this.selectedFilters();
-    filters.date_from = moment(day).format("YYYY-MM-DD HH:mm:ss");
+    filters.date_from = moment(day).format("YYYY-MM-DD");
     this.props.getReports(this.props.match.params.projectId, filters);
   }
   setToDate(day) {
     var filters = this.selectedFilters();
-    filters.date_to = moment(day).format("YYYY-MM-DD HH:mm:ss");
+    filters.date_to = moment(day).format("YYYY-MM-DD");
     this.props.getReports(this.props.match.params.projectId, filters);
   }
 
@@ -623,7 +623,7 @@ class Reports extends Component {
               onDayClick={day => {
                 this.setFromDate(day);
                 this.props.editReportSettings(this.props.match.params.projectId, {
-                  date_from: moment(day).format("YYYY-MM-DD HH:mm:ss")
+                  date_from: moment(day).format("YYYY-MM-DD")
                 });
               }}
             />
@@ -640,7 +640,7 @@ class Reports extends Component {
               onDayClick={day => {
                 this.setToDate(day);
                 this.props.editReportSettings(this.props.match.params.projectId, {
-                  date_to: moment(day).format("YYYY-MM-DD HH:mm:ss")
+                  date_to: moment(day).format("YYYY-MM-DD")
                 });
               }}
             />
@@ -1035,17 +1035,13 @@ const filterSelector = createSelector([getSettings, getReportFilterProps], (repo
       dateFrom = report_settings.date_from;
       selectedDateTimestampFrom = moment(report_settings.date_from)._d;
       selectedDateFrom = moment(report_settings.date_from).format(" Do MMM YY");
-      selectedDateFromFormated = moment(report_settings.date_from).format("YYYY-MM-DD HH:mm:ss");
+      selectedDateFromFormated = moment(report_settings.date_from).format("YYYY-MM-DD");
     }
     if (report_settings.date_to) {
       dateTo = report_settings.date_to;
       selectedDateTimestampTo = moment(report_settings.date_to)._d;
       selectedDateTo = moment(report_settings.date_to).format(" Do MMM YY");
-      selectedDateToFormated = moment(report_settings.date_to)
-        .add(21, "hours")
-        .add(59, "minutes")
-        .add(59, "seconds")
-        .format("YYYY-MM-DD HH:mm:ss");
+      selectedDateToFormated = moment(report_settings.date_to).format("YYYY-MM-DD");
     }
     if (report_settings.view_mode) {
       viewMode = report_settings.view_mode;
