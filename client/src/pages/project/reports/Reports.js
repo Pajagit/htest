@@ -259,11 +259,7 @@ class Reports extends Component {
   selectMultipleOptionUsers(value) {
     this.setState({ selectedUsers: value }, () => {
       var testcase = {};
-      testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
       testcase.users = getidsFromObjectArray(this.state.selectedUsers);
-      testcase.date_from = this.props.filters.selectedDateFromFormated;
-      testcase.date_to = this.props.filters.selectedDateToFormated;
-      testcase.search_term = this.state.searchTerm;
       this.props.getReports(
         this.props.match.params.projectId
         // , testcase
@@ -431,21 +427,8 @@ class Reports extends Component {
     var selectedDevices = this.props.filters.selectedDevices.filter(function(item) {
       return item["id"] !== e;
     });
-
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.devices = getidsFromObjectArray(selectedDevices);
-    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
-    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
-    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
-    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
     this.props.getReports(
       this.props.match.params.projectId
       // , testcase
@@ -460,21 +443,8 @@ class Reports extends Component {
     var selectedBrowsers = this.props.filters.selectedBrowsers.filter(function(item) {
       return item["id"] !== e;
     });
-
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
     testcase.browsers = getidsFromObjectArray(selectedBrowsers);
-    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
-    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
-    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
     this.props.getReports(
       this.props.match.params.projectId
       // , testcase
@@ -489,21 +459,8 @@ class Reports extends Component {
     var selectedEnvironments = this.props.filters.selectedEnvironments.filter(function(item) {
       return item["id"] !== e;
     });
-
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
-    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
     testcase.environments = getidsFromObjectArray(selectedEnvironments);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
-    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
-    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
     this.props.getReports(
       this.props.match.params.projectId
       // , testcase
@@ -518,21 +475,8 @@ class Reports extends Component {
     var selectedOperatingsystems = this.props.filters.selectedOperatingsystems.filter(function(item) {
       return item["id"] !== e;
     });
-
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
-    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
     testcase.operatingsystems = getidsFromObjectArray(selectedOperatingsystems);
-    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
-    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
-    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
     this.props.getReports(
       this.props.match.params.projectId
       // , testcase
@@ -546,21 +490,8 @@ class Reports extends Component {
     var selectedVersions = this.props.filters.selectedVersions.filter(function(item) {
       return item["id"] !== e;
     });
-
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
-    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
-    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
     testcase.versions = getidsFromObjectArray(selectedVersions);
-    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
     this.props.getReports(
       this.props.match.params.projectId
       // , testcase
@@ -575,21 +506,8 @@ class Reports extends Component {
     var selectedStatuses = this.props.filters.selectedStatuses.filter(function(item) {
       return item["id"] !== e;
     });
-
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
-    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
-    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
-    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
     testcase.statuses = getidsFromObjectArray(selectedStatuses);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
     this.props.getReports(
       this.props.match.params.projectId
       // , testcase
@@ -604,22 +522,8 @@ class Reports extends Component {
     var selectedSimulators = this.props.filters.selectedSimulators.filter(function(item) {
       return item["id"] !== e;
     });
-
     var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
-    testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
-    testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
-    testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
-    testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
     testcase.simulators = getidsFromObjectArray(selectedSimulators);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
     this.props.getReports(
       this.props.match.params.projectId
       // , testcase
@@ -804,11 +708,11 @@ class Reports extends Component {
         <Tag title={"Reset all"} color={"RESET_COLOR"} isRemovable={true} onClickRemove={e => this.resetFilters()} />
       );
     }
-    var filters = <div className="padding"></div>;
+    var filters = <div className='padding'></div>;
     if (this.props.filters.showFilters) {
       filters = (
         <div>
-          <div className="testcase-grid">
+          <div className='testcase-grid'>
             <Datepicker
               forwardRef={node => (this.node = node)}
               showdatepicker={this.state.showDatepickerFrom}
@@ -867,7 +771,7 @@ class Reports extends Component {
               label={"Select User"}
               placeholder={"Users"}
               multiple={true}
-              numberDisplayed={2}
+              numberDisplayed={1}
             />
 
             <SearchDropdown
@@ -920,7 +824,7 @@ class Reports extends Component {
             />
           </div>
 
-          <div className="active-filter-container">
+          <div className='active-filter-container'>
             {this.props.filters.selectedGroups &&
               this.props.filters.selectedGroups.map((group, index) => (
                 <Tag
@@ -1022,26 +926,26 @@ class Reports extends Component {
 
     if (!this.state.listViewActivity) {
       var listView = (
-        <div className="view-options">
+        <div className='view-options'>
           <div
             className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
             onClick={e => this.setViewList(e)}
           >
-            <i className="fas fa-bars "></i>
+            <i className='fas fa-bars '></i>
           </div>
           <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
-            <i className="fas fa-th "></i>
+            <i className='fas fa-th '></i>
           </div>
         </div>
       );
     }
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className="main-content main-content-grid">
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fas fa-file-alt"></i>}
+            icon={<i className='fas fa-file-alt'></i>}
             title={"Reports"}
             canGoBack={false}
             filterBtn={
