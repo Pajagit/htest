@@ -24,7 +24,7 @@ import successToast from "../../../toast/successToast";
 import failToast from "../../../toast/failToast";
 
 import { getTestcase } from "../../../actions/testcaseActions";
-import { getTestcaseSetup } from "../../../actions/testcaseSetup";
+import { getReportFilters } from "../../../actions/filterActions";
 import { getDevices } from "../../../actions/deviceActions";
 import { getBrowsers } from "../../../actions/browserActions";
 import { getVersions } from "../../../actions/versionAction";
@@ -99,7 +99,7 @@ class NewReport extends Component {
   componentDidMount() {
     var testcaseId = this.props.match.params.testcaseId;
     this.props.getTestcase(testcaseId);
-    this.props.getTestcaseSetup(testcaseId);
+    this.props.getReportFilters(testcaseId);
     this.props.getStatuses();
     this.interval = setInterval(this.updateCurrentTime.bind(this), 1000);
   }
@@ -636,7 +636,7 @@ export default connect(mapStateToProps, {
   getDevices,
   getBrowsers,
   getVersions,
-  getTestcaseSetup,
+  getReportFilters,
   getEnvironments,
   getStatuses,
   getOperatingSystems,

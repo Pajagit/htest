@@ -10,21 +10,14 @@ import FilterBtn from "../../../components/common/FilterBtn";
 import Header from "../../../components/common/Header";
 import SearchBtn from "../../../components/common/SearchBtn";
 import ReportCointainer from "../../../components/reports/ReportCointainer";
-import { getGroups } from "../../../actions/groupsActions";
-import { getUsers } from "../../../actions/userActions";
 import {
   getReportSettings,
   editReportSettings,
   getTestcaseSettings,
   clearReportSettings
 } from "../../../actions/settingsActions";
-import { getStatuses } from "../../../actions/statusActions";
-import { getDevices } from "../../../actions/deviceActions";
-import { getEnvironments } from "../../../actions/environmentActions";
-import { getVersions } from "../../../actions/versionAction";
-import { getBrowsers } from "../../../actions/browserActions";
-import { getSimulators } from "../../../actions/simulatorActions";
-import { getOperatingSystems } from "../../../actions/osActions";
+
+import { getReportFilters } from "../../../actions/filterActions";
 import { writePermissions, projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import { getReports } from "../../../actions/reportActions";
 import getidsFromObjectArray from "../../../utility/getIdsFromObjArray";
@@ -53,7 +46,7 @@ class Reports extends Component {
       projectBrowsers: [],
       projectVersions: [],
       projectSimulators: [],
-      projectOss: [],
+      projectOperatingsystems: [],
       statuses: [],
       showDatepickerFrom: false,
       activeDateFrom: "",
@@ -104,47 +97,84 @@ class Reports extends Component {
       );
 
       var usersWithTestcases = [];
-      if (nextProps.users && nextProps.users.users) {
-        if (nextProps.users.users !== prevState.users) {
-          nextProps.users.users.map(function(item) {
-            return usersWithTestcases.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
-          });
-          update.usersWithTestcases = usersWithTestcases;
-        }
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.users
+      ) {
+        nextProps.report_filters.report_filters.users.map(function(item) {
+          return usersWithTestcases.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
+        });
+        update.usersWithTestcases = usersWithTestcases;
       }
+
       if (nextProps.filters && nextProps.filters.searchTerm && !prevState.initialLoad) {
         if (nextProps.filters.searchTerm !== prevState.searchTerm) {
           update.initialLoad = true;
           update.searchTerm = nextProps.filters.searchTerm;
         }
       }
-      if (nextProps.statuses && nextProps.statuses.statuses) {
-        update.statuses = nextProps.statuses.statuses;
-      }
-      if (nextProps.groups && nextProps.groups.groups) {
-        update.projectGroups = nextProps.groups.groups;
-      }
-      if (nextProps.devices && nextProps.devices.devices) {
-        update.projectDevices = nextProps.devices.devices.devices;
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.statuses
+      ) {
+        update.statuses = nextProps.report_filters.report_filters.statuses;
       }
 
-      if (nextProps.browsers && nextProps.browsers.browsers) {
-        update.projectBrowsers = nextProps.browsers.browsers.browsers;
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.groups
+      ) {
+        update.projectGroups = nextProps.report_filters.report_filters.groups;
       }
-      if (nextProps.simulators && nextProps.simulators.simulators) {
-        update.projectSimulators = nextProps.simulators.simulators.simulators;
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.devices
+      ) {
+        update.projectDevices = nextProps.report_filters.report_filters.devices;
       }
-      if (nextProps.oss && nextProps.oss.oss) {
-        update.projectOss = nextProps.oss.oss.oss;
+
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.browsers
+      ) {
+        update.projectBrowsers = nextProps.report_filters.report_filters.browsers;
       }
-      if (nextProps.environments && nextProps.environments.environments) {
-        update.projectEnvironments = nextProps.environments.environments.environments;
+
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.environments
+      ) {
+        update.projectEnvironments = nextProps.report_filters.report_filters.environments;
       }
-      if (nextProps.versions && nextProps.versions.versions) {
-        const mappedVersions = nextProps.versions.versions.versions.map(function(row) {
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.simulators
+      ) {
+        update.projectSimulators = nextProps.report_filters.report_filters.simulators;
+      }
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.operatingsystems
+      ) {
+        update.projectOperatingsystems = nextProps.report_filters.report_filters.operatingsystems;
+      }
+
+      if (
+        nextProps.report_filters &&
+        nextProps.report_filters.report_filters &&
+        nextProps.report_filters.report_filters.versions
+      ) {
+        const mappedVersions = nextProps.report_filters.report_filters.versions.map(function(row) {
           return { id: row.id, title: row.version, used: row.used };
         });
-
         update.projectVersions = mappedVersions;
       }
     }
@@ -156,18 +186,8 @@ class Reports extends Component {
     document.addEventListener("mousedown", this.handleClick, false);
     if (this.state.isValid) {
       var projectId = this.props.match.params.projectId;
-      this.props.getGroups(projectId);
-      this.props.getBrowsers(projectId);
-      this.props.getOperatingSystems(projectId);
-      this.props.getStatuses();
-      this.props.getEnvironments(projectId);
-      this.props.getVersions(projectId);
-      this.props.getSimulators(projectId);
-      this.props.getDevices(null, projectId);
-      var has_testcases = true;
-      this.props.getUsers(has_testcases, projectId);
+      this.props.getReportFilters(projectId);
       this.props.getReportSettings(this.props.match.params.projectId);
-
       this.updateWindowDimensions();
       window.addEventListener("resize", this.updateWindowDimensions);
     }
@@ -299,9 +319,9 @@ class Reports extends Component {
   }
 
   selectMultipleOptionOss(value) {
-    this.setState({ selectedOss: value }, () => {
+    this.setState({ selectedOperatingsystems: value }, () => {
       var testcase = {};
-      testcase.operatingsystems = getidsFromObjectArray(this.state.selectedOss);
+      testcase.operatingsystems = getidsFromObjectArray(this.state.selectedOperatingsystems);
       this.props.getReports(
         this.props.match.params.projectId
         // , testcase
@@ -418,7 +438,7 @@ class Reports extends Component {
     testcase.devices = getidsFromObjectArray(selectedDevices);
     testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
     testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
     testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
     testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
     testcase.date_from =
@@ -447,7 +467,7 @@ class Reports extends Component {
     testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
     testcase.browsers = getidsFromObjectArray(selectedBrowsers);
     testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
     testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
     testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
     testcase.date_from =
@@ -476,7 +496,7 @@ class Reports extends Component {
     testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
     testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
     testcase.environments = getidsFromObjectArray(selectedEnvironments);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
     testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
     testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
     testcase.date_from =
@@ -495,7 +515,7 @@ class Reports extends Component {
   }
 
   removeOs(e) {
-    var selectedOss = this.props.filters.selectedOss.filter(function(item) {
+    var selectedOperatingsystems = this.props.filters.selectedOperatingsystems.filter(function(item) {
       return item["id"] !== e;
     });
 
@@ -504,7 +524,7 @@ class Reports extends Component {
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
     testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
-    testcase.operatingsystems = getidsFromObjectArray(selectedOss);
+    testcase.operatingsystems = getidsFromObjectArray(selectedOperatingsystems);
     testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
     testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
     testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
@@ -518,7 +538,7 @@ class Reports extends Component {
       // , testcase
     );
 
-    this.setState({ selectedOss }, () => {
+    this.setState({ selectedOperatingsystems }, () => {
       this.props.editReportSettings(this.props.match.params.projectId, testcase);
     });
   }
@@ -532,7 +552,7 @@ class Reports extends Component {
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
     testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
     testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
     testcase.versions = getidsFromObjectArray(selectedVersions);
     testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
@@ -561,7 +581,7 @@ class Reports extends Component {
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
     testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
     testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
     testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
     testcase.statuses = getidsFromObjectArray(selectedStatuses);
@@ -590,7 +610,7 @@ class Reports extends Component {
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
     testcase.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
-    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOss);
+    testcase.operatingsystems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
     testcase.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
     testcase.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
     testcase.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
@@ -707,6 +727,7 @@ class Reports extends Component {
   }
   disableListView() {
     var view_mode = 1;
+
     this.props.editReportSettings(this.props.match.params.projectId, { view_mode });
     this.setState({ listViewActivity: "disabled", disabledAlready: true });
   }
@@ -770,7 +791,7 @@ class Reports extends Component {
       !isEmpty(this.props.filters.selectedDevices) ||
       !isEmpty(this.props.filters.selectedSimulators) ||
       !isEmpty(this.props.filters.selectedBrowsers) ||
-      !isEmpty(this.props.filters.selectedOss) ||
+      !isEmpty(this.props.filters.selectedOperatingsystems) ||
       !isEmpty(this.props.filters.selectedEnvironments) ||
       !isEmpty(this.props.filters.selectedVersions) ||
       !isEmpty(this.props.filters.selectedUsers) ||
@@ -783,11 +804,11 @@ class Reports extends Component {
         <Tag title={"Reset all"} color={"RESET_COLOR"} isRemovable={true} onClickRemove={e => this.resetFilters()} />
       );
     }
-    var filters = <div className='padding'></div>;
+    var filters = <div className="padding"></div>;
     if (this.props.filters.showFilters) {
       filters = (
         <div>
-          <div className='testcase-grid'>
+          <div className="testcase-grid">
             <Datepicker
               forwardRef={node => (this.node = node)}
               showdatepicker={this.state.showDatepickerFrom}
@@ -866,8 +887,8 @@ class Reports extends Component {
               multiple={true}
             />
             <SearchDropdown
-              value={this.props.filters.selectedOss}
-              options={this.state.projectOss}
+              value={this.props.filters.selectedOperatingsystems}
+              options={this.state.projectOperatingsystems}
               onChange={this.selectMultipleOptionOss}
               label={"Operating System"}
               placeholder={"Operating Systems"}
@@ -899,7 +920,7 @@ class Reports extends Component {
             />
           </div>
 
-          <div className='active-filter-container'>
+          <div className="active-filter-container">
             {this.props.filters.selectedGroups &&
               this.props.filters.selectedGroups.map((group, index) => (
                 <Tag
@@ -940,8 +961,8 @@ class Reports extends Component {
                   onClickRemove={e => this.removeBrowser(browser.id)}
                 />
               ))}
-            {this.props.filters.selectedOss &&
-              this.props.filters.selectedOss.map((os, index) => (
+            {this.props.filters.selectedOperatingsystems &&
+              this.props.filters.selectedOperatingsystems.map((os, index) => (
                 <Tag
                   key={index}
                   title={os.title}
@@ -1001,26 +1022,26 @@ class Reports extends Component {
 
     if (!this.state.listViewActivity) {
       var listView = (
-        <div className='view-options'>
+        <div className="view-options">
           <div
             className={`view-options--list ${this.state.listViewActivity} clickable ${viewOptionListClass}`}
             onClick={e => this.setViewList(e)}
           >
-            <i className='fas fa-bars '></i>
+            <i className="fas fa-bars "></i>
           </div>
           <div className={`view-options--grid clickable ${viewOptionGridClass}`} onClick={e => this.setViewGrid(e)}>
-            <i className='fas fa-th '></i>
+            <i className="fas fa-th "></i>
           </div>
         </div>
       );
     }
     return (
-      <div className='wrapper'>
+      <div className="wrapper">
         <GlobalPanel props={this.props} />
         <ProjectPanel projectId={this.props.match.params.projectId} />
-        <div className='main-content main-content-grid'>
+        <div className="main-content main-content-grid">
           <Header
-            icon={<i className='fas fa-file-alt'></i>}
+            icon={<i className="fas fa-file-alt"></i>}
             title={"Reports"}
             canGoBack={false}
             filterBtn={
@@ -1051,283 +1072,226 @@ class Reports extends Component {
 }
 
 Reports.propTypes = {
-  testcases: PropTypes.object.isRequired,
-  users: PropTypes.object.isRequired
+  testcases: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   testcases: state.testcases,
   filters: filterSelector(state),
-  groups: state.groups,
-  browsers: state.browsers,
-  statuses: state.statuses,
-  versions: state.versions,
-  users: state.users,
-  simulators: state.simulators,
-  devices: state.devices,
-  oss: state.oss,
-  environments: state.environments,
+  report_filters: state.filters,
   settings: state.settings,
   auth: state.auth
 });
 
 export default connect(mapStateToProps, {
-  getGroups,
-  getUsers,
   getReportSettings,
-  getDevices,
-  getBrowsers,
-  getSimulators,
-  getOperatingSystems,
+  getReportFilters,
   getTestcaseSettings,
-  getEnvironments,
-  getVersions,
   editReportSettings,
   getReports,
-  getStatuses,
   clearReportSettings
 })(withRouter(Reports));
 
 const getSettings = state => state.settings.report_settings;
-const getUsersProps = state => state.users;
-const getGroupsProps = state => state.groups;
-const getDeviceProps = state => state.devices;
-const getBrowserProps = state => state.browsers;
-const getSimulatorProps = state => state.simulators;
-const getStatusProps = state => state.statuses;
-const getEnvironmentProps = state => state.environments;
-const getOsProps = state => state.oss;
-const getVersionProps = state => state.versions;
+const getReportFilterProps = state => state.filters.report_filters;
 
-const filterSelector = createSelector(
-  [
-    getSettings,
-    getUsersProps,
-    getGroupsProps,
-    getDeviceProps,
-    getBrowserProps,
-    getOsProps,
-    getEnvironmentProps,
-    getVersionProps,
-    getStatusProps,
-    getSimulatorProps
-  ],
-  (report_settings, users, groups, devices, browsers, oss, environments, versions, statuses, simulators) => {
-    var dateFrom = "";
-    var selectedDateTimestampFrom = "";
-    var selectedDateFrom = "";
-    var selectedDateFromFormated = "";
+const filterSelector = createSelector([getSettings, getReportFilterProps], (report_settings, report_filters) => {
+  var dateFrom = "";
+  var selectedDateTimestampFrom = "";
+  var selectedDateFrom = "";
+  var selectedDateFromFormated = "";
 
-    var dateTo = "";
-    var selectedDateTimestampTo = "";
-    var selectedDateTo = "";
-    var selectedDateToFormated = "";
+  var dateTo = "";
+  var selectedDateTimestampTo = "";
+  var selectedDateTo = "";
+  var selectedDateToFormated = "";
 
-    var viewMode = 1;
-    var showFilters = true;
-    var searchTerm = "";
+  var viewMode = 1;
+  var showFilters = true;
+  var searchTerm = "";
+  var selectedUsers = [];
+  var selectedDevices = [];
+  var selectedBrowsers = [];
+  var selectedOperatingsystems = [];
+  var selectedEnvironments = [];
+  var selectedGroups = [];
+  var selectedSimulators = [];
+  var selectedVersions = [];
+  var selectedStatuses = [];
 
-    var selectedUsers = [];
-    var selectedDevices = [];
-    var selectedBrowsers = [];
-    var selectedOss = [];
-    var selectedEnvironments = [];
-    var selectedGroups = [];
-    var selectedSimulators = [];
-    var selectedVersions = [];
-    var selectedStatuses = [];
+  var activeFilters = false;
 
-    var activeFilters = false;
-
-    if (report_settings) {
-      if (devices) {
-        if (devices.devices) {
-          selectedDevices = [];
-          devices.devices.devices.map(function(item) {
-            if (report_settings && report_settings.devices) {
-              if (report_settings.devices.includes(item.id)) {
-                selectedDevices.push({ id: item.id, title: item.title });
-              }
-            }
-            return selectedDevices;
-          });
+  if (report_settings && report_filters) {
+    if (report_filters.devices) {
+      selectedDevices = [];
+      report_filters.devices.map(function(item) {
+        if (report_settings && report_settings.devices) {
+          if (report_settings.devices.includes(item.id)) {
+            selectedDevices.push({ id: item.id, title: item.title });
+          }
         }
-      }
-
-      if (browsers) {
-        if (browsers.browsers) {
-          selectedBrowsers = [];
-          browsers.browsers.browsers.map(function(item) {
-            if (report_settings && report_settings.browsers) {
-              if (report_settings.browsers.includes(item.id)) {
-                selectedBrowsers.push({ id: item.id, title: item.title });
-              }
-            }
-            return selectedBrowsers;
-          });
-        }
-      }
-      if (simulators) {
-        if (simulators.simulators) {
-          selectedSimulators = [];
-          simulators.simulators.simulators.map(function(item) {
-            if (report_settings && report_settings.simulators) {
-              if (report_settings.simulators.includes(item.id)) {
-                selectedSimulators.push({ id: item.id, title: item.title });
-              }
-            }
-            return selectedSimulators;
-          });
-        }
-      }
-
-      if (statuses) {
-        if (statuses.statuses) {
-          selectedStatuses = [];
-          statuses.statuses.map(function(item) {
-            if (report_settings && report_settings.statuses) {
-              if (report_settings.statuses.includes(item.id)) {
-                selectedStatuses.push({ id: item.id, title: item.title });
-              }
-            }
-            return selectedStatuses;
-          });
-        }
-      }
-
-      if (versions) {
-        if (versions.versions) {
-          selectedVersions = [];
-          versions.versions.versions.map(function(item) {
-            if (report_settings && report_settings.versions) {
-              if (report_settings.versions.includes(item.id)) {
-                selectedVersions.push({ id: item.id, title: item.version });
-              }
-            }
-            return selectedVersions;
-          });
-        }
-      }
-
-      if (environments) {
-        if (environments.environments) {
-          selectedEnvironments = [];
-          environments.environments.environments.map(function(item) {
-            if (report_settings && report_settings.environments) {
-              if (report_settings.environments.includes(item.id)) {
-                selectedEnvironments.push({ id: item.id, title: item.title });
-              }
-            }
-            return selectedEnvironments;
-          });
-        }
-      }
-
-      if (oss) {
-        if (oss.oss) {
-          selectedOss = [];
-          oss.oss.oss.map(function(item) {
-            if (report_settings && report_settings.operatingsystems) {
-              if (report_settings.operatingsystems.includes(item.id)) {
-                selectedOss.push({ id: item.id, title: item.title });
-              }
-            }
-            return selectedOss;
-          });
-        }
-      }
-      if (groups) {
-        if (groups.groups) {
-          selectedGroups = [];
-          groups.groups.map(function(item) {
-            if (report_settings && report_settings.groups) {
-              if (report_settings.groups.includes(item.id)) {
-                selectedGroups.push({ id: item.id, title: item.title, color: item.color });
-              }
-            }
-            return selectedGroups;
-          });
-        }
-      }
-
-      if (users) {
-        if (users.users) {
-          var selectedUsersObjects = [];
-          users.users.map(function(item) {
-            if (report_settings && report_settings.users) {
-              if (report_settings.users.includes(item.id)) {
-                selectedUsersObjects.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
-              }
-            }
-            return selectedUsersObjects;
-          });
-          selectedUsers = selectedUsersObjects;
-        }
-      }
-
-      if (report_settings.date_from) {
-        dateFrom = report_settings.date_from;
-        selectedDateTimestampFrom = moment(report_settings.date_from)._d;
-        selectedDateFrom = moment(report_settings.date_from).format(" Do MMM YY");
-        selectedDateFromFormated = moment(report_settings.date_from).format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (report_settings.date_to) {
-        dateTo = report_settings.date_to;
-        selectedDateTimestampTo = moment(report_settings.date_to)._d;
-        selectedDateTo = moment(report_settings.date_to).format(" Do MMM YY");
-        selectedDateToFormated = moment(report_settings.date_to)
-          .add(21, "hours")
-          .add(59, "minutes")
-          .add(59, "seconds")
-          .format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (report_settings.view_mode) {
-        viewMode = report_settings.view_mode;
-      }
-      showFilters = report_settings.show_filters;
-      if (report_settings.search_term !== null) {
-        searchTerm = report_settings.search_term;
-      }
-
-      if (
-        !isEmpty(selectedUsers) ||
-        !isEmpty(selectedGroups) ||
-        selectedDateTimestampFrom !== "" ||
-        selectedDateTimestampTo !== "" ||
-        !isEmpty(selectedStatuses) ||
-        !isEmpty(selectedDevices) ||
-        !isEmpty(selectedSimulators) ||
-        !isEmpty(selectedBrowsers) ||
-        !isEmpty(selectedOss) ||
-        !isEmpty(selectedEnvironments) ||
-        !isEmpty(selectedVersions)
-      ) {
-        activeFilters = true;
-      }
-      return {
-        dateFrom,
-        selectedDateTimestampFrom,
-        selectedDateFrom,
-        dateTo,
-        selectedDateTimestampTo,
-        selectedDateTo,
-        viewMode,
-        showFilters,
-        searchTerm,
-        selectedUsers,
-        selectedGroups,
-        selectedDevices,
-        selectedEnvironments,
-        selectedSimulators,
-        selectedOss,
-        selectedVersions,
-        selectedStatuses,
-        selectedBrowsers,
-        activeFilters,
-        selectedDateFromFormated,
-        selectedDateToFormated
-      };
+        return selectedDevices;
+      });
     }
-    return {};
+
+    if (report_filters.browsers) {
+      selectedBrowsers = [];
+      report_filters.browsers.map(function(item) {
+        if (report_settings && report_settings.browsers) {
+          if (report_settings.browsers.includes(item.id)) {
+            selectedBrowsers.push({ id: item.id, title: item.title });
+          }
+        }
+        return selectedBrowsers;
+      });
+    }
+
+    if (report_filters.environments) {
+      selectedEnvironments = [];
+      report_filters.environments.map(function(item) {
+        if (report_settings && report_settings.environments) {
+          if (report_settings.environments.includes(item.id)) {
+            selectedEnvironments.push({ id: item.id, title: item.title });
+          }
+        }
+        return selectedEnvironments;
+      });
+    }
+
+    if (report_filters.simulators) {
+      selectedSimulators = [];
+      report_filters.simulators.map(function(item) {
+        if (report_settings && report_settings.simulators) {
+          if (report_settings.simulators.includes(item.id)) {
+            selectedSimulators.push({ id: item.id, title: item.title });
+          }
+        }
+        return selectedSimulators;
+      });
+    }
+
+    if (report_filters.statuses) {
+      selectedStatuses = [];
+      report_filters.statuses.map(function(item) {
+        if (report_settings && report_settings.statuses) {
+          if (report_settings.statuses.includes(item.id)) {
+            selectedStatuses.push({ id: item.id, title: item.title });
+          }
+        }
+        return selectedStatuses;
+      });
+    }
+
+    if (report_filters.versions) {
+      selectedVersions = [];
+      report_filters.versions.map(function(item) {
+        if (report_settings && report_settings.versions) {
+          if (report_settings.versions.includes(item.id)) {
+            selectedVersions.push({ id: item.id, title: item.version });
+          }
+        }
+        return selectedVersions;
+      });
+    }
+
+    if (report_filters.operatingsystems) {
+      selectedOperatingsystems = [];
+      report_filters.operatingsystems.map(function(item) {
+        if (report_settings && report_settings.operatingsystems) {
+          if (report_settings.operatingsystems.includes(item.id)) {
+            selectedOperatingsystems.push({ id: item.id, title: item.title });
+          }
+        }
+        return selectedOperatingsystems;
+      });
+    }
+    if (report_filters.users) {
+      var selectedUsersObjects = [];
+      report_filters.users.map(function(item) {
+        if (report_settings && report_settings.users) {
+          if (report_settings.users.includes(item.id)) {
+            selectedUsersObjects.push({ id: item.id, title: `${item.first_name} ${item.last_name}` });
+          }
+        }
+        return selectedUsersObjects;
+      });
+      selectedUsers = selectedUsersObjects;
+    }
+
+    if (report_filters.groups) {
+      selectedGroups = [];
+      report_filters.groups.map(function(item) {
+        if (report_settings && report_settings.groups) {
+          if (report_settings.groups.includes(item.id)) {
+            selectedGroups.push({ id: item.id, title: item.title, color: item.color });
+          }
+        }
+        return selectedGroups;
+      });
+    }
+
+    if (report_settings.date_from) {
+      dateFrom = report_settings.date_from;
+      selectedDateTimestampFrom = moment(report_settings.date_from)._d;
+      selectedDateFrom = moment(report_settings.date_from).format(" Do MMM YY");
+      selectedDateFromFormated = moment(report_settings.date_from).format("YYYY-MM-DD HH:mm:ss");
+    }
+    if (report_settings.date_to) {
+      dateTo = report_settings.date_to;
+      selectedDateTimestampTo = moment(report_settings.date_to)._d;
+      selectedDateTo = moment(report_settings.date_to).format(" Do MMM YY");
+      selectedDateToFormated = moment(report_settings.date_to)
+        .add(21, "hours")
+        .add(59, "minutes")
+        .add(59, "seconds")
+        .format("YYYY-MM-DD HH:mm:ss");
+    }
+    if (report_settings.view_mode) {
+      viewMode = report_settings.view_mode;
+    }
+    showFilters = report_settings.show_filters;
+    if (report_settings.search_term !== null) {
+      searchTerm = report_settings.search_term;
+    }
+
+    if (
+      !isEmpty(selectedUsers) ||
+      !isEmpty(selectedGroups) ||
+      selectedDateTimestampFrom !== "" ||
+      selectedDateTimestampTo !== "" ||
+      !isEmpty(selectedStatuses) ||
+      !isEmpty(selectedDevices) ||
+      !isEmpty(selectedSimulators) ||
+      !isEmpty(selectedBrowsers) ||
+      !isEmpty(selectedOperatingsystems) ||
+      !isEmpty(selectedEnvironments) ||
+      !isEmpty(selectedVersions)
+    ) {
+      activeFilters = true;
+    }
+    return {
+      dateFrom,
+      selectedDateTimestampFrom,
+      selectedDateFrom,
+      dateTo,
+      selectedDateTimestampTo,
+      selectedDateTo,
+      viewMode,
+      showFilters,
+      searchTerm,
+      selectedUsers,
+      selectedGroups,
+      selectedDevices,
+      selectedEnvironments,
+      selectedSimulators,
+      selectedOperatingsystems,
+      selectedVersions,
+      selectedStatuses,
+      selectedBrowsers,
+      activeFilters,
+      selectedDateFromFormated,
+      selectedDateToFormated
+    };
   }
-);
+  return {};
+});
