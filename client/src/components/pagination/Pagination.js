@@ -37,7 +37,7 @@ class Pagination extends Component {
   }
   newPage(e) {
     var page = 1;
-    var currentPage = this.props.page;
+    var currentPage = parseInt(this.props.page);
     if (e === 0) {
       page = 1;
     } else if (e === 1) {
@@ -54,7 +54,7 @@ class Pagination extends Component {
     } else if (this.props.match.url === `/${this.state.projectId}/TestCases`) {
       this.props.getTestcases(this.state.projectId, this.props.settings.settings, page);
     } else if (this.props.match.url === `/${this.state.projectId}/Reports`) {
-      this.props.getReports(this.state.projectId, page, 15);
+      this.props.getReports(this.state.projectId, this.props.settings.settings, page);
     }
   }
   newPagePredefined(e) {
@@ -67,7 +67,7 @@ class Pagination extends Component {
     } else if (this.props.match.url === `/${this.state.projectId}/TestCases`) {
       this.props.getTestcases(this.state.projectId, this.props.settings.settings, page);
     } else if (this.props.match.url === `/${this.state.projectId}/Reports`) {
-      this.props.getReports(this.state.projectId, page, 15);
+      this.props.getReports(this.state.projectId, this.props.settings.settings, page);
     }
   }
 
