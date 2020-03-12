@@ -36,7 +36,7 @@ class ReportContainer extends Component {
         if (prevState.initialRender) {
           update.initialRender = false;
 
-          nextProps.getReports(nextProps.match.params.projectId);
+          nextProps.getReports(nextProps.match.params.projectId, nextProps.settings.report_settings, 1);
         }
       }
     }
@@ -109,7 +109,7 @@ class ReportContainer extends Component {
           <React.Fragment key={index}>
             <PortraitReport
               title={report.testcase.title}
-              tags={report.groups.map((group, groupIndex) => (
+              tags={report.testcase.groups.map((group, groupIndex) => (
                 <React.Fragment key={groupIndex}>
                   <Tag title={group.title} color={group.color.title} isRemovable={false} />
                 </React.Fragment>

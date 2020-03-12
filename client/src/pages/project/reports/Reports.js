@@ -224,18 +224,9 @@ class Reports extends Component {
   };
 
   triggerChange = e => {
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = this.state.searchTerm;
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    var filters = this.selectedFilters();
+    filters.search_term = this.state.searchTerm;
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.props.editReportSettings(this.props.match.params.projectId, { search_term: this.state.searchTerm });
   };
@@ -255,369 +246,275 @@ class Reports extends Component {
   handleClickOutside() {
     this.setState({ showDatepickerFrom: false, showDatepickerTo: false });
   }
-
+  selectedFilters() {
+    var filters = {};
+    if (!isEmpty(this.props.filters)) {
+      filters.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
+      filters.users = getidsFromObjectArray(this.props.filters.selectedUsers);
+      filters.date_from =
+        this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
+      filters.date_to =
+        this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
+      filters.search_term = this.state.searchTerm;
+      filters.statuses = getidsFromObjectArray(this.props.filters.selectedStatuses);
+      filters.devices = getidsFromObjectArray(this.props.filters.selectedDevices);
+      filters.simulators = getidsFromObjectArray(this.props.filters.selectedSimulators);
+      filters.browsers = getidsFromObjectArray(this.props.filters.selectedBrowsers);
+      filters.operating_systems = getidsFromObjectArray(this.props.filters.selectedOperatingsystems);
+      filters.environments = getidsFromObjectArray(this.props.filters.selectedEnvironments);
+      filters.versions = getidsFromObjectArray(this.props.filters.selectedVersions);
+      return filters;
+    }
+  }
   selectMultipleOptionUsers(value) {
     this.setState({ selectedUsers: value }, () => {
-      var testcase = {};
-      testcase.users = getidsFromObjectArray(this.state.selectedUsers);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { users: testcase.users });
+      var filters = this.selectedFilters();
+      filters.users = getidsFromObjectArray(this.state.selectedUsers);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { users: filters.users });
     });
   }
 
   selectMultipleOptionGroups(value) {
     this.setState({ selectedGroups: value }, () => {
-      var testcase = {};
-      testcase.groups = getidsFromObjectArray(this.state.selectedGroups);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { groups: testcase.groups });
+      var filters = this.selectedFilters();
+      filters.groups = getidsFromObjectArray(this.state.selectedGroups);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { groups: filters.groups });
     });
   }
   selectMultipleOptionStatuses(value) {
     this.setState({ selectedStatuses: value }, () => {
-      var testcase = {};
-      testcase.statuses = getidsFromObjectArray(this.state.selectedStatuses);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { statuses: testcase.statuses });
+      var filters = this.selectedFilters();
+      filters.statuses = getidsFromObjectArray(this.state.selectedStatuses);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { statuses: filters.statuses });
     });
   }
 
   selectMultipleOptionDevices(value) {
     this.setState({ selectedDevices: value }, () => {
-      var testcase = {};
-      testcase.devices = getidsFromObjectArray(this.state.selectedDevices);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { devices: testcase.devices });
+      var filters = this.selectedFilters();
+      filters.devices = getidsFromObjectArray(this.state.selectedDevices);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { devices: filters.devices });
     });
   }
   selectMultipleOptionBrowsers(value) {
     this.setState({ selectedBrowsers: value }, () => {
-      var testcase = {};
-      testcase.browsers = getidsFromObjectArray(this.state.selectedBrowsers);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { browsers: testcase.browsers });
+      var filters = this.selectedFilters();
+      filters.browsers = getidsFromObjectArray(this.state.selectedBrowsers);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { browsers: filters.browsers });
     });
   }
 
   selectMultipleOptionOss(value) {
     this.setState({ selectedOperatingsystems: value }, () => {
-      var testcase = {};
-      testcase.operatingsystems = getidsFromObjectArray(this.state.selectedOperatingsystems);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { operatingsystems: testcase.operatingsystems });
+      var filters = this.selectedFilters();
+      filters.operating_systems = getidsFromObjectArray(this.state.selectedOperatingsystems);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { operatingsystems: filters.operating_systems });
     });
   }
 
   selectMultipleOptionEnvironments(value) {
     this.setState({ selectedEnvironments: value }, () => {
-      var testcase = {};
-      testcase.environments = getidsFromObjectArray(this.state.selectedEnvironments);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { environments: testcase.environments });
+      var filters = this.selectedFilters();
+      filters.environments = getidsFromObjectArray(this.state.selectedEnvironments);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { environments: filters.environments });
     });
   }
 
   selectMultipleOptionVersions(value) {
     this.setState({ selectedVersions: value }, () => {
-      var testcase = {};
-      testcase.versions = getidsFromObjectArray(this.state.selectedVersions);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { versions: testcase.versions });
+      var filters = this.selectedFilters();
+      filters.versions = getidsFromObjectArray(this.state.selectedVersions);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { versions: filters.versions });
     });
   }
   selectMultipleOptionSimulators(value) {
     this.setState({ selectedSimulators: value }, () => {
-      var testcase = {};
-      testcase.simulators = getidsFromObjectArray(this.state.selectedSimulators);
-      this.props.getReports(
-        this.props.match.params.projectId
-        // , testcase
-      );
-      this.props.editReportSettings(this.props.match.params.projectId, { simulators: testcase.simulators });
+      var filters = this.selectedFilters();
+      filters.simulators = getidsFromObjectArray(this.state.selectedSimulators);
+      this.props.getReports(this.props.match.params.projectId, filters);
+      this.props.editReportSettings(this.props.match.params.projectId, { simulators: filters.simulators });
     });
   }
 
   removeSearchTerm() {
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
-
-    this.props.editReportSettings(this.props.match.params.projectId, { search_term: null });
+    this.props.getReports(this.props.match.params.projectId);
+    var filters = this.selectedFilters();
+    filters.search_term = null;
+    this.props.editReportSettings(this.props.match.params.projectId, filters);
     this.setState({ searchTerm: "" });
   }
   removeGroupFilter(e) {
+    var filters = this.selectedFilters();
     var groups = this.props.filters.selectedGroups.filter(function(item) {
       return item["id"] !== e;
     });
-
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(groups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = this.state.searchTerm;
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.groups = getidsFromObjectArray(groups);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedGroups: groups }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
   removeUser(e) {
+    var filters = this.selectedFilters();
     var selectedUsers = this.state.selectedUsers.filter(function(item) {
       return item["id"] !== e;
     });
-
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(selectedUsers);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.users = getidsFromObjectArray(selectedUsers);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedUsers }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
 
   removeDevice(e) {
+    var filters = this.selectedFilters();
     var selectedDevices = this.props.filters.selectedDevices.filter(function(item) {
       return item["id"] !== e;
     });
-    var testcase = {};
-    testcase.devices = getidsFromObjectArray(selectedDevices);
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.devices = getidsFromObjectArray(selectedDevices);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedDevices }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
 
   removeBrowser(e) {
+    var filters = this.selectedFilters();
     var selectedBrowsers = this.props.filters.selectedBrowsers.filter(function(item) {
       return item["id"] !== e;
     });
-    var testcase = {};
-    testcase.browsers = getidsFromObjectArray(selectedBrowsers);
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.browsers = getidsFromObjectArray(selectedBrowsers);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedBrowsers }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
 
   removeEnvironment(e) {
+    var filters = this.selectedFilters();
     var selectedEnvironments = this.props.filters.selectedEnvironments.filter(function(item) {
       return item["id"] !== e;
     });
-    var testcase = {};
-    testcase.environments = getidsFromObjectArray(selectedEnvironments);
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.environments = getidsFromObjectArray(selectedEnvironments);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedEnvironments }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
 
   removeOs(e) {
+    var filters = this.selectedFilters();
     var selectedOperatingsystems = this.props.filters.selectedOperatingsystems.filter(function(item) {
       return item["id"] !== e;
     });
-    var testcase = {};
-    testcase.operatingsystems = getidsFromObjectArray(selectedOperatingsystems);
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.operatingsystems = getidsFromObjectArray(selectedOperatingsystems);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedOperatingsystems }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
   removeVersion(e) {
+    var filters = this.selectedFilters();
     var selectedVersions = this.props.filters.selectedVersions.filter(function(item) {
       return item["id"] !== e;
     });
-    var testcase = {};
-    testcase.versions = getidsFromObjectArray(selectedVersions);
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.versions = getidsFromObjectArray(selectedVersions);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedVersions }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
 
   removeStatus(e) {
+    var filters = this.selectedFilters();
     var selectedStatuses = this.props.filters.selectedStatuses.filter(function(item) {
       return item["id"] !== e;
     });
-    var testcase = {};
-    testcase.statuses = getidsFromObjectArray(selectedStatuses);
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.statuses = getidsFromObjectArray(selectedStatuses);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedStatuses }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
 
   removeSimulator(e) {
+    var filters = this.selectedFilters();
     var selectedSimulators = this.props.filters.selectedSimulators.filter(function(item) {
       return item["id"] !== e;
     });
-    var testcase = {};
-    testcase.simulators = getidsFromObjectArray(selectedSimulators);
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    filters.simulators = getidsFromObjectArray(selectedSimulators);
+    this.props.getReports(this.props.match.params.projectId, filters);
 
     this.setState({ selectedSimulators }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, testcase);
+      this.props.editReportSettings(this.props.match.params.projectId, filters);
     });
   }
 
   removeFromDate() {
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.date_from = null;
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = "";
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
-    this.props.editReportSettings(this.props.match.params.projectId, { date_from: null });
+    var filters = this.selectedFilters();
+    filters.date_from = null;
+    this.props.getReports(this.props.match.params.projectId, filters);
+    this.props.editReportSettings(this.props.match.params.projectId, filters);
   }
   setFromDate(day) {
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.date_from = moment(day).format("YYYY-MM-DD HH:mm:ss");
-    testcase.date_to =
-      this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
-    testcase.search_term = this.state.searchTerm;
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    var filters = this.selectedFilters();
+    filters.date_from = moment(day).format("YYYY-MM-DD HH:mm:ss");
+    this.props.getReports(this.props.match.params.projectId, filters);
   }
   setToDate(day) {
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to = moment(day).format("YYYY-MM-DD HH:mm:ss");
-
-    testcase.search_term = this.state.searchTerm;
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
+    var filters = this.selectedFilters();
+    filters.date_to = moment(day).format("YYYY-MM-DD HH:mm:ss");
+    this.props.getReports(this.props.match.params.projectId, filters);
   }
 
   removeToDate() {
-    var testcase = {};
-    testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroups);
-    testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.date_from =
-      this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to = null;
-    testcase.search_term = "";
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
-    this.props.editReportSettings(this.props.match.params.projectId, { date_to: null });
+    var filters = this.selectedFilters();
+    filters.date_to = null;
+
+    this.props.getReports(this.props.match.params.projectId, filters);
+    this.props.editReportSettings(this.props.match.params.projectId, filters);
   }
 
   filterBtn() {
     var showFilters = !this.props.filters.showFilters;
-    var testcase = {};
-    testcase.show_filters = showFilters;
+    var filters = {};
+    filters.show_filters = showFilters;
 
-    this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    this.props.editReportSettings(this.props.match.params.projectId, filters);
   }
   resetFilters() {
-    var testcase = {};
-    testcase.date_to = null;
-    testcase.date_from = null;
-    testcase.search_term = "";
-    testcase.users = [];
-    testcase.groups = [];
-    testcase.statuses = [];
-    testcase.devices = [];
-    testcase.simulators = [];
-    testcase.browsers = [];
-    testcase.operatingsystems = [];
-    testcase.environments = [];
-    testcase.versions = [];
-
-    this.props.getReports(
-      this.props.match.params.projectId
-      // , testcase
-    );
-    this.props.editReportSettings(this.props.match.params.projectId, testcase);
+    var filters = {};
+    filters.date_to = null;
+    filters.date_from = null;
+    filters.search_term = "";
+    filters.users = [];
+    filters.groups = [];
+    filters.statuses = [];
+    filters.devices = [];
+    filters.simulators = [];
+    filters.browsers = [];
+    filters.operatingsystems = [];
+    filters.environments = [];
+    filters.versions = [];
+    this.setState({ searchTerm: "" });
+    this.props.getReports(this.props.match.params.projectId, filters);
+    this.props.editReportSettings(this.props.match.params.projectId, filters);
   }
 
   setViewList(e) {

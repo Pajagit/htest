@@ -1,15 +1,18 @@
 import axios from "axios";
+import isEmpty from "../validation/isEmpty";
 
 import { GET_REPORTS, GET_REPORT, REPORT_LOADING, GET_ERRORS } from "./types";
 
 // Get All Reports
-export const getReports = (project_id, pageSent, pageSizeSent) => dispatch => {
+export const getReports = (project_id, reportFilters, page) => dispatch => {
   dispatch(reportLoading());
-  var page = pageSent === undefined ? 1 : pageSent;
-  var size = pageSizeSent === undefined ? 15 : pageSizeSent;
+  if (isEmpty(page)) {
+    page = 1;
+  }
+  var page_size = 15;
 
   axios
-    .get(`/api/reports?page=${page}&page_size=${size}&project_id=${project_id}`)
+    .post(`/api/reports?page=${page}&page_size=${page_size}&project_id=${project_id}`, reportFilters)
     .then(res =>
       dispatch({
         type: GET_REPORTS,
