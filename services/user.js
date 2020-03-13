@@ -1026,7 +1026,7 @@ module.exports = {
 
   canGetReports: async function(user, projectId) {
     return new Promise((resolve, reject) => {
-      var allowedRoles = ["Superadmin", "Project Administrator", "QA"];
+      var allowedRoles = ["Superadmin", "Project Administrator", "QA", "Viewer"];
 
       var allowed = false;
       if (user.superadmin == true) {
