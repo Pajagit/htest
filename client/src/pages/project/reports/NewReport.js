@@ -18,7 +18,7 @@ import InputGroupDouble from "../../../components/common/InputGroupDouble";
 import openExternalBtn from "../../../img/openExternalBtn.png";
 
 import SearchDropdown from "../../../components/common/SearchDropdown";
-import { projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
+import { projectIdAndSuperAdminPermission, writePermissions } from "../../../permissions/Permissions";
 import ReportValidation from "../../../validation/ReportValidation";
 import successToast from "../../../toast/successToast";
 import failToast from "../../../toast/failToast";
@@ -66,13 +66,25 @@ class NewReport extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
+      var isValidWrite = writePermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+
       var { isValid } = projectIdAndSuperAdminPermission(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
-      if (!isValid) {
-        nextProps.history.push(`/${nextProps.match.params.projectId}/Testcase/${nextProps.match.params.testcaseId}`);
+      update.isValidWrite = isValidWrite.isValid;
+
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = nextProps.auth.user;
+        if (!isValidWrite.isValid || !isValid) {
+          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCase/${nextProps.match.params.testcaseId}`);
+        }
+        update.isValid = isValid;
       }
     }
 

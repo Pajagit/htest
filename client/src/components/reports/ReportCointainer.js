@@ -9,6 +9,7 @@ import Tag from "../common/Tag";
 import Spinner from "../common/Spinner";
 import isEmpty from "../../validation/isEmpty";
 import Pagination from "../pagination/Pagination";
+import moment from "moment";
 
 import { getTestcases } from "../../actions/testcaseActions";
 import { getReports } from "../../actions/reportActions";
@@ -35,7 +36,13 @@ class ReportContainer extends Component {
         update.settings = nextProps.settings.report_settings;
         if (prevState.initialRender) {
           update.initialRender = false;
-
+          var filters = nextProps.settings.report_settings;
+          filters.date_from = nextProps.settings.report_settings.date_from
+            ? moment(nextProps.settings.report_settings.date_from).format("YYYY-MM-DD")
+            : null;
+          filters.date_to = nextProps.settings.report_settings.date_to
+            ? moment(nextProps.settings.report_settings.date_to).format("YYYY-MM-DD")
+            : null;
           nextProps.getReports(nextProps.match.params.projectId, nextProps.settings.report_settings, 1);
         }
       }
@@ -219,11 +226,11 @@ class ReportContainer extends Component {
         (this.state.settings && this.state.settings.date_to !== null)
       ) {
         content = (
-          <div className='testcase-container-no-content padding'>There are no test cases matching selected filters</div>
+          <div className='testcase-container-no-content padding'>There are no reports matching selected filters</div>
         );
       } else {
         content = (
-          <div className='testcase-container-no-content padding'>There are no test cases created for this project</div>
+          <div className='testcase-container-no-content padding'>There are no reports created for this project</div>
         );
       }
     }
