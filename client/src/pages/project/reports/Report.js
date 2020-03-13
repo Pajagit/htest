@@ -7,7 +7,7 @@ import ProjectPanel from "../../../components/project-panel/ProjectPanel";
 import isEmpty from "../../../validation/isEmpty";
 import Header from "../../../components/common/Header";
 import Tag from "../../../components/common/Tag";
-import { superAndProjectAdminPermissions } from "../../../permissions/Permissions";
+import { projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import Spinner from "../../../components/common/Spinner";
 import openExternalBtn from "../../../img/openExternalBtn.png";
 import moment from "moment";
@@ -30,13 +30,13 @@ class Report extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.auth && nextProps.auth.user) {
-      var { isValid } = superAndProjectAdminPermissions(
+      var { isValid } = projectIdAndSuperAdminPermission(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
       if (!isValid) {
-        nextProps.history.push(`/Reports`);
+        nextProps.history.push(`/${nextProps.match.params.projectId}/Reports`);
       }
     }
     // update.isValidWrite = isValidWrite.isValid;
@@ -507,7 +507,8 @@ Report.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  reports: state.reports
+  reports: state.reports,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, { getReport })(withRouter(Report));

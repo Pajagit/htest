@@ -865,7 +865,7 @@ class Reports extends Component {
 
           {listView}
           {filters}
-          <ReportCointainer filters={this.state.testcaseFilters} viewOption={view_mode} />
+          <ReportCointainer filters={this.selectedFilters()} viewOption={view_mode} />
         </div>
       </div>
     );
