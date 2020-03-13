@@ -31,10 +31,13 @@ module.exports = {
         });
       }
       if (requestObject.date_to) {
-        dateToCondition = ` and "created_at" <= '${requestObject.date_to}'`;
+        var date_to = requestObject.date_to + "T23:59:59.999";
+
+        dateToCondition = ` and "created_at" <= '${date_to}'`;
       }
       if (requestObject.date_from) {
-        dateFromCondition = ` and "created_at" >= '${requestObject.date_from}'`;
+        var date_from = requestObject.date_from + "T00:00:00";
+        dateFromCondition = ` and "created_at" >= '${date_from}'`;
       }
       if (requestObject.search_term.length > 0) {
         searchTermCondition = ` and "title" ilike '%${requestObject.search_term}%'`;
