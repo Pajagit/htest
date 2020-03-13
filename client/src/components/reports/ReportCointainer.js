@@ -119,12 +119,30 @@ class ReportContainer extends Component {
               comment={report.comment}
               actual_result={report.actual_result}
               status={report.status}
-              device={report.reportsetup.device !== null ? report.reportsetup.device : "/"}
-              browser={report.reportsetup.browser ? report.reportsetup.browser : "/"}
-              version={report.reportsetup.version ? report.reportsetup.version : "/"}
-              operatingsystem={report.reportsetup.operatingsystem !== null ? report.reportsetup.operatingsystem : "/"}
-              environment={report.reportsetup.environment !== null ? report.reportsetup.environment : "/"}
-              simulator={report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/"}
+              device={[
+                report.reportsetup.device !== null ? report.reportsetup.device : "/",
+                report.reportsetup.device && report.reportsetup.device.deprecated
+              ]}
+              browser={[
+                report.reportsetup.browser ? report.reportsetup.browser : "/",
+                report.reportsetup.device && report.reportsetup.device.deprecated
+              ]}
+              version={[
+                report.reportsetup.version ? report.reportsetup.version : "/",
+                report.reportsetup.version && report.reportsetup.version.deprecated
+              ]}
+              operatingsystem={[
+                report.reportsetup.operatingsystem !== null ? report.reportsetup.operatingsystem : "/",
+                report.reportsetup.operatingsystem && report.reportsetup.operatingsystem.deprecated
+              ]}
+              environment={[
+                report.reportsetup.environment !== null ? report.reportsetup.environment : "/",
+                report.reportsetup.environment && report.reportsetup.environment.deprecated
+              ]}
+              simulator={[
+                report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/",
+                report.reportsetup.simulator && report.reportsetup.simulator.deprecated
+              ]}
               id={report.id}
               projectId={projectId}
               onClick={e => this.props.history.push(`/${projectId}/Report/${report.id}`)}
@@ -152,7 +170,7 @@ class ReportContainer extends Component {
           <React.Fragment key={index}>
             <LandscapeReport
               title={report.testcase.title}
-              tags={report.groups.map((group, groupIndex) => (
+              tags={report.testcase.groups.map((group, groupIndex) => (
                 <React.Fragment key={groupIndex}>
                   <Tag title={group.title} color={group.color.title} isRemovable={false} />
                 </React.Fragment>
@@ -162,12 +180,30 @@ class ReportContainer extends Component {
               comment={report.comment}
               actual_result={report.actual_result}
               status={report.status}
-              device={report.reportsetup.device !== null ? report.reportsetup.device : "/"}
-              browser={report.reportsetup.browser ? report.reportsetup.browser : "/"}
-              version={report.reportsetup.version ? report.reportsetup.version : "/"}
-              operatingsystem={report.reportsetup.operatingsystem !== null ? report.reportsetup.operatingsystem : "/"}
-              environment={report.reportsetup.environment !== null ? report.reportsetup.environment : "/"}
-              simulator={report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/"}
+              device={[
+                report.reportsetup.device !== null ? report.reportsetup.device : "/",
+                report.reportsetup.device && report.reportsetup.device.deprecated
+              ]}
+              browser={[
+                report.reportsetup.browser ? report.reportsetup.browser : "/",
+                report.reportsetup.device && report.reportsetup.device.deprecated
+              ]}
+              version={[
+                report.reportsetup.version ? report.reportsetup.version : "/",
+                report.reportsetup.version && report.reportsetup.version.deprecated
+              ]}
+              operatingsystem={[
+                report.reportsetup.operatingsystem !== null ? report.reportsetup.operatingsystem : "/",
+                report.reportsetup.operatingsystem && report.reportsetup.operatingsystem.deprecated
+              ]}
+              environment={[
+                report.reportsetup.environment !== null ? report.reportsetup.environment : "/",
+                report.reportsetup.environment && report.reportsetup.environment.deprecated
+              ]}
+              simulator={[
+                report.reportsetup.simulator !== null ? report.reportsetup.simulator : "/",
+                report.reportsetup.simulator && report.reportsetup.simulator.deprecated
+              ]}
               id={report.id}
               projectId={projectId}
               onClick={e => this.props.history.push(`/${projectId}/Report/${report.id}`)}
