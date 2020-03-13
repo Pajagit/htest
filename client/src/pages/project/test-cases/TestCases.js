@@ -274,7 +274,7 @@ class TestCases extends Component {
     var testcase = {};
     testcase.groups = getidsFromObjectArray(this.props.filters.selectedGroupFilters);
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
-    testcase.date_from = moment(day).format("YYYY-MM-DD HH:mm:ss");
+    testcase.date_from = moment(day).format("YYYY-MM-DD");
     testcase.date_to =
       this.props.filters.selectedDateToFormated !== "" ? this.props.filters.selectedDateToFormated : null;
     testcase.search_term = this.state.searchTerm;
@@ -286,7 +286,7 @@ class TestCases extends Component {
     testcase.users = getidsFromObjectArray(this.props.filters.selectedUsers);
     testcase.date_from =
       this.props.filters.selectedDateFromFormated !== "" ? this.props.filters.selectedDateFromFormated : null;
-    testcase.date_to = moment(day).format("YYYY-MM-DD HH:mm:ss");
+    testcase.date_to = moment(day).format("YYYY-MM-DD");
 
     testcase.search_term = this.state.searchTerm;
     this.props.getTestcases(this.props.match.params.projectId, testcase);
@@ -421,7 +421,7 @@ class TestCases extends Component {
               onDayClick={day => {
                 this.setFromDate(day);
                 this.props.editTestcaseSettings(this.props.match.params.projectId, {
-                  date_from: moment(day).format("YYYY-MM-DD HH:mm:ss")
+                  date_from: moment(day).format("YYYY-MM-DD")
                 });
               }}
             />
@@ -438,7 +438,7 @@ class TestCases extends Component {
               onDayClick={day => {
                 this.setToDate(day);
                 this.props.editTestcaseSettings(this.props.match.params.projectId, {
-                  date_to: moment(day).format("YYYY-MM-DD HH:mm:ss")
+                  date_to: moment(day).format("YYYY-MM-DD")
                 });
               }}
             />
@@ -642,17 +642,13 @@ const filterSelector = createSelector(
         dateFrom = testcase_settings.date_from;
         selectedDateTimestampFrom = moment(testcase_settings.date_from)._d;
         selectedDateFrom = moment(testcase_settings.date_from).format(" Do MMM YY");
-        selectedDateFromFormated = moment(testcase_settings.date_from).format("YYYY-MM-DD HH:mm:ss");
+        selectedDateFromFormated = moment(testcase_settings.date_from).format("YYYY-MM-DD");
       }
       if (testcase_settings.date_to) {
         dateTo = testcase_settings.date_to;
         selectedDateTimestampTo = moment(testcase_settings.date_to)._d;
         selectedDateTo = moment(testcase_settings.date_to).format(" Do MMM YY");
-        selectedDateToFormated = moment(testcase_settings.date_to)
-          .add(21, "hours")
-          .add(59, "minutes")
-          .add(59, "seconds")
-          .format("YYYY-MM-DD HH:mm:ss");
+        selectedDateToFormated = moment(testcase_settings.date_to).format("YYYY-MM-DD");
       }
       if (testcase_settings.view_mode) {
         viewMode = testcase_settings.view_mode;

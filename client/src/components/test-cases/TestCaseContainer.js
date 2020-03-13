@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import moment from "moment";
 
 import PortraitTestCase from "../common/PortraitTestCase";
 import LandscapeTestCase from "../common/LandscapeTestCase";
@@ -34,7 +35,15 @@ class TestCaseContainer extends Component {
         update.settings = nextProps.settings.testcase_settings;
         if (prevState.initialRender) {
           update.initialRender = false;
-          nextProps.getTestcases(nextProps.match.params.projectId, nextProps.settings.testcase_settings, 1);
+          var filters = nextProps.settings.testcase_settings;
+          console.log(nextProps.settings.testcase_settings);
+          filters.date_from = nextProps.settings.testcase_settings.date_from
+            ? moment(nextProps.settings.testcase_settings.date_from).format("YYYY-MM-DD")
+            : null;
+          filters.date_to = nextProps.settings.testcase_settings.date_to
+            ? moment(nextProps.settings.testcase_settings.date_to).format("YYYY-MM-DD")
+            : null;
+          nextProps.getTestcases(nextProps.match.params.projectId, filters, 1);
         }
       }
     }
