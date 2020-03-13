@@ -35,6 +35,20 @@
         color: #000000;
         font-size: 1.2rem;
         line-height: 2.3rem;
+        &--item {
+          width: 100%;
+          display: flex;
+          @media only screen and (max-width: $bp-800) {
+            display: inline-block;
+          }
+          &-title {
+            margin-right: 0.5rem;
+            min-width: 7rem;
+          }
+          &-value {
+            font-weight: 600;
+          }
+        }
       }
       box-shadow: 2px 2px 0 0 rgba(221, 218, 239, 0.5);
     }
