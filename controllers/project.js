@@ -1,6 +1,7 @@
 var ProjectService = require("../services/project");
 var UserService = require("../services/user");
 var RoleService = require("../services/role");
+var GroupService = require("../services/group");
 
 const validateRouteProjectId = require("../validation/project").validateRouteProjectId;
 const validateProjectInput = require("../validation/project").validateProjectInput;
@@ -309,5 +310,16 @@ module.exports = {
     } else {
       return res.status(500).json({ error: "Something went wrong" });
     }
+  },
+  getTestcaseFilterSetup: async function(req, res) {
+    var setupObject = {};
+
+    var groupsAll = await GroupService.getAllProjectGroups(req.params.id);
+    setupObject.groups = groupsAll;
+
+    var usersAll = await UserService.getUsersWithTestCases(req.params.id);
+    setupObject.users = usersAll;
+
+    return res.status(200).json(setupObject);
   }
 };

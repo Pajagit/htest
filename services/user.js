@@ -60,6 +60,51 @@ module.exports = {
       });
     });
   },
+  getUsersWithTestCases: async function(project_id) {
+    return new Promise((resolve, reject) => {
+      var includeArray = [
+        {
+          model: Project,
+          attributes: ["id", "title"],
+          through: {
+            attributes: []
+          },
+          as: "projects",
+          required: false
+        }
+      ];
+      var whereCondition = {
+        deprecated: false
+      };
+      if (project_id) {
+        whereCondition.project_id = project_id;
+      }
+      includeArray.push({
+        model: Testcase,
+        where: whereCondition,
+        attributes: [],
+        required: true
+      });
+      User.findAll({
+        attributes: ["id", "email", "first_name", "last_name", "position", "image_url", "active", "last_login"],
+
+        include: includeArray,
+        order: [
+          ["id", "DESC"],
+          [Project, "id", "ASC"]
+        ]
+      }).then(users => {
+        if (users) {
+          users.forEach(user => {
+            user.last_login = getLocalTimestamp(user.last_login);
+          });
+          resolve(users);
+        } else {
+          resolve([]);
+        }
+      });
+    });
+  },
   getUsersWithReports: async function(project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
