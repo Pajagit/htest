@@ -159,46 +159,70 @@ class NewReport extends Component {
     });
   }
   selectBrowser(value) {
-    this.setState({ browser: value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
-    });
+    if (JSON.stringify(this.state.browser) !== JSON.stringify(value)) {
+      this.setState({ browser: value }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else {
+      this.setState({ browser: null });
+    }
   }
   selectDevice(value) {
-    this.setState({ device: value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
-    });
+    if (JSON.stringify(this.state.device) !== JSON.stringify(value)) {
+      this.setState({ device: value }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else {
+      this.setState({ device: null });
+    }
   }
   selectSimulator(value) {
-    this.setState({ simulator: value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
-    });
+    if (JSON.stringify(this.state.simulator) !== JSON.stringify(value)) {
+      this.setState({ simulator: value }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else {
+      this.setState({ simulator: null });
+    }
   }
   selectVersion(value) {
-    this.setState({ version: value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
-    });
+    if (JSON.stringify(this.state.version) !== JSON.stringify(value)) {
+      this.setState({ version: value }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else {
+      this.setState({ version: null });
+    }
   }
   selectEnvironment(value) {
-    this.setState({ environment: value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
-    });
+    if (JSON.stringify(this.state.environment) !== JSON.stringify(value)) {
+      this.setState({ environment: value }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else {
+      this.setState({ environment: null });
+    }
   }
   selectOperatingSystem(value) {
-    this.setState({ os: value }, () => {
-      if (this.state.submitPressed) {
-        this.checkValidation();
-      }
-    });
+    if (JSON.stringify(this.state.os) !== JSON.stringify(value)) {
+      this.setState({ os: value }, () => {
+        if (this.state.submitPressed) {
+          this.checkValidation();
+        }
+      });
+    } else {
+      this.setState({ os: null });
+    }
   }
 
   addColumnLink(e) {
