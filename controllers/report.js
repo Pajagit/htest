@@ -353,6 +353,7 @@ module.exports = {
       deviceObj.screen_size = devicesArr.devices[i].screen_size;
       deviceObj.retina = devicesArr.devices[i].retina;
       deviceObj.os = devicesArr.devices[i].os;
+      deviceObj.office = devicesArr.devices[i].office;
 
       deviceObj.used = await DeviceService.checkIfUsed(devicesArr.devices[i].id, req.params.id);
       devicesAll.push(deviceObj);
