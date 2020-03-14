@@ -101,7 +101,7 @@ class NewReport extends Component {
         return device.used === true;
       });
       const mappedDevices = filteredUsedDevices.map(function(row) {
-        return { id: row.id, title: `${row.title} - ${row.office.city}`, used: row.used };
+        return { id: row.id, title: `${row.title} - (${row.office.city})`, used: row.used };
       });
       update.filteredDevices = mappedDevices;
 
