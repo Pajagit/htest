@@ -257,22 +257,6 @@ module.exports = {
       });
     });
   },
-
-  setAsDeprecatedReportSettings: async function(id) {
-    return new Promise((resolve, reject) => {
-      ReportSettings.destroy({
-        where: {
-          browser_id: id
-        }
-      }).then(setting => {
-        if (setting) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-    });
-  },
   setAsUsed: async function(id, used) {
     return new Promise((resolve, reject) => {
       var browserFields = {};

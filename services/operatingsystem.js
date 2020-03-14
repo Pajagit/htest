@@ -4,6 +4,8 @@ const sequelize = new Sequelize(pgURI);
 const Op = Sequelize.Op;
 const User = require("../models/user");
 const OperatingSystem = require("../models/operatingsystem");
+const ReportSettings = require("../models/reportsetting");
+
 const paginate = require("../utils/pagination").paginate;
 
 module.exports = {
@@ -194,6 +196,43 @@ module.exports = {
       }).then(os => {
         if (os[1]) {
           resolve(os[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  findAllOccurancesInReportSettings: async function(id) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.findAll({
+        where: {
+          operatingsystems: {
+            [Op.contains]: [id]
+          }
+        }
+      }).then(setting => {
+        if (setting) {
+          resolve(setting);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeAllOccurancesInReportSettings: async function(setting_id, newOparatingsystems) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.update(
+        { operatingsystems: newOparatingsystems },
+        {
+          where: {
+            id: setting_id
+          },
+          returning: true,
+          plain: true
+        }
+      ).then(updated_settings => {
+        if (updated_settings) {
+          resolve(true);
         } else {
           resolve(false);
         }

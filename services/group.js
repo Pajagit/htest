@@ -3,6 +3,8 @@ const Op = Sequelize.Op;
 const Group = require("../models/group");
 const Color = require("../models/color");
 const GroupTestCases = require("../models/grouptestcase");
+const ReportSettings = require("../models/reportsetting");
+const ProjectSettings = require("../models/projectsettings");
 
 module.exports = {
   getGroupById: async function(id) {
@@ -261,6 +263,80 @@ module.exports = {
       } else {
         resolve(false);
       }
+    });
+  },
+  findAllOccurancesInReportSettings: async function(id) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.findAll({
+        where: {
+          groups: {
+            [Op.contains]: [id]
+          }
+        }
+      }).then(setting => {
+        if (setting) {
+          resolve(setting);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeAllOccurancesInReportSettings: async function(setting_id, newGroups) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.update(
+        { groups: newGroups },
+        {
+          where: {
+            id: setting_id
+          },
+          returning: true,
+          plain: true
+        }
+      ).then(updated_settings => {
+        if (updated_settings) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  findAllOccurancesInTestcaseSettings: async function(id) {
+    return new Promise((resolve, reject) => {
+      ProjectSettings.findAll({
+        where: {
+          testcase_groups: {
+            [Op.contains]: [id]
+          }
+        }
+      }).then(setting => {
+        if (setting) {
+          resolve(setting);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeAllOccurancesInTestcaseSettings: async function(setting_id, newGroups) {
+    return new Promise((resolve, reject) => {
+      ProjectSettings.update(
+        { testcase_groups: newGroups },
+        {
+          where: {
+            id: setting_id
+          },
+          returning: true,
+          plain: true
+        }
+      ).then(updated_settings => {
+        if (updated_settings) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
     });
   }
 };

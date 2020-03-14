@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const Version = require("../models/version");
+const ReportSettings = require("../models/reportsetting");
+
 const paginate = require("../utils/pagination").paginate;
 
 module.exports = {
@@ -175,6 +177,43 @@ module.exports = {
       }).then(version => {
         if (version[1]) {
           resolve(version[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  findAllOccurancesInReportSettings: async function(id) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.findAll({
+        where: {
+          versions: {
+            [Op.contains]: [id]
+          }
+        }
+      }).then(setting => {
+        if (setting) {
+          resolve(setting);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeAllOccurancesInReportSettings: async function(setting_id, newVersions) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.update(
+        { versions: newVersions },
+        {
+          where: {
+            id: setting_id
+          },
+          returning: true,
+          plain: true
+        }
+      ).then(updated_settings => {
+        if (updated_settings) {
+          resolve(true);
         } else {
           resolve(false);
         }

@@ -113,6 +113,24 @@ module.exports = {
     var deprecateSimulator = await SimulatorService.setAsDeprecated(req.params.id);
 
     if (deprecateSimulator) {
+      var settings = await SimulatorService.findAllOccurancesInReportSettings(req.params.id);
+      if (settings) {
+        for (var i = 0; i < settings.length; i++) {
+          var newSimulators = Array();
+          var limit = settings[i].simulators.length - 1;
+          for (var j = 0; j < settings[i].simulators.length; j++) {
+            if (settings[i].simulators[j] != req.params.id) {
+              newSimulators.push(settings[i].simulators[j]);
+            }
+            if (j == limit) {
+              var newSettings = await SimulatorService.removeAllOccurancesInReportSettings(
+                settings[i].id,
+                newSimulators
+              );
+            }
+          }
+        }
+      }
       res.status(200).json({ success: "Simulator set as deprecated" });
     } else {
       res.status(500).json({ error: "Something went wrong" });

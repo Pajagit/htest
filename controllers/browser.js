@@ -162,18 +162,18 @@ module.exports = {
       var settings = await BrowserService.findAllOccurancesInReportSettings(req.params.id);
       if (settings) {
         for (var i = 0; i < settings.length; i++) {
-          var newBrowsers = [];
+          var newBrowsers = Array();
+          var limit = settings[i].browsers.length - 1;
           for (var j = 0; j < settings[i].browsers.length; j++) {
             if (settings[i].browsers[j] != req.params.id) {
               newBrowsers.push(settings[i].browsers[j]);
             }
-            if ((j = settings[i].browsers.length - 1)) {
+            if (j == limit) {
               var newSettings = await BrowserService.removeAllOccurancesInReportSettings(settings[i].id, newBrowsers);
             }
           }
         }
       }
-      // res.status(200).json(settings);
       res.status(200).json({ success: "Browser set as deprecated" });
     } else {
       res.status(500).json({ error: "Something went wrong" });
