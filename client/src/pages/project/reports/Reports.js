@@ -210,9 +210,7 @@ class Reports extends Component {
   timer = null;
   handleChange = e => {
     clearTimeout(this.timer);
-    this.setState({ searchTerm: e.target.value }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, { search_term: this.state.searchTerm });
-    });
+    this.setState({ searchTerm: e.target.value }, () => {});
     this.timer = setTimeout(test => {
       this.triggerChange(test);
     }, WAIT_INTERVAL);
@@ -355,14 +353,13 @@ class Reports extends Component {
   }
   removeGroupFilter(e) {
     var filters = this.selectedFilters();
-    var groups = this.props.filters.selectedGroups.filter(function(item) {
+    var groups = this.state.selectedGroups.filter(function(item) {
       return item["id"] !== e;
     });
     filters.groups = getidsFromObjectArray(groups);
-    this.props.getReports(this.props.match.params.projectId, filters);
-
+    this.props.editReportSettings(this.props.match.params.projectId, filters);
     this.setState({ selectedGroups: groups }, () => {
-      this.props.editReportSettings(this.props.match.params.projectId, filters);
+      this.props.getReports(this.props.match.params.projectId, filters);
     });
   }
   removeUser(e) {
@@ -875,11 +872,11 @@ class Reports extends Component {
 }
 
 Reports.propTypes = {
-  testcases: PropTypes.object.isRequired
+  reports: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  testcases: state.testcases,
+  reports: state.testcases,
   filters: filterSelector(state),
   report_filters: state.filters,
   settings: state.settings,
@@ -1032,7 +1029,6 @@ const filterSelector = createSelector([getSettings, getReportFilterProps], (repo
         return selectedGroups;
       });
     }
-
     if (report_settings.date_from) {
       dateFrom = report_settings.date_from;
       selectedDateTimestampFrom = moment(report_settings.date_from)._d;
