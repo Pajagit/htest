@@ -210,7 +210,9 @@ class Reports extends Component {
   timer = null;
   handleChange = e => {
     clearTimeout(this.timer);
-    this.setState({ searchTerm: e.target.value });
+    this.setState({ searchTerm: e.target.value }, () => {
+      this.props.editReportSettings(this.props.match.params.projectId, { search_term: this.state.searchTerm });
+    });
     this.timer = setTimeout(test => {
       this.triggerChange(test);
     }, WAIT_INTERVAL);
