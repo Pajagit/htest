@@ -508,15 +508,7 @@ class Report extends Component {
                 </div>
               </div>
             </div>
-            {/* <div className='report-details-row'> */}
-            {/* {deviceComponent}
-              {browserComponent}
-              {versionComponent}
-              {osComponent}
-              {environmentComponent}
-              {simulatorComponent} */}
             {allSetupComponents}
-            {/* </div> */}
             <div className='report-details-row'>
               <div className='report-details-row-full'>
                 <div className={`report-details-row-full ${report.status.title.toUpperCase()}-REPORT`}>
