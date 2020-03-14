@@ -135,7 +135,7 @@ class Reports extends Component {
         nextProps.report_filters.report_filters.devices
       ) {
         const mappedDevices = nextProps.report_filters.report_filters.devices.map(function(row) {
-          return { id: row.id, title: `${row.title} - ${row.office.city}`, used: row.used };
+          return { id: row.id, title: `${row.title} - (${row.office.city})`, used: row.used };
         });
         update.projectDevices = mappedDevices;
       }
