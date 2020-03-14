@@ -38,15 +38,15 @@ module.exports = {
 
       if (requestObject.date_from && requestObject.date_to) {
         whereStatement.created_at = {
-          [Op.gte]: new Date(requestObject.date_from),
-          [Op.lte]: new Date(requestObject.date_to)
+          [Op.gte]: new Date(requestObject.date_from + "T00:00:00"),
+          [Op.lte]: new Date(requestObject.date_to + "T23:59:59.999")
         };
       } else {
         if (requestObject.date_to) {
-          whereStatement.created_at = { [Op.lte]: new Date(requestObject.date_to) };
+          whereStatement.created_at = { [Op.lte]: new Date(requestObject.date_to + "T23:59:59.999") };
         } else {
           if (requestObject.date_from) {
-            whereStatement.created_at = { [Op.gte]: new Date(requestObject.date_from) };
+            whereStatement.created_at = { [Op.gte]: new Date(requestObject.date_from + "T00:00:00") };
           }
         }
       }
