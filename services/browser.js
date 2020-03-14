@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const Browser = require("../models/browser");
+const ReportSettings = require("../models/reportsetting");
+
 const paginate = require("../utils/pagination").paginate;
 
 module.exports = {
@@ -211,6 +213,59 @@ module.exports = {
         }
       ).then(browser => {
         if (browser) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  findAllOccurancesInReportSettings: async function(id) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.findAll({
+        where: {
+          browsers: {
+            [Op.contains]: [id]
+          }
+        }
+      }).then(setting => {
+        if (setting) {
+          resolve(setting);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeAllOccurancesInReportSettings: async function(setting_id, newBrowsers) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.update(
+        { browsers: newBrowsers },
+        {
+          where: {
+            id: setting_id
+          },
+          returning: true,
+          plain: true
+        }
+      ).then(updated_settings => {
+        if (updated_settings) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+
+  setAsDeprecatedReportSettings: async function(id) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.destroy({
+        where: {
+          browser_id: id
+        }
+      }).then(setting => {
+        if (setting) {
           resolve(true);
         } else {
           resolve(false);
