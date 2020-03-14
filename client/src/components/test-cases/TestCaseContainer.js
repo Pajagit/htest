@@ -36,7 +36,6 @@ class TestCaseContainer extends Component {
         if (prevState.initialRender) {
           update.initialRender = false;
           var filters = nextProps.settings.testcase_settings;
-          console.log(nextProps.settings.testcase_settings);
           filters.date_from = nextProps.settings.testcase_settings.date_from
             ? moment(nextProps.settings.testcase_settings.date_from).format("YYYY-MM-DD")
             : null;
