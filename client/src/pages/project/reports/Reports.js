@@ -134,7 +134,10 @@ class Reports extends Component {
         nextProps.report_filters.report_filters &&
         nextProps.report_filters.report_filters.devices
       ) {
-        update.projectDevices = nextProps.report_filters.report_filters.devices;
+        const mappedDevices = nextProps.report_filters.report_filters.devices.map(function(row) {
+          return { id: row.id, title: `${row.title} - ${row.office.city}`, used: row.used };
+        });
+        update.projectDevices = mappedDevices;
       }
 
       if (
@@ -927,13 +930,12 @@ const filterSelector = createSelector([getSettings, getReportFilterProps], (repo
       report_filters.devices.map(function(item) {
         if (report_settings && report_settings.devices) {
           if (report_settings.devices.includes(item.id)) {
-            selectedDevices.push({ id: item.id, title: item.title });
+            selectedDevices.push({ id: item.id, title: `${item.title} - ${item.office.city}` });
           }
         }
         return selectedDevices;
       });
     }
-
     if (report_filters.browsers) {
       selectedBrowsers = [];
       report_filters.browsers.map(function(item) {
