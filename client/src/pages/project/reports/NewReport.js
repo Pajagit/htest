@@ -100,7 +100,10 @@ class NewReport extends Component {
       var filteredUsedDevices = nextProps.report_filters.report_filters.devices.filter(function(device) {
         return device.used === true;
       });
-      update.filteredDevices = filteredUsedDevices;
+      const mappedDevices = filteredUsedDevices.map(function(row) {
+        return { id: row.id, title: `${row.title} - ${row.office.city}`, used: row.used };
+      });
+      update.filteredDevices = mappedDevices;
 
       var filteredUsedSimulators = nextProps.report_filters.report_filters.simulators.filter(function(simulator) {
         return simulator.used === true;
