@@ -36,6 +36,38 @@ class Pagination extends Component {
 
     return Object.keys(update).length ? update : null;
   }
+
+  getReportFilters() {
+    var reportFilters = {};
+    if (this.state.settings.report_settings) {
+      reportFilters = this.state.settings.report_settings;
+
+      reportFilters.date_from =
+        this.state.settings.report_settings && this.state.settings.report_settings.date_from
+          ? moment(this.state.settings.report_settings.date_from).format("YYYY-MM-DD")
+          : null;
+      reportFilters.date_to = this.state.settings.report_settings.date_to
+        ? moment(this.state.settings.report_settings.date_to).format("YYYY-MM-DD")
+        : null;
+    }
+    return reportFilters;
+  }
+
+  getTestcaseReports() {
+    var testcaseFilters = {};
+    if (this.state.settings.testcase_settings) {
+      testcaseFilters = this.state.settings.testcase_settings;
+      testcaseFilters.date_from =
+        this.state.settings.testcase_settings && this.state.settings.testcase_settings.date_from
+          ? moment(this.state.settings.testcase_settings.date_from).format("YYYY-MM-DD")
+          : null;
+      testcaseFilters.date_to = this.state.settings.testcase_settings.date_to
+        ? moment(this.state.settings.testcase_settings.date_to).format("YYYY-MM-DD")
+        : null;
+    }
+    return testcaseFilters;
+  }
+
   newPage(e) {
     var page = 1;
     var currentPage = parseInt(this.props.page);
@@ -51,36 +83,12 @@ class Pagination extends Component {
       page = parseInt(this.props.pageCount);
     }
 
-    var reportFilters = {};
-    if (this.state.settings.report_settings) {
-      reportFilters = this.state.settings.report_settings;
-
-      reportFilters.date_from =
-        this.state.settings.report_settings && this.state.settings.report_settings.date_from
-          ? moment(this.state.settings.report_settings.date_from).format("YYYY-MM-DD")
-          : null;
-      reportFilters.date_to = this.state.settings.report_settings.date_to
-        ? moment(this.state.settings.report_settings.date_to).format("YYYY-MM-DD")
-        : null;
-    }
-
-    var testcaseFilters = {};
-    if (this.state.settings.testcase_settings) {
-      testcaseFilters = this.state.settings.testcase_settings;
-      testcaseFilters.date_from =
-        this.state.settings.testcase_settings && this.state.settings.testcase_settings.date_from
-          ? moment(this.state.settings.testcase_settings.date_from).format("YYYY-MM-DD")
-          : null;
-      testcaseFilters.date_to = this.state.settings.testcase_settings.date_to
-        ? moment(this.state.settings.testcase_settings.date_to).format("YYYY-MM-DD")
-        : null;
-    }
     if (this.props.match.url === "/Projects") {
       this.props.getProjects(this.props.searchTerm, page);
     } else if (this.props.match.url === `/${this.state.projectId}/TestCases`) {
-      this.props.getTestcases(this.state.projectId, testcaseFilters, page);
+      this.props.getTestcases(this.state.projectId, this.getTestcaseReports(), page);
     } else if (this.props.match.url === `/${this.state.projectId}/Reports`) {
-      this.props.getReports(this.state.projectId, reportFilters, page);
+      this.props.getReports(this.state.projectId, this.getReportFilters(), page);
     }
   }
   newPagePredefined(e) {
@@ -88,37 +96,13 @@ class Pagination extends Component {
     if (!isNaN(e.target.textContent)) {
       page = parseInt(e.target.textContent);
     }
-    var reportFilters = {};
-    if (this.state.settings.report_settings) {
-      reportFilters = this.state.settings.report_settings;
-
-      reportFilters.date_from =
-        this.state.settings.report_settings && this.state.settings.report_settings.date_from
-          ? moment(this.state.settings.report_settings.date_from).format("YYYY-MM-DD")
-          : null;
-      reportFilters.date_to = this.state.settings.report_settings.date_to
-        ? moment(this.state.settings.report_settings.date_to).format("YYYY-MM-DD")
-        : null;
-    }
-
-    var testcaseFilters = {};
-    if (this.state.settings.testcase_settings) {
-      testcaseFilters = this.state.settings.testcase_settings;
-      testcaseFilters.date_from =
-        this.state.settings.testcase_settings && this.state.settings.testcase_settings.date_from
-          ? moment(this.state.settings.testcase_settings.date_from).format("YYYY-MM-DD")
-          : null;
-      testcaseFilters.date_to = this.state.settings.testcase_settings.date_to
-        ? moment(this.state.settings.testcase_settings.date_to).format("YYYY-MM-DD")
-        : null;
-    }
 
     if (this.props.match.url === "/Projects") {
       this.props.getProjects(this.props.searchTerm, page);
     } else if (this.props.match.url === `/${this.state.projectId}/TestCases`) {
-      this.props.getTestcases(this.state.projectId, testcaseFilters, page);
+      this.props.getTestcases(this.state.projectId, this.getTestcaseReports(), page);
     } else if (this.props.match.url === `/${this.state.projectId}/Reports`) {
-      this.props.getReports(this.state.projectId, reportFilters, page);
+      this.props.getReports(this.state.projectId, this.getReportFilters(), page);
     }
   }
 
