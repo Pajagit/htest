@@ -34,7 +34,7 @@ module.exports = {
         },
         attributes: ["id", "title", "used"],
         ...paginate({ page, pageSize }),
-        order: [["title", "ASC"]]
+        order: [["id", "DESC"]]
       }).then(environment_obj => {
         var environments = environment_obj.rows;
         var pages = 1;

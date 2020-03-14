@@ -34,7 +34,7 @@ module.exports = {
         },
         attributes: ["id", "title", "used"],
         ...paginate({ page, pageSize }),
-        order: [["id", "ASC"]]
+        order: [["id", "DESC"]]
       }).then(os_obj => {
         var oss = os_obj.rows;
         var pages = 1;
@@ -55,7 +55,7 @@ module.exports = {
           project_id: project_id,
           deprecated: false
         },
-        order: [["id", "ASC"]]
+        order: [["title", "ASC"]]
       }).then(oss => {
         var page = 1;
         var pages = 0;

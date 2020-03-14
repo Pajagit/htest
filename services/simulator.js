@@ -16,7 +16,7 @@ module.exports = {
         attributes: ["id", "title", "resolution", "dpi", "screen_size", "retina", "os", "used", "emulator"],
         where: whereStatement,
         ...paginate({ page, pageSize }),
-        order: [["title", "ASC"]]
+        order: [["id", "DESC"]]
       }).then(simulator_obj => {
         var simulators = simulator_obj.rows;
         var pages = 1;

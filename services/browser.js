@@ -35,7 +35,7 @@ module.exports = {
         },
         attributes: ["id", "title", "screen_resolution", "version", "used"],
         ...paginate({ page, pageSize }),
-        order: [["title", "ASC"]]
+        order: [["id", "DESC"]]
       }).then(browser_obj => {
         var browsers = browser_obj.rows;
         var pages = 1;

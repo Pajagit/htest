@@ -155,7 +155,12 @@ module.exports = {
       });
     });
   },
-  getAllProjectGroups: async function(id) {
+  getAllProjectGroups: async function(id, order) {
+    if (order == "id") {
+      var orderval = ["id", "DESC"];
+    } else {
+      var orderval = ["title", "ASC"];
+    }
     return new Promise((resolve, reject) => {
       Group.findAll({
         attributes: ["id", "pinned", "title"],
@@ -170,7 +175,7 @@ module.exports = {
             required: true
           }
         ],
-        order: [["id", "ASC"]]
+        order: [orderval]
       }).then(groups => {
         if (groups) {
           var groupsObj = Array();

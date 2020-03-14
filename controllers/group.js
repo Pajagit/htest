@@ -191,7 +191,7 @@ module.exports = {
       if (!canGetProject) {
         return res.status(403).json({ message: "Forbidden" });
       }
-      var getAllProjectGroups = await GroupService.getAllProjectGroups(req.query.project_id);
+      var getAllProjectGroups = await GroupService.getAllProjectGroups(req.query.project_id, "id");
       if (getAllProjectGroups) {
         res.status(200).json(getAllProjectGroups);
       } else {
