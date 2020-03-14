@@ -111,6 +111,12 @@ class EditTestCase extends Component {
           let filteredEmptyLinks = links.filter(o => o.value);
           update.links = filteredEmptyLinks;
 
+          filteredEmptyLinks.forEach(element => {
+            if (element.title === null) {
+              element.title = "";
+            }
+          });
+
           var filteredNotPinnedSelectedGroups = testcase.groups.filter(function(group) {
             return group.pinned === false;
           });
