@@ -146,6 +146,24 @@ module.exports = {
     }
     var deprecateEnvironment = await EnvironmentService.setAsDeprecated(req.params.id);
     if (deprecateEnvironment) {
+      var settings = await EnvironmentService.findAllOccurancesInReportSettings(req.params.id);
+      if (settings) {
+        for (var i = 0; i < settings.length; i++) {
+          var newEnvironments = Array();
+          var limit = settings[i].environments.length - 1;
+          for (var j = 0; j < settings[i].environments.length; j++) {
+            if (settings[i].environments[j] != req.params.id) {
+              newEnvironments.push(settings[i].environments[j]);
+            }
+            if (j == limit) {
+              var newSettings = await EnvironmentService.removeAllOccurancesInReportSettings(
+                settings[i].id,
+                newEnvironments
+              );
+            }
+          }
+        }
+      }
       res.status(200).json({ success: "Environment set as deprecated" });
     } else {
       res.status(500).json({ error: "Something went wrong" });

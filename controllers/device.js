@@ -177,6 +177,21 @@ module.exports = {
       await DeviceService.removeFromProjects(req.params.id);
     }
     if (deprecateDevice) {
+      var settings = await DeviceService.findAllOccurancesInReportSettings(req.params.id);
+      if (settings) {
+        for (var i = 0; i < settings.length; i++) {
+          var newDevices = Array();
+          var limit = settings[i].devices.length - 1;
+          for (var j = 0; j < settings[i].devices.length; j++) {
+            if (settings[i].devices[j] != req.params.id) {
+              newDevices.push(settings[i].devices[j]);
+            }
+            if (j == limit) {
+              var newSettings = await DeviceService.removeAllOccurancesInReportSettings(settings[i].id, newDevices);
+            }
+          }
+        }
+      }
       res.status(200).json({ success: "Device set as deprecated" });
     } else {
       res.status(500).json({ error: "Something went wrong" });

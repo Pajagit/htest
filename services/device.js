@@ -7,6 +7,7 @@ const Device = require("../models/device");
 const Office = require("../models/office");
 const ProjectDevice = require("../models/projectdevice");
 const Project = require("../models/project");
+const ReportSettings = require("../models/reportsetting");
 
 const paginate = require("../utils/pagination").paginate;
 
@@ -360,6 +361,43 @@ module.exports = {
         }
       ).then(device => {
         if (device) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  findAllOccurancesInReportSettings: async function(id) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.findAll({
+        where: {
+          devices: {
+            [Op.contains]: [id]
+          }
+        }
+      }).then(setting => {
+        if (setting) {
+          resolve(setting);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeAllOccurancesInReportSettings: async function(setting_id, newDevices) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.update(
+        { devices: newDevices },
+        {
+          where: {
+            id: setting_id
+          },
+          returning: true,
+          plain: true
+        }
+      ).then(updated_settings => {
+        if (updated_settings) {
           resolve(true);
         } else {
           resolve(false);

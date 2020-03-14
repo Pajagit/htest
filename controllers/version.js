@@ -144,6 +144,21 @@ module.exports = {
     }
     var deprecateVersion = await VersionService.setAsDeprecated(req.params.id);
     if (deprecateVersion) {
+      var settings = await VersionService.findAllOccurancesInReportSettings(req.params.id);
+      if (settings) {
+        for (var i = 0; i < settings.length; i++) {
+          var newVersions = Array();
+          var limit = settings[i].versions.length - 1;
+          for (var j = 0; j < settings[i].versions.length; j++) {
+            if (settings[i].versions[j] != req.params.id) {
+              newVersions.push(settings[i].versions[j]);
+            }
+            if (j == limit) {
+              var newSettings = await VersionService.removeAllOccurancesInReportSettings(settings[i].id, newVersions);
+            }
+          }
+        }
+      }
       res.status(200).json({ success: "Version set as deprecated" });
     } else {
       res.status(500).json({ error: "Something went wrong" });

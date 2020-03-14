@@ -131,6 +131,44 @@ module.exports = {
       } else {
         var removeGroup = await GroupService.removeGroup(req.params.id);
         if (removeGroup) {
+          //report settings
+          var settings = await GroupService.findAllOccurancesInReportSettings(req.params.id);
+          if (settings) {
+            for (var i = 0; i < settings.length; i++) {
+              var newGroups = Array();
+              var limit = settings[i].groups.length - 1;
+              for (var j = 0; j < settings[i].groups.length; j++) {
+                if (settings[i].groups[j] != req.params.id) {
+                  newGroups.push(settings[i].groups[j]);
+                }
+                if (j == limit) {
+                  var newSettings = await GroupService.removeAllOccurancesInReportSettings(settings[i].id, newGroups);
+                }
+              }
+            }
+          }
+
+          //tesstcase settings
+          var TCsettings = await GroupService.findAllOccurancesInTestcaseSettings(req.params.id);
+          console.log(TCsettings);
+          if (TCsettings) {
+            for (var i = 0; i < TCsettings.length; i++) {
+              var newTCGroups = Array();
+              var limitTC = TCsettings[i].testcase_groups.length - 1;
+              for (var j = 0; j < TCsettings[i].testcase_groups.length; j++) {
+                if (TCsettings[i].testcase_groups[j] != req.params.id) {
+                  newTCGroups.push(TCsettings[i].testcase_groups[j]);
+                }
+                if (j == limitTC) {
+                  var newTCSettings = await GroupService.removeAllOccurancesInTestcaseSettings(
+                    settings[i].id,
+                    newTCGroups
+                  );
+                }
+              }
+            }
+          }
+
           return res.status(200).json({ success: "Group successfully deleted" });
         } else {
           return res.status(500).json({ error: "Something went wrong" });

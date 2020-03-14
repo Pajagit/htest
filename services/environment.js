@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const Environment = require("../models/environment");
+const ReportSettings = require("../models/reportsetting");
 const paginate = require("../utils/pagination").paginate;
 
 module.exports = {
@@ -175,6 +176,43 @@ module.exports = {
       }).then(environment => {
         if (environment[1]) {
           resolve(environment[1]);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  findAllOccurancesInReportSettings: async function(id) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.findAll({
+        where: {
+          environments: {
+            [Op.contains]: [id]
+          }
+        }
+      }).then(setting => {
+        if (setting) {
+          resolve(setting);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+  removeAllOccurancesInReportSettings: async function(setting_id, newEnvironments) {
+    return new Promise((resolve, reject) => {
+      ReportSettings.update(
+        { environments: newEnvironments },
+        {
+          where: {
+            id: setting_id
+          },
+          returning: true,
+          plain: true
+        }
+      ).then(updated_settings => {
+        if (updated_settings) {
+          resolve(true);
         } else {
           resolve(false);
         }

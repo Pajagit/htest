@@ -140,6 +140,21 @@ module.exports = {
     }
     var deprecateOs = await OsService.setAsDeprecated(req.params.id);
     if (deprecateOs) {
+      var settings = await OsService.findAllOccurancesInReportSettings(req.params.id);
+      if (settings) {
+        for (var i = 0; i < settings.length; i++) {
+          var newOss = Array();
+          var limit = settings[i].operatingsystems.length - 1;
+          for (var j = 0; j < settings[i].operatingsystems.length; j++) {
+            if (settings[i].operatingsystems[j] != req.params.id) {
+              newOss.push(settings[i].operatingsystems[j]);
+            }
+            if (j == limit) {
+              var newSettings = await OsService.removeAllOccurancesInReportSettings(settings[i].id, newOss);
+            }
+          }
+        }
+      }
       res.status(200).json({ success: "OS set as deprecated" });
     } else {
       res.status(500).json({ error: "Something went wrong" });
