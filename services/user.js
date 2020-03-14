@@ -90,7 +90,7 @@ module.exports = {
 
         include: includeArray,
         order: [
-          ["id", "DESC"],
+          ["title", "ASC"],
           [Project, "id", "ASC"]
         ]
       }).then(users => {
@@ -134,7 +134,7 @@ module.exports = {
 
         include: includeArray,
         order: [
-          ["id", "DESC"],
+          ["title", "ASC"],
           [Project, "id", "ASC"]
         ]
       }).then(users => {

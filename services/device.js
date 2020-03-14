@@ -36,7 +36,7 @@ module.exports = {
         ],
         ...paginate({ page, pageSize }),
         order: [
-          ["title", "ASC"],
+          ["id", "DESC"],
           [Office, "id", "ASC"]
         ]
       }).then(devices_obj => {

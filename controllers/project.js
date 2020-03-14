@@ -314,7 +314,7 @@ module.exports = {
   getTestcaseFilterSetup: async function(req, res) {
     var setupObject = {};
 
-    var groupsAll = await GroupService.getAllProjectGroups(req.params.id);
+    var groupsAll = await GroupService.getAllProjectGroups(req.params.id, "title");
     setupObject.groups = groupsAll;
 
     var usersAll = await UserService.getUsersWithTestCases(req.params.id);

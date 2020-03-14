@@ -379,7 +379,7 @@ module.exports = {
     var versionsAll = await VersionService.getAllVersions(req.params.id);
     setupObject.versions = versionsAll.versions;
 
-    var groupsAll = await GroupService.getAllProjectGroups(req.params.id);
+    var groupsAll = await GroupService.getAllProjectGroups(req.params.id, "title");
     setupObject.groups = groupsAll;
 
     var statusesAll = await ReportService.getReportStatuses();

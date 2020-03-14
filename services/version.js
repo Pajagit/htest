@@ -35,7 +35,7 @@ module.exports = {
         },
         attributes: ["id", "version", "used"],
         ...paginate({ page, pageSize }),
-        order: [["version", "ASC"]]
+        order: [["id", "DESC"]]
       }).then(version_obj => {
         var versions = version_obj.rows;
         var pages = 1;
