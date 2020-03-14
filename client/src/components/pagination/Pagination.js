@@ -14,7 +14,7 @@ class Pagination extends Component {
     this.state = {
       pageCount: this.props.pageCount,
       projectId: this.props.projectId,
-      settings: this.props.settings,
+      settings: {},
       page: this.props.page
     };
     this.newPagePredefined = this.newPagePredefined.bind(this);
@@ -33,7 +33,9 @@ class Pagination extends Component {
     if (nextProps.page !== prevState.page) {
       update.page = nextProps.page;
     }
-
+    if (nextProps.settings !== prevState.settings) {
+      update.settings = nextProps.settings;
+    }
     return Object.keys(update).length ? update : null;
   }
 
