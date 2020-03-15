@@ -20,6 +20,7 @@ import reportReducer from "./reportReducer";
 import statusReducer from "./statusReducer";
 import filterReducer from "./filterReducer";
 import osReducer from "./osReducer";
+import statisticReducer from "./statisticReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -41,5 +42,6 @@ export default combineReducers({
   statuses: statusReducer,
   filters: filterReducer,
   oss: osReducer,
-  reports: reportReducer
+  reports: reportReducer,
+  statistics: statisticReducer
 });

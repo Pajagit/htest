@@ -8,15 +8,15 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="app">
-        <div className="row">
-          <div className="mixed-chart">
+      <div className='app'>
+        <div className='row'>
+          <div className='mixed-chart'>
             <Chart
               options={this.props.options}
               series={this.props.series}
               type={this.props.type}
               width={this.props.width}
-              height={400}
+              height={500}
             />
           </div>
         </div>
