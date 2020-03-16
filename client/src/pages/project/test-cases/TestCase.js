@@ -92,7 +92,7 @@ class TestCase extends Component {
       var actionBtns = "";
       if (this.state.isValidWrite) {
         actionBtns = (
-          <div className='flex-column-left mt-4'>
+          <div className='flex-column-left mt-5'>
             <BtnAnchor
               className='a-btn a-btn-primary mr-2'
               label='Add To Report'
