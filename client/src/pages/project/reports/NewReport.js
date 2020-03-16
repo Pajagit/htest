@@ -71,21 +71,27 @@ class NewReport extends Component {
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
-
+      update.isValidWrite = isValidWrite.isValid;
       var { isValid } = projectIdAndSuperAdminPermission(
         nextProps.auth.user.projects,
         nextProps.match.params.projectId,
         nextProps.auth.user.superadmin
       );
-      update.isValidWrite = isValidWrite.isValid;
+      update.isValid = isValid;
 
       if (nextProps.auth.user !== prevState.user) {
         update.user = nextProps.auth.user;
-        if (!isValidWrite.isValid || !isValid) {
-          nextProps.history.push(`/${nextProps.match.params.projectId}/TestCase/${nextProps.match.params.testcaseId}`);
-        }
-        update.isValid = isValid;
       }
+      if (!isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+        console.log("Nije na projektu");
+      } else if (!isValidWrite.isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCase/${nextProps.match.params.testcaseId}`);
+        console.log("Ne moze da edituje");
+      }
+      console.log("isValid: " + isValid);
+      console.log("isValidWrite: " + isValidWrite.isValid);
+      console.log("testcaseId: " + nextProps.match.params.testcaseId);
     }
 
     if (nextProps.report_filters && nextProps.report_filters.report_filters) {

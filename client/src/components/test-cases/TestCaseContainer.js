@@ -95,7 +95,13 @@ class TestCaseContainer extends Component {
       this.state.dimensions === null
     ) {
       content = <Spinner />;
-    } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 1) {
+    } else if (
+      testcases &&
+      testcases.testcases &&
+      testcases.testcases.testcases &&
+      testcases.testcases.testcases.length > 0 &&
+      this.state.settings.view_mode === 1
+    ) {
       testcases = this.props.testcases.testcases;
       if (showPagination) {
         pagination = (
@@ -135,7 +141,13 @@ class TestCaseContainer extends Component {
             ></PortraitTestCase>
           </React.Fragment>
         ));
-    } else if (testcases.testcases.testcases.length > 0 && this.state.settings.view_mode === 2) {
+    } else if (
+      testcases &&
+      testcases.testcases &&
+      testcases.testcases.testcases &&
+      testcases.testcases.testcases.length > 0 &&
+      this.state.settings.view_mode === 2
+    ) {
       testcases = this.props.testcases.testcases;
       testcases = this.props.testcases.testcases;
       if (showPagination) {

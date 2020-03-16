@@ -27,7 +27,7 @@ import { editTestcase } from "../../../actions/testcaseActions";
 import { getGroups } from "../../../actions/groupsActions";
 import isEmpty from "../../../validation/isEmpty";
 import TestCaseValidation from "../../../validation/TestCaseValidation";
-import { writePermissions } from "../../../permissions/Permissions";
+import { writePermissions, projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import checkIfElemInObjInArray from "../../../utility/checkIfElemInObjInArray";
 import getIdsFromObjArray from "../../../utility/getIdsFromObjArray";
 
@@ -89,6 +89,30 @@ class EditTestCase extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
+    if (nextProps.auth && nextProps.auth.user) {
+      var isValidWrite = writePermissions(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+      update.isValidWrite = isValidWrite.isValid;
+      var { isValid } = projectIdAndSuperAdminPermission(
+        nextProps.auth.user.projects,
+        nextProps.match.params.projectId,
+        nextProps.auth.user.superadmin
+      );
+      update.isValid = isValid;
+
+      if (nextProps.auth.user !== prevState.user) {
+        update.user = nextProps.auth.user;
+      }
+      if (!isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
+      } else if (!isValidWrite.isValid) {
+        nextProps.history.push(`/${nextProps.match.params.projectId}/TestCase/${nextProps.match.params.testcaseId}`);
+      }
+    }
+
     if (nextProps.testcases && nextProps.testcases.testcase) {
       if (prevState.initialRender) {
         if (nextProps.testcases !== prevState.testcases) {
@@ -142,17 +166,6 @@ class EditTestCase extends Component {
 
         update.notPinnedGroups = filteredUnpinnedGroups;
         update.allGroups = groups;
-      }
-      if (nextProps.auth && nextProps.auth.user) {
-        if (nextProps.auth.user !== prevState.user) {
-          var { isValid } = writePermissions(nextProps.auth.user.projects, nextProps.match.params.projectId);
-          if (!isValid) {
-            nextProps.history.push(
-              `/${nextProps.match.params.projectId}/TestCase/${nextProps.match.params.testcaseId}`
-            );
-          }
-        }
-        update.isValid = isValid;
       }
     }
 
