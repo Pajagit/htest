@@ -150,7 +150,6 @@ module.exports = {
 
           //tesstcase settings
           var TCsettings = await GroupService.findAllOccurancesInTestcaseSettings(req.params.id);
-          console.log(TCsettings);
           if (TCsettings) {
             for (var i = 0; i < TCsettings.length; i++) {
               var newTCGroups = Array();
