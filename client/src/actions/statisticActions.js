@@ -6,13 +6,13 @@ import { GET_PROJECT_STATISTICS, STATISTICS_LOADING } from "./types";
 export const getProjectStatistics = () => dispatch => {
   dispatch(statisticsLoading());
 
-  delete axios.defaults.headers.common["Authorization"]; // Comment out when not testing statistics or all EPs will stop working
+  // delete axios.defaults.headers.common["Authorization"]; // Comment out when not testing statistics or all EPs will stop working
   axios
     // .get("https://api.myjson.com/bins/uhvtm") // annual test
     // .get("https://api.myjson.com/bins/18wknu") // most used TC test
     // .get("https://api.myjson.com/bins/w81h6") // nema ni jedan
     // .get("https://api.myjson.com/bins/m1j16") // ima po neki
-    // .get(`https://api.myjson.com/bins/1citmm`) // ima sve
+    .get(`https://api.myjson.com/bins/1citmm`) // ima sve
     // .get(`https://api.myjson.com/bins/1afdku`)
 
     // .get("http://www.json-generator.com/api/json/get/bUkFMBhmUO?indent=2") // bez annual
@@ -26,7 +26,7 @@ export const getProjectStatistics = () => dispatch => {
     // .get("http://www.json-generator.com/api/json/get/bVFGkconpK?indent=2") // most_user_reports + most_user_testcases + most_version_failed + most_testcases_failed
     // .get("http://www.json-generator.com/api/json/get/bTAUhMeiwi?indent=2") // most_user_reports + most_user_testcases + most_version_failed + most_testcases_failed + annual_data
     // .get("http://www.json-generator.com/api/json/get/cqIOsBLCoO?indent=2") // most_user_reports + most_user_testcases + most_version_failed + most_testcases_failed + annual_data + total_data
-    .get("http://www.json-generator.com/api/json/get/bVsrpwZgoi?indent=2") // most_user_reports + most_user_testcases + most_version_failed + most_testcases_failed + annual_data + total_data + most_active_testcases
+    // .get("http://www.json-generator.com/api/json/get/bVsrpwZgoi?indent=2") // most_user_reports + most_user_testcases + most_version_failed + most_testcases_failed + annual_data + total_data + most_active_testcases
 
     .then(res =>
       dispatch({
