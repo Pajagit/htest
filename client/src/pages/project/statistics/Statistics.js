@@ -383,177 +383,345 @@ class Statistics extends Component {
     if (isEmpty(project_statistics) || loading || !this.state.allTCOptions) {
       content = <Spinner />;
     } else {
-      content = (
-        <div className='stats-flex'>
-          <div className='stats-flex-top'>
-            <div className='stats-flex-top-left'>
-              <div className='stats-flex-top-left-title'>Test Cases</div>
+      if (project_statistics && project_statistics.annual_report) {
+        var annualReportComponent = (
+          <Chart options={this.state.allTCOptions} series={this.state.allTCSeries} type='area' width='100%' />
+        );
+      } else {
+        annualReportComponent = <div className='no-content'>There is no enough relevant data for annual report</div>;
+      }
+      if (!isEmpty(project_statistics.most_active_testcases)) {
+        var mostTestcasesComponent = (
+          <Chart
+            options={this.state.mostActiveOptions}
+            series={this.state.mostActiveSeries}
+            type='donut'
+            width='100%'
+            legend={this.state.legend1}
+          />
+        );
+      } else {
+        mostTestcasesComponent = (
+          <div className='no-content'>There is no enough relevant data for most active test cases</div>
+        );
+      }
 
-              <div className='stats-flex-top-left-chart'>
-                <div className='stats-grid'>
-                  <div className='stats-grid--item'>
-                    <div className='stats-grid--item-1'>
-                      <div className='stats-grid--item-1-title'>Total Test Cases</div>
-                      <div className='stats-grid--item-1-count'>
-                        {project_statistics.total_data.total_testcases &&
-                        project_statistics.total_data.total_testcases.value
-                          ? project_statistics.total_data.total_testcases.value
-                          : "None Created"}
+      if (!isEmpty(project_statistics.most_testcases_failed)) {
+        var mostTestcasesFailedComponent = (
+          <Chart
+            options={this.state.mostFailedTCOptions}
+            series={this.state.mostFailedTCSeries}
+            type='bar'
+            width='100%'
+          />
+        );
+      } else {
+        mostTestcasesFailedComponent = (
+          <div className='no-content'>There is no enough relevant data for most failed test cases</div>
+        );
+      }
+
+      if (!isEmpty(project_statistics.most_version_failed)) {
+        var mostVersionFailedComponent = (
+          <Chart
+            options={this.state.mostFailedVersionOptions}
+            series={this.state.mostFailedVersionSeries}
+            type='bar'
+            width='100%'
+          />
+        );
+      } else {
+        mostVersionFailedComponent = (
+          <div className='no-content'>There is no enough relevant data for most failed version</div>
+        );
+      }
+
+      if (!isEmpty(project_statistics.most_user_testcases)) {
+        var mostUserTestcasesComponent = (
+          <Chart
+            options={this.state.usersWithMostTc}
+            series={this.state.usersWithMostTcSeries}
+            type='bar'
+            width='100%'
+          />
+        );
+      } else {
+        mostUserTestcasesComponent = (
+          <div className='no-content'>There is no enough relevant data for most failed version</div>
+        );
+      }
+
+      if (!isEmpty(project_statistics.most_user_reports)) {
+        var mostUserReports = (
+          <Chart
+            options={this.state.usersWithMostReports}
+            series={this.state.usersWithMostReportsSeries}
+            type='bar'
+            width='100%'
+          />
+        );
+      } else {
+        mostUserReports = <div className='no-content'>There is no enough relevant data for most failed version</div>;
+      }
+      if (
+        !(project_statistics && project_statistics.annual_report) &&
+        isEmpty(project_statistics.most_active_testcases) &&
+        isEmpty(project_statistics.most_testcases_failed) &&
+        isEmpty(project_statistics.most_version_failed) &&
+        isEmpty(project_statistics.most_user_testcases) &&
+        isEmpty(project_statistics.most_user_reports)
+      ) {
+        content = (
+          <div className='stats-flex'>
+            <div className='stats-flex-top'>
+              <div className='stats-flex-top-left'>
+                <div className='stats-flex-top-left-title'>Total Data</div>
+
+                <div className='stats-flex-top-left-chart'>
+                  <div className='stats-grid'>
+                    <div className='stats-grid--item'>
+                      <div className='stats-grid--item-1'>
+                        <div className='stats-grid--item-1-title'>Total Test Cases</div>
+                        <div className='stats-grid--item-1-count'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_testcases &&
+                          project_statistics.total_data.total_testcases.value
+                            ? project_statistics.total_data.total_testcases.value
+                            : "None Created"}
+                        </div>
+                        <div className='stats-grid--item-1-percentage'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_testcases &&
+                          project_statistics.total_data.total_testcases.percentage > 0
+                            ? "+"
+                            : ""}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_testcases &&
+                          project_statistics.total_data.total_testcases.percentage
+                            ? `${project_statistics.total_data.total_testcases.percentage} %`
+                            : "No Changes"}
+                        </div>
                       </div>
-                      <div className='stats-grid--item-1-percentage'>
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_testcases &&
-                        project_statistics.total_data.total_testcases.percentage > 0
-                          ? "+"
-                          : ""}
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_testcases &&
-                        project_statistics.total_data.total_testcases.percentage
-                          ? `${project_statistics.total_data.total_testcases.percentage} %`
-                          : "No Changes"}
+                    </div>
+                    <div className='stats-grid--item'>
+                      <div className='stats-grid--item-2'>
+                        <div className='stats-grid--item-1-title'>Total Reports</div>
+                        <div className='stats-grid--item-1-count'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_reports &&
+                          project_statistics.total_data.total_reports.value
+                            ? project_statistics.total_data.total_reports.value
+                            : "None Reported"}
+                        </div>
+                        <div className='stats-grid--item-1-percentage'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_reports &&
+                          project_statistics.total_data.total_reports.percentage > 0
+                            ? "+"
+                            : ""}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_reports &&
+                          project_statistics.total_data.total_reports.percentage
+                            ? `${project_statistics.total_data.total_reports.percentage} %`
+                            : "No Changes"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='stats-grid--item'>
+                      <div className='stats-grid--item-3'>
+                        <div className='stats-grid--item-1-title'>Passed Reports</div>
+                        <div className='stats-grid--item-1-count'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_passed_reports &&
+                          project_statistics.total_data.total_passed_reports.value
+                            ? project_statistics.total_data.total_passed_reports.value
+                            : "None Reported"}
+                        </div>
+                        <div className='stats-grid--item-1-percentage'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_passed_reports &&
+                          project_statistics.total_data.total_passed_reports.percentage > 0
+                            ? "+"
+                            : ""}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_passed_reports &&
+                          project_statistics.total_data.total_passed_reports.percentage
+                            ? `${project_statistics.total_data.total_passed_reports.percentage} %`
+                            : "No Changes"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='stats-grid--item'>
+                      <div className='stats-grid--item-4'>
+                        <div className='stats-grid--item-1-title'>Failed Reports</div>
+                        <div className='stats-grid--item-1-count'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_failed_reports &&
+                          project_statistics.total_data.total_failed_reports.value
+                            ? project_statistics.total_data.total_failed_reports.value
+                            : "None Reported"}
+                        </div>
+                        <div className='stats-grid--item-1-percentage'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_failed_reports &&
+                          project_statistics.total_data.total_failed_reports.percentage > 0
+                            ? "+"
+                            : ""}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_failed_reports &&
+                          project_statistics.total_data.total_failed_reports.percentage
+                            ? `${project_statistics.total_data.total_failed_reports.percentage} %`
+                            : "No Changes"}
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className='stats-grid--item'>
-                    <div className='stats-grid--item-2'>
-                      <div className='stats-grid--item-1-title'>Total Reports</div>
-                      <div className='stats-grid--item-1-count'>
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_reports &&
-                        project_statistics.total_data.total_reports.value
-                          ? project_statistics.total_data.total_reports.value
-                          : "None Reported"}
-                      </div>
-                      <div className='stats-grid--item-1-percentage'>
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_reports &&
-                        project_statistics.total_data.total_reports.percentage > 0
-                          ? "+"
-                          : ""}
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_reports &&
-                        project_statistics.total_data.total_reports.percentage
-                          ? `${project_statistics.total_data.total_reports.percentage} %`
-                          : "No Changes"}
-                      </div>
-                    </div>
-                  </div>
-                  <div className='stats-grid--item'>
-                    <div className='stats-grid--item-3'>
-                      <div className='stats-grid--item-1-title'>Passed Reports</div>
-                      <div className='stats-grid--item-1-count'>
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_passed_reports &&
-                        project_statistics.total_data.total_passed_reports.value
-                          ? project_statistics.total_data.total_passed_reports.value
-                          : "None Reported"}
-                      </div>
-                      <div className='stats-grid--item-1-percentage'>
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_passed_reports &&
-                        project_statistics.total_data.total_passed_reports.percentage > 0
-                          ? "+"
-                          : ""}
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_passed_reports &&
-                        project_statistics.total_data.total_passed_reports.percentage
-                          ? `${project_statistics.total_data.total_passed_reports.percentage} %`
-                          : "No Changes"}
-                      </div>
-                    </div>
-                  </div>
-                  <div className='stats-grid--item'>
-                    <div className='stats-grid--item-4'>
-                      <div className='stats-grid--item-1-title'>Failed Reports</div>
-                      <div className='stats-grid--item-1-count'>
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_failed_reports &&
-                        project_statistics.total_data.total_failed_reports.value
-                          ? project_statistics.total_data.total_failed_reports.value
-                          : "None Reported"}
-                      </div>
-                      <div className='stats-grid--item-1-percentage'>
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_failed_reports &&
-                        project_statistics.total_data.total_failed_reports.percentage > 0
-                          ? "+"
-                          : ""}
-                        {project_statistics.total_data &&
-                        project_statistics.total_data.total_failed_reports &&
-                        project_statistics.total_data.total_failed_reports.percentage
-                          ? `${project_statistics.total_data.total_failed_reports.percentage} %`
-                          : "No Changes"}
-                      </div>
-                    </div>
-                  </div>
+
+                  {annualReportComponent}
                 </div>
-                <Chart options={this.state.allTCOptions} series={this.state.allTCSeries} type='area' width='100%' />
-              </div>
-            </div>
-            <div className='stats-flex-top-right'>
-              <div className='stats-flex-top-right-title'>Most Active Test Cases</div>
-              <div className='stats-flex-top-right-chart'>
-                <Chart
-                  options={this.state.mostActiveOptions}
-                  series={this.state.mostActiveSeries}
-                  type='donut'
-                  width='100%'
-                  legend={this.state.legend1}
-                />
               </div>
             </div>
           </div>
-          <div className='stats-flex-bottom'>
-            <div className='stats-flex-bottom-left'>
-              <div className='stats-flex-bottom-left-title'>Test Cases with most falied reports</div>
-              <div className='stats-flex-bottom-left-chart'>
-                <Chart
-                  options={this.state.mostFailedTCOptions}
-                  series={this.state.mostFailedTCSeries}
-                  type='bar'
-                  width='100%'
-                />
-              </div>
-            </div>
-            <div className='stats-flex-bottom-right'>
-              <div className='stats-flex-bottom-right-title'>App versions with most failed reports</div>
-              <div className='stats-flex-bottom-right-chart'>
-                <Chart
-                  options={this.state.mostFailedVersionOptions}
-                  series={this.state.mostFailedVersionSeries}
-                  type='bar'
-                  width='100%'
-                />
-              </div>
-            </div>
-          </div>
+        );
+      } else {
+        content = (
+          <div className='stats-flex'>
+            <div className='stats-flex-top'>
+              <div className='stats-flex-top-left'>
+                <div className='stats-flex-top-left-title'>Total Data</div>
 
-          <div className='stats-flex-bottom'>
-            <div className='stats-flex-bottom-left'>
-              <div className='stats-flex-bottom-left-title'>Users with most created test cases</div>
-              <div className='stats-flex-bottom-left-chart'>
-                <Chart
-                  options={this.state.usersWithMostTc}
-                  series={this.state.usersWithMostTcSeries}
-                  type='bar'
-                  width='100%'
-                />
+                <div className='stats-flex-top-left-chart'>
+                  <div className='stats-grid'>
+                    <div className='stats-grid--item'>
+                      <div className='stats-grid--item-1'>
+                        <div className='stats-grid--item-1-title'>Total Test Cases</div>
+                        <div className='stats-grid--item-1-count'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_testcases &&
+                          project_statistics.total_data.total_testcases.value
+                            ? project_statistics.total_data.total_testcases.value
+                            : "None Created"}
+                        </div>
+                        <div className='stats-grid--item-1-percentage'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_testcases &&
+                          project_statistics.total_data.total_testcases.percentage > 0
+                            ? "+"
+                            : ""}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_testcases &&
+                          project_statistics.total_data.total_testcases.percentage
+                            ? `${project_statistics.total_data.total_testcases.percentage} %`
+                            : "No Changes"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='stats-grid--item'>
+                      <div className='stats-grid--item-2'>
+                        <div className='stats-grid--item-1-title'>Total Reports</div>
+                        <div className='stats-grid--item-1-count'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_reports &&
+                          project_statistics.total_data.total_reports.value
+                            ? project_statistics.total_data.total_reports.value
+                            : "None Reported"}
+                        </div>
+                        <div className='stats-grid--item-1-percentage'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_reports &&
+                          project_statistics.total_data.total_reports.percentage > 0
+                            ? "+"
+                            : ""}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_reports &&
+                          project_statistics.total_data.total_reports.percentage
+                            ? `${project_statistics.total_data.total_reports.percentage} %`
+                            : "No Changes"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='stats-grid--item'>
+                      <div className='stats-grid--item-3'>
+                        <div className='stats-grid--item-1-title'>Passed Reports</div>
+                        <div className='stats-grid--item-1-count'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_passed_reports &&
+                          project_statistics.total_data.total_passed_reports.value
+                            ? project_statistics.total_data.total_passed_reports.value
+                            : "None Reported"}
+                        </div>
+                        <div className='stats-grid--item-1-percentage'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_passed_reports &&
+                          project_statistics.total_data.total_passed_reports.percentage > 0
+                            ? "+"
+                            : ""}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_passed_reports &&
+                          project_statistics.total_data.total_passed_reports.percentage
+                            ? `${project_statistics.total_data.total_passed_reports.percentage} %`
+                            : "No Changes"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='stats-grid--item'>
+                      <div className='stats-grid--item-4'>
+                        <div className='stats-grid--item-1-title'>Failed Reports</div>
+                        <div className='stats-grid--item-1-count'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_failed_reports &&
+                          project_statistics.total_data.total_failed_reports.value
+                            ? project_statistics.total_data.total_failed_reports.value
+                            : "None Reported"}
+                        </div>
+                        <div className='stats-grid--item-1-percentage'>
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_failed_reports &&
+                          project_statistics.total_data.total_failed_reports.percentage > 0
+                            ? "+"
+                            : ""}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_failed_reports &&
+                          project_statistics.total_data.total_failed_reports.percentage
+                            ? `${project_statistics.total_data.total_failed_reports.percentage} %`
+                            : "No Changes"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {annualReportComponent}
+                </div>
+              </div>
+              <div className='stats-flex-top-right'>
+                <div className='stats-flex-top-right-title'>Most Active Test Cases</div>
+                <div className='stats-flex-top-right-chart'>{mostTestcasesComponent}</div>
               </div>
             </div>
-            <div className='stats-flex-bottom-right'>
-              <div className='stats-flex-bottom-right-title'>Users with most created reports</div>
-              <div className='stats-flex-bottom-right-chart'>
-                <Chart
-                  options={this.state.usersWithMostReports}
-                  series={this.state.usersWithMostReportsSeries}
-                  type='bar'
-                  width='100%'
-                />
+            <div className='stats-flex-bottom'>
+              <div className='stats-flex-bottom-left'>
+                <div className='stats-flex-bottom-left-title'>Test Cases with most falied reports</div>
+                <div className='stats-flex-bottom-left-chart'>{mostTestcasesFailedComponent}</div>
+              </div>
+              <div className='stats-flex-bottom-right'>
+                <div className='stats-flex-bottom-right-title'>App versions with most failed reports</div>
+                <div className='stats-flex-bottom-right-chart'>{mostVersionFailedComponent}</div>
+              </div>
+            </div>
+
+            <div className='stats-flex-bottom'>
+              <div className='stats-flex-bottom-left'>
+                <div className='stats-flex-bottom-left-title'>Users with most created test cases</div>
+                <div className='stats-flex-bottom-left-chart'>{mostUserTestcasesComponent}</div>
+              </div>
+              <div className='stats-flex-bottom-right'>
+                <div className='stats-flex-bottom-right-title'>Users with most created reports</div>
+                <div className='stats-flex-bottom-right-chart'>{mostUserReports}</div>
               </div>
             </div>
           </div>
-        </div>
-      );
+        );
+      }
     }
 
     return (
