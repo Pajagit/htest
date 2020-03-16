@@ -238,8 +238,12 @@ class Statistics extends Component {
           var mostActiveTcTitles = [];
           var mostActiveTcPercentage = [];
           Object.entries(nextProps.statistics.project_statistics.most_active_testcases).forEach(([key, value]) => {
-            mostActiveTcTitles.push(value.title);
-            mostActiveTcPercentage.push(value.percentage);
+            if (value.title) {
+              if (value.percentage !== null && !isNaN(value.percentage) && value.title !== null) {
+                mostActiveTcTitles.push(value.title);
+                mostActiveTcPercentage.push(value.percentage);
+              }
+            }
           });
           newMostActiveTC.mostActiveOptions.labels = mostActiveTcTitles;
           newMostActiveTC.mostActiveSeries = mostActiveTcPercentage;
@@ -391,15 +395,22 @@ class Statistics extends Component {
                     <div className='stats-grid--item-1'>
                       <div className='stats-grid--item-1-title'>Total Test Cases</div>
                       <div className='stats-grid--item-1-count'>
-                        {project_statistics.total_data.total_testcases.value
+                        {project_statistics.total_data.total_testcases &&
+                        project_statistics.total_data.total_testcases.value
                           ? project_statistics.total_data.total_testcases.value
-                          : "None"}
+                          : "None Created"}
                       </div>
                       <div className='stats-grid--item-1-percentage'>
-                        {project_statistics.total_data.total_testcases.percentage > 0 ? "+" : ""}
-                        {project_statistics.total_data.total_testcases.percentage
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_testcases &&
+                        project_statistics.total_data.total_testcases.percentage > 0
+                          ? "+"
+                          : ""}
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_testcases &&
+                        project_statistics.total_data.total_testcases.percentage
                           ? `${project_statistics.total_data.total_testcases.percentage} %`
-                          : "None"}
+                          : "No Changes"}
                       </div>
                     </div>
                   </div>
@@ -407,15 +418,23 @@ class Statistics extends Component {
                     <div className='stats-grid--item-2'>
                       <div className='stats-grid--item-1-title'>Total Reports</div>
                       <div className='stats-grid--item-1-count'>
-                        {project_statistics.total_data.total_reports.value
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_reports &&
+                        project_statistics.total_data.total_reports.value
                           ? project_statistics.total_data.total_reports.value
-                          : "None"}
+                          : "None Reported"}
                       </div>
                       <div className='stats-grid--item-1-percentage'>
-                        {project_statistics.total_data.total_reports.percentage > 0 ? "+" : ""}
-                        {project_statistics.total_data.total_reports.percentage
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_reports &&
+                        project_statistics.total_data.total_reports.percentage > 0
+                          ? "+"
+                          : ""}
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_reports &&
+                        project_statistics.total_data.total_reports.percentage
                           ? `${project_statistics.total_data.total_reports.percentage} %`
-                          : "None"}
+                          : "No Changes"}
                       </div>
                     </div>
                   </div>
@@ -423,15 +442,23 @@ class Statistics extends Component {
                     <div className='stats-grid--item-3'>
                       <div className='stats-grid--item-1-title'>Passed Reports</div>
                       <div className='stats-grid--item-1-count'>
-                        {project_statistics.total_data.total_passed_reports.value
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_passed_reports &&
+                        project_statistics.total_data.total_passed_reports.value
                           ? project_statistics.total_data.total_passed_reports.value
-                          : "None"}
+                          : "None Reported"}
                       </div>
                       <div className='stats-grid--item-1-percentage'>
-                        {project_statistics.total_data.total_passed_reports.percentage > 0 ? "+" : ""}
-                        {project_statistics.total_data.total_passed_reports.percentage
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_passed_reports &&
+                        project_statistics.total_data.total_passed_reports.percentage > 0
+                          ? "+"
+                          : ""}
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_passed_reports &&
+                        project_statistics.total_data.total_passed_reports.percentage
                           ? `${project_statistics.total_data.total_passed_reports.percentage} %`
-                          : "None"}
+                          : "No Changes"}
                       </div>
                     </div>
                   </div>
@@ -439,15 +466,23 @@ class Statistics extends Component {
                     <div className='stats-grid--item-4'>
                       <div className='stats-grid--item-1-title'>Failed Reports</div>
                       <div className='stats-grid--item-1-count'>
-                        {project_statistics.total_data.total_failed_reports.value
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_failed_reports &&
+                        project_statistics.total_data.total_failed_reports.value
                           ? project_statistics.total_data.total_failed_reports.value
-                          : "None"}
+                          : "None Reported"}
                       </div>
                       <div className='stats-grid--item-1-percentage'>
-                        {project_statistics.total_data.total_failed_reports.percentage > 0 ? "+" : ""}
-                        {project_statistics.total_data.total_failed_reports.percentage
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_failed_reports &&
+                        project_statistics.total_data.total_failed_reports.percentage > 0
+                          ? "+"
+                          : ""}
+                        {project_statistics.total_data &&
+                        project_statistics.total_data.total_failed_reports &&
+                        project_statistics.total_data.total_failed_reports.percentage
                           ? `${project_statistics.total_data.total_failed_reports.percentage} %`
-                          : "None"}
+                          : "No Changes"}
                       </div>
                     </div>
                   </div>
