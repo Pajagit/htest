@@ -55,7 +55,7 @@ export const getGlobalStatistics = () => dispatch => {
     // .get("https://api.myjson.com/bins/w81h6") // nema ni jedan
     // .get("https://api.myjson.com/bins/m1j16") // ima po neki
     // .get(`https://api.myjson.com/bins/1citmm`) // ima sve
-    .get("https://testserse.free.beeceptor.com/global-settings-mocked")
+    .get("/api/global-statistics-mocked")
     // .get(`https://api.myjson.com/bins/1afdku`)
 
     // .get("http://www.json-generator.com/api/json/get/bUkFMBhmUO?indent=2") // bez annual
