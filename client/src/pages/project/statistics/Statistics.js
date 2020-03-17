@@ -39,7 +39,7 @@ class Statistics extends Component {
       },
       allTCSeries: [
         {
-          name: "Test Cases",
+          name: "Reports",
           data: []
         },
         {
@@ -89,7 +89,7 @@ class Statistics extends Component {
       },
       mostFailedTCSeries: [
         {
-          name: "Test Cases",
+          name: "Reports",
           data: []
         },
         {
@@ -120,7 +120,7 @@ class Statistics extends Component {
       },
       mostFailedVersionSeries: [
         {
-          name: "Test Cases",
+          name: "Reports",
           data: []
         },
         {
@@ -209,7 +209,9 @@ class Statistics extends Component {
           var total_passed = [];
           var total_failed = [];
           Object.entries(nextProps.statistics.project_statistics.annual_report).forEach(([key, value]) => {
-            total_months.push(key);
+            if (value && value.month) {
+              total_months.push(value.month);
+            }
             if (value && value.total) {
               total_testcases.push(value.total);
             } else {

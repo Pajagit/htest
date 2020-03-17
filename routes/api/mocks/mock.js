@@ -64,60 +64,80 @@ module.exports = Router({ mergeParams: true }).get(
             "title": "Aleksandar Pavlovic"
           }
         ],
-        "annual_report": {
-          "January": {
-            "failed": 68,
-            "total": 123,
-            "passed": 55
-          },
-          "February": {
-            "failed": 15,
-            "total": 98,
-            "passed": 83
-          },
-          "March": {
-            "failed": 67,
-            "total": 87,
-            "passed": 20
-          },
-          "April": {
-            "failed": 33,
-            "total": 66,
-            "passed": 33
-          },
-          "May": {
-            "failed": 5,
-            "total": 52,
-            "passed": 47
-          },
-          "Jun": {
-            "failed": 68,
-            "total": 123,
-            "passed": 55
-          },
-          "July": {
-            "failed": 67,
-            "total": 87,
-            "passed": 20
-          },
-          "August": {
-            "failed": 155,
-            "total": 221,
-            "passed": 66
-          },
-          "September": {
-            "failed": 67,
-            "total": 87,
-            "passed": 20
-          },
-          "October": {
-            "failed": 5,
-            "total": 52,
-            "passed": 47
-          },
-          "November": null,
-          "December": null
-        },
+        "annual_report": [
+            {
+                "total": 673,
+                "passed": 321,
+                "failed": 352,
+                "month": "April"
+              },
+              {
+                "total": 452,
+                "passed": 221,
+                "failed": 231,
+                "month": "May"
+              },
+              {
+                "total": 678,
+                "passed": 322,
+                "failed": 356,
+                "month": "June"
+              },
+              {
+                "total": 657,
+                "passed": 456,
+                "failed": 201,
+                "month": "July"
+              },
+              {
+                "total": 544,
+                "passed": 421,
+                "failed": 123,
+                "month": "August"
+              },
+              {
+                "total": 511,
+                "passed": 210,
+                "failed": 301,
+                "month": "September"
+              },
+              {
+                "total": 498,
+                "passed": 267,
+                "failed": 231,
+                "month": "October"
+              },
+              {
+                "total": 590,
+                "passed": 345,
+                "failed": 245,
+                "month": "November"
+              },
+              {
+                "total": 378,
+                "passed": 115,
+                "failed": 263,
+                "month": "December"
+              },
+              {
+                "total": 669,
+                "passed": 331,
+                "failed": 338,
+                "month": "January"
+              },
+              {
+                "total": 521,
+                "passed": 251,
+                "failed": 270,
+                "month": "February"
+              },
+              {
+                "total": 27,
+                "passed": 15,
+                "failed": 12,
+                "month": "March"
+              }
+            ],
         "most_testcases_failed": [
           {
             "failed": 168,
