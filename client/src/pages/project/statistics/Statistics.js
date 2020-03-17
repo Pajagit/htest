@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import ReactTooltip from "react-tooltip";
 
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import ProjectPanel from "../../../components/project-panel/ProjectPanel";
@@ -501,7 +502,7 @@ class Statistics extends Component {
                           project_statistics.total_data.total_testcases &&
                           project_statistics.total_data.total_testcases.percentage
                             ? `${project_statistics.total_data.total_testcases.percentage} %`
-                            : "No Changes"}
+                            : ""}
                         </div>
                       </div>
                     </div>
@@ -525,7 +526,7 @@ class Statistics extends Component {
                           project_statistics.total_data.total_reports &&
                           project_statistics.total_data.total_reports.percentage
                             ? `${project_statistics.total_data.total_reports.percentage} %`
-                            : "No Changes"}
+                            : ""}
                         </div>
                       </div>
                     </div>
@@ -549,7 +550,7 @@ class Statistics extends Component {
                           project_statistics.total_data.total_passed_reports &&
                           project_statistics.total_data.total_passed_reports.percentage
                             ? `${project_statistics.total_data.total_passed_reports.percentage} %`
-                            : "No Changes"}
+                            : ""}
                         </div>
                       </div>
                     </div>
@@ -573,7 +574,7 @@ class Statistics extends Component {
                           project_statistics.total_data.total_failed_reports &&
                           project_statistics.total_data.total_failed_reports.percentage
                             ? `${project_statistics.total_data.total_failed_reports.percentage} %`
-                            : "No Changes"}
+                            : ""}
                         </div>
                       </div>
                     </div>
@@ -614,7 +615,7 @@ class Statistics extends Component {
                           project_statistics.total_data.total_testcases &&
                           project_statistics.total_data.total_testcases.percentage
                             ? `${project_statistics.total_data.total_testcases.percentage} %`
-                            : "No Changes"}
+                            : ""}
                         </div>
                       </div>
                     </div>
@@ -634,11 +635,33 @@ class Statistics extends Component {
                           project_statistics.total_data.total_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
+                          {/* {project_statistics.total_data &&
                           project_statistics.total_data.total_reports &&
                           project_statistics.total_data.total_reports.percentage
                             ? `${project_statistics.total_data.total_reports.percentage} %`
-                            : "No Changes"}
+                            : ""} */}
+                          {project_statistics.total_data &&
+                          project_statistics.total_data.total_reports.value &&
+                          project_statistics.total_data &&
+                          project_statistics.total_data.total_testcases.value
+                            ? Math.round(
+                                (project_statistics.total_data.total_reports.value /
+                                  project_statistics.total_data.total_testcases.value) *
+                                  100 +
+                                  Number.EPSILON
+                              ) / 100
+                            : ""}
+                          <i className='fas fa-info-circle ml-0 primary-text' data-tip data-for='ratio'></i>
+                          <ReactTooltip
+                            id='ratio'
+                            aria-haspopup='true'
+                            className='custom-color-no-arrow'
+                            textColor='#fff'
+                            backgroundColor='#4d3cb5'
+                            effect='solid'
+                          >
+                            <p>Reports / Test Cases ratio</p>
+                          </ReactTooltip>
                         </div>
                       </div>
                     </div>
@@ -659,10 +682,29 @@ class Statistics extends Component {
                             ? "+"
                             : ""}
                           {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.percentage
-                            ? `${project_statistics.total_data.total_passed_reports.percentage} %`
-                            : "No Changes"}
+                          project_statistics.total_data.total_reports &&
+                          project_statistics.total_data.total_reports.value &&
+                          project_statistics.total_data &&
+                          project_statistics.total_data.total_passed_reports
+                            ? `${Math.round(
+                                ((project_statistics.total_data.total_passed_reports.value /
+                                  project_statistics.total_data.total_reports.value) *
+                                  100 +
+                                  Number.EPSILON) *
+                                  100
+                              ) / 100} %`
+                            : ""}
+                          <i className='fas fa-info-circle ml-0 passed-text' data-tip data-for='passed'></i>
+                          <ReactTooltip
+                            id='passed'
+                            aria-haspopup='true'
+                            className='custom-color-no-arrow'
+                            textColor='#fff'
+                            backgroundColor='#4d3cb5'
+                            effect='solid'
+                          >
+                            <p>Percentage of passed reports</p>
+                          </ReactTooltip>
                         </div>
                       </div>
                     </div>
@@ -683,10 +725,29 @@ class Statistics extends Component {
                             ? "+"
                             : ""}
                           {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.percentage
-                            ? `${project_statistics.total_data.total_failed_reports.percentage} %`
-                            : "No Changes"}
+                          project_statistics.total_data.total_reports &&
+                          project_statistics.total_data.total_reports.value &&
+                          project_statistics.total_data &&
+                          project_statistics.total_data.total_failed_reports
+                            ? `${Math.round(
+                                ((project_statistics.total_data.total_failed_reports.value /
+                                  project_statistics.total_data.total_reports.value) *
+                                  100 +
+                                  Number.EPSILON) *
+                                  100
+                              ) / 100} %`
+                            : ""}
+                          <i className='fas fa-info-circle ml-0 failed-text' data-tip data-for='failed'></i>
+                          <ReactTooltip
+                            id='failed'
+                            aria-haspopup='true'
+                            className='custom-color-no-arrow'
+                            textColor='#fff'
+                            backgroundColor='#4d3cb5'
+                            effect='solid'
+                          >
+                            <p>Percentage of failed reports</p>
+                          </ReactTooltip>
                         </div>
                       </div>
                     </div>
