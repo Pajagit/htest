@@ -84,14 +84,9 @@ class NewReport extends Component {
       }
       if (!isValid) {
         nextProps.history.push(`/${nextProps.match.params.projectId}/TestCases`);
-        console.log("Nije na projektu");
       } else if (!isValidWrite.isValid) {
         nextProps.history.push(`/${nextProps.match.params.projectId}/TestCase/${nextProps.match.params.testcaseId}`);
-        console.log("Ne moze da edituje");
       }
-      console.log("isValid: " + isValid);
-      console.log("isValidWrite: " + isValidWrite.isValid);
-      console.log("testcaseId: " + nextProps.match.params.testcaseId);
     }
 
     if (nextProps.report_filters && nextProps.report_filters.report_filters) {
