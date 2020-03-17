@@ -8,12 +8,12 @@ export const getProjectStatistics = projectId => dispatch => {
 
   // delete axios.defaults.headers.common["Authorization"]; // Comment out when not testing statistics or all EPs will stop working
   axios
-    // .get(`/api/projects/project/${projectId}/statistics`)
+    .get(`/api/projects/project/${projectId}/statistics`)
     // .get("https://api.myjson.com/bins/uhvtm") // annual test
     // .get("https://api.myjson.com/bins/18wknu") // most used TC test
     // .get("https://api.myjson.com/bins/w81h6") // nema ni jedan
     // .get("https://api.myjson.com/bins/m1j16") // ima po neki
-    .get(`https://api.myjson.com/bins/1citmm`) // ima sve
+    // .get(`https://api.myjson.com/bins/1citmm`) // ima sve
     // .get(`https://api.myjson.com/bins/1afdku`)
 
     // .get("http://www.json-generator.com/api/json/get/bUkFMBhmUO?indent=2") // bez annual
@@ -54,7 +54,8 @@ export const getGlobalStatistics = () => dispatch => {
     // .get("https://api.myjson.com/bins/18wknu") // most used TC test
     // .get("https://api.myjson.com/bins/w81h6") // nema ni jedan
     // .get("https://api.myjson.com/bins/m1j16") // ima po neki
-    .get(`https://api.myjson.com/bins/1citmm`) // ima sve
+    // .get(`https://api.myjson.com/bins/1citmm`) // ima sve
+    .get("https://testserse.free.beeceptor.com/global-settings-mocked")
     // .get(`https://api.myjson.com/bins/1afdku`)
 
     // .get("http://www.json-generator.com/api/json/get/bUkFMBhmUO?indent=2") // bez annual

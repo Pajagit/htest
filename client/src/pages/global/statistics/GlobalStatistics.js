@@ -228,11 +228,11 @@ class GlobalStatistics extends Component {
           newAnnual.allTCSeries[2].data = total_failed;
         }
         update.statistics = newAnnual;
-        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_active_testcases) {
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_active_projects) {
           var newMostActiveTC = prevState;
           var mostActiveTcTitles = [];
           var mostActiveTcPercentage = [];
-          Object.entries(nextProps.statistics.global_statistics.most_active_testcases).forEach(([key, value]) => {
+          Object.entries(nextProps.statistics.global_statistics.most_active_projects).forEach(([key, value]) => {
             if (value.title) {
               if (value.percentage !== null && !isNaN(value.percentage) && value.title !== null) {
                 mostActiveTcTitles.push(value.title);
@@ -385,7 +385,7 @@ class GlobalStatistics extends Component {
       } else {
         annualReportComponent = <div className='no-content'>There is no enough relevant data for annual report</div>;
       }
-      if (!isEmpty(global_statistics.most_active_testcases)) {
+      if (!isEmpty(global_statistics.most_active_projects)) {
         var mostTestcasesComponent = (
           <Chart
             options={this.state.mostActiveOptions}
@@ -460,7 +460,7 @@ class GlobalStatistics extends Component {
       }
       if (
         !(global_statistics && global_statistics.annual_report) &&
-        isEmpty(global_statistics.most_active_testcases) &&
+        isEmpty(global_statistics.most_active_projects) &&
         isEmpty(global_statistics.most_testcases_failed) &&
         isEmpty(global_statistics.most_version_failed) &&
         isEmpty(global_statistics.most_user_testcases) &&
@@ -689,17 +689,17 @@ class GlobalStatistics extends Component {
                 </div>
               </div>
               <div className='stats-flex-top-right'>
-                <div className='stats-flex-top-right-title'>Most Active Test Cases</div>
+                <div className='stats-flex-top-right-title'>Most Active Projects</div>
                 <div className='stats-flex-top-right-chart'>{mostTestcasesComponent}</div>
               </div>
             </div>
             <div className='stats-flex-bottom'>
               <div className='stats-flex-bottom-left'>
-                <div className='stats-flex-bottom-left-title'>Test Cases with most falied reports</div>
+                <div className='stats-flex-bottom-left-title'>Project with most falied reports</div>
                 <div className='stats-flex-bottom-left-chart'>{mostTestcasesFailedComponent}</div>
               </div>
               <div className='stats-flex-bottom-right'>
-                <div className='stats-flex-bottom-right-title'>App versions with most failed reports</div>
+                <div className='stats-flex-bottom-right-title'>Projects with most test cases</div>
                 <div className='stats-flex-bottom-right-chart'>{mostVersionFailedComponent}</div>
               </div>
             </div>
