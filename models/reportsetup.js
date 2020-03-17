@@ -80,6 +80,12 @@ ReportSetup.belongsTo(Version, {
   as: "version"
 });
 
+Version.hasMany(ReportSetup, {
+  foreignKey: "version_id",
+  targetKey: "id",
+  as: "reportsetups"
+});
+
 ReportSetup.belongsTo(OperatingSystem, {
   foreignKey: "operating_system_id",
   targetKey: "id",

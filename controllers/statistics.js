@@ -42,7 +42,7 @@ module.exports = {
 
     var most_user_testcases = await StatisticsService.getMostTestcasesUsers(req.params.id, 5);
 
-    // var most_version_failed = await StatisticsService.getMostVersionsFailed(req.params.id, 5);
+    var most_version_failed = await StatisticsService.getMostVersionsFailed(req.params.id, 5);
 
     var statistics = {};
     statistics.total_data = {};
@@ -66,7 +66,7 @@ module.exports = {
 
     statistics.most_user_testcases = most_user_testcases;
 
-    // statistics.most_version_failed = statistics;
+    statistics.most_version_failed = most_version_failed.slice(0, 5);
 
     return res.status(200).json(statistics);
   }
