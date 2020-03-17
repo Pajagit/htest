@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import { superAdminPermissions } from "../../../permissions/Permissions";
-import { getProjectStatistics } from "../../../actions/statisticActions";
+import { getGlobalStatistics } from "../../../actions/statisticActions";
 
 import Header from "../../../components/common/Header";
 import Chart from "../../../components/common/Chart";
@@ -198,12 +198,12 @@ class GlobalStatistics extends Component {
         nextProps.history.push(`/Projects`);
       }
       if (nextProps.statistics !== prevState.statistics) {
-        if (nextProps.statistics.project_statistics && nextProps.statistics.project_statistics.annual_report) {
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.annual_report) {
           var total_months = [];
           var total_testcases = [];
           var total_passed = [];
           var total_failed = [];
-          Object.entries(nextProps.statistics.project_statistics.annual_report).forEach(([key, value]) => {
+          Object.entries(nextProps.statistics.global_statistics.annual_report).forEach(([key, value]) => {
             total_months.push(key);
             if (value && value.total) {
               total_testcases.push(value.total);
@@ -228,11 +228,11 @@ class GlobalStatistics extends Component {
           newAnnual.allTCSeries[2].data = total_failed;
         }
         update.statistics = newAnnual;
-        if (nextProps.statistics.project_statistics && nextProps.statistics.project_statistics.most_active_testcases) {
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_active_projects) {
           var newMostActiveTC = prevState;
           var mostActiveTcTitles = [];
           var mostActiveTcPercentage = [];
-          Object.entries(nextProps.statistics.project_statistics.most_active_testcases).forEach(([key, value]) => {
+          Object.entries(nextProps.statistics.global_statistics.most_active_projects).forEach(([key, value]) => {
             if (value.title) {
               if (value.percentage !== null && !isNaN(value.percentage) && value.title !== null) {
                 mostActiveTcTitles.push(value.title);
@@ -244,12 +244,12 @@ class GlobalStatistics extends Component {
           newMostActiveTC.mostActiveSeries = mostActiveTcPercentage;
         }
         update.statistics = newMostActiveTC;
-        if (nextProps.statistics.project_statistics && nextProps.statistics.project_statistics.most_testcases_failed) {
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_testcases_failed) {
           var most_tc_failed_titles = [];
           var most_tc_failed_testcases = [];
           var most_tc_failed_passed = [];
           var most_tc_failed_failed = [];
-          Object.entries(nextProps.statistics.project_statistics.most_testcases_failed).forEach(([key, value]) => {
+          Object.entries(nextProps.statistics.global_statistics.most_testcases_failed).forEach(([key, value]) => {
             most_tc_failed_titles.push(value.title);
             if (value && value.total) {
               most_tc_failed_testcases.push(value.total);
@@ -274,12 +274,12 @@ class GlobalStatistics extends Component {
           newMostFailedTc.mostFailedTCSeries[2].data = most_tc_failed_failed;
         }
         update.statistics = newMostFailedTc;
-        if (nextProps.statistics.project_statistics && nextProps.statistics.project_statistics.most_version_failed) {
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_version_failed) {
           var most_version_failed_titles = [];
           var most_version_failed_total = [];
           var most_version_failed_passed = [];
           var most_version_failed_failed = [];
-          Object.entries(nextProps.statistics.project_statistics.most_version_failed).forEach(([key, value]) => {
+          Object.entries(nextProps.statistics.global_statistics.most_version_failed).forEach(([key, value]) => {
             most_version_failed_titles.push(value.title);
             if (value && value.total) {
               most_version_failed_total.push(value.total);
@@ -304,12 +304,12 @@ class GlobalStatistics extends Component {
           newMostFailedVersion.mostFailedVersionSeries[2].data = most_version_failed_failed;
         }
         update.statistics = newMostFailedVersion;
-        if (nextProps.statistics.project_statistics && nextProps.statistics.project_statistics.most_user_testcases) {
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_user_testcases) {
           var most_user_testcases_titles = [];
           var most_user_testcases_total = [];
           var most_user_testcases_passed = [];
           var most_user_testcases_failed = [];
-          Object.entries(nextProps.statistics.project_statistics.most_user_testcases).forEach(([key, value]) => {
+          Object.entries(nextProps.statistics.global_statistics.most_user_testcases).forEach(([key, value]) => {
             most_user_testcases_titles.push(value.title);
             if (value && value.total) {
               most_user_testcases_total.push(value.total);
@@ -332,12 +332,12 @@ class GlobalStatistics extends Component {
           newMostUserTestcases.usersWithMostTcSeries[0].data = most_user_testcases_total;
         }
         update.statistics = newMostUserTestcases;
-        if (nextProps.statistics.project_statistics && nextProps.statistics.project_statistics.most_user_reports) {
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_user_reports) {
           var most_user_report_titles = [];
           var most_user_report_total = [];
           var most_user_report_passed = [];
           var most_user_report_failed = [];
-          Object.entries(nextProps.statistics.project_statistics.most_user_reports).forEach(([key, value]) => {
+          Object.entries(nextProps.statistics.global_statistics.most_user_reports).forEach(([key, value]) => {
             most_user_report_titles.push(value.title);
             if (value && value.total) {
               most_user_report_total.push(value.total);
@@ -369,23 +369,23 @@ class GlobalStatistics extends Component {
   componentDidMount() {
     // var projectId = this.props.match.params.projectId;
     // this.setState({ projectId });
-    this.props.getProjectStatistics();
+    this.props.getGlobalStatistics();
   }
 
   render() {
-    var { project_statistics, loading } = this.props.statistics;
+    var { global_statistics, loading } = this.props.statistics;
     var content = "";
-    if (isEmpty(project_statistics) || loading || !this.state.allTCOptions) {
+    if (isEmpty(global_statistics) || loading || !this.state.allTCOptions) {
       content = <Spinner />;
     } else {
-      if (project_statistics && project_statistics.annual_report) {
+      if (global_statistics && global_statistics.annual_report) {
         var annualReportComponent = (
           <Chart options={this.state.allTCOptions} series={this.state.allTCSeries} type='area' width='100%' />
         );
       } else {
         annualReportComponent = <div className='no-content'>There is no enough relevant data for annual report</div>;
       }
-      if (!isEmpty(project_statistics.most_active_testcases)) {
+      if (!isEmpty(global_statistics.most_active_projects)) {
         var mostTestcasesComponent = (
           <Chart
             options={this.state.mostActiveOptions}
@@ -401,7 +401,7 @@ class GlobalStatistics extends Component {
         );
       }
 
-      if (!isEmpty(project_statistics.most_testcases_failed)) {
+      if (!isEmpty(global_statistics.most_testcases_failed)) {
         var mostTestcasesFailedComponent = (
           <Chart
             options={this.state.mostFailedTCOptions}
@@ -416,7 +416,7 @@ class GlobalStatistics extends Component {
         );
       }
 
-      if (!isEmpty(project_statistics.most_version_failed)) {
+      if (!isEmpty(global_statistics.most_version_failed)) {
         var mostVersionFailedComponent = (
           <Chart
             options={this.state.mostFailedVersionOptions}
@@ -431,7 +431,7 @@ class GlobalStatistics extends Component {
         );
       }
 
-      if (!isEmpty(project_statistics.most_user_testcases)) {
+      if (!isEmpty(global_statistics.most_user_testcases)) {
         var mostUserTestcasesComponent = (
           <Chart
             options={this.state.usersWithMostTc}
@@ -446,7 +446,7 @@ class GlobalStatistics extends Component {
         );
       }
 
-      if (!isEmpty(project_statistics.most_user_reports)) {
+      if (!isEmpty(global_statistics.most_user_reports)) {
         var mostUserReports = (
           <Chart
             options={this.state.usersWithMostReports}
@@ -459,12 +459,12 @@ class GlobalStatistics extends Component {
         mostUserReports = <div className='no-content'>There is no enough relevant data for most failed version</div>;
       }
       if (
-        !(project_statistics && project_statistics.annual_report) &&
-        isEmpty(project_statistics.most_active_testcases) &&
-        isEmpty(project_statistics.most_testcases_failed) &&
-        isEmpty(project_statistics.most_version_failed) &&
-        isEmpty(project_statistics.most_user_testcases) &&
-        isEmpty(project_statistics.most_user_reports)
+        !(global_statistics && global_statistics.annual_report) &&
+        isEmpty(global_statistics.most_active_projects) &&
+        isEmpty(global_statistics.most_testcases_failed) &&
+        isEmpty(global_statistics.most_version_failed) &&
+        isEmpty(global_statistics.most_user_testcases) &&
+        isEmpty(global_statistics.most_user_reports)
       ) {
         content = (
           <div className='stats-flex'>
@@ -478,22 +478,22 @@ class GlobalStatistics extends Component {
                       <div className='stats-grid--item-1'>
                         <div className='stats-grid--item-1-title'>Total Test Cases</div>
                         <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.value
-                            ? project_statistics.total_data.total_testcases.value
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_testcases &&
+                          global_statistics.total_data.total_testcases.value
+                            ? global_statistics.total_data.total_testcases.value
                             : "None Created"}
                         </div>
                         <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.percentage > 0
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_testcases &&
+                          global_statistics.total_data.total_testcases.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.percentage
-                            ? `${project_statistics.total_data.total_testcases.percentage} %`
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_testcases &&
+                          global_statistics.total_data.total_testcases.percentage
+                            ? `${global_statistics.total_data.total_testcases.percentage} %`
                             : "No Changes"}
                         </div>
                       </div>
@@ -502,22 +502,22 @@ class GlobalStatistics extends Component {
                       <div className='stats-grid--item-2'>
                         <div className='stats-grid--item-1-title'>Total Reports</div>
                         <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.value
-                            ? project_statistics.total_data.total_reports.value
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports &&
+                          global_statistics.total_data.total_reports.value
+                            ? global_statistics.total_data.total_reports.value
                             : "None Reported"}
                         </div>
                         <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.percentage > 0
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports &&
+                          global_statistics.total_data.total_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.percentage
-                            ? `${project_statistics.total_data.total_reports.percentage} %`
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports &&
+                          global_statistics.total_data.total_reports.percentage
+                            ? `${global_statistics.total_data.total_reports.percentage} %`
                             : "No Changes"}
                         </div>
                       </div>
@@ -526,22 +526,22 @@ class GlobalStatistics extends Component {
                       <div className='stats-grid--item-3'>
                         <div className='stats-grid--item-1-title'>Passed Reports</div>
                         <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.value
-                            ? project_statistics.total_data.total_passed_reports.value
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_passed_reports &&
+                          global_statistics.total_data.total_passed_reports.value
+                            ? global_statistics.total_data.total_passed_reports.value
                             : "None Reported"}
                         </div>
                         <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.percentage > 0
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_passed_reports &&
+                          global_statistics.total_data.total_passed_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.percentage
-                            ? `${project_statistics.total_data.total_passed_reports.percentage} %`
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_passed_reports &&
+                          global_statistics.total_data.total_passed_reports.percentage
+                            ? `${global_statistics.total_data.total_passed_reports.percentage} %`
                             : "No Changes"}
                         </div>
                       </div>
@@ -550,22 +550,22 @@ class GlobalStatistics extends Component {
                       <div className='stats-grid--item-4'>
                         <div className='stats-grid--item-1-title'>Failed Reports</div>
                         <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.value
-                            ? project_statistics.total_data.total_failed_reports.value
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_failed_reports &&
+                          global_statistics.total_data.total_failed_reports.value
+                            ? global_statistics.total_data.total_failed_reports.value
                             : "None Reported"}
                         </div>
                         <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.percentage > 0
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_failed_reports &&
+                          global_statistics.total_data.total_failed_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.percentage
-                            ? `${project_statistics.total_data.total_failed_reports.percentage} %`
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_failed_reports &&
+                          global_statistics.total_data.total_failed_reports.percentage
+                            ? `${global_statistics.total_data.total_failed_reports.percentage} %`
                             : "No Changes"}
                         </div>
                       </div>
@@ -591,22 +591,22 @@ class GlobalStatistics extends Component {
                       <div className='stats-grid--item-1'>
                         <div className='stats-grid--item-1-title'>Total Test Cases</div>
                         <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.value
-                            ? project_statistics.total_data.total_testcases.value
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_testcases &&
+                          global_statistics.total_data.total_testcases.value
+                            ? global_statistics.total_data.total_testcases.value
                             : "None Created"}
                         </div>
                         <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.percentage > 0
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_testcases &&
+                          global_statistics.total_data.total_testcases.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.percentage
-                            ? `${project_statistics.total_data.total_testcases.percentage} %`
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_testcases &&
+                          global_statistics.total_data.total_testcases.percentage
+                            ? `${global_statistics.total_data.total_testcases.percentage} %`
                             : "No Changes"}
                         </div>
                       </div>
@@ -615,22 +615,22 @@ class GlobalStatistics extends Component {
                       <div className='stats-grid--item-2'>
                         <div className='stats-grid--item-1-title'>Total Reports</div>
                         <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.value
-                            ? project_statistics.total_data.total_reports.value
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports &&
+                          global_statistics.total_data.total_reports.value
+                            ? global_statistics.total_data.total_reports.value
                             : "None Reported"}
                         </div>
                         <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.percentage > 0
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports &&
+                          global_statistics.total_data.total_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.percentage
-                            ? `${project_statistics.total_data.total_reports.percentage} %`
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports &&
+                          global_statistics.total_data.total_reports.percentage
+                            ? `${global_statistics.total_data.total_reports.percentage} %`
                             : "No Changes"}
                         </div>
                       </div>
@@ -639,22 +639,22 @@ class GlobalStatistics extends Component {
                       <div className='stats-grid--item-3'>
                         <div className='stats-grid--item-1-title'>Passed Reports</div>
                         <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.value
-                            ? project_statistics.total_data.total_passed_reports.value
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_passed_reports &&
+                          global_statistics.total_data.total_passed_reports.value
+                            ? global_statistics.total_data.total_passed_reports.value
                             : "None Reported"}
                         </div>
                         <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.percentage > 0
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_passed_reports &&
+                          global_statistics.total_data.total_passed_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.percentage
-                            ? `${project_statistics.total_data.total_passed_reports.percentage} %`
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_passed_reports &&
+                          global_statistics.total_data.total_passed_reports.percentage
+                            ? `${global_statistics.total_data.total_passed_reports.percentage} %`
                             : "No Changes"}
                         </div>
                       </div>
@@ -663,22 +663,22 @@ class GlobalStatistics extends Component {
                       <div className='stats-grid--item-4'>
                         <div className='stats-grid--item-1-title'>Failed Reports</div>
                         <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.value
-                            ? project_statistics.total_data.total_failed_reports.value
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_failed_reports &&
+                          global_statistics.total_data.total_failed_reports.value
+                            ? global_statistics.total_data.total_failed_reports.value
                             : "None Reported"}
                         </div>
                         <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.percentage > 0
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_failed_reports &&
+                          global_statistics.total_data.total_failed_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.percentage
-                            ? `${project_statistics.total_data.total_failed_reports.percentage} %`
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_failed_reports &&
+                          global_statistics.total_data.total_failed_reports.percentage
+                            ? `${global_statistics.total_data.total_failed_reports.percentage} %`
                             : "No Changes"}
                         </div>
                       </div>
@@ -689,17 +689,17 @@ class GlobalStatistics extends Component {
                 </div>
               </div>
               <div className='stats-flex-top-right'>
-                <div className='stats-flex-top-right-title'>Most Active Test Cases</div>
+                <div className='stats-flex-top-right-title'>Most Active Projects</div>
                 <div className='stats-flex-top-right-chart'>{mostTestcasesComponent}</div>
               </div>
             </div>
             <div className='stats-flex-bottom'>
               <div className='stats-flex-bottom-left'>
-                <div className='stats-flex-bottom-left-title'>Test Cases with most falied reports</div>
+                <div className='stats-flex-bottom-left-title'>Project with most falied reports</div>
                 <div className='stats-flex-bottom-left-chart'>{mostTestcasesFailedComponent}</div>
               </div>
               <div className='stats-flex-bottom-right'>
-                <div className='stats-flex-bottom-right-title'>App versions with most failed reports</div>
+                <div className='stats-flex-bottom-right-title'>Projects with most test cases</div>
                 <div className='stats-flex-bottom-right-chart'>{mostVersionFailedComponent}</div>
               </div>
             </div>
@@ -725,7 +725,7 @@ class GlobalStatistics extends Component {
         <div className='main-content full-content-grid'>
           <Header
             icon={<i className='far fa-chart-bar'></i>}
-            title={"Statistics"}
+            title={"Global Statistics"}
             history={this.props}
             canGoBack={false}
           />
@@ -747,4 +747,4 @@ const mapStateToProps = state => ({
   statistics: state.statistics
 });
 
-export default connect(mapStateToProps, { getProjectStatistics })(withRouter(GlobalStatistics));
+export default connect(mapStateToProps, { getGlobalStatistics })(withRouter(GlobalStatistics));

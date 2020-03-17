@@ -3,7 +3,9 @@
   padding-right: 3.8rem;
   padding-top: 2.4rem;
   padding-bottom: 2.4rem;
-
+  @media only screen and (max-width: $bp-600) {
+    padding: 1rem 0;
+  }
   //   width: 100%;
   &-top {
     padding: 2rem 3rem;
@@ -28,6 +30,9 @@
       }
       @media only screen and (max-width: $bp-400) {
         width: 92%;
+      }
+      @media only screen and (max-width: $bp-600) {
+        padding: 2rem 3rem;
       }
       &-title {
         margin-bottom: 2rem;
@@ -70,7 +75,7 @@
     &-left {
       width: 49%;
       @media only screen and (max-width: $bp-1600) {
-        width: 100%;
+        width: 90%;
       }
       &-title {
         // margin-left: 2rem;
@@ -84,7 +89,7 @@
     &-right {
       width: 49%;
       @media only screen and (max-width: $bp-1600) {
-        width: 100%;
+        width: 90%;
       }
       &-title {
         // margin-left: 2rem;
