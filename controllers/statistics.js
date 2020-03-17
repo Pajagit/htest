@@ -83,12 +83,12 @@ module.exports = {
 
     //current month-1
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 1);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -96,16 +96,14 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 1);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthOneTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -122,12 +120,12 @@ module.exports = {
 
     //current month-2
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 2);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -135,16 +133,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 1);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 2);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -160,12 +157,12 @@ module.exports = {
 
     //current month-3
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 3);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -173,16 +170,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 2);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 3);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -198,12 +194,12 @@ module.exports = {
 
     //current month-4
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 4);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -211,16 +207,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 3);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 4);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -236,12 +231,12 @@ module.exports = {
 
     //current month-5
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 5);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -249,16 +244,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 4);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 5);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -274,12 +268,12 @@ module.exports = {
 
     //current month-6
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 6);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -287,16 +281,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 5);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 6);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -312,12 +305,12 @@ module.exports = {
 
     //current month-7
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 7);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -325,16 +318,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 6);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 7);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -350,12 +342,12 @@ module.exports = {
 
     //current month-8
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 8);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -363,16 +355,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 7);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 8);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -388,12 +379,12 @@ module.exports = {
 
     //current month-9
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 9);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -401,16 +392,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 8);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 9);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -426,12 +416,12 @@ module.exports = {
 
     //current month-10
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 10);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -439,16 +429,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 9);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 10);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
@@ -464,12 +453,12 @@ module.exports = {
 
     //current month-11
     var startDate = new Date();
-    var minutes = startDate.getTimezoneOffset();
     startDate.setMonth(startDate.getMonth() - 11);
     startDate = new Date(startDate);
     var month = monthNames[startDate.getMonth()];
     startDate = startDate.setHours(0, 0, 0, 0);
     startDate = new Date(startDate);
+    var minutes = startDate.getTimezoneOffset();
     startDate = startDate.getTime();
     startDate = startDate - minutes * 60 * 1000;
     startDate = new Date(startDate);
@@ -477,16 +466,15 @@ module.exports = {
     startDate = new Date(startDate);
 
     var endDate = new Date();
-    endDate = endDate.setHours(23, 23, 59, 999);
+    endDate.setMonth(endDate.getMonth() - 10);
     endDate = new Date(endDate);
-    endDate.setMonth(endDate.getMonth() - 11);
-    endDate = new Date(endDate);
+    var minutes = endDate.getTimezoneOffset();
     endDate = endDate.setDate(0);
+    endDate = new Date(endDate);
+    endDate = endDate.setHours(23, 23, 59, 999);
     endDate = new Date(endDate);
     endDate = endDate.getTime();
     endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
-    endDate = endDate.setDate(1);
     endDate = new Date(endDate);
 
     var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(req.params.id, startDate, endDate);
