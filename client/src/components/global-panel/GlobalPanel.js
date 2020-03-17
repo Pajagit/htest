@@ -86,22 +86,22 @@ class GlobalPanel extends Component {
     var settings;
     if (this.state.settingsVisible) {
       settings = (
-        <GlobalPanelItem icon={<i className="fas fa-user-cog"></i>} link={"/UserSettings"} active={settingsActive} />
+        <GlobalPanelItem icon={<i className='fas fa-user-cog'></i>} link={"/UserSettings"} active={settingsActive} />
       );
     }
 
     return (
-      <div className="global-panel global-panel-grid">
-        <div className="global-panel-items">
+      <div className='global-panel global-panel-grid'>
+        <div className='global-panel-items'>
           <GlobalPanelHeader />
-          <GlobalPanelItem icon={<i className="fas fa-th"></i>} link={"/Projects"} active={projectsActive} />
+          <GlobalPanelItem icon={<i className='fas fa-th'></i>} link={"/Projects"} active={projectsActive} />
           <GlobalPanelItem
-            icon={<i className="fas fa-bell"></i>}
+            icon={<i className='fas fa-bell'></i>}
             link={"/Notifications"}
             active={notificationsActive}
             notification={14}
           />
-          <GlobalPanelItem icon={<i className="fas fa-chart-pie"></i>} link={"/Statistics"} active={statisticsActive} />
+          <GlobalPanelItem icon={<i className='fas fa-chart-bar'></i>} link={"/Statistics"} active={statisticsActive} />
           {settings}
           <GlobalPanelProfileImage
             img={userImg}
@@ -126,7 +126,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { logoutUser }
-)(withRouter(GlobalPanel));
+export default connect(mapStateToProps, { logoutUser })(withRouter(GlobalPanel));
