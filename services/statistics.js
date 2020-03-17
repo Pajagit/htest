@@ -464,5 +464,110 @@ module.exports = {
         }
       });
     });
+  },
+  getTotalReportsFailedAnnual: async function(project_id, startDate, EndDate) {
+    return new Promise((resolve, reject) => {
+      Report.count({
+        attributes: [],
+        where: {
+          created_at: {
+            [Op.between]: [startDate, EndDate]
+          }
+        },
+        include: [
+          {
+            model: TestCase,
+            as: "testcase",
+            attributes: [],
+            required: true,
+            where: {
+              project_id: project_id
+            }
+          },
+          {
+            model: Status,
+            as: "status",
+            attributes: [],
+            required: true,
+            where: {
+              title: "Failed"
+            }
+          }
+        ]
+      }).then(reports => {
+        if (reports) {
+          resolve(reports);
+        } else {
+          resolve(0);
+        }
+      });
+    });
+  },
+  getTotalReportsPassedAnnual: async function(project_id, startDate, EndDate) {
+    return new Promise((resolve, reject) => {
+      Report.count({
+        attributes: [],
+        where: {
+          created_at: {
+            [Op.between]: [startDate, EndDate]
+          }
+        },
+        include: [
+          {
+            model: TestCase,
+            as: "testcase",
+            attributes: [],
+            required: true,
+            where: {
+              project_id: project_id
+            }
+          },
+          {
+            model: Status,
+            as: "status",
+            attributes: [],
+            required: true,
+            where: {
+              title: "Passed"
+            }
+          }
+        ]
+      }).then(reports => {
+        if (reports) {
+          resolve(reports);
+        } else {
+          resolve(0);
+        }
+      });
+    });
+  },
+  getTotalReportsAnnual: async function(project_id, startDate, EndDate) {
+    return new Promise((resolve, reject) => {
+      Report.count({
+        attributes: [],
+        where: {
+          created_at: {
+            [Op.between]: [startDate, EndDate]
+          }
+        },
+        include: [
+          {
+            model: TestCase,
+            as: "testcase",
+            attributes: [],
+            required: true,
+            where: {
+              project_id: project_id
+            }
+          }
+        ]
+      }).then(reports => {
+        if (reports) {
+          resolve(reports);
+        } else {
+          resolve(0);
+        }
+      });
+    });
   }
 };
