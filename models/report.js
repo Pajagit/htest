@@ -85,6 +85,12 @@ Report.hasMany(ReportStep, {
   as: "steps"
 });
 
+ReportSetup.belongsTo(Report, {
+  foreignKey: "report_id",
+  targetKey: "id",
+  as: "reports"
+});
+
 Report.hasMany(ReportLink, {
   foreignKey: "report_id",
   targetKey: "id",
@@ -95,6 +101,12 @@ Report.belongsTo(TestCase, {
   foreignKey: "test_case_id",
   targetKey: "id",
   as: "testcase"
+});
+
+TestCase.hasMany(Report, {
+  foreignKey: "test_case_id",
+  targetKey: "id",
+  as: "reports"
 });
 
 Report.belongsTo(User, {

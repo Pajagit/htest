@@ -355,7 +355,8 @@ module.exports = {
         attributes: ["user_id", [sequelize.fn("COUNT", "user_id"), "countTestcases"]],
         group: ["user.first_name", "user.last_name", "user.id", "testcases.user_id"],
         where: {
-          project_id: project_id
+          project_id: project_id,
+          deprecated: false
         },
         include: [
           {
@@ -385,57 +386,76 @@ module.exports = {
       });
     });
   },
+
   getMostVersionsFailed: async function(project_id, limit) {
     return new Promise((resolve, reject) => {
-      Report.findAll({
-        attributes: [[sequelize.fn("COUNT", "reportsetup.version.id"), "countReports"]],
-        group: ["reportsetup.version.id"],
+      Version.findAll({
         include: [
           {
-            model: TestCase,
-            as: "testcase",
-            attributes: [],
-            required: true,
-            where: {
-              project_id: project_id
-            }
-          },
-          {
-            model: Status,
-            as: "status",
-            attributes: [],
-            required: true,
-            where: {
-              title: "Failed"
-            }
-          },
-          {
             model: ReportSetup,
-            as: "reportsetup",
-            attributes: ["id"],
+            as: "reportsetups",
+            attributes: ["version_id"],
             required: true,
+            where: {
+              version_id: {
+                [Op.ne]: null
+              }
+            },
             include: [
               {
-                model: Version,
-                as: "version",
+                model: Report,
+                as: "reports",
+                attributes: ["id"],
                 required: true,
-                attributes: ["id"]
+
+                include: [
+                  {
+                    model: Status,
+                    as: "status",
+                    attributes: ["id", "title"],
+                    required: true
+                  },
+                  {
+                    model: TestCase,
+                    as: "testcase",
+                    attributes: ["id", "project_id"],
+                    required: true,
+                    where: {
+                      project_id: project_id
+                    }
+                  }
+                ]
               }
             ]
           }
-        ],
-        order: [["count", "DESC"]],
-        limit: limit
+        ]
       }).then(testcases => {
-        var testcasesArr = Array();
-        if (testcases) {
+        if (testcases.length > 0) {
+          var testcasesArr = Array();
           for (var i = 0; i < testcases.length; i++) {
             var TCobj = {};
-            TCobj.title = testcases[i].testcase.title;
-            TCobj.test_case_id = testcases[i].testcase.id;
-            TCobj.failed = Number(testcases[i].dataValues.countReports);
+            TCobj.title = testcases[i].version;
+            TCobj.total = testcases[i].reportsetups.length;
+            var countPassed = 0;
+            var countFailed = 0;
+            for (var j = 0; j < testcases[i].reportsetups.length; j++) {
+              if (testcases[i].reportsetups[j].reports.status.title == "Passed") {
+                countPassed = countPassed + 1;
+              } else {
+                countFailed = countFailed + 1;
+              }
+            }
+            TCobj.passed = countPassed;
+            TCobj.failed = countFailed;
             testcasesArr.push(TCobj);
             if (i == testcases.length - 1) {
+              testcasesArr.sort(function(a, b) {
+                var keyA = a.failed,
+                  keyB = b.failed;
+                if (keyA > keyB) return -1;
+                if (keyA < keyB) return 1;
+                return 0;
+              });
               resolve(testcasesArr);
             }
           }
