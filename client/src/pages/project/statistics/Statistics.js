@@ -372,9 +372,9 @@ class Statistics extends Component {
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
-    // var projectId = this.props.match.params.projectId;
+    var projectId = this.props.match.params.projectId;
     // this.setState({ projectId });
-    this.props.getProjectStatistics();
+    this.props.getProjectStatistics(projectId);
   }
 
   render() {
@@ -731,7 +731,11 @@ class Statistics extends Component {
         <div className='main-content main-content-grid'>
           <Header
             icon={<i className='far fa-chart-bar'></i>}
-            title={"Statistics"}
+            title={
+              this.props.project && this.props.project.title
+                ? this.props.project.title + " Statistics"
+                : "Project Statistics"
+            }
             history={this.props}
             canGoBack={false}
           />
@@ -750,6 +754,7 @@ Statistics.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  project: state.projects.project,
   statistics: state.statistics
 });
 

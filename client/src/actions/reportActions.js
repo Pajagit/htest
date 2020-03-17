@@ -9,7 +9,7 @@ export const getReports = (project_id, reportFilters, page) => dispatch => {
   if (isEmpty(page)) {
     page = 1;
   }
-  var page_size = 15;
+  var page_size = 30;
 
   axios
     .post(`/api/reports?page=${page}&page_size=${page_size}&project_id=${project_id}`, reportFilters)
