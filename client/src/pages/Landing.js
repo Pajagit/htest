@@ -51,24 +51,24 @@ class Landing extends Component {
     const { errors } = this.state;
 
     return (
-      <div className="landing">
-        <div className="landing-content">
-          <div className="landing-content-logo">
-            <img src={htestLogo} alt="htest logo" />
+      <div className='landing'>
+        <div className='landing-content'>
+          <div className='landing-content-logo'>
+            <img src={htestLogo} alt='htest logo' />
           </div>
-          <div className="landing-content-btn">
+          <div className='landing-content-btn'>
             <GoogleLogin
-              clientId="19117053252-nqhee0c2nmovdumnub6tee623hdgkfoo.apps.googleusercontent.com"
-              buttonText="Sign in with Google"
+              clientId='423003783080-qknv579ghf7qbe9ji09l7irauhdhtiu5.apps.googleusercontent.com'
+              buttonText='Sign in with Google'
               onSuccess={this.responseGoogle}
               onFailure={this.responseGoogle}
               className={"login-btn"}
               redirectUri={"/Projects"}
               prompt={"consent"}
-              ux_mode="redirect"
+              ux_mode='redirect'
             />
           </div>
-          <span className="text-danger">{errors.email}</span>
+          <span className='text-danger'>{errors.email}</span>
         </div>
       </div>
     );
@@ -86,7 +86,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { loginUser, clearErrors }
-)(withRouter(Landing));
+export default connect(mapStateToProps, { loginUser, clearErrors })(withRouter(Landing));
