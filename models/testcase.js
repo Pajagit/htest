@@ -6,6 +6,8 @@ const sequelize = new Sequelize(pgURI);
 const Group = require("./group");
 const GroupTestCase = require("./grouptestcase");
 const Link = require("./link");
+const Project = require("./project");
+
 const TestStep = require("./teststep");
 const UploadedFile = require("./uploadedfile");
 const User = require("./user");
@@ -96,6 +98,14 @@ TestCase.belongsTo(User, {
 });
 User.hasMany(TestCase, {
   foreignKey: "user_id",
+  targetKey: "id"
+});
+TestCase.belongsTo(Project, {
+  foreignKey: "project_id",
+  targetKey: "id"
+});
+Project.hasMany(TestCase, {
+  foreignKey: "project_id",
   targetKey: "id"
 });
 
