@@ -707,7 +707,7 @@ class GlobalStatistics extends Component {
                             id='failed'
                             aria-haspopup='true'
                             className='custom-color-no-arrow'
-                            textColor='#000'
+                            textColor='#fff'
                             backgroundColor='#ff4560'
                             effect='solid'
                           >

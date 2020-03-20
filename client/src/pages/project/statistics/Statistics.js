@@ -699,8 +699,8 @@ class Statistics extends Component {
                             id='passed'
                             aria-haspopup='true'
                             className='custom-color-no-arrow'
-                            textColor='#fff'
-                            backgroundColor='#4d3cb5'
+                            textColor='#000'
+                            backgroundColor='#00e396'
                             effect='solid'
                           >
                             <p>Percentage of passed reports</p>
@@ -743,7 +743,7 @@ class Statistics extends Component {
                             aria-haspopup='true'
                             className='custom-color-no-arrow'
                             textColor='#fff'
-                            backgroundColor='#4d3cb5'
+                            backgroundColor='#ff4560'
                             effect='solid'
                           >
                             <p>Percentage of failed reports</p>
