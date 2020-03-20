@@ -29,12 +29,12 @@ module.exports = {
     if (most_user_reports) {
       for (var j = 0; j < most_user_reports.length; j++) {
         most_user_reports[j].passed = await StatisticsService.getCountReportsPassedForUser(
-          req.params.id,
-          most_user_reports[j].user_id
+          most_user_reports[j].user_id,
+          req.params.id
         );
         most_user_reports[j].failed = await StatisticsService.getCountReportsFailedForUser(
-          req.params.id,
-          most_user_reports[j].user_id
+          most_user_reports[j].user_id,
+          req.params.id
         );
         delete most_user_reports[j]["user_id"];
       }
