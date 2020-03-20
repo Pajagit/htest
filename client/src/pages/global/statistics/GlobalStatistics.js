@@ -70,7 +70,7 @@ class GlobalStatistics extends Component {
 
       // MOST FAILED TC
       mostFailedTCOptions: {
-        colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        colors: ["rgb(0, 227, 150)", "#a592ff", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },
@@ -154,7 +154,7 @@ class GlobalStatistics extends Component {
       ],
       // USER MOST Reports
       usersWithMostReports: {
-        colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        colors: ["rgb(0, 227, 150)", "#a592ff", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },
@@ -242,67 +242,68 @@ class GlobalStatistics extends Component {
           newMostActiveTC.mostActiveSeries = mostActiveTcPercentage;
         }
         update.statistics = newMostActiveTC;
-        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_testcases_failed) {
-          var most_tc_failed_titles = [];
-          var most_tc_failed_testcases = [];
-          var most_tc_failed_passed = [];
-          var most_tc_failed_failed = [];
-          Object.entries(nextProps.statistics.global_statistics.most_testcases_failed).forEach(([key, value]) => {
-            most_tc_failed_titles.push(value.title);
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_reports_failed) {
+          var most_reports_failed_titles = [];
+          var most_reports_failed_testcases = [];
+          var most_reports_failed_passed = [];
+          var most_reports_failed_failed = [];
+          Object.entries(nextProps.statistics.global_statistics.most_reports_failed).forEach(([key, value]) => {
+            most_reports_failed_titles.push(value.title);
             if (value && value.total) {
-              most_tc_failed_testcases.push(value.total);
+              most_reports_failed_testcases.push(value.total);
             } else {
-              most_tc_failed_testcases.push(0);
+              most_reports_failed_testcases.push(0);
             }
             if (value && value.passed) {
-              most_tc_failed_passed.push(value.passed);
+              most_reports_failed_passed.push(value.passed);
             } else {
-              most_tc_failed_passed.push(0);
+              most_reports_failed_passed.push(0);
             }
             if (value && value.failed) {
-              most_tc_failed_failed.push(value.failed);
+              most_reports_failed_failed.push(value.failed);
             } else {
-              most_tc_failed_failed.push(0);
+              most_reports_failed_failed.push(0);
             }
           });
           var newMostFailedTc = prevState;
-          newMostFailedTc.mostFailedTCOptions.xaxis.categories = most_tc_failed_titles;
-          newMostFailedTc.mostFailedTCSeries[0].data = most_tc_failed_passed;
-          newMostFailedTc.mostFailedTCSeries[1].data = most_tc_failed_testcases;
+          newMostFailedTc.mostFailedTCOptions.xaxis.categories = most_reports_failed_titles;
+          newMostFailedTc.mostFailedTCSeries[0].data = most_reports_failed_passed;
+          newMostFailedTc.mostFailedTCSeries[1].data = most_reports_failed_testcases;
 
-          newMostFailedTc.mostFailedTCSeries[2].data = most_tc_failed_failed;
+          newMostFailedTc.mostFailedTCSeries[2].data = most_reports_failed_failed;
         }
         update.statistics = newMostFailedTc;
-        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_version_failed) {
-          var most_version_failed_titles = [];
-          var most_version_failed_total = [];
-          var most_version_failed_passed = [];
-          var most_version_failed_failed = [];
-          Object.entries(nextProps.statistics.global_statistics.most_version_failed).forEach(([key, value]) => {
-            most_version_failed_titles.push(value.title);
-            if (value && value.total) {
-              most_version_failed_total.push(value.total);
-            } else {
-              most_version_failed_total.push(0);
+        if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.project_most_testcases) {
+          var project_most_testcases_titles = [];
+          var project_most_testcases_total = [];
+          var project_most_testcases_passed = [];
+          var project_most_testcases_failed = [];
+          Object.entries(nextProps.statistics.global_statistics.project_most_testcases).forEach(([key, value]) => {
+            project_most_testcases_titles.push(value.title);
+            if (value && value.count) {
+              project_most_testcases_total.push(value.count);
             }
-            if (value && value.passed) {
-              most_version_failed_passed.push(value.passed);
-            } else {
-              most_version_failed_passed.push(0);
-            }
-            if (value && value.failed) {
-              most_version_failed_failed.push(value.failed);
-            } else {
-              most_version_failed_failed.push(0);
-            }
+            // else {
+            //   project_most_testcases_total.push(0);
+            // }
+            // if (value && value.passed) {
+            //   project_most_testcases_passed.push(value.passed);
+            // } else {
+            //   project_most_testcases_passed.push(0);
+            // }
+            // if (value && value.failed) {
+            //   project_most_testcases_failed.push(value.failed);
+            // } else {
+            //   project_most_testcases_failed.push(0);
+            // }
           });
-          var newMostFailedVersion = prevState;
-          newMostFailedVersion.mostFailedVersionOptions.xaxis.categories = most_version_failed_titles;
-          newMostFailedVersion.mostFailedVersionSeries[0].data = most_version_failed_passed;
-          newMostFailedVersion.mostFailedVersionSeries[1].data = most_version_failed_total;
-          newMostFailedVersion.mostFailedVersionSeries[2].data = most_version_failed_failed;
+          var newMostProjectTestcases = prevState;
+          newMostProjectTestcases.mostFailedVersionOptions.xaxis.categories = project_most_testcases_titles;
+          newMostProjectTestcases.mostFailedVersionSeries[0].data = project_most_testcases_passed;
+          newMostProjectTestcases.mostFailedVersionSeries[1].data = project_most_testcases_total;
+          newMostProjectTestcases.mostFailedVersionSeries[2].data = project_most_testcases_failed;
         }
-        update.statistics = newMostFailedVersion;
+        update.statistics = newMostProjectTestcases;
         if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_user_testcases) {
           var most_user_testcases_titles = [];
           var most_user_testcases_total = [];
@@ -400,7 +401,7 @@ class GlobalStatistics extends Component {
         );
       }
 
-      if (!isEmpty(global_statistics.most_testcases_failed)) {
+      if (!isEmpty(global_statistics.most_reports_failed)) {
         var mostTestcasesFailedComponent = (
           <Chart
             options={this.state.mostFailedTCOptions}
@@ -415,7 +416,7 @@ class GlobalStatistics extends Component {
         );
       }
 
-      if (!isEmpty(global_statistics.most_version_failed)) {
+      if (!isEmpty(global_statistics.project_most_testcases)) {
         var mostVersionFailedComponent = (
           <Chart
             options={this.state.mostFailedVersionOptions}
@@ -461,7 +462,7 @@ class GlobalStatistics extends Component {
         !(global_statistics && global_statistics.annual_report) &&
         isEmpty(global_statistics.most_active_projects) &&
         isEmpty(global_statistics.most_testcases_failed) &&
-        isEmpty(global_statistics.most_version_failed) &&
+        isEmpty(global_statistics.project_most_testcases) &&
         isEmpty(global_statistics.most_user_testcases) &&
         isEmpty(global_statistics.most_user_reports)
       ) {
