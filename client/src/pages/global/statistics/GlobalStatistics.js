@@ -38,11 +38,11 @@ class GlobalStatistics extends Component {
       },
       allTCSeries: [
         {
-          name: "Passed",
+          name: "Reports",
           data: []
         },
         {
-          name: "Reports",
+          name: "Passed",
           data: []
         },
         {
