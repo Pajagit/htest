@@ -21,7 +21,7 @@ class Statistics extends Component {
       statistics: this.props.statistics.project_statistics,
       // ALL TCs
       allTCOptions: {
-        colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        colors: ["#503bbc", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },
@@ -73,7 +73,7 @@ class Statistics extends Component {
 
       // MOST FAILED TC
       mostFailedTCOptions: {
-        colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        colors: ["rgb(0, 227, 150)", "#503bbc", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },
@@ -105,7 +105,7 @@ class Statistics extends Component {
       ],
       // MOST FAILED VERSION
       mostFailedVersionOptions: {
-        colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        colors: ["rgb(0, 227, 150)", "#503bbc", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },
@@ -159,7 +159,7 @@ class Statistics extends Component {
       ],
       // USER MOST Reports
       usersWithMostReports: {
-        colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        colors: ["rgb(0, 227, 150)", "#503bbc", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },

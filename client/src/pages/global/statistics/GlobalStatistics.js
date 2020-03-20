@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import ReactTooltip from "react-tooltip";
 
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import { superAdminPermissions } from "../../../permissions/Permissions";
@@ -19,7 +20,7 @@ class GlobalStatistics extends Component {
       statistics: this.props.statistics.project_statistics,
       // ALL TCs
       allTCOptions: {
-        colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+        colors: ["#503bbc", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },
@@ -69,8 +70,8 @@ class GlobalStatistics extends Component {
       mostActiveSeries: [],
 
       // MOST FAILED TC
-      mostFailedTCOptions: {
-        colors: ["rgb(0, 227, 150)", "#a592ff", "rgb(255, 69, 96)"],
+      mostProjectReportsFailedOptions: {
+        colors: ["rgb(0, 227, 150)", "#503bbc", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },
@@ -85,7 +86,7 @@ class GlobalStatistics extends Component {
           categories: []
         }
       },
-      mostFailedTCSeries: [
+      mostProjectReportsFailedSeries: [
         {
           name: "Passed",
           data: []
@@ -100,8 +101,8 @@ class GlobalStatistics extends Component {
         }
       ],
       // MOST FAILED VERSION
-      mostFailedVersionOptions: {
-        colors: ["#a592ff", "rgb(0, 227, 150)", "rgb(255, 69, 96)"],
+      mostProjectTestcasesOptions: {
+        colors: ["#a592ff"],
         legend: {
           show: false
         },
@@ -115,22 +116,14 @@ class GlobalStatistics extends Component {
           categories: []
         }
       },
-      mostFailedVersionSeries: [
+      mostProjectTestcasesSeries: [
         {
-          name: "Passed",
-          data: []
-        },
-        {
-          name: "Reports",
-          data: []
-        },
-        {
-          name: "Failed",
+          name: "Test Cases",
           data: []
         }
       ],
       // USER MOST TC
-      usersWithMostTc: {
+      usersWithMostTcOptions: {
         colors: ["#a592ff"],
         legend: {
           show: false
@@ -153,8 +146,8 @@ class GlobalStatistics extends Component {
         }
       ],
       // USER MOST Reports
-      usersWithMostReports: {
-        colors: ["rgb(0, 227, 150)", "#a592ff", "rgb(255, 69, 96)"],
+      usersWithMostReportsOptions: {
+        colors: ["rgb(0, 227, 150)", "#503bbc", "rgb(255, 69, 96)"],
         legend: {
           show: false
         },
@@ -266,69 +259,39 @@ class GlobalStatistics extends Component {
             }
           });
           var newMostFailedTc = prevState;
-          newMostFailedTc.mostFailedTCOptions.xaxis.categories = most_reports_failed_titles;
-          newMostFailedTc.mostFailedTCSeries[0].data = most_reports_failed_passed;
-          newMostFailedTc.mostFailedTCSeries[1].data = most_reports_failed_testcases;
+          newMostFailedTc.mostProjectReportsFailedOptions.xaxis.categories = most_reports_failed_titles;
+          newMostFailedTc.mostProjectReportsFailedSeries[0].data = most_reports_failed_passed;
+          newMostFailedTc.mostProjectReportsFailedSeries[1].data = most_reports_failed_testcases;
 
-          newMostFailedTc.mostFailedTCSeries[2].data = most_reports_failed_failed;
+          newMostFailedTc.mostProjectReportsFailedSeries[2].data = most_reports_failed_failed;
         }
         update.statistics = newMostFailedTc;
         if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.project_most_testcases) {
           var project_most_testcases_titles = [];
           var project_most_testcases_total = [];
-          var project_most_testcases_passed = [];
-          var project_most_testcases_failed = [];
           Object.entries(nextProps.statistics.global_statistics.project_most_testcases).forEach(([key, value]) => {
             project_most_testcases_titles.push(value.title);
             if (value && value.count) {
               project_most_testcases_total.push(value.count);
             }
-            // else {
-            //   project_most_testcases_total.push(0);
-            // }
-            // if (value && value.passed) {
-            //   project_most_testcases_passed.push(value.passed);
-            // } else {
-            //   project_most_testcases_passed.push(0);
-            // }
-            // if (value && value.failed) {
-            //   project_most_testcases_failed.push(value.failed);
-            // } else {
-            //   project_most_testcases_failed.push(0);
-            // }
           });
           var newMostProjectTestcases = prevState;
-          newMostProjectTestcases.mostFailedVersionOptions.xaxis.categories = project_most_testcases_titles;
-          newMostProjectTestcases.mostFailedVersionSeries[0].data = project_most_testcases_passed;
-          newMostProjectTestcases.mostFailedVersionSeries[1].data = project_most_testcases_total;
-          newMostProjectTestcases.mostFailedVersionSeries[2].data = project_most_testcases_failed;
+          newMostProjectTestcases.mostProjectTestcasesOptions.xaxis.categories = project_most_testcases_titles;
+          newMostProjectTestcases.mostProjectTestcasesSeries[0].data = project_most_testcases_total;
         }
         update.statistics = newMostProjectTestcases;
         if (nextProps.statistics.global_statistics && nextProps.statistics.global_statistics.most_user_testcases) {
           var most_user_testcases_titles = [];
           var most_user_testcases_total = [];
-          var most_user_testcases_passed = [];
-          var most_user_testcases_failed = [];
+
           Object.entries(nextProps.statistics.global_statistics.most_user_testcases).forEach(([key, value]) => {
             most_user_testcases_titles.push(value.title);
             if (value && value.total) {
               most_user_testcases_total.push(value.total);
-            } else {
-              most_user_testcases_total.push(0);
-            }
-            if (value && value.passed) {
-              most_user_testcases_passed.push(value.passed);
-            } else {
-              most_user_testcases_passed.push(0);
-            }
-            if (value && value.failed) {
-              most_user_testcases_failed.push(value.failed);
-            } else {
-              most_user_testcases_failed.push(0);
             }
           });
           var newMostUserTestcases = prevState;
-          newMostUserTestcases.usersWithMostTc.xaxis.categories = most_user_testcases_titles;
+          newMostUserTestcases.usersWithMostTcOptions.xaxis.categories = most_user_testcases_titles;
           newMostUserTestcases.usersWithMostTcSeries[0].data = most_user_testcases_total;
         }
         update.statistics = newMostUserTestcases;
@@ -356,7 +319,7 @@ class GlobalStatistics extends Component {
             }
           });
           var newMostUserReports = prevState;
-          newMostUserReports.usersWithMostReports.xaxis.categories = most_user_report_titles;
+          newMostUserReports.usersWithMostReportsOptions.xaxis.categories = most_user_report_titles;
           newMostUserReports.usersWithMostReportsSeries[0].data = most_user_report_passed;
           newMostUserReports.usersWithMostReportsSeries[1].data = most_user_report_total;
           newMostUserReports.usersWithMostReportsSeries[2].data = most_user_report_failed;
@@ -404,8 +367,8 @@ class GlobalStatistics extends Component {
       if (!isEmpty(global_statistics.most_reports_failed)) {
         var mostTestcasesFailedComponent = (
           <Chart
-            options={this.state.mostFailedTCOptions}
-            series={this.state.mostFailedTCSeries}
+            options={this.state.mostProjectReportsFailedOptions}
+            series={this.state.mostProjectReportsFailedSeries}
             type='bar'
             width='100%'
           />
@@ -419,8 +382,8 @@ class GlobalStatistics extends Component {
       if (!isEmpty(global_statistics.project_most_testcases)) {
         var mostVersionFailedComponent = (
           <Chart
-            options={this.state.mostFailedVersionOptions}
-            series={this.state.mostFailedVersionSeries}
+            options={this.state.mostProjectTestcasesOptions}
+            series={this.state.mostProjectTestcasesSeries}
             type='bar'
             width='100%'
           />
@@ -434,7 +397,7 @@ class GlobalStatistics extends Component {
       if (!isEmpty(global_statistics.most_user_testcases)) {
         var mostUserTestcasesComponent = (
           <Chart
-            options={this.state.usersWithMostTc}
+            options={this.state.usersWithMostTcOptions}
             series={this.state.usersWithMostTcSeries}
             type='bar'
             width='100%'
@@ -449,7 +412,7 @@ class GlobalStatistics extends Component {
       if (!isEmpty(global_statistics.most_user_reports)) {
         var mostUserReports = (
           <Chart
-            options={this.state.usersWithMostReports}
+            options={this.state.usersWithMostReportsOptions}
             series={this.state.usersWithMostReportsSeries}
             type='bar'
             width='100%'
@@ -607,7 +570,7 @@ class GlobalStatistics extends Component {
                           global_statistics.total_data.total_testcases &&
                           global_statistics.total_data.total_testcases.percentage
                             ? `${global_statistics.total_data.total_testcases.percentage} %`
-                            : "No Changes"}
+                            : ""}
                         </div>
                       </div>
                     </div>
@@ -627,11 +590,33 @@ class GlobalStatistics extends Component {
                           global_statistics.total_data.total_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {global_statistics.total_data &&
+                          {/* {global_statistics.total_data &&
                           global_statistics.total_data.total_reports &&
                           global_statistics.total_data.total_reports.percentage
                             ? `${global_statistics.total_data.total_reports.percentage} %`
-                            : "No Changes"}
+                            : "No Changes"} */}
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports.value &&
+                          global_statistics.total_data &&
+                          global_statistics.total_data.total_testcases.value
+                            ? Math.round(
+                                (global_statistics.total_data.total_reports.value /
+                                  global_statistics.total_data.total_testcases.value) *
+                                  100 +
+                                  Number.EPSILON
+                              ) / 100
+                            : ""}
+                          <i className='fas fa-info-circle ml-0 primary-text' data-tip data-for='ratio'></i>
+                          <ReactTooltip
+                            id='ratio'
+                            aria-haspopup='true'
+                            className='custom-color-no-arrow'
+                            textColor='#fff'
+                            backgroundColor='#4d3cb5'
+                            effect='solid'
+                          >
+                            <p>Reports / Test Cases ratio</p>
+                          </ReactTooltip>
                         </div>
                       </div>
                     </div>
@@ -651,11 +636,35 @@ class GlobalStatistics extends Component {
                           global_statistics.total_data.total_passed_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {global_statistics.total_data &&
+                          {/* {global_statistics.total_data &&
                           global_statistics.total_data.total_passed_reports &&
                           global_statistics.total_data.total_passed_reports.percentage
                             ? `${global_statistics.total_data.total_passed_reports.percentage} %`
-                            : "No Changes"}
+                            : "No Changes"} */}
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports &&
+                          global_statistics.total_data.total_reports.value &&
+                          global_statistics.total_data &&
+                          global_statistics.total_data.total_passed_reports
+                            ? `${Math.round(
+                                ((global_statistics.total_data.total_passed_reports.value /
+                                  global_statistics.total_data.total_reports.value) *
+                                  100 +
+                                  Number.EPSILON) *
+                                  100
+                              ) / 100} %`
+                            : ""}
+                          <i className='fas fa-info-circle ml-0 passed-text' data-tip data-for='passed'></i>
+                          <ReactTooltip
+                            id='passed'
+                            aria-haspopup='true'
+                            className='custom-color-no-arrow'
+                            textColor='#000'
+                            backgroundColor='#00e396'
+                            effect='solid'
+                          >
+                            <p>Percentage of passed reports</p>
+                          </ReactTooltip>
                         </div>
                       </div>
                     </div>
@@ -675,11 +684,35 @@ class GlobalStatistics extends Component {
                           global_statistics.total_data.total_failed_reports.percentage > 0
                             ? "+"
                             : ""}
-                          {global_statistics.total_data &&
+                          {/* {global_statistics.total_data &&
                           global_statistics.total_data.total_failed_reports &&
                           global_statistics.total_data.total_failed_reports.percentage
                             ? `${global_statistics.total_data.total_failed_reports.percentage} %`
-                            : "No Changes"}
+                            : "No Changes"} */}
+                          {global_statistics.total_data &&
+                          global_statistics.total_data.total_reports &&
+                          global_statistics.total_data.total_reports.value &&
+                          global_statistics.total_data &&
+                          global_statistics.total_data.total_failed_reports
+                            ? `${Math.round(
+                                ((global_statistics.total_data.total_failed_reports.value /
+                                  global_statistics.total_data.total_reports.value) *
+                                  100 +
+                                  Number.EPSILON) *
+                                  100
+                              ) / 100} %`
+                            : ""}
+                          <i className='fas fa-info-circle ml-0 failed-text' data-tip data-for='failed'></i>
+                          <ReactTooltip
+                            id='failed'
+                            aria-haspopup='true'
+                            className='custom-color-no-arrow'
+                            textColor='#000'
+                            backgroundColor='#ff4560'
+                            effect='solid'
+                          >
+                            <p>Percentage of failed reports</p>
+                          </ReactTooltip>
                         </div>
                       </div>
                     </div>
