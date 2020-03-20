@@ -9,7 +9,10 @@
     "webSocket": "node sio-server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run webSocket\""
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run webSocket\"",
+    "client-prod": "serve -s client/build -l 3000",
+    "prod-install": "concurrently \"npm run server-install\" \"npm run client-install\"",
+    "prod": "concurrently \"npm run start\" \"npm run client-prod\" \"npm run webSocket\""
   },
   "author": "QA Nis",
   "license": "ISC",

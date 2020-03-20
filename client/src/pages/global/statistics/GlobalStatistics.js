@@ -38,14 +38,13 @@ class GlobalStatistics extends Component {
       },
       allTCSeries: [
         {
-          name: "Reports",
-          data: []
-        },
-        {
           name: "Passed",
           data: []
         },
-
+        {
+          name: "Reports",
+          data: []
+        },
         {
           name: "Failed",
           data: []
@@ -88,14 +87,13 @@ class GlobalStatistics extends Component {
       },
       mostFailedTCSeries: [
         {
-          name: "Reports",
-          data: []
-        },
-        {
           name: "Passed",
           data: []
         },
-
+        {
+          name: "Reports",
+          data: []
+        },
         {
           name: "Failed",
           data: []
@@ -119,14 +117,13 @@ class GlobalStatistics extends Component {
       },
       mostFailedVersionSeries: [
         {
-          name: "Reports",
-          data: []
-        },
-        {
           name: "Passed",
           data: []
         },
-
+        {
+          name: "Reports",
+          data: []
+        },
         {
           name: "Failed",
           data: []
@@ -174,14 +171,13 @@ class GlobalStatistics extends Component {
       },
       usersWithMostReportsSeries: [
         {
-          name: "Reports",
-          data: []
-        },
-        {
           name: "Passed",
           data: []
         },
-
+        {
+          name: "Reports",
+          data: []
+        },
         {
           name: "Failed",
           data: []
@@ -271,8 +267,9 @@ class GlobalStatistics extends Component {
           });
           var newMostFailedTc = prevState;
           newMostFailedTc.mostFailedTCOptions.xaxis.categories = most_tc_failed_titles;
-          newMostFailedTc.mostFailedTCSeries[0].data = most_tc_failed_testcases;
-          newMostFailedTc.mostFailedTCSeries[1].data = most_tc_failed_passed;
+          newMostFailedTc.mostFailedTCSeries[0].data = most_tc_failed_passed;
+          newMostFailedTc.mostFailedTCSeries[1].data = most_tc_failed_testcases;
+
           newMostFailedTc.mostFailedTCSeries[2].data = most_tc_failed_failed;
         }
         update.statistics = newMostFailedTc;
@@ -301,8 +298,8 @@ class GlobalStatistics extends Component {
           });
           var newMostFailedVersion = prevState;
           newMostFailedVersion.mostFailedVersionOptions.xaxis.categories = most_version_failed_titles;
-          newMostFailedVersion.mostFailedVersionSeries[0].data = most_version_failed_total;
-          newMostFailedVersion.mostFailedVersionSeries[1].data = most_version_failed_passed;
+          newMostFailedVersion.mostFailedVersionSeries[0].data = most_version_failed_passed;
+          newMostFailedVersion.mostFailedVersionSeries[1].data = most_version_failed_total;
           newMostFailedVersion.mostFailedVersionSeries[2].data = most_version_failed_failed;
         }
         update.statistics = newMostFailedVersion;
@@ -359,8 +356,8 @@ class GlobalStatistics extends Component {
           });
           var newMostUserReports = prevState;
           newMostUserReports.usersWithMostReports.xaxis.categories = most_user_report_titles;
-          newMostUserReports.usersWithMostReportsSeries[0].data = most_user_report_total;
-          newMostUserReports.usersWithMostReportsSeries[1].data = most_user_report_passed;
+          newMostUserReports.usersWithMostReportsSeries[0].data = most_user_report_passed;
+          newMostUserReports.usersWithMostReportsSeries[1].data = most_user_report_total;
           newMostUserReports.usersWithMostReportsSeries[2].data = most_user_report_failed;
         }
         update.statistics = newMostUserReports;
