@@ -132,7 +132,7 @@ module.exports = {
       });
     });
   },
-  getMostActiveTestcases: async function(project_id, limit) {
+  getMostActiveTestcases: async function(limit, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
