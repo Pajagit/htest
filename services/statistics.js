@@ -719,23 +719,10 @@ module.exports = {
           {
             model: TestCase,
             attributes: ["id", "title"],
-            required: true,
-            include: [
-              {
-                model: Report,
-                attributes: ["id"],
-                required: true,
-                as: "reports",
-                include: [
-                  {
-                    model: Status,
-                    as: "status",
-                    attributes: ["title"],
-                    required: true
-                  }
-                ]
-              }
-            ]
+            required: false,
+            where: {
+              deprecated: false
+            }
           }
         ]
       }).then(projects => {
