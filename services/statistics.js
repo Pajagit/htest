@@ -637,5 +637,136 @@ module.exports = {
         }
       });
     });
+  },
+  getMostProjectsTestcasesFailed: async function(limit) {
+    return new Promise((resolve, reject) => {
+      Project.findAll({
+        include: [
+          {
+            model: TestCase,
+            attributes: ["id"],
+            required: true,
+            include: [
+              {
+                model: Report,
+                attributes: ["id"],
+                required: true,
+                as: "reports",
+                include: [
+                  {
+                    model: Status,
+                    as: "status",
+                    attributes: ["title"],
+                    required: true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }).then(projects => {
+        var projectsArr = Array();
+        if (projects.length > 0) {
+          var projectsArr = Array();
+          for (var i = 0; i < projects.length; i++) {
+            var TCobj = {};
+            TCobj.title = projects[i].title;
+            var total = 0;
+            var totalPassed = 0;
+            var totalFailed = 0;
+
+            if (projects[i].testcases) {
+              projects[i].testcases.forEach(testcase => {
+                if (testcase.reports) {
+                  total = total + testcase.reports.length;
+                  testcase.reports.forEach(report => {
+                    if (report.status.title == "Passed") {
+                      totalPassed = totalPassed + 1;
+                    } else {
+                      totalFailed = totalFailed + 1;
+                    }
+                  });
+                }
+              });
+            }
+            TCobj.total = total;
+            TCobj.passed = totalPassed;
+            TCobj.failed = totalFailed;
+
+            projectsArr.push(TCobj);
+            if (i == projects.length - 1) {
+              projectsArr.sort(function(a, b) {
+                var keyA = a.failed,
+                  keyB = b.failed;
+                if (keyA > keyB) return -1;
+                if (keyA < keyB) return 1;
+                return 0;
+              });
+              resolve(projectsArr);
+            }
+          }
+          resolve(projects);
+        } else {
+          resolve([]);
+        }
+      });
+    });
+  },
+  getMostProjectsTestcases: async function(limit) {
+    return new Promise((resolve, reject) => {
+      Project.findAll({
+        include: [
+          {
+            model: TestCase,
+            attributes: ["id", "title"],
+            required: true,
+            include: [
+              {
+                model: Report,
+                attributes: ["id"],
+                required: true,
+                as: "reports",
+                include: [
+                  {
+                    model: Status,
+                    as: "status",
+                    attributes: ["title"],
+                    required: true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }).then(projects => {
+        if (projects.length > 0) {
+          var projectsArr = Array();
+          for (var i = 0; i < projects.length; i++) {
+            var TCS = {};
+            TCS.title = projects[i].title;
+            if (projects[i].testcases) {
+              TCS.count = projects[i].testcases.length;
+            } else {
+              TCS.count = 0;
+            }
+
+            projectsArr.push(TCS);
+
+            if (i == projects.length - 1) {
+              projectsArr.sort(function(a, b) {
+                var keyA = a.count,
+                  keyB = b.count;
+                if (keyA > keyB) return -1;
+                if (keyA < keyB) return 1;
+                return 0;
+              });
+              resolve(projectsArr);
+            }
+          }
+        } else {
+          resolve([]);
+        }
+      });
+    });
   }
 };

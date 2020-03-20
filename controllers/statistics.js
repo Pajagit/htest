@@ -522,17 +522,8 @@ module.exports = {
     var totalsReportsPassed = await StatisticsService.getTotalReportsPassed();
     var totalsReportsFailed = await StatisticsService.getTotalReportsFailed();
     var most_active_projects = await StatisticsService.getMostActiveProjects(5);
-    var most_testcases_failed = await StatisticsService.getMostTestcasesFailed(5);
-
-    if (most_testcases_failed) {
-      for (var i = 0; i < most_testcases_failed.length; i++) {
-        most_testcases_failed[i].passed = await StatisticsService.getCountReportsPassed(
-          most_testcases_failed[i].test_case_id
-        );
-        most_testcases_failed[i].total = most_testcases_failed[i].failed + most_testcases_failed[i].passed;
-        delete most_testcases_failed[i]["test_case_id"];
-      }
-    }
+    var most_reports_failed = await StatisticsService.getMostProjectsTestcasesFailed(5);
+    var project_most_testcases = await StatisticsService.getMostProjectsTestcases();
 
     var most_user_reports = await StatisticsService.getMostReportsUsers(5);
     if (most_user_reports) {
@@ -1011,13 +1002,15 @@ module.exports = {
 
     statistics.most_active_projects = most_active_projects;
 
-    statistics.most_testcases_failed = most_testcases_failed;
+    statistics.most_reports_failed = most_reports_failed.slice(0, 5);
 
     statistics.most_user_reports = most_user_reports;
 
     statistics.most_user_testcases = most_user_testcases;
 
     statistics.most_version_failed = most_version_failed.slice(0, 5);
+
+    statistics.project_most_testcases = project_most_testcases.slice(0, 5);
 
     statistics.annual_report = annual_report.reverse();
 
