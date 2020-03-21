@@ -631,7 +631,11 @@ module.exports = {
             TCobj.created_at = testcases[i].created_at;
             TCobj.count = testcases[i].dataValues.count;
             var now = new Date();
-            TCobj.period = (now - testcases[i].created_at) / 86400000;
+            var periodPerProject = 1;
+            if ((now - testcases[i].created_at) / 86400000 > 1) {
+              periodPerProject = (now - testcases[i].created_at) / 86400000;
+            }
+            TCobj.period = periodPerProject;
             TCobj.frequency = TCobj.count / TCobj.period;
 
             testcasesArr.push(TCobj);
@@ -693,7 +697,11 @@ module.exports = {
             TCobj.created_at = testcases[i].created_at;
             TCobj.count = testcases[i].dataValues.count;
             var now = new Date();
-            TCobj.period = (now - testcases[i].created_at) / 86400000;
+            var periodPerTc = 1;
+            if ((now - testcases[i].created_at) / 86400000 > 1) {
+              periodPerTc = (now - testcases[i].created_at) / 86400000;
+            }
+            TCobj.period = periodPerTc;
             TCobj.frequency = TCobj.count / TCobj.period;
 
             testcasesArr.push(TCobj);
