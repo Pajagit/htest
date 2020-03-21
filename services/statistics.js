@@ -602,7 +602,7 @@ module.exports = {
   getMostActiveProjects: async function(limit) {
     return new Promise((resolve, reject) => {
       Project.findAll({
-        attributes: ["title", [sequelize.fn("COUNT", "testcases.id"), "count"]],
+        attributes: ["title", [sequelize.fn("COUNT", "testcases.id"), "count"], "created_at"],
         group: ["projects.id"],
         include: [
           {
@@ -619,17 +619,46 @@ module.exports = {
             ]
           }
         ],
-        order: [["count", "DESC"]],
-        limit: limit
+        order: [["count", "DESC"]]
       }).then(testcases => {
+        resObj = {};
         var testcasesArr = Array();
         if (testcases.length > 0) {
+          var totalFrequency = 0;
           for (var i = 0; i < testcases.length; i++) {
             var TCobj = {};
             TCobj.title = testcases[i].title;
+            TCobj.created_at = testcases[i].created_at;
+            TCobj.count = testcases[i].dataValues.count;
+            var now = new Date();
+            TCobj.period = (now - testcases[i].created_at) / 86400000;
+            TCobj.frequency = TCobj.count / TCobj.period;
+
             testcasesArr.push(TCobj);
             if (i == testcases.length - 1) {
-              resolve(testcasesArr);
+              testcasesArr.sort(function(a, b) {
+                var keyA = a.frequency,
+                  keyB = b.frequency;
+                if (keyA > keyB) return -1;
+                if (keyA < keyB) return 1;
+                return 0;
+              });
+              resObj.projects = testcasesArr.slice(0, limit);
+              resObj.projects.forEach(proj => {
+                totalFrequency = totalFrequency + proj.frequency;
+              });
+              resObj.totalFrequency = totalFrequency;
+
+              var projectsRes = Array();
+              for (var j = 0; j < resObj.projects.length; j++) {
+                var projectObj = {};
+                projectObj.title = resObj.projects[j].title;
+                projectObj.percentage = Math.round((resObj.projects[j].frequency / resObj.totalFrequency) * 1000) / 10;
+                projectsRes.push(projectObj);
+                if (j == resObj.projects.length - 1) {
+                  resolve(projectsRes);
+                }
+              }
             }
           }
         } else {
