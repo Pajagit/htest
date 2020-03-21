@@ -132,43 +132,43 @@ module.exports = {
       });
     });
   },
-  getMostActiveTestcases: async function(limit, project_id) {
-    return new Promise((resolve, reject) => {
-      var whereCondition = {};
-      if (project_id) {
-        whereCondition.project_id = project_id;
-      }
-      Report.findAll({
-        attributes: [[sequelize.fn("COUNT", "test_case_id"), "count"]],
-        group: ["test_case_id", "testcase.title", "testcase.id"],
-        include: [
-          {
-            model: TestCase,
-            as: "testcase",
-            attributes: ["title"],
-            required: true,
-            where: whereCondition
-          }
-        ],
-        order: [["count", "DESC"]],
-        limit: limit
-      }).then(testcases => {
-        var testcasesArr = Array();
-        if (testcases.length > 0) {
-          for (var i = 0; i < testcases.length; i++) {
-            var TCobj = {};
-            TCobj.title = testcases[i].testcase.title;
-            testcasesArr.push(TCobj);
-            if (i == testcases.length - 1) {
-              resolve(testcasesArr);
-            }
-          }
-        } else {
-          resolve([]);
-        }
-      });
-    });
-  },
+  // getMostActiveTestcases: async function(limit, project_id) {
+  //   return new Promise((resolve, reject) => {
+  //     var whereCondition = {};
+  //     if (project_id) {
+  //       whereCondition.project_id = project_id;
+  //     }
+  //     Report.findAll({
+  //       attributes: [[sequelize.fn("COUNT", "test_case_id"), "count"]],
+  //       group: ["test_case_id", "testcase.title", "testcase.id"],
+  //       include: [
+  //         {
+  //           model: TestCase,
+  //           as: "testcase",
+  //           attributes: ["title"],
+  //           required: true,
+  //           where: whereCondition
+  //         }
+  //       ],
+  //       order: [["count", "DESC"]],
+  //       limit: limit
+  //     }).then(testcases => {
+  //       var testcasesArr = Array();
+  //       if (testcases.length > 0) {
+  //         for (var i = 0; i < testcases.length; i++) {
+  //           var TCobj = {};
+  //           TCobj.title = testcases[i].testcase.title;
+  //           testcasesArr.push(TCobj);
+  //           if (i == testcases.length - 1) {
+  //             resolve(testcasesArr);
+  //           }
+  //         }
+  //       } else {
+  //         resolve([]);
+  //       }
+  //     });
+  //   });
+  // },
   getCountReportsPassed: async function(test_case_id) {
     return new Promise((resolve, reject) => {
       Report.count({
@@ -657,6 +657,68 @@ module.exports = {
                 projectsRes.push(projectObj);
                 if (j == resObj.projects.length - 1) {
                   resolve(projectsRes);
+                }
+              }
+            }
+          }
+        } else {
+          resolve([]);
+        }
+      });
+    });
+  },
+  getMostActiveTestcases: async function(limit, project_id) {
+    return new Promise((resolve, reject) => {
+      TestCase.findAll({
+        attributes: ["title", [sequelize.fn("COUNT", "reports.id"), "count"], "created_at"],
+        group: ["testcases.id"],
+        required: true,
+        include: [
+          {
+            model: Report,
+            attributes: [],
+            required: true,
+            as: "reports"
+          }
+        ]
+      }).then(testcases => {
+        resObj = {};
+        var testcasesArr = Array();
+        if (testcases.length > 0) {
+          var totalFrequency = 0;
+          for (var i = 0; i < testcases.length; i++) {
+            var TCobj = {};
+            TCobj.title = testcases[i].title;
+            TCobj.created_at = testcases[i].created_at;
+            TCobj.count = testcases[i].dataValues.count;
+            var now = new Date();
+            TCobj.period = (now - testcases[i].created_at) / 86400000;
+            TCobj.frequency = TCobj.count / TCobj.period;
+
+            testcasesArr.push(TCobj);
+            if (i == testcases.length - 1) {
+              testcasesArr.sort(function(a, b) {
+                var keyA = a.frequency,
+                  keyB = b.frequency;
+                if (keyA > keyB) return -1;
+                if (keyA < keyB) return 1;
+                return 0;
+              });
+              resObj.testcases = testcasesArr.slice(0, limit);
+              resObj.testcases.forEach(tc => {
+                totalFrequency = totalFrequency + tc.frequency;
+              });
+              resObj.totalFrequency = totalFrequency;
+
+              var tcRes = Array();
+              for (var j = 0; j < resObj.testcases.length; j++) {
+                var testcaseObj = {};
+                testcaseObj.title = resObj.testcases[j].title;
+                testcaseObj.percentage =
+                  Math.round((resObj.testcases[j].frequency / resObj.totalFrequency) * 1000) / 10;
+                tcRes.push(testcaseObj);
+                if (j == resObj.testcases.length - 1) {
+                  resolve(tcRes);
                 }
               }
             }
