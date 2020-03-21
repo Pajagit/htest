@@ -672,6 +672,7 @@ module.exports = {
       TestCase.findAll({
         attributes: ["title", [sequelize.fn("COUNT", "reports.id"), "count"], "created_at"],
         group: ["testcases.id"],
+        where: { project_id: project_id },
         required: true,
         include: [
           {
