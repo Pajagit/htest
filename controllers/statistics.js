@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const BrowserService = require("../services/browser");
 const UserService = require("../services/user");
 const StatisticsService = require("../services/statistics");
+const TestSetupService = require("../services/testsetup");
 
 module.exports = {
   getStatistics: async function(req, res) {
@@ -42,7 +43,17 @@ module.exports = {
 
     var most_user_testcases = await StatisticsService.getMostTestcasesUsers(5, req.params.id);
 
-    var most_version_failed = await StatisticsService.getMostVersionsFailed(5, req.params.id);
+    var setupItemsOnProject = await TestSetupService.getAlltestSetupItems(req.params.id);
+    var versions = false;
+    setupItemsOnProject.forEach(item => {
+      if (item.title == "Versions" && item.used == true) {
+        versions = true;
+      }
+    });
+    if (versions) {
+      most_version_failed = await StatisticsService.getMostVersionsFailed(5, req.params.id);
+    }
+    // var most_version_failed = await StatisticsService.getMostVersionsFailed(5, req.params.id);
 
     var annual_report = [];
     const monthNames = [
@@ -510,7 +521,9 @@ module.exports = {
 
     statistics.most_user_testcases = most_user_testcases;
 
-    statistics.most_version_failed = most_version_failed.slice(0, 5);
+    if (versions) {
+      statistics.most_version_failed = most_version_failed.slice(0, 5);
+    }
 
     statistics.annual_report = annual_report.reverse();
 

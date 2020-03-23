@@ -631,10 +631,7 @@ module.exports = {
             TCobj.created_at = testcases[i].created_at;
             TCobj.count = testcases[i].dataValues.count;
             var now = new Date();
-            var periodPerProject = 1;
-            if ((now - testcases[i].created_at) / 86400000 > 1) {
-              periodPerProject = (now - testcases[i].created_at) / 86400000;
-            }
+            var periodPerProject = Math.ceil((now - testcases[i].created_at) / 86400000);
             TCobj.period = periodPerProject;
             TCobj.frequency = TCobj.count / TCobj.period;
 
@@ -652,6 +649,7 @@ module.exports = {
                 totalFrequency = totalFrequency + proj.frequency;
               });
               resObj.totalFrequency = totalFrequency;
+              console.log(totalFrequency);
 
               var projectsRes = Array();
               for (var j = 0; j < resObj.projects.length; j++) {
@@ -697,10 +695,8 @@ module.exports = {
             TCobj.created_at = testcases[i].created_at;
             TCobj.count = testcases[i].dataValues.count;
             var now = new Date();
-            var periodPerTc = 1;
-            if ((now - testcases[i].created_at) / 86400000 > 1) {
-              periodPerTc = (now - testcases[i].created_at) / 86400000;
-            }
+            var periodPerTc = Math.ceil((now - testcases[i].created_at) / 86400000);
+
             TCobj.period = periodPerTc;
             TCobj.frequency = TCobj.count / TCobj.period;
 
@@ -837,7 +833,9 @@ module.exports = {
               TCS.count = 0;
             }
 
-            projectsArr.push(TCS);
+            if (TCS.count > 0) {
+              projectsArr.push(TCS);
+            }
 
             if (i == projects.length - 1) {
               projectsArr.sort(function(a, b) {
