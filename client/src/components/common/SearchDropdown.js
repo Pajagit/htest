@@ -4,7 +4,7 @@ import isEmpty from "../../validation/isEmpty";
 
 import FormElementTitle from "../form/FormElementTitle";
 import "react-picky/dist/picky.css";
-import Picky from "react-picky";
+import { Picky } from "react-picky";
 
 function SearchDropdown({
   className,
