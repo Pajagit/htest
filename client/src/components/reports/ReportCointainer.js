@@ -133,7 +133,7 @@ class ReportContainer extends Component {
               ]}
               browser={[
                 report.reportsetup.browser ? report.reportsetup.browser : "/",
-                report.reportsetup.device && report.reportsetup.device.deprecated
+                report.reportsetup.browser && report.reportsetup.browser.deprecated
               ]}
               version={[
                 report.reportsetup.version ? report.reportsetup.version : "/",
@@ -197,7 +197,7 @@ class ReportContainer extends Component {
               ]}
               browser={[
                 report.reportsetup.browser ? report.reportsetup.browser : "/",
-                report.reportsetup.device && report.reportsetup.device.deprecated
+                report.reportsetup.browser && report.reportsetup.browser.deprecated
               ]}
               version={[
                 report.reportsetup.version ? report.reportsetup.version : "/",

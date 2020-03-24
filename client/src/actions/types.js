@@ -57,6 +57,7 @@ export const OS_LOADING = "OS_LOADING";
 export const GET_REPORT = "GET_REPORT";
 export const GET_REPORTS = "GET_REPORTS";
 export const REPORT_LOADING = "REPORT_LOADING";
+export const CLEAR_REPORT = "CLEAR_REPORT";
 
 export const GET_TEST_SETUP = "GET_TEST_SETUP";
 export const TEST_SETUP_LOADING = "TEST_SETUP_LOADING";

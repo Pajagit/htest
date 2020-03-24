@@ -20,20 +20,13 @@ import openExternalBtn from "../../../img/openExternalBtn.png";
 import SearchDropdown from "../../../components/common/SearchDropdown";
 import { projectIdAndSuperAdminPermission, writePermissions } from "../../../permissions/Permissions";
 import ReportValidation from "../../../validation/ReportValidation";
+import checkIfElemInObjInArray from "../../../utility/checkIfElemInObjInArray";
 import successToast from "../../../toast/successToast";
 import failToast from "../../../toast/failToast";
 
-import { getTestcase } from "../../../actions/testcaseActions";
-import { getReport } from "../../../actions/reportActions";
+import { getReport, clearReport } from "../../../actions/reportActions";
 import { getReportFilters } from "../../../actions/filterActions";
-import { getDevices } from "../../../actions/deviceActions";
-import { getBrowsers } from "../../../actions/browserActions";
-import { getVersions } from "../../../actions/versionAction";
-import { getEnvironments } from "../../../actions/environmentActions";
-import { getOperatingSystems } from "../../../actions/osActions";
-import { getSimulators } from "../../../actions/simulatorActions";
 import { createReport } from "../../../actions/reportActions";
-var initialRender = true;
 class NewReport extends Component {
   constructor(props) {
     super(props);
@@ -44,12 +37,18 @@ class NewReport extends Component {
       actual_result: "",
       comment: "",
       reportLinks: [],
-      report: this.props.report,
+      report: this.props.reports && this.props.reports.report,
       submitPressed: false,
       test_steps: [],
       filteredOperatingSystems: [],
       filteredDevices: [],
       filteredBrowsers: [],
+      device: [],
+      browser: [],
+      version: [],
+      os: [],
+      simulator: [],
+      environment: [],
       filteredVersions: [],
       filteredEnvironments: [],
       currentTime: moment().format("Do MMMM YYYY, h:mm:ss a"),
@@ -109,20 +108,80 @@ class NewReport extends Component {
       });
       update.filteredDevices = mappedDevices;
 
+      if (
+        checkIfElemInObjInArray(
+          prevState.filteredDevices,
+          nextProps.reports.report &&
+            nextProps.reports.report.reportsetup &&
+            nextProps.reports.report.reportsetup.device &&
+            nextProps.reports.report.reportsetup.device.id
+        )
+      ) {
+        update.device =
+          nextProps.reports.report.reportsetup && nextProps.reports.report.reportsetup.device
+            ? nextProps.reports.report.reportsetup.device
+            : [];
+      }
+
       var filteredUsedSimulators = nextProps.report_filters.report_filters.simulators.filter(function(simulator) {
         return simulator.used === true;
       });
       update.filteredSimulators = filteredUsedSimulators;
+
+      if (
+        checkIfElemInObjInArray(
+          filteredUsedSimulators,
+          nextProps.reports.report &&
+            nextProps.reports.report.reportsetup &&
+            nextProps.reports.report.reportsetup.simulator &&
+            nextProps.reports.report.reportsetup.simulator.id
+        )
+      ) {
+        update.simulator =
+          nextProps.reports.report.reportsetup && nextProps.reports.report.reportsetup.simulator
+            ? nextProps.reports.report.reportsetup.simulator
+            : [];
+      }
 
       var filteredUsedBrowsers = nextProps.report_filters.report_filters.browsers.filter(function(browser) {
         return browser.used === true;
       });
       update.filteredBrowsers = filteredUsedBrowsers;
 
+      if (
+        checkIfElemInObjInArray(
+          prevState.filteredBrowsers,
+          nextProps.reports.report &&
+            nextProps.reports.report.reportsetup &&
+            nextProps.reports.report.reportsetup.browser &&
+            nextProps.reports.report.reportsetup.browser.id
+        )
+      ) {
+        update.browser =
+          nextProps.reports.report.reportsetup && nextProps.reports.report.reportsetup.browser
+            ? nextProps.reports.report.reportsetup.browser
+            : [];
+      }
+
       var filteredUsedOperatingSystems = nextProps.report_filters.report_filters.operatingsystems.filter(function(os) {
         return os.used === true;
       });
       update.filteredOperatingSystems = filteredUsedOperatingSystems;
+
+      if (
+        checkIfElemInObjInArray(
+          prevState.filteredOperatingSystems,
+          nextProps.reports.report &&
+            nextProps.reports.report.reportsetup &&
+            nextProps.reports.report.reportsetup.operatingsystem &&
+            nextProps.reports.report.reportsetup.operatingsystem.id
+        )
+      ) {
+        update.os =
+          nextProps.reports.report.reportsetup && nextProps.reports.report.reportsetup.operatingsystem
+            ? nextProps.reports.report.reportsetup.operatingsystem
+            : [];
+      }
 
       var filteredUsedVersions = nextProps.report_filters.report_filters.versions.filter(function(version) {
         return version.used === true;
@@ -133,28 +192,56 @@ class NewReport extends Component {
       });
       update.filteredVersions = versionsMap;
 
+      var versionRemapped =
+        nextProps.reports.report && nextProps.reports.report.reportsetup && nextProps.reports.report.reportsetup.version
+          ? nextProps.reports.report.reportsetup.version
+          : [];
+      versionRemapped.title = versionRemapped.version;
+
+      if (checkIfElemInObjInArray(versionsMap, versionRemapped.id)) {
+        update.version = versionRemapped ? versionRemapped : [];
+      }
+
       var filteredUsedEnvironments = nextProps.report_filters.report_filters.environments.filter(function(environment) {
         return environment.used === true;
       });
 
       update.filteredEnvironments = filteredUsedEnvironments;
+
+      if (
+        checkIfElemInObjInArray(
+          filteredUsedEnvironments,
+          nextProps.reports.report &&
+            nextProps.reports.report.reportsetup &&
+            nextProps.reports.report.reportsetup.environment &&
+            nextProps.reports.report.reportsetup.environment.id
+        )
+      ) {
+        update.environment =
+          nextProps.reports.report.reportsetup && nextProps.reports.report.reportsetup.environment
+            ? nextProps.reports.report.reportsetup.environment
+            : [];
+      }
     }
-    if (nextProps.report !== prevState.report) {
-      update.report = nextProps.report;
-      update.status = nextProps.report.status.title ? nextProps.report.status.title : "";
-      update.additional_precondition = nextProps.report.additional_precondition
-        ? nextProps.report.additional_precondition
+
+    if (nextProps.reports.report !== prevState.report) {
+      update.report = nextProps.reports.report;
+      update.additional_precondition = nextProps.reports.report.additional_precondition
+        ? nextProps.reports.report.additional_precondition
         : "";
-      update.actual_result = nextProps.report.actual_result ? nextProps.report.actual_result : "";
+      update.actual_result = nextProps.reports.report.actual_result ? nextProps.reports.report.actual_result : "";
+      update.steps = nextProps.reports.report && nextProps.reports.report.steps ? nextProps.reports.report.steps : [];
+      update.reportLinks =
+        nextProps.reports.report && nextProps.reports.report.links ? nextProps.reports.report.links : [];
+      update.comment =
+        nextProps.reports.report && nextProps.reports.report.comment ? nextProps.reports.report.comment : "";
     }
 
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
-    var testcaseId = this.props.match.params.testcaseId;
     var projectId = this.props.match.params.projectId;
     var reportId = this.props.match.params.reportId;
-    this.props.getTestcase(testcaseId);
     this.props.getReportFilters(projectId);
     this.props.getReport(reportId);
     this.interval = setInterval(this.updateCurrentTime.bind(this), 1000);
@@ -164,6 +251,7 @@ class NewReport extends Component {
   }
   componentWillUnmount() {
     clearInterval(this.interval);
+    this.props.clearReport();
   }
   selectStatus(value) {
     this.setState({ status: value }, () => {
@@ -349,10 +437,10 @@ class NewReport extends Component {
   }
 
   render() {
-    var { testcase } = this.props.testcases;
-    var { loading } = this.props.testcases;
+    var { report, loading } = this.props.reports;
     var content = "";
-    if (isEmpty(testcase) || loading || isEmpty(this.state.statuses)) {
+
+    if (isEmpty(report) || loading || isEmpty(this.state.statuses)) {
       content = <Spinner />;
     } else {
       var statusValueClass = `${
@@ -484,7 +572,7 @@ class NewReport extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Title</div>
-                <div className='report-details-row-half-value'>{testcase.title}</div>
+                <div className='report-details-row-half-value'>{report.testcase.title}</div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-value'>
@@ -505,7 +593,7 @@ class NewReport extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Test Case Created</div>
                 <div className='report-details-row-half-value'>
-                  {moment(testcase.date).format("Do MMMM YYYY, h:mm:ss a")}
+                  {moment(report.testcase.date).format("Do MMMM YYYY, h:mm:ss a")}
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
@@ -517,7 +605,11 @@ class NewReport extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Created By</div>
                 <div className='report-details-row-half-value'>
-                  {testcase.author.first_name + " " + testcase.author.last_name + " - " + testcase.author.email}
+                  {report.testcase.user.first_name +
+                    " " +
+                    report.testcase.user.last_name +
+                    " - " +
+                    report.testcase.user.email}
                 </div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
@@ -535,7 +627,7 @@ class NewReport extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Precondition</div>
-                <div className='report-details-row-half-value'>{testcase.preconditions}</div>
+                <div className='report-details-row-half-value'>{report.testcase.preconditions}</div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-value'>
@@ -552,7 +644,7 @@ class NewReport extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Expected Result</div>
-                <div className='report-details-row-half-value'>{testcase.expected_result}</div>
+                <div className='report-details-row-half-value'>{report.testcase.expected_result}</div>
               </div>
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-value'>
@@ -570,19 +662,21 @@ class NewReport extends Component {
             <div className='report-details-row'>
               <div className='report-details-row-full'>
                 <div className='report-details-row-full-title'>Description</div>
-                <div className='report-details-row-full-value'>{testcase.description}</div>
+                <div className='report-details-row-full-value'>{report.testcase.description}</div>
               </div>
             </div>
             <div className='report-details-row'>
               <div className='report-details-row-full'>
                 <div className='report-details-row-full-title'>Groups</div>
                 <div className='report-details-row-full-value'>
-                  {testcase.groups.map((group, groupIndex) => (
+                  {report.testcase.groups.map((group, groupIndex) => (
                     <React.Fragment key={groupIndex}>
-                      <Tag title={group.title} color={group.color} isRemovable={false} />
+                      <Tag title={group.title} color={group.color.title} isRemovable={false} />
                     </React.Fragment>
                   ))}
                 </div>
+                <br />
+                <br />
                 <br />
               </div>
             </div>
@@ -591,7 +685,7 @@ class NewReport extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Test Steps</div>
                 <div className='report-details-row-half-value'>
-                  {testcase.test_steps.map((step, index) => (
+                  {report.testcase.steps.map((step, index) => (
                     <React.Fragment key={index}>
                       <span key={index}>
                         <div className='steps-class mb-2'>
@@ -608,7 +702,7 @@ class NewReport extends Component {
               <div className={`report-details-row-half ${statusValueClass}`}>
                 <div className='report-details-row-half-title'>Steps Input Data</div>
                 <div className='report-details-row-half-value'>
-                  {testcase.test_steps.map((step, index) => (
+                  {report.testcase.steps.map((step, index) => (
                     <div key={index} className='steps-class'>
                       <span>
                         <Input
@@ -616,6 +710,7 @@ class NewReport extends Component {
                           onChange={e => this.onChange(e)}
                           name={`input_data`}
                           id={`${index + 1}`}
+                          value={this.state.steps && this.state.steps[index] && this.state.steps[index].value}
                           noMargin={true}
                           validationMsg={index === 0 ? this.state.errors.step : ""}
                         />
@@ -629,7 +724,7 @@ class NewReport extends Component {
               <div className='report-details-row-half'>
                 <div className='report-details-row-half-title'>Links</div>
                 <div className='report-details-row-half-value'>
-                  {testcase.links.map((link, index) => (
+                  {report.testcase.links.map((link, index) => (
                     <div key={index}>
                       <span>
                         {`${index + 1}. `}
@@ -677,6 +772,7 @@ class NewReport extends Component {
                     placeholder={"Comment"}
                     onChange={e => this.onChange(e)}
                     name={"comment"}
+                    value={this.state.comment}
                     validationMsg={this.state.errors.comment}
                   />
                 </div>
@@ -728,25 +824,18 @@ class NewReport extends Component {
   }
 }
 NewReport.propTypes = {
-  testcases: PropTypes.object.isRequired
+  reports: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  testcases: state.testcases,
-  report: state.reports.report,
+  reports: state.reports,
   report_filters: state.filters,
   auth: state.auth
 });
 
 export default connect(mapStateToProps, {
-  getTestcase,
-  getDevices,
-  getBrowsers,
-  getVersions,
+  clearReport,
   getReportFilters,
-  getEnvironments,
-  getOperatingSystems,
   getReport,
-  getSimulators,
   createReport
 })(withRouter(NewReport));
