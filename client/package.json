@@ -14,7 +14,7 @@
     "react-dom": "^16.9.0",
     "react-dropdown-select": "^3.3.4",
     "react-google-login": "^5.0.5",
-    "react-picky": "^4.5.2",
+    "react-picky": "^5.2.3",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",
