@@ -1,6 +1,8 @@
 import React from "react";
 import ReportStatus from "./ReportStatus";
 import ReactTooltip from "react-tooltip";
+import AddReportBtn from "../common/AddReportBtn";
+
 import moment from "moment";
 
 function PortraitReport({
@@ -18,6 +20,7 @@ function PortraitReport({
   comment,
   actual_result,
   status,
+  onClickAddReport,
   onClick,
   isValidWrite
 }) {
@@ -111,6 +114,14 @@ function PortraitReport({
       </div>
     );
   }
+  var addReportBtn = "";
+  if (isValidWrite) {
+    addReportBtn = (
+      <div className='portrait-testcase-bottom-container--button' onClick={onClickAddReport}>
+        <AddReportBtn title={"Clone"} id={id} />
+      </div>
+    );
+  }
   return (
     <div className='portrait-report clickable' onClick={onClick}>
       <div className='portrait-report-top'>
@@ -152,6 +163,8 @@ function PortraitReport({
           {actualResultValue}
           <br />
           <br />
+          <br />
+          {addReportBtn}
         </div>
       </div>
     </div>

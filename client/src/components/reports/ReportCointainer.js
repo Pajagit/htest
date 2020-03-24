@@ -115,6 +115,7 @@ class ReportContainer extends Component {
         reports.reports.map((report, index) => (
           <React.Fragment key={index}>
             <PortraitReport
+              isValidWrite={this.props.isValidWrite}
               title={report.testcase.title}
               tags={report.testcase.groups.map((group, groupIndex) => (
                 <React.Fragment key={groupIndex}>
@@ -153,7 +154,10 @@ class ReportContainer extends Component {
               id={report.id}
               projectId={projectId}
               onClick={e => this.props.history.push(`/${projectId}/Report/${report.id}`)}
-              isValidWrite={this.props.isValidWrite}
+              onClickAddReport={e => {
+                e.stopPropagation();
+                this.props.history.push(`/${projectId}/Testcase/${report.testcase.id}/Report/${report.id}`);
+              }}
             />
           </React.Fragment>
         ));
@@ -214,6 +218,10 @@ class ReportContainer extends Component {
               id={report.id}
               projectId={projectId}
               onClick={e => this.props.history.push(`/${projectId}/Report/${report.id}`)}
+              onClickAddReport={e => {
+                e.stopPropagation();
+                this.props.history.push(`/${projectId}/Testcase/${report.testcase.id}/Report/${report.id}`);
+              }}
               isValidWrite={this.props.isValidWrite}
             ></LandscapeReport>
           </React.Fragment>
