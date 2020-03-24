@@ -84,28 +84,28 @@ class DeviceSettings extends Component {
           link={`/EditDevice/${device.id}`}
           list={`${device.retina ? "Retina" : ""}${" "} ${device.screen_size ? device.screen_size : " "}${" "} ${
             device.resolution ? device.resolution : " "
-            }${" "} ${device.dpi ? "ppi: " + device.dpi : " "} ${" "}${device.udid ? "udid: " + device.udid : " "}`}
+          }${" "} ${device.dpi ? "ppi: " + device.dpi : " "} ${" "}${device.udid ? "udid: " + device.udid : " "}`}
         />
       ));
     } else if (isEmpty(devices.devices) && isEmpty(this.state.office)) {
-      content = <div className="testcase-container-no-content">There are no devices added yet</div>;
+      content = <div className='testcase-container-no-content'>There are no devices added yet</div>;
     } else if (!isEmpty(this.state.office)) {
-      content = <div className="testcase-container-no-content">There are no devices for selected office</div>;
+      content = <div className='testcase-container-no-content'>There are no devices for selected office</div>;
     }
 
     return (
-      <div className="wrapper">
+      <div className='wrapper'>
         <GlobalPanel props={this.props} />
         <SettingPanel props={this.props} />
-        <div className="main-content main-content-grid">
+        <div className='main-content main-content-grid'>
           <Header
-            icon={<i className="fas fa-laptop"></i>}
+            icon={<i className='fas fa-laptop'></i>}
             title={"Device Settings"}
             history={this.props}
             canGoBack={false}
-            addBtn={<BtnAnchor type={"text"} label="Add Device" className={"a-btn a-btn-primary"} link={`AddDevice`} />}
+            addBtn={<BtnAnchor type={"text"} label='Add Device' className={"a-btn a-btn-primary"} link={`AddDevice`} />}
           />
-          <div className="list-item-container">
+          <div className='list-item-container'>
             <SearchDropdown
               value={this.state.office}
               options={this.state.officesFormatted}
@@ -136,7 +136,4 @@ const mapStateToProps = state => ({
   offices: state.offices
 });
 
-export default connect(
-  mapStateToProps,
-  { getDevices, getOffices }
-)(withRouter(DeviceSettings));
+export default connect(mapStateToProps, { getDevices, getOffices })(withRouter(DeviceSettings));

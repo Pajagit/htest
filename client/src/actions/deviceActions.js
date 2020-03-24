@@ -4,19 +4,17 @@ import { GET_DEVICES, GET_DEVICE, DEVICE_LOADING, GET_ERRORS, CLEAR_DEVICES } fr
 
 // Get All Devices
 export const getDevices = (offices, project_id, pageSent, pageSizeSent) => dispatch => {
-
   dispatch(deviceLoading());
   var page = pageSent === undefined ? 1 : pageSent;
   var size = pageSizeSent === undefined ? 100 : pageSizeSent;
   var data = {};
   if (offices) {
-    data.offices = offices;
+    data.offices = offices.offices;
   }
 
   if (project_id) {
-    data.project_id = project_id
+    data.project_id = project_id;
   }
-
 
   axios
     .post(`/api/devices?page=${page}&page_size=${size}`, data)
