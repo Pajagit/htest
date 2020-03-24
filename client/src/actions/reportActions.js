@@ -1,7 +1,7 @@
 import axios from "axios";
 import isEmpty from "../validation/isEmpty";
 
-import { GET_REPORTS, GET_REPORT, REPORT_LOADING, GET_ERRORS } from "./types";
+import { GET_REPORTS, GET_REPORT, REPORT_LOADING, GET_ERRORS, CLEAR_REPORT } from "./types";
 
 // Get All Reports
 export const getReports = (project_id, reportFilters, page) => dispatch => {
@@ -78,5 +78,12 @@ export const createReport = (reportData, callback) => dispatch => {
 export const reportLoading = () => {
   return {
     type: REPORT_LOADING
+  };
+};
+
+// Clear Report
+export const clearReport = () => {
+  return {
+    type: CLEAR_REPORT
   };
 };
