@@ -387,6 +387,8 @@ class NewTestCase extends Component {
                   className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1`}
                   label='Save Test Case'
                   type='text'
+                  tooltip={"Save and open test case you are about to create"}
+                  tooltipId={"saveAndOpenTC"}
                   disabled={false}
                   onClick={e => this.submitForm(e, false)}
                 />
@@ -394,6 +396,8 @@ class NewTestCase extends Component {
                   className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1`}
                   label='Add To Report'
                   type='text'
+                  tooltip={"Save this test case and open page to create report for it right away"}
+                  tooltipId={"saveAndOpenCreateReport"}
                   disabled={this.state.addNew}
                   onClick={e => this.submitForm(e, true)}
                 />
