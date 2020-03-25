@@ -426,17 +426,20 @@ class Statistics extends Component {
 
       if (!isEmpty(project_statistics.most_version_failed)) {
         var mostVersionFailedComponent = (
-          <Chart
-            options={this.state.mostFailedVersionOptions}
-            series={this.state.mostFailedVersionSeries}
-            type='bar'
-            width='100%'
-          />
+          <div>
+            <div className='stats-flex-bottom-right-title'>App versions with most failed reports</div>
+            <div className='stats-flex-bottom-right-chart'>
+              <Chart
+                options={this.state.mostFailedVersionOptions}
+                series={this.state.mostFailedVersionSeries}
+                type='bar'
+                width='100%'
+              />
+            </div>
+          </div>
         );
       } else {
-        mostVersionFailedComponent = (
-          <div className='no-content'>There is no enough relevant data for most failed version</div>
-        );
+        mostVersionFailedComponent = "";
       }
 
       if (!isEmpty(project_statistics.most_user_testcases)) {
@@ -450,7 +453,7 @@ class Statistics extends Component {
         );
       } else {
         mostUserTestcasesComponent = (
-          <div className='no-content'>There is no enough relevant data for most failed version</div>
+          <div className='no-content'>There is no enough relevant data for users with most test cases</div>
         );
       }
 
@@ -767,8 +770,8 @@ class Statistics extends Component {
                 <div className='stats-flex-bottom-left-chart'>{mostTestcasesFailedComponent}</div>
               </div>
               <div className='stats-flex-bottom-right'>
-                <div className='stats-flex-bottom-right-title'>App versions with most failed reports</div>
-                <div className='stats-flex-bottom-right-chart'>{mostVersionFailedComponent}</div>
+                <div className='stats-flex-bottom-right-title'>Users with most created reports</div>
+                <div className='stats-flex-bottom-right-chart'>{mostUserReports}</div>
               </div>
             </div>
 
@@ -777,10 +780,7 @@ class Statistics extends Component {
                 <div className='stats-flex-bottom-left-title'>Users with most created test cases</div>
                 <div className='stats-flex-bottom-left-chart'>{mostUserTestcasesComponent}</div>
               </div>
-              <div className='stats-flex-bottom-right'>
-                <div className='stats-flex-bottom-right-title'>Users with most created reports</div>
-                <div className='stats-flex-bottom-right-chart'>{mostUserReports}</div>
-              </div>
+              <div className='stats-flex-bottom-right'>{mostVersionFailedComponent}</div>
             </div>
           </div>
         );
