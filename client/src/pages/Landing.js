@@ -9,6 +9,8 @@ import { withRouter } from "react-router-dom";
 import { loginUser } from "../actions/authActions";
 
 class Landing extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -36,9 +38,14 @@ class Landing extends Component {
     return Object.keys(update).length ? update : null;
   }
   componentWillUnmount() {
-    this.props.clearErrors();
+    this._isMounted = false;
+    if (this._isMounted) {
+      this.props.clearErrors();
+    }
   }
   componentDidMount() {
+    this._isMounted = true;
+
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/Projects");
     }
@@ -81,7 +88,6 @@ Landing.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  // testcases: state.testcases
   auth: state.auth,
   errors: state.errors
 });
