@@ -16,13 +16,14 @@ const UploadedFile = require("../models/uploadedfile");
 const Group = require("../models/group");
 
 module.exports = {
-  getTotalTestcases: async function(project_id) {
+  getTotalTestcases: async function(project_id, start_date, end_date) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       whereCondition.deprecated = false;
       if (project_id) {
         whereCondition.project_id = project_id;
       }
+
       TestCase.count({
         attributes: [],
         where: whereCondition
@@ -132,49 +133,18 @@ module.exports = {
       });
     });
   },
-  // getMostActiveTestcases: async function(limit, project_id) {
-  //   return new Promise((resolve, reject) => {
-  //     var whereCondition = {};
-  //     if (project_id) {
-  //       whereCondition.project_id = project_id;
-  //     }
-  //     Report.findAll({
-  //       attributes: [[sequelize.fn("COUNT", "test_case_id"), "count"]],
-  //       group: ["test_case_id", "testcase.title", "testcase.id"],
-  //       include: [
-  //         {
-  //           model: TestCase,
-  //           as: "testcase",
-  //           attributes: ["title"],
-  //           required: true,
-  //           where: whereCondition
-  //         }
-  //       ],
-  //       order: [["count", "DESC"]],
-  //       limit: limit
-  //     }).then(testcases => {
-  //       var testcasesArr = Array();
-  //       if (testcases.length > 0) {
-  //         for (var i = 0; i < testcases.length; i++) {
-  //           var TCobj = {};
-  //           TCobj.title = testcases[i].testcase.title;
-  //           testcasesArr.push(TCobj);
-  //           if (i == testcases.length - 1) {
-  //             resolve(testcasesArr);
-  //           }
-  //         }
-  //       } else {
-  //         resolve([]);
-  //       }
-  //     });
-  //   });
-  // },
-  getCountReportsPassed: async function(test_case_id) {
+  getCountReportsPassed: async function(test_case_id, start_date, end_date) {
     return new Promise((resolve, reject) => {
+      var whereReports = {};
+      whereReports.test_case_id = test_case_id;
+      if (start_date && end_date) {
+        whereReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Report.count({
-        where: {
-          test_case_id: test_case_id
-        },
+        where: whereReports,
         include: [
           {
             model: Status,
@@ -195,14 +165,22 @@ module.exports = {
       });
     });
   },
-  getMostTestcasesFailed: async function(limit, project_id) {
+  getMostTestcasesFailed: async function(limit, start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
       }
+      var whereReports = {};
+      if (start_date && end_date) {
+        whereReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Report.findAll({
         attributes: [[sequelize.fn("COUNT", "test_case_id"), "countReports"]],
+        where: whereReports,
         group: ["test_case_id", "testcase.title", "testcase.id"],
         include: [
           {
@@ -243,16 +221,22 @@ module.exports = {
       });
     });
   },
-  getCountReportsPassedForUser: async function(user_id, project_id) {
+  getCountReportsPassedForUser: async function(user_id, start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
       }
+      var whereReports = {};
+      whereReports.user_id = user_id;
+      if (start_date && end_date) {
+        whereReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Report.count({
-        where: {
-          user_id: user_id
-        },
+        where: whereReports,
         include: [
           {
             model: TestCase,
@@ -280,16 +264,22 @@ module.exports = {
       });
     });
   },
-  getCountReportsFailedForUser: async function(user_id, project_id) {
+  getCountReportsFailedForUser: async function(user_id, start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
       }
+      var whereReports = {};
+      whereReports.user_id = user_id;
+      if (start_date && end_date) {
+        whereReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Report.count({
-        where: {
-          user_id: user_id
-        },
+        where: whereReports,
         include: [
           {
             model: TestCase,
@@ -317,14 +307,22 @@ module.exports = {
       });
     });
   },
-  getMostReportsUsers: async function(limit, project_id) {
+  getMostReportsUsers: async function(limit, start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
       }
+      var whereReports = {};
+      if (start_date && end_date) {
+        whereReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Report.findAll({
         attributes: ["user_id", [sequelize.fn("COUNT", "user_id"), "countReports"]],
+        where: whereReports,
         group: ["user.first_name", "user.last_name", "reports.user_id", "user.id"],
         include: [
           {
@@ -368,13 +366,19 @@ module.exports = {
       });
     });
   },
-  getMostTestcasesUsers: async function(limit, project_id) {
+  getMostTestcasesUsers: async function(limit, start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
       }
       whereCondition.deprecated = false;
+      if (start_date && end_date) {
+        whereCondition.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       TestCase.findAll({
         attributes: ["user_id", [sequelize.fn("COUNT", "user_id"), "countTestcases"]],
         group: ["user.first_name", "user.last_name", "user.id", "testcases.user_id"],
@@ -408,11 +412,18 @@ module.exports = {
     });
   },
 
-  getMostVersionsFailed: async function(limit, project_id) {
+  getMostVersionsFailed: async function(limit, start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
+      }
+      var whereReports = {};
+      if (start_date && end_date) {
+        whereReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
       }
       Version.findAll({
         include: [
@@ -432,7 +443,7 @@ module.exports = {
                 as: "reports",
                 attributes: ["id"],
                 required: true,
-
+                where: whereReports,
                 include: [
                   {
                     model: Status,
@@ -599,7 +610,14 @@ module.exports = {
       });
     });
   },
-  getMostActiveProjects: async function(limit) {
+  getMostActiveProjects: async function(limit, start_date, end_date) {
+    var whereReports = {};
+    if (start_date && end_date) {
+      whereReports.created_at = {
+        [Op.gt]: start_date,
+        [Op.lte]: end_date
+      };
+    }
     return new Promise((resolve, reject) => {
       Project.findAll({
         attributes: ["title", [sequelize.fn("COUNT", "testcases.id"), "count"], "created_at"],
@@ -612,6 +630,7 @@ module.exports = {
             include: [
               {
                 model: Report,
+                where: whereReports,
                 attributes: [],
                 required: true,
                 as: "reports"
@@ -669,17 +688,27 @@ module.exports = {
       });
     });
   },
-  getMostActiveTestcases: async function(limit, project_id) {
+  getMostActiveTestcases: async function(limit, start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
+      var whereReports = {};
+      if (start_date && end_date) {
+        whereReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       TestCase.findAll({
         attributes: ["title", [sequelize.fn("COUNT", "reports.id"), "count"], "created_at"],
         group: ["testcases.id"],
-        where: { project_id: project_id },
+        where: {
+          project_id: project_id
+        },
         required: true,
         include: [
           {
             model: Report,
             attributes: [],
+            where: whereReports,
             required: true,
             as: "reports"
           }
@@ -734,8 +763,15 @@ module.exports = {
       });
     });
   },
-  getMostProjectsTestcasesFailed: async function(limit) {
+  getMostProjectsTestcasesFailed: async function(limit, start_date, end_date) {
     return new Promise((resolve, reject) => {
+      var whereReports = {};
+      if (start_date && end_date) {
+        whereReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Project.findAll({
         include: [
           {
@@ -746,6 +782,7 @@ module.exports = {
               {
                 model: Report,
                 attributes: ["id"],
+                where: whereReports,
                 required: true,
                 as: "reports",
                 include: [
@@ -808,17 +845,23 @@ module.exports = {
       });
     });
   },
-  getMostProjectsTestcases: async function(limit) {
+  getMostProjectsTestcases: async function(start_date, end_date) {
     return new Promise((resolve, reject) => {
+      var whereCond = {};
+      whereCond.deprecated = false;
+      if (start_date && end_date) {
+        whereCond.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Project.findAll({
         include: [
           {
             model: TestCase,
             attributes: ["id", "title"],
             required: false,
-            where: {
-              deprecated: false
-            }
+            where: whereCond
           }
         ]
       }).then(projects => {
