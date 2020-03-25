@@ -9,12 +9,11 @@ import { withRouter } from "react-router-dom";
 import { loginUser } from "../actions/authActions";
 
 class Landing extends Component {
-  _isMounted = false;
-
   constructor(props) {
     super(props);
     this.state = {
       user: {},
+      mounted: false,
       errors: {}
     };
   }
@@ -38,43 +37,45 @@ class Landing extends Component {
     return Object.keys(update).length ? update : null;
   }
   componentWillUnmount() {
-    this._isMounted = false;
-    if (this._isMounted) {
-      this.props.clearErrors();
-    }
+    this.setState({ mounted: false });
+    this.props.clearErrors();
   }
   componentDidMount() {
-    this._isMounted = true;
-
+    this.setState({ mounted: true });
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/Projects");
     }
   }
   responseGoogle = response => {
-    this.props.loginUser(response);
+    if (this.state.mounted) {
+      this.props.loginUser(response);
+    }
   };
 
   render() {
     const { errors } = this.state;
-
+    var loginButton = "Loading...";
+    if (this.state.mounted) {
+      loginButton = (
+        <GoogleLogin
+          clientId='423003783080-qknv579ghf7qbe9ji09l7irauhdhtiu5.apps.googleusercontent.com'
+          buttonText='Sign in with Google'
+          onSuccess={this.responseGoogle}
+          onFailure={this.responseGoogle}
+          className={"login-btn"}
+          redirectUri={"/Projects"}
+          prompt={"consent"}
+          ux_mode='redirect'
+        />
+      );
+    }
     return (
       <div className='landing'>
         <div className='landing-content'>
           <div className='landing-content-logo'>
             <img src={htestLogo} alt='htest logo' />
           </div>
-          <div className='landing-content-btn'>
-            <GoogleLogin
-              clientId='423003783080-qknv579ghf7qbe9ji09l7irauhdhtiu5.apps.googleusercontent.com'
-              buttonText='Sign in with Google'
-              onSuccess={this.responseGoogle}
-              onFailure={this.responseGoogle}
-              className={"login-btn"}
-              redirectUri={"/Projects"}
-              prompt={"consent"}
-              ux_mode='redirect'
-            />
-          </div>
+          <div className='landing-content-btn'>{loginButton}</div>
           <span className='text-danger'>{errors.email}</span>
         </div>
       </div>
