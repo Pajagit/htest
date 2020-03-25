@@ -9,39 +9,54 @@ const TestSetupService = require("../services/testsetup");
 
 module.exports = {
   getStatistics: async function(req, res) {
+    var days = req.query.days;
+    end_date = null;
+    start_date = null;
+    if (days) {
+      var end_date = new Date();
+      var start_date = new Date();
+      start_date.setDate(start_date.getDate() - days);
+    }
+
     var totalTestcases = await StatisticsService.getTotalTestcases(req.params.id);
     var totalReports = await StatisticsService.getTotalReports(req.params.id);
     var totalsReportsPassed = await StatisticsService.getTotalReportsPassed(req.params.id);
     var totalsReportsFailed = await StatisticsService.getTotalReportsFailed(req.params.id);
-    var most_active_testcases = await StatisticsService.getMostActiveTestcases(5, req.params.id);
-    var most_testcases_failed = await StatisticsService.getMostTestcasesFailed(5, req.params.id);
+    var most_active_testcases = await StatisticsService.getMostActiveTestcases(5, start_date, end_date, req.params.id);
+    var most_testcases_failed = await StatisticsService.getMostTestcasesFailed(5, start_date, end_date, req.params.id);
 
     if (most_testcases_failed) {
       for (var i = 0; i < most_testcases_failed.length; i++) {
         most_testcases_failed[i].passed = await StatisticsService.getCountReportsPassed(
-          most_testcases_failed[i].test_case_id
+          most_testcases_failed[i].test_case_id,
+          start_date,
+          end_date
         );
         most_testcases_failed[i].total = most_testcases_failed[i].failed + most_testcases_failed[i].passed;
         delete most_testcases_failed[i]["test_case_id"];
       }
     }
 
-    var most_user_reports = await StatisticsService.getMostReportsUsers(5, req.params.id);
+    var most_user_reports = await StatisticsService.getMostReportsUsers(5, start_date, end_date, req.params.id);
     if (most_user_reports) {
       for (var j = 0; j < most_user_reports.length; j++) {
         most_user_reports[j].passed = await StatisticsService.getCountReportsPassedForUser(
           most_user_reports[j].user_id,
+          start_date,
+          end_date,
           req.params.id
         );
         most_user_reports[j].failed = await StatisticsService.getCountReportsFailedForUser(
           most_user_reports[j].user_id,
+          start_date,
+          end_date,
           req.params.id
         );
         delete most_user_reports[j]["user_id"];
       }
     }
 
-    var most_user_testcases = await StatisticsService.getMostTestcasesUsers(5, req.params.id);
+    var most_user_testcases = await StatisticsService.getMostTestcasesUsers(5, start_date, end_date, req.params.id);
 
     var setupItemsOnProject = await TestSetupService.getAlltestSetupItems(req.params.id);
     var versions = false;
@@ -51,9 +66,8 @@ module.exports = {
       }
     });
     if (versions) {
-      most_version_failed = await StatisticsService.getMostVersionsFailed(5, req.params.id);
+      most_version_failed = await StatisticsService.getMostVersionsFailed(5, start_date, end_date, req.params.id);
     }
-    // var most_version_failed = await StatisticsService.getMostVersionsFailed(5, req.params.id);
 
     var annual_report = [];
     const monthNames = [
@@ -530,30 +544,43 @@ module.exports = {
     return res.status(200).json(statistics);
   },
   getGlobalStatistics: async function(req, res) {
+    var days = req.query.days;
+    end_date = null;
+    start_date = null;
+    if (days) {
+      var end_date = new Date();
+      var start_date = new Date();
+      start_date.setDate(start_date.getDate() - days);
+    }
+
     var totalTestcases = await StatisticsService.getTotalTestcases();
     var totalReports = await StatisticsService.getTotalReports();
     var totalsReportsPassed = await StatisticsService.getTotalReportsPassed();
     var totalsReportsFailed = await StatisticsService.getTotalReportsFailed();
-    var most_active_projects = await StatisticsService.getMostActiveProjects(5);
-    var most_reports_failed = await StatisticsService.getMostProjectsTestcasesFailed(5);
-    var project_most_testcases = await StatisticsService.getMostProjectsTestcases();
+    var most_active_projects = await StatisticsService.getMostActiveProjects(5, start_date, end_date);
+    var most_reports_failed = await StatisticsService.getMostProjectsTestcasesFailed(5, start_date, end_date);
+    var project_most_testcases = await StatisticsService.getMostProjectsTestcases(start_date, end_date);
 
-    var most_user_reports = await StatisticsService.getMostReportsUsers(5);
+    var most_user_reports = await StatisticsService.getMostReportsUsers(5, start_date, end_date);
     if (most_user_reports) {
       for (var j = 0; j < most_user_reports.length; j++) {
         most_user_reports[j].passed = await StatisticsService.getCountReportsPassedForUser(
-          most_user_reports[j].user_id
+          most_user_reports[j].user_id,
+          start_date,
+          end_date
         );
         most_user_reports[j].failed = await StatisticsService.getCountReportsFailedForUser(
-          most_user_reports[j].user_id
+          most_user_reports[j].user_id,
+          start_date,
+          end_date
         );
         delete most_user_reports[j]["user_id"];
       }
     }
 
-    var most_user_testcases = await StatisticsService.getMostTestcasesUsers(5);
+    var most_user_testcases = await StatisticsService.getMostTestcasesUsers(5, start_date, end_date);
 
-    var most_version_failed = await StatisticsService.getMostVersionsFailed(5);
+    var most_version_failed = await StatisticsService.getMostVersionsFailed(5, start_date, end_date);
 
     var annual_report = [];
     const monthNames = [
