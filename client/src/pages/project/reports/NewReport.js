@@ -673,12 +673,16 @@ class NewReport extends Component {
                       className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1 ml-2`}
                       label='Save And Open Report'
                       type='text'
+                      tooltip={"Save and open report you are about to create"}
+                      tooltipId={"saveAndOpenReport"}
                       onClick={e => this.submitForm(e, false)}
                     />
                     <Btn
                       className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1 ml-2`}
                       label='Save And Open Test Case'
                       type='text'
+                      tooltip={"Save and open test case that this report is created for"}
+                      tooltipId={"saveAndOpenTC"}
                       onClick={e => this.submitForm(e, true)}
                     />
                     <UnderlineAnchor
