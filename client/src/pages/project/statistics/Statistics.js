@@ -639,7 +639,7 @@ class Statistics extends Component {
                         { id: 2, title: "Week" },
                         { id: 3, title: "Month" },
                         { id: 4, title: "3 Months" },
-                        { id: 5, title: "6 Month" },
+                        { id: 5, title: "6 Months" },
                         { id: 6, title: "Year" }
                       ]}
                       value={this.state.days}
