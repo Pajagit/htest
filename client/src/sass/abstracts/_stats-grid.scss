@@ -7,6 +7,9 @@
     padding: 1rem 0;
   }
   //   width: 100%;
+  &--dropdown {
+    min-width: 25rem;
+  }
   &-top {
     padding: 2rem 3rem;
     @media only screen and (max-width: $bp-600) {
@@ -39,6 +42,8 @@
         color: #2b3037;
         font-size: 2rem;
         letter-spacing: -0.6px;
+        display: flex;
+        justify-content: space-between;
       }
     }
     &-right {

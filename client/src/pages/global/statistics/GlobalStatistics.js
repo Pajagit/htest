@@ -8,6 +8,7 @@ import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import { superAdminPermissions } from "../../../permissions/Permissions";
 import { getGlobalStatistics } from "../../../actions/statisticActions";
 
+import Dropdown from "../../../components/common/Dropdown";
 import Header from "../../../components/common/Header";
 import Chart from "../../../components/common/Chart";
 import isEmpty from "../../../validation/isEmpty";
@@ -17,6 +18,7 @@ class GlobalStatistics extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      days: 0,
       statistics: this.props.statistics.project_statistics,
       // ALL TCs
       allTCOptions: {
@@ -335,6 +337,36 @@ class GlobalStatistics extends Component {
     this.props.getGlobalStatistics();
   }
 
+  onChange(e) {
+    this.setState({ days: +e.target.value }, () => {
+      if (this.state.days === 0) {
+        this.props.getGlobalStatistics();
+      } else {
+        var days;
+        switch (this.state.days) {
+          case 1:
+            days = 7;
+            break;
+          case 2:
+            days = 30;
+            break;
+          case 3:
+            days = 90;
+            break;
+          case 4:
+            days = 180;
+            break;
+          case 5:
+            days = 360;
+            break;
+          default:
+            days = 0;
+        }
+        this.props.getGlobalStatistics(days);
+      }
+    });
+  }
+
   render() {
     var { global_statistics, loading } = this.props.statistics;
     var content = "";
@@ -546,7 +578,23 @@ class GlobalStatistics extends Component {
           <div className='stats-flex'>
             <div className='stats-flex-top'>
               <div className='stats-flex-top-left'>
-                <div className='stats-flex-top-left-title'>Total Data</div>
+                <div className='stats-flex-top-left-title'>
+                  Total Data
+                  <div className='stats-flex--dropdown'>
+                    <Dropdown
+                      options={[
+                        { id: 0, title: "Time Range" },
+                        { id: 1, title: "Week" },
+                        { id: 2, title: "Month" },
+                        { id: 3, title: "3 Months" },
+                        { id: 4, title: "6 Month" },
+                        { id: 5, title: "Year" }
+                      ]}
+                      value={this.state.days}
+                      onChange={e => this.onChange(e)}
+                    />
+                  </div>
+                </div>
 
                 <div className='stats-flex-top-left-chart'>
                   <div className='stats-grid'>
@@ -736,7 +784,6 @@ class GlobalStatistics extends Component {
                 <div className='stats-flex-bottom-right-chart'>{mostVersionFailedComponent}</div>
               </div>
             </div>
-
             <div className='stats-flex-bottom'>
               <div className='stats-flex-bottom-left'>
                 <div className='stats-flex-bottom-left-title'>Users with most created test cases</div>
