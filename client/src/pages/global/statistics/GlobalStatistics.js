@@ -332,8 +332,6 @@ class GlobalStatistics extends Component {
     return Object.keys(update).length ? update : null;
   }
   componentDidMount() {
-    // var projectId = this.props.match.params.projectId;
-    // this.setState({ projectId });
     this.props.getGlobalStatistics();
   }
 
@@ -345,18 +343,21 @@ class GlobalStatistics extends Component {
         var days;
         switch (this.state.days) {
           case 1:
-            days = 7;
+            days = 3;
             break;
           case 2:
-            days = 30;
+            days = 7;
             break;
           case 3:
-            days = 90;
+            days = 30;
             break;
           case 4:
-            days = 180;
+            days = 90;
             break;
           case 5:
+            days = 180;
+            break;
+          case 6:
             days = 360;
             break;
           default:
@@ -584,11 +585,12 @@ class GlobalStatistics extends Component {
                     <Dropdown
                       options={[
                         { id: 0, title: "Time Range" },
-                        { id: 1, title: "Week" },
-                        { id: 2, title: "Month" },
-                        { id: 3, title: "3 Months" },
-                        { id: 4, title: "6 Month" },
-                        { id: 5, title: "Year" }
+                        { id: 1, title: "3 Days" },
+                        { id: 2, title: "Week" },
+                        { id: 3, title: "Month" },
+                        { id: 4, title: "3 Months" },
+                        { id: 5, title: "6 Month" },
+                        { id: 6, title: "Year" }
                       ]}
                       value={this.state.days}
                       onChange={e => this.onChange(e)}
