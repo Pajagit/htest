@@ -188,6 +188,8 @@ class TestCase extends Component {
                   <br />
                 </div>
               </div>
+              <br />
+              <br />
               {precondition}
               {links}
               {uploaded_files}
