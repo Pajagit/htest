@@ -31,6 +31,7 @@
 
   &-item {
     margin-bottom: 2.4rem;
+    clear: both;
 
     &--title {
       margin-bottom: 1rem;
@@ -67,9 +68,11 @@
     display: flex;
     align-items: center;
     font-size: 1.4rem;
+    padding-left: 1.5rem;
     &-title {
       margin-right: 1.5rem;
       color: #9b9b9b;
+      min-width: 3rem;
 
       letter-spacing: 0.17px;
       line-height: 1.8rem;
