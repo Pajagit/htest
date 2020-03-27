@@ -15,11 +15,16 @@
       padding: 1.5rem 2rem;
       &--title {
         font-weight: 500;
-        padding-bottom: 1.3rem;
+        margin-bottom: 1rem;
         font-size: 1.6rem;
         font-weight: 500;
         letter-spacing: 0.2px;
         line-height: 2.3rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
       }
       &--tags {
         &:after {
@@ -75,6 +80,11 @@
         &-value {
           font-size: 1.4rem;
           color: #000;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 6; /* number of lines to show */
+          -webkit-box-orient: vertical;
         }
       }
     }
