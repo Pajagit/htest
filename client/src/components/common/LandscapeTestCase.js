@@ -31,7 +31,7 @@ function LandscapeTestCase({ title, tags, author, date, description, id, project
             {moment(date).format("Do MMMM YYYY, h:mm:ss a")}
           </div>
           <div className='landscape-testcase-left-container--button'>
-            <AddReportBtn title={"Add to Report"} id={id} />
+            <AddReportBtn title={"Test"} id={id} />
           </div>
         </div>
       </div>

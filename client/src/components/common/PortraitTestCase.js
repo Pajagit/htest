@@ -8,7 +8,7 @@ function PortraitTestCase({ title, tags, author, date, description, id, onClick,
   if (isValidWrite) {
     addReportBtn = (
       <div className='portrait-testcase-bottom-container--button' onClick={onClickAddReport}>
-        <AddReportBtn title={"Add to Report"} id={id} />
+        <AddReportBtn title={"Test"} id={id} />
       </div>
     );
   }
