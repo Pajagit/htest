@@ -2,6 +2,7 @@ import React from "react";
 import ReportStatus from "./ReportStatus";
 import ReactTooltip from "react-tooltip";
 import AddReportBtn from "../common/AddReportBtn";
+import Tag from "./Tag";
 
 import moment from "moment";
 
@@ -118,9 +119,20 @@ function PortraitReport({
   if (isValidWrite) {
     addReportBtn = (
       <div className='portrait-testcase-bottom-container--button' onClick={onClickAddReport}>
-        <AddReportBtn title={"Clone"} id={id} />
+        <AddReportBtn title={"Retest"} id={id} />
       </div>
     );
+  }
+
+  var spliceCount = 0;
+  var totalCount = tags.length;
+  var array = tags;
+  if (tags.length > 5) {
+    array.splice(5, totalCount);
+    spliceCount = totalCount - tags.length;
+  }
+  if (spliceCount > 0) {
+    tags.push(<Tag title={`+ ${spliceCount}`} color={"PRIMARY"} />);
   }
   return (
     <div className='portrait-report clickable' onClick={onClick}>
