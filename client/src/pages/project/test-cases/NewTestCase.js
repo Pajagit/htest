@@ -394,7 +394,7 @@ class NewTestCase extends Component {
                 />
                 <Btn
                   className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2 mb-1`}
-                  label='Add To Report'
+                  label='Save and Test'
                   type='text'
                   tooltip={"Save this test case and open page to create report for it right away"}
                   tooltipId={"saveAndOpenCreateReport"}

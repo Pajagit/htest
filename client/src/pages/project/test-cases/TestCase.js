@@ -95,7 +95,7 @@ class TestCase extends Component {
           <div className='flex-column-left mt-5'>
             <BtnAnchor
               className='a-btn a-btn-primary mr-2'
-              label='Add To Report'
+              label='Test'
               link={`/${projectId}/NewReport/${testcase.id}`}
             />
           </div>
