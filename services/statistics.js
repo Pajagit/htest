@@ -16,12 +16,18 @@ const UploadedFile = require("../models/uploadedfile");
 const Group = require("../models/group");
 
 module.exports = {
-  getTotalTestcases: async function(project_id, start_date, end_date) {
+  getTotalTestcases: async function(start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       whereCondition.deprecated = false;
       if (project_id) {
         whereCondition.project_id = project_id;
+      }
+      if (start_date && end_date) {
+        whereCondition.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
       }
 
       TestCase.count({
@@ -37,14 +43,22 @@ module.exports = {
     });
   },
 
-  getTotalReports: async function(project_id) {
+  getTotalReports: async function(start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
       }
+      var whereCondReports = {};
+      if (start_date && end_date) {
+        whereCondReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Report.count({
         attributes: [],
+        where: whereCondReports,
         include: [
           {
             model: TestCase,
@@ -63,14 +77,22 @@ module.exports = {
       });
     });
   },
-  getTotalReportsPassed: async function(project_id) {
+  getTotalReportsPassed: async function(start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
       }
+      var whereCondReports = {};
+      if (start_date && end_date) {
+        whereCondReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Report.count({
         attributes: [],
+        where: whereCondReports,
         include: [
           {
             model: TestCase,
@@ -98,14 +120,22 @@ module.exports = {
       });
     });
   },
-  getTotalReportsFailed: async function(project_id) {
+  getTotalReportsFailed: async function(start_date, end_date, project_id) {
     return new Promise((resolve, reject) => {
       var whereCondition = {};
       if (project_id) {
         whereCondition.project_id = project_id;
       }
+      var whereCondReports = {};
+      if (start_date && end_date) {
+        whereCondReports.created_at = {
+          [Op.gt]: start_date,
+          [Op.lte]: end_date
+        };
+      }
       Report.count({
         attributes: [],
+        where: whereCondReports,
         include: [
           {
             model: TestCase,

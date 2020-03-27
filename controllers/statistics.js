@@ -12,16 +12,74 @@ module.exports = {
     var days = req.query.days;
     end_date = null;
     start_date = null;
+    prev_start_date = null;
+
     if (days) {
       var end_date = new Date();
       var start_date = new Date();
+      var prev_start_date = new Date();
       start_date.setDate(start_date.getDate() - days);
+      prev_start_date.setDate(start_date.getDate() - days);
     }
 
-    var totalTestcases = await StatisticsService.getTotalTestcases(req.params.id);
-    var totalReports = await StatisticsService.getTotalReports(req.params.id);
-    var totalsReportsPassed = await StatisticsService.getTotalReportsPassed(req.params.id);
-    var totalsReportsFailed = await StatisticsService.getTotalReportsFailed(req.params.id);
+    var totalTestcases = await StatisticsService.getTotalTestcases(start_date, end_date, req.params.id);
+    var totalTestcasesPrevious = await StatisticsService.getTotalTestcases(prev_start_date, start_date, req.params.id);
+    if (totalTestcasesPrevious > 0 && days) {
+      var totalTestcasesPercentage = Math.round(((totalTestcases / totalTestcasesPrevious) * 100 - 100) * 100) / 100;
+    } else {
+      var totalTestcasesPercentage = null;
+    }
+
+    var totalReports = await StatisticsService.getTotalReports(start_date, end_date, req.params.id);
+    var totalReportsPrevious = await StatisticsService.getTotalReports(prev_start_date, start_date, req.params.id);
+    if (totalReportsPrevious > 0 && days) {
+      var totalReportsPercentage = Math.round(((totalReports / totalReportsPrevious) * 100 - 100) * 100) / 100;
+    } else {
+      var totalReportsPercentage = null;
+    }
+
+    if (totalTestcases && totalReports) {
+      var ratio = Math.round((totalReports / totalTestcases) * 100) / 100;
+    } else {
+      var ratio = null;
+    }
+
+    var totalsReportsPassed = await StatisticsService.getTotalReportsPassed(start_date, end_date, req.params.id);
+    var totalsReportsPassedPrevious = await StatisticsService.getTotalReportsPassed(
+      prev_start_date,
+      start_date,
+      req.params.id
+    );
+    if (totalsReportsPassedPrevious > 0 && days) {
+      var totalReportsPassedPercentage =
+        Math.round(((totalsReportsPassed / totalsReportsPassedPrevious) * 100 - 100) * 100) / 100;
+    } else {
+      var totalReportsPassedPercentage = null;
+    }
+    if (totalReports && totalsReportsPassed) {
+      var ratioPassedReports = Math.round((totalsReportsPassed / totalReports) * 100 * 100) / 100;
+    } else {
+      var ratioPassedReports = null;
+    }
+
+    var totalsReportsFailed = await StatisticsService.getTotalReportsFailed(start_date, end_date, req.params.id);
+    var totalsReportsFailedPrevious = await StatisticsService.getTotalReportsFailed(
+      prev_start_date,
+      start_date,
+      req.params.id
+    );
+    if (totalsReportsFailedPrevious > 0 && days) {
+      var totalReportsFailedPercentage =
+        Math.round(((totalsReportsFailed / totalsReportsFailedPrevious) * 100 - 100) * 100) / 100;
+    } else {
+      var totalReportsFailedPercentage = null;
+    }
+    if (totalReports && totalsReportsFailed) {
+      var ratioFailedReports = Math.round((totalsReportsFailed / totalReports) * 100 * 100) / 100;
+    } else {
+      var ratioFailedReports = null;
+    }
+
     var most_active_testcases = await StatisticsService.getMostActiveTestcases(5, start_date, end_date, req.params.id);
     var most_testcases_failed = await StatisticsService.getMostTestcasesFailed(5, start_date, end_date, req.params.id);
 
@@ -517,15 +575,22 @@ module.exports = {
     statistics.total_data = {};
     statistics.total_data.total_testcases = {};
     statistics.total_data.total_testcases.value = totalTestcases;
+    statistics.total_data.total_testcases.percentage = totalTestcasesPercentage;
 
     statistics.total_data.total_reports = {};
     statistics.total_data.total_reports.value = totalReports;
+    statistics.total_data.total_reports.percentage = totalReportsPercentage;
+    statistics.total_data.total_reports.ratio = ratio;
 
     statistics.total_data.total_passed_reports = {};
     statistics.total_data.total_passed_reports.value = totalsReportsPassed;
+    statistics.total_data.total_passed_reports.percentage = totalReportsPassedPercentage;
+    statistics.total_data.total_passed_reports.ratio = ratioPassedReports;
 
     statistics.total_data.total_failed_reports = {};
     statistics.total_data.total_failed_reports.value = totalsReportsFailed;
+    statistics.total_data.total_failed_reports.percentage = totalReportsFailedPercentage;
+    statistics.total_data.total_failed_reports.ratio = ratioFailedReports;
 
     statistics.most_active_testcases = most_active_testcases;
 
@@ -545,18 +610,69 @@ module.exports = {
   },
   getGlobalStatistics: async function(req, res) {
     var days = req.query.days;
-    end_date = null;
-    start_date = null;
+    var end_date = null;
+    var start_date = null;
+    var prev_start_date = null;
+
     if (days) {
       var end_date = new Date();
       var start_date = new Date();
+      var prev_start_date = new Date();
       start_date.setDate(start_date.getDate() - days);
+      prev_start_date.setDate(start_date.getDate() - days);
     }
 
-    var totalTestcases = await StatisticsService.getTotalTestcases();
-    var totalReports = await StatisticsService.getTotalReports();
-    var totalsReportsPassed = await StatisticsService.getTotalReportsPassed();
-    var totalsReportsFailed = await StatisticsService.getTotalReportsFailed();
+    var totalTestcases = await StatisticsService.getTotalTestcases(start_date, end_date);
+    var totalTestcasesPrevious = await StatisticsService.getTotalTestcases(prev_start_date, start_date);
+    if (totalTestcasesPrevious > 0 && days) {
+      var totalTestcasesPercentage = Math.round(((totalTestcases / totalTestcasesPrevious) * 100 - 100) * 100) / 100;
+    } else {
+      var totalTestcasesPercentage = null;
+    }
+
+    var totalReports = await StatisticsService.getTotalReports(start_date, end_date);
+    var totalReportsPrevious = await StatisticsService.getTotalReports(prev_start_date, start_date);
+
+    if (totalReportsPrevious > 0 && days) {
+      var totalReportsPercentage = Math.round(((totalReports / totalReportsPrevious) * 100 - 100) * 100) / 100;
+    } else {
+      var totalReportsPercentage = null;
+    }
+
+    if (totalTestcases && totalReports) {
+      var ratio = Math.round((totalReports / totalTestcases) * 100) / 100;
+    } else {
+      var ratio = null;
+    }
+
+    var totalsReportsPassed = await StatisticsService.getTotalReportsPassed(start_date, end_date);
+    var totalsReportsPassedPrevious = await StatisticsService.getTotalReportsPassed(prev_start_date, start_date);
+    if (totalsReportsPassedPrevious > 0 && days) {
+      var totalReportsPassedPercentage =
+        Math.round(((totalsReportsPassed / totalsReportsPassedPrevious) * 100 - 100) * 100) / 100;
+    } else {
+      var totalReportsPassedPercentage = null;
+    }
+    if (totalReports && totalsReportsPassed) {
+      var ratioPassedReports = Math.round((totalsReportsPassed / totalReports) * 100 * 100) / 100;
+    } else {
+      var ratioPassedReports = null;
+    }
+
+    var totalsReportsFailed = await StatisticsService.getTotalReportsFailed(start_date, end_date);
+    var totalsReportsFailedPrevious = await StatisticsService.getTotalReportsFailed(prev_start_date, start_date);
+    if (totalsReportsFailedPrevious > 0 && days) {
+      var totalReportsFailedPercentage =
+        Math.round(((totalsReportsFailed / totalsReportsFailedPrevious) * 100 - 100) * 100) / 100;
+    } else {
+      var totalReportsFailedPercentage = null;
+    }
+    if (totalReports && totalsReportsFailed) {
+      var ratioFailedReports = Math.round((totalsReportsFailed / totalReports) * 100 * 100) / 100;
+    } else {
+      var ratioFailedReports = null;
+    }
+
     var most_active_projects = await StatisticsService.getMostActiveProjects(5, start_date, end_date);
     var most_reports_failed = await StatisticsService.getMostProjectsTestcasesFailed(5, start_date, end_date);
     var project_most_testcases = await StatisticsService.getMostProjectsTestcases(start_date, end_date);
@@ -1030,15 +1146,22 @@ module.exports = {
     statistics.total_data = {};
     statistics.total_data.total_testcases = {};
     statistics.total_data.total_testcases.value = totalTestcases;
+    statistics.total_data.total_testcases.percentage = totalTestcasesPercentage;
 
     statistics.total_data.total_reports = {};
     statistics.total_data.total_reports.value = totalReports;
+    statistics.total_data.total_reports.percentage = totalReportsPercentage;
+    statistics.total_data.total_reports.ratio = ratio;
 
     statistics.total_data.total_passed_reports = {};
     statistics.total_data.total_passed_reports.value = totalsReportsPassed;
+    statistics.total_data.total_passed_reports.percentage = totalReportsPassedPercentage;
+    statistics.total_data.total_passed_reports.ratio = ratioPassedReports;
 
     statistics.total_data.total_failed_reports = {};
     statistics.total_data.total_failed_reports.value = totalsReportsFailed;
+    statistics.total_data.total_failed_reports.percentage = totalReportsFailedPercentage;
+    statistics.total_data.total_failed_reports.ratio = ratioFailedReports;
 
     statistics.most_active_projects = most_active_projects;
 
