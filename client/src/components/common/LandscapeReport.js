@@ -1,6 +1,8 @@
 import React from "react";
 import moment from "moment";
 import ReportStatus from "./ReportStatus";
+import Tag from "./Tag";
+import AddReportBtn from "../common/AddReportBtn";
 import ReactTooltip from "react-tooltip";
 
 function LandscapeTestCase({
@@ -17,10 +19,31 @@ function LandscapeTestCase({
   simulator,
   comment,
   actual_result,
+  onClickAddReport,
   status,
   onClick,
   isValidWrite
 }) {
+  var addReportBtn = "";
+  if (isValidWrite) {
+    addReportBtn = (
+      <div className='portrait-testcase-bottom-container--button' onClick={onClickAddReport}>
+        <AddReportBtn title={"Retest"} id={id} />
+      </div>
+    );
+  }
+
+  var tagsToShow = 5;
+  var spliceCount = 0;
+  var totalCount = tags.length;
+  var array = tags;
+  if (tags.length > tagsToShow) {
+    array.splice(tagsToShow, totalCount);
+    spliceCount = totalCount - tags.length;
+  }
+  if (spliceCount > 0) {
+    tags.push(<Tag title={`+ ${spliceCount} other`} color={"PRIMARY"} />);
+  }
   return (
     <div className='landscape-report clickable' onClick={onClick}>
       <div className='landscape-report-left'>
@@ -36,6 +59,9 @@ function LandscapeTestCase({
           <div className='landscape-report-left-container--button'>
             <ReportStatus status={status.title.toLowerCase()} id={id} />
           </div>
+          <br />
+          <br />
+          {addReportBtn}
         </div>
       </div>
       <ReactTooltip
@@ -104,13 +130,14 @@ function LandscapeTestCase({
               {simulator[1] ? <i className='fas fa-info-circle removed-text' data-tip data-for='removed'></i> : ""}
             </div>
           </div>
-          <div className='landscape-report-right-right-container--item'>
-            <div className='landscape-report-right-right-container--item-title'>Comment:</div>
-            <div className='landscape-report-right-right-container--item-value'>{comment}</div>
-          </div>
+
           <div className='landscape-report-right-right-container--item'>
             <div className='landscape-report-right-right-container--item-title'>Actual Result:</div>
             <div className='landscape-report-right-right-container--item-value'>{actual_result}</div>
+          </div>
+          <div className='landscape-report-right-right-container--item'>
+            <div className='landscape-report-right-right-container--item-title'>Comment:</div>
+            <div className='landscape-report-right-right-container--item-value'>{comment}</div>
           </div>
         </div>
       </div>
