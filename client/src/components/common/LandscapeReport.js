@@ -20,17 +20,30 @@ function LandscapeTestCase({
   comment,
   actual_result,
   onClickAddReport,
+  deprecated,
   status,
   onClick,
   isValidWrite
 }) {
   var addReportBtn = "";
+  var disabledReportBtnClass = "";
+  if (deprecated) {
+    disabledReportBtnClass = "disabled-with-event";
+  }
   if (isValidWrite) {
-    addReportBtn = (
-      <div className='portrait-testcase-bottom-container--button' onClick={onClickAddReport}>
-        <AddReportBtn title={"Retest"} id={id} />
-      </div>
-    );
+    if (!deprecated) {
+      addReportBtn = (
+        <div className={`portrait-testcase-bottom-container--button`} onClick={onClickAddReport}>
+          <AddReportBtn title={"Retest"} id={id} />
+        </div>
+      );
+    } else {
+      addReportBtn = (
+        <div className={`portrait-testcase-bottom-container--button primary-text deprecated`}>
+          <i className={`fas fa-trash-alt`} data-tip data-for={"deprecated"}></i>
+        </div>
+      );
+    }
   }
 
   var tagsToShow = 5;
@@ -42,7 +55,7 @@ function LandscapeTestCase({
     spliceCount = totalCount - tags.length;
   }
   if (spliceCount > 0) {
-    tags.push(<Tag title={`+ ${spliceCount} other`} color={"PRIMARY"} />);
+    tags.push(<Tag title={`+ ${spliceCount} other`} color={"PRIMARY"} key={"bonus"} />);
   }
   return (
     <div className='landscape-report clickable' onClick={onClick}>
@@ -75,6 +88,16 @@ function LandscapeTestCase({
         <p>This setup item is removed.</p>
         <p>You can not filter or create</p>
         <p> new report with this item.</p>
+      </ReactTooltip>
+      <ReactTooltip
+        id='deprecated'
+        aria-haspopup='true'
+        className='custom-color-no-arrow'
+        textColor='#fff'
+        backgroundColor='#4d3cb5'
+        effect='solid'
+      >
+        <p>Can not test removed test case</p>
       </ReactTooltip>
       <div className='landscape-report-right'>
         <div className='landscape-report-right-left-container'>

@@ -123,6 +123,7 @@ class ReportContainer extends Component {
                 </React.Fragment>
               ))}
               author={report.user}
+              deprecated={report.testcase.deprecated}
               date={report.created_at}
               comment={report.comment}
               actual_result={report.actual_result}
@@ -187,6 +188,7 @@ class ReportContainer extends Component {
                 </React.Fragment>
               ))}
               author={report.user}
+              deprecated={report.testcase.deprecated}
               date={report.created_at}
               comment={report.comment}
               actual_result={report.actual_result}

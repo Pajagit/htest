@@ -50,6 +50,20 @@
   pointer-events: none !important;
   box-shadow: 0 0 0 0 !important;
 }
+.disabled-with-event {
+  opacity: 0.35 !important;
+  cursor: default !important;
+  pointer-events: visible;
+  box-shadow: 0 0 0 0 !important;
+}
+.deprecated {
+  font-size: 1.4rem;
+}
+.disabled-with-event:hover {
+  opacity: 0.35 !important;
+  cursor: default !important;
+  box-shadow: 0 0 0 0 !important;
+}
 
 .disabled-light {
   opacity: 0.75 !important;
