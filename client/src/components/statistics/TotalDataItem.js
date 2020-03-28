@@ -10,6 +10,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
   var toolTipClass = "";
   var statsGridClass = "";
   var percentageLabel = " %";
+  var plusLabel = "";
   var daysValue;
   switch (days) {
     case 1:
@@ -41,6 +42,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
     backGroundColor = "#ff4560";
     toolTipRatioValue = "Percentage of failed reports based on total reports in selected time frame";
     toolTipClass = "failed-text";
+    plusLabel = "+";
     statsGridClass = "4";
   } else if (className === "passed") {
     title = "Passed Reports";
@@ -49,6 +51,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
     backGroundColor = "#00e396";
     toolTipRatioValue = "Percentage of passed reports based on total reports in selected time frame";
     toolTipClass = "passed-text";
+    plusLabel = "+";
     statsGridClass = "3";
   } else if (className === "reports") {
     title = "Total Reports";
@@ -110,7 +113,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
   if (className !== "testcases") {
     totalDataRatioValueComponent = (
       <div>
-        {totalDataRatioValue}
+        {+totalDataRatio >= 0 && totalDataRatio ? plusLabel + totalDataRatioValue : totalDataRatioValue}
         <i className={`fas fa-info-circle ml-0 ${toolTipClass}`} data-tip data-for={dataForValue + "-ratio"}></i>
         <ReactTooltip
           id={dataForValue + "-ratio"}
