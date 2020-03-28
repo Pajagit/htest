@@ -37,7 +37,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
   var toolTipPercentageValue = `Change percentage compared to previous ${daysValue}`;
   if (className === "failed") {
     title = "Failed Reports";
-    dataForValue = "failed";
+    dataForValue = "Failed: ";
     textColor = "#fff";
     backGroundColor = "#ff4560";
     toolTipRatioValue = "Percentage of failed reports based on total reports in selected time frame";
@@ -46,7 +46,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
     statsGridClass = "4";
   } else if (className === "passed") {
     title = "Passed Reports";
-    dataForValue = "passed";
+    dataForValue = "Passed: ";
     textColor = "#000";
     backGroundColor = "#00e396";
     toolTipRatioValue = "Percentage of passed reports based on total reports in selected time frame";
@@ -55,7 +55,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
     statsGridClass = "3";
   } else if (className === "reports") {
     title = "Total Reports";
-    dataForValue = "total-reports";
+    dataForValue = "Ratio:";
     textColor = "#fff";
     backGroundColor = "#503bbc";
     toolTipRatioValue = "Reports / Test Cases ratio in selected time frame";
@@ -64,7 +64,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
     percentageLabel = "";
   } else if (className === "testcases") {
     title = "Total Test Cases";
-    dataForValue = "total-testcases";
+    dataForValue = "";
     textColor = "#000";
     backGroundColor = "#a592ff";
     toolTipRatioValue = "Reports / Test Cases ratio";
@@ -73,15 +73,18 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
     percentageLabel = "";
   }
   var totalDataCountPercentageValue = "Can not compare";
+  var percentageTitle = "";
   var totalDataCountValue = "0";
   if (totalDataCount) {
     totalDataCountValue = totalDataCount;
   }
   if (totalDataCountPercentage) {
     totalDataCountPercentageValue =
-      totalDataCountPercentage >= 0 ? "+" + totalDataCountPercentage + " %" : totalDataCountPercentage + " %";
+      totalDataCountPercentage >= 0 ? totalDataCountPercentage + " %" : totalDataCountPercentage + " %";
   } else if (totalDataCountPercentage === 0) {
     totalDataCountPercentageValue = "No changes";
+  } else {
+    totalDataCountPercentageValue = "Can not compare";
   }
   var totalDataCountPercentageComponent = "";
   if (days) {
@@ -101,6 +104,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
         </ReactTooltip>
       </div>
     );
+    percentageTitle = "Changed: ";
   }
 
   var totalDataRatioValueComponent = "";
@@ -133,11 +137,15 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
     <div className='stats-grid--item'>
       <div className={`stats-grid--item-${statsGridClass}`}>
         <div className='stats-grid--item-1-title'>{title}</div>
-        <div className='stats-grid--item-1-count'>
-          {totalDataCountValue}
-          <div className='stats-grid--item-1-count-percentage'>{totalDataCountPercentageComponent}</div>
+        <div className='stats-grid--item-1-count'>{totalDataCountValue}</div>
+        <div className='stats-grid--item-1-count-percentage'>
+          <div className='stats-grid--item-1-count-percentage-title'>{percentageTitle}</div>
+          <div className='stats-grid--item-1-count-percentage-value'> {totalDataCountPercentageComponent}</div>
         </div>
-        <div className='stats-grid--item-1-ratio'>{totalDataRatioValueComponent}</div>
+        <div className='stats-grid--item-1-ratio'>
+          <div className='stats-grid--item-1-ratio-title'>{dataForValue}</div>
+          <div className='stats-grid--item-1-ratio-value'> {totalDataRatioValueComponent}</div>
+        </div>
       </div>
     </div>
   );

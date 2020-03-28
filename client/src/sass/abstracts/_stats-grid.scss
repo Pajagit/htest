@@ -168,7 +168,7 @@
       }
       &-count {
         display: flex;
-        align-items: center;
+        // align-items: center;
         height: 3.4rem;
         width: 18rem;
         color: #2b3037;
@@ -178,14 +178,21 @@
         letter-spacing: -0.9px;
         line-height: 3.4rem;
         &-percentage {
-          margin-left: 1rem;
+          // margin-left: 1rem;
           color: gray;
           color: #9b9b9b;
           font-family: Roboto;
-          font-size: 1.6rem;
+          font-size: 1.4rem;
           font-weight: bold;
           letter-spacing: -0.3px;
           line-height: 2.6rem;
+          display: flex;
+          &-title {
+            padding-right: 1rem;
+          }
+          &-value {
+            color: black;
+          }
         }
       }
       &-ratio {
@@ -193,10 +200,17 @@
         width: 18rem;
         color: #9b9b9b;
         font-family: Roboto;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
         font-weight: bold;
         letter-spacing: -0.3px;
         line-height: 2.6rem;
+        display: flex;
+        &-title {
+          margin-right: 1rem;
+        }
+        &-value {
+          color: black;
+        }
       }
     }
     &-2 {
