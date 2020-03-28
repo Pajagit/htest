@@ -72,7 +72,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
     statsGridClass = "1";
     percentageLabel = "";
   }
-  var totalDataCountPercentageValue = "Can not compare";
+  var totalDataCountPercentageValue = "";
   var percentageTitle = "";
   var totalDataCountValue = "0";
   if (totalDataCount) {
@@ -84,7 +84,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
   } else if (totalDataCountPercentage === 0) {
     totalDataCountPercentageValue = "No changes";
   } else {
-    totalDataCountPercentageValue = "Can not compare";
+    totalDataCountPercentageValue = "No Data";
   }
   var totalDataCountPercentageComponent = "";
   if (days) {
@@ -112,7 +112,7 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
   if (totalDataRatio) {
     totalDataRatioValue = totalDataRatio + percentageLabel;
   } else {
-    totalDataRatioValue = "Can't calculate";
+    totalDataRatioValue = "No Data";
   }
   if (className !== "testcases") {
     totalDataRatioValueComponent = (
