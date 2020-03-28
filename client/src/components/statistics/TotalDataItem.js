@@ -77,6 +77,8 @@ function TotalDataItem({ className, totalDataCount, totalDataCountPercentage, to
   if (totalDataCountPercentage) {
     totalDataCountPercentageValue =
       totalDataCountPercentage >= 0 ? "+" + totalDataCountPercentage + " %" : totalDataCountPercentage + " %";
+  } else if (totalDataCountPercentage === 0) {
+    totalDataCountPercentage = "No changes";
   }
   var totalDataCountPercentageComponent = "";
   if (days) {
