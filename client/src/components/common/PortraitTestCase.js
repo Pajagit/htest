@@ -22,7 +22,7 @@ function PortraitTestCase({ title, tags, author, date, description, id, onClick,
     spliceCount = totalCount - tags.length;
   }
   if (spliceCount > 0) {
-    tags.push(<Tag title={`+ ${spliceCount} other`} color={"PRIMARY"} />);
+    tags.push(<Tag title={`+ ${spliceCount} other`} color={"PRIMARY"} key={"bonus"} />);
   }
   return (
     <div className='portrait-testcase clickable' onClick={onClick}>

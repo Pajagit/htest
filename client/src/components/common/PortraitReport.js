@@ -22,6 +22,7 @@ function PortraitReport({
   actual_result,
   status,
   onClickAddReport,
+  deprecated,
   onClick,
   isValidWrite
 }) {
@@ -117,11 +118,19 @@ function PortraitReport({
   }
   var addReportBtn = "";
   if (isValidWrite) {
-    addReportBtn = (
-      <div className='portrait-testcase-bottom-container--button' onClick={onClickAddReport}>
-        <AddReportBtn title={"Retest"} id={id} />
-      </div>
-    );
+    if (!deprecated) {
+      addReportBtn = (
+        <div className='portrait-testcase-bottom-container--button' onClick={onClickAddReport}>
+          <AddReportBtn title={"Retest"} id={id} />
+        </div>
+      );
+    } else {
+      addReportBtn = (
+        <div className={`portrait-testcase-bottom-container--button primary-text deprecated`}>
+          <i className={`fas fa-trash-alt`} data-tip data-for={"deprecated"}></i>
+        </div>
+      );
+    }
   }
 
   var spliceCount = 0;
@@ -132,7 +141,7 @@ function PortraitReport({
     spliceCount = totalCount - tags.length;
   }
   if (spliceCount > 0) {
-    tags.push(<Tag title={`+ ${spliceCount}`} color={"PRIMARY"} />);
+    tags.push(<Tag title={`+ ${spliceCount}`} color={"PRIMARY"} key={"bonus"} />);
   }
   return (
     <div className='portrait-report clickable' onClick={onClick}>
@@ -162,6 +171,16 @@ function PortraitReport({
         <p>This setup item is removed.</p>
         <p>You can not filter or create</p>
         <p> new report with this item.</p>
+      </ReactTooltip>
+      <ReactTooltip
+        id='deprecated'
+        aria-haspopup='true'
+        className='custom-color-no-arrow'
+        textColor='#fff'
+        backgroundColor='#4d3cb5'
+        effect='solid'
+      >
+        <p>Can not retest removed test case</p>
       </ReactTooltip>
       <div className='portrait-report-bottom'>
         <div className='portrait-report-bottom-container'>

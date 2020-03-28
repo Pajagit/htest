@@ -13,7 +13,7 @@ function LandscapeTestCase({ title, tags, author, date, description, id, project
     spliceCount = totalCount - tags.length;
   }
   if (spliceCount > 0) {
-    tags.push(<Tag title={`+ ${spliceCount} other`} color={"PRIMARY"} />);
+    tags.push(<Tag title={`+ ${spliceCount} other`} color={"PRIMARY"} key={"bonus"} />);
   }
 
   return (
