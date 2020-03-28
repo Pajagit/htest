@@ -270,7 +270,16 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["id", "project_id", "title", "description", "preconditions", "expected_result", "created_at"],
+            attributes: [
+              "id",
+              "project_id",
+              "title",
+              "description",
+              "preconditions",
+              "expected_result",
+              "created_at",
+              "deprecated"
+            ],
             required: true,
             where: {
               project_id: project_id
@@ -406,6 +415,7 @@ module.exports = {
           report_obj.links = report.links;
           report_obj.testcase.links = report.testcase.links;
           report_obj.testcase.steps = report.testcase.test_steps;
+          report_obj.testcase.deprecated = report.testcase.deprecated;
 
           resolve(report_obj);
         } else {
@@ -637,7 +647,16 @@ module.exports = {
           {
             model: TestCase,
             as: "testcase",
-            attributes: ["id", "project_id", "title", "description", "preconditions", "expected_result", "created_at"],
+            attributes: [
+              "id",
+              "project_id",
+              "title",
+              "description",
+              "preconditions",
+              "expected_result",
+              "created_at",
+              "deprecated"
+            ],
             required: true,
 
             include: [
@@ -755,6 +774,7 @@ module.exports = {
             report_obj.testcase.created_at = report.testcase.created_at;
             report_obj.links = report.links;
             report_obj.testcase.links = report.testcase.links;
+            report_obj.testcase.deprecated = report.testcase.deprecated;
 
             reports.push(report_obj);
             if (reportsCount > 0) {
