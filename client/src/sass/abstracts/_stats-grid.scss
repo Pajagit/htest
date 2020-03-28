@@ -147,7 +147,7 @@
   grid-template-columns: repeat(auto-fit, 20rem);
 
   width: 100%;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
 
   &--item {
     border-radius: 4px;
@@ -167,6 +167,8 @@
         margin-bottom: 1.2rem;
       }
       &-count {
+        display: flex;
+        align-items: center;
         height: 3.4rem;
         width: 18rem;
         color: #2b3037;
@@ -175,8 +177,18 @@
         font-weight: bold;
         letter-spacing: -0.9px;
         line-height: 3.4rem;
+        &-percentage {
+          margin-left: 1rem;
+          color: gray;
+          color: #9b9b9b;
+          font-family: Roboto;
+          font-size: 1.6rem;
+          font-weight: bold;
+          letter-spacing: -0.3px;
+          line-height: 2.6rem;
+        }
       }
-      &-percentage {
+      &-ratio {
         height: 2.6rem;
         width: 18rem;
         color: #9b9b9b;
