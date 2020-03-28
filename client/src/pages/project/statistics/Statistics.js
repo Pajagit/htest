@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
+import TotalDataItem from "../../../components/statistics/TotalDataItem";
 import ProjectPanel from "../../../components/project-panel/ProjectPanel";
 import { projectIdAndSuperAdminPermission } from "../../../permissions/Permissions";
 import { getProjectStatistics } from "../../../actions/statisticActions";
@@ -649,162 +650,82 @@ class Statistics extends Component {
                 </div>
                 <div className='stats-flex-top-left-chart'>
                   <div className='stats-grid'>
-                    <div className='stats-grid--item'>
-                      <div className='stats-grid--item-1'>
-                        <div className='stats-grid--item-1-title'>Total Test Cases</div>
-                        <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.value
-                            ? project_statistics.total_data.total_testcases.value
-                            : "None Created"}
-                        </div>
-                        <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.percentage > 0
-                            ? "+"
-                            : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases &&
-                          project_statistics.total_data.total_testcases.percentage
-                            ? `${project_statistics.total_data.total_testcases.percentage} %`
-                            : ""}
-                        </div>
-                      </div>
-                    </div>
-                    <div className='stats-grid--item'>
-                      <div className='stats-grid--item-2'>
-                        <div className='stats-grid--item-1-title'>Total Reports</div>
-                        <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.value
-                            ? project_statistics.total_data.total_reports.value
-                            : "None Reported"}
-                        </div>
-                        <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.percentage > 0
-                            ? "+"
-                            : ""}
-                          {/* {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.percentage
-                            ? `${project_statistics.total_data.total_reports.percentage} %`
-                            : ""} */}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports.value &&
-                          project_statistics.total_data &&
-                          project_statistics.total_data.total_testcases.value
-                            ? Math.round(
-                                (project_statistics.total_data.total_reports.value /
-                                  project_statistics.total_data.total_testcases.value) *
-                                  100 +
-                                  Number.EPSILON
-                              ) / 100
-                            : ""}
-                          <i className='fas fa-info-circle ml-0 primary-text' data-tip data-for='ratio'></i>
-                          <ReactTooltip
-                            id='ratio'
-                            aria-haspopup='true'
-                            className='custom-color-no-arrow'
-                            textColor='#fff'
-                            backgroundColor='#4d3cb5'
-                            effect='solid'
-                          >
-                            <p>Reports / Test Cases ratio</p>
-                          </ReactTooltip>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='stats-grid--item'>
-                      <div className='stats-grid--item-3'>
-                        <div className='stats-grid--item-1-title'>Passed Reports</div>
-                        <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.value
-                            ? project_statistics.total_data.total_passed_reports.value
-                            : "None Reported"}
-                        </div>
-                        <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports &&
-                          project_statistics.total_data.total_passed_reports.percentage > 0
-                            ? "+"
-                            : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.value &&
-                          project_statistics.total_data &&
-                          project_statistics.total_data.total_passed_reports
-                            ? `${Math.round(
-                                ((project_statistics.total_data.total_passed_reports.value /
-                                  project_statistics.total_data.total_reports.value) *
-                                  100 +
-                                  Number.EPSILON) *
-                                  100
-                              ) / 100} %`
-                            : ""}
-                          <i className='fas fa-info-circle ml-0 passed-text' data-tip data-for='passed'></i>
-                          <ReactTooltip
-                            id='passed'
-                            aria-haspopup='true'
-                            className='custom-color-no-arrow'
-                            textColor='#000'
-                            backgroundColor='#00e396'
-                            effect='solid'
-                          >
-                            <p>Percentage of passed reports</p>
-                          </ReactTooltip>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='stats-grid--item'>
-                      <div className='stats-grid--item-4'>
-                        <div className='stats-grid--item-1-title'>Failed Reports</div>
-                        <div className='stats-grid--item-1-count'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.value
-                            ? project_statistics.total_data.total_failed_reports.value
-                            : "None Reported"}
-                        </div>
-                        <div className='stats-grid--item-1-percentage'>
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports &&
-                          project_statistics.total_data.total_failed_reports.percentage > 0
-                            ? "+"
-                            : ""}
-                          {project_statistics.total_data &&
-                          project_statistics.total_data.total_reports &&
-                          project_statistics.total_data.total_reports.value &&
-                          project_statistics.total_data &&
-                          project_statistics.total_data.total_failed_reports
-                            ? `${Math.round(
-                                ((project_statistics.total_data.total_failed_reports.value /
-                                  project_statistics.total_data.total_reports.value) *
-                                  100 +
-                                  Number.EPSILON) *
-                                  100
-                              ) / 100} %`
-                            : ""}
-                          <i className='fas fa-info-circle ml-0 failed-text' data-tip data-for='failed'></i>
-                          <ReactTooltip
-                            id='failed'
-                            aria-haspopup='true'
-                            className='custom-color-no-arrow'
-                            textColor='#fff'
-                            backgroundColor='#ff4560'
-                            effect='solid'
-                          >
-                            <p>Percentage of failed reports</p>
-                          </ReactTooltip>
-                        </div>
-                      </div>
-                    </div>
+                    <TotalDataItem
+                      className={"testcases"}
+                      totalDataCount={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_testcases &&
+                        project_statistics.total_data.total_testcases.value
+                      }
+                      totalDataCountPercentage={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_testcases &&
+                        project_statistics.total_data.total_testcases.percentage
+                      }
+                      totalDataRatio={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_testcases &&
+                        project_statistics.total_data.total_testcases.ratio
+                      }
+                      days={this.state.days}
+                    />
+                    <TotalDataItem
+                      className={"reports"}
+                      totalDataCount={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_reports &&
+                        project_statistics.total_data.total_reports.value
+                      }
+                      totalDataCountPercentage={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_reports &&
+                        project_statistics.total_data.total_reports.percentage
+                      }
+                      totalDataRatio={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_reports &&
+                        project_statistics.total_data.total_reports.ratio
+                      }
+                      days={this.state.days}
+                    />
+                    <TotalDataItem
+                      className={"passed"}
+                      totalDataCount={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_passed_reports &&
+                        project_statistics.total_data.total_passed_reports.value
+                      }
+                      totalDataCountPercentage={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_passed_reports &&
+                        project_statistics.total_data.total_passed_reports.percentage
+                      }
+                      totalDataRatio={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_passed_reports &&
+                        project_statistics.total_data.total_passed_reports.ratio
+                      }
+                      days={this.state.days}
+                    />
+                    <TotalDataItem
+                      className={"failed"}
+                      totalDataCount={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_failed_reports &&
+                        project_statistics.total_data.total_failed_reports.value
+                      }
+                      totalDataCountPercentage={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_failed_reports &&
+                        project_statistics.total_data.total_failed_reports.percentage
+                      }
+                      totalDataRatio={
+                        project_statistics.total_data &&
+                        project_statistics.total_data.total_failed_reports &&
+                        project_statistics.total_data.total_failed_reports.ratio
+                      }
+                      days={this.state.days}
+                    />
                   </div>
 
                   {annualReportComponent}
