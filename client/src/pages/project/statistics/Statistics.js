@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import ReactTooltip from "react-tooltip";
 
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import TotalDataItem from "../../../components/statistics/TotalDataItem";
