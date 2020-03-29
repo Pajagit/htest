@@ -26,10 +26,7 @@ function LandscapeTestCase({
   isValidWrite
 }) {
   var addReportBtn = "";
-  var disabledReportBtnClass = "";
-  if (deprecated) {
-    disabledReportBtnClass = "disabled-with-event";
-  }
+
   if (isValidWrite) {
     if (!deprecated) {
       addReportBtn = (
