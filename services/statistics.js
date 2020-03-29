@@ -926,5 +926,133 @@ module.exports = {
         }
       });
     });
+  },
+
+  getAnnual: async function(days) {
+    return new Promise((resolve, reject) => {
+      switch (days) {
+        case 3:
+          var end_date = new Date();
+          var start_date_3 = new Date();
+          var start_date_2 = new Date();
+          var start_date_1 = new Date();
+
+          start_date_3.setDate(start_date_3.getDate() - 1);
+          start_date_2.setDate(start_date_2.getDate() - 2);
+          start_date_1.setDate(start_date_1.getDate() - 3);
+
+          break;
+        case 7:
+          var end_date = new Date();
+          var start_date_7 = new Date();
+          var start_date_6 = new Date();
+          var start_date_5 = new Date();
+          var start_date_4 = new Date();
+          var start_date_3 = new Date();
+          var start_date_2 = new Date();
+          var start_date_1 = new Date();
+
+          start_date_7.setDate(start_date_4.getDate() - 1);
+          start_date_6.setDate(start_date_4.getDate() - 2);
+          start_date_5.setDate(start_date_4.getDate() - 3);
+          start_date_4.setDate(start_date_4.getDate() - 4);
+          start_date_3.setDate(start_date_3.getDate() - 5);
+          start_date_2.setDate(start_date_2.getDate() - 6);
+          start_date_1.setDate(start_date_1.getDate() - 7);
+          break;
+        case 30:
+          var end_date = new Date();
+          var start_date_4 = new Date();
+          var start_date_3 = new Date();
+          var start_date_2 = new Date();
+          var start_date_1 = new Date();
+
+          var week = 30.0 / 4.0;
+          start_date_4.setDate(start_date_4.getDate() - week);
+          start_date_3.setDate(start_date_3.getDate() - 2 * week);
+          start_date_2.setDate(start_date_2.getDate() - 3 * week);
+          start_date_1.setDate(start_date_1.getDate() - 4 * week);
+          break;
+        case 90:
+          var end_date = new Date();
+          var start_date_12 = new Date();
+          var start_date_11 = new Date();
+          var start_date_10 = new Date();
+          var start_date_9 = new Date();
+          var start_date_8 = new Date();
+          var start_date_7 = new Date();
+          var start_date_6 = new Date();
+          var start_date_5 = new Date();
+          var start_date_4 = new Date();
+          var start_date_3 = new Date();
+          var start_date_2 = new Date();
+          var start_date_1 = new Date();
+
+          var week = 30.0 / 4.0;
+          start_date_12.setDate(start_date_12.getDate() - week);
+          start_date_11.setDate(start_date_11.getDate() - 2 * week);
+          start_date_10.setDate(start_date_10.getDate() - 3 * week);
+          start_date_9.setDate(start_date_9.getDate() - 4 * week);
+          start_date_8.setDate(start_date_8.getDate() - 5 * week);
+          start_date_7.setDate(start_date_7.getDate() - 6 * week);
+          start_date_6.setDate(start_date_6.getDate() - 7 * week);
+          start_date_5.setDate(start_date_5.getDate() - 8 * week);
+          start_date_4.setDate(start_date_4.getDate() - 9 * week);
+          start_date_3.setDate(start_date_3.getDate() - 10 * week);
+          start_date_2.setDate(start_date_2.getDate() - 11 * week);
+          start_date_1.setDate(start_date_1.getDate() - 12 * week);
+          break;
+        case 180:
+          var end_date = new Date();
+          var start_date_6 = new Date();
+          var start_date_5 = new Date();
+          var start_date_4 = new Date();
+          var start_date_3 = new Date();
+          var start_date_2 = new Date();
+          var start_date_1 = new Date();
+
+          var month = 30.0;
+          start_date_6.setDate(start_date_6.getDate() - month);
+          start_date_5.setDate(start_date_5.getDate() - 2 * month);
+          start_date_4.setDate(start_date_4.getDate() - 3 * month);
+          start_date_3.setDate(start_date_3.getDate() - 4 * month);
+          start_date_2.setDate(start_date_2.getDate() - 5 * month);
+          start_date_1.setDate(start_date_1.getDate() - 6 * month);
+
+          break;
+        case 360:
+          var end_date = new Date();
+          var start_date_12 = new Date();
+          var start_date_11 = new Date();
+          var start_date_10 = new Date();
+          var start_date_9 = new Date();
+          var start_date_8 = new Date();
+          var start_date_7 = new Date();
+          var start_date_6 = new Date();
+          var start_date_5 = new Date();
+          var start_date_4 = new Date();
+          var start_date_3 = new Date();
+          var start_date_2 = new Date();
+          var start_date_1 = new Date();
+
+          var month = 30.0;
+          start_date_12.setDate(start_date_12.getDate() - month);
+          start_date_11.setDate(start_date_11.getDate() - 2 * month);
+          start_date_10.setDate(start_date_10.getDate() - 3 * month);
+          start_date_9.setDate(start_date_9.getDate() - 4 * month);
+          start_date_8.setDate(start_date_8.getDate() - 5 * month);
+          start_date_7.setDate(start_date_7.getDate() - 6 * month);
+          start_date_6.setDate(start_date_6.getDate() - 7 * month);
+          start_date_5.setDate(start_date_5.getDate() - 8 * month);
+          start_date_4.setDate(start_date_4.getDate() - 9 * month);
+          start_date_3.setDate(start_date_3.getDate() - 10 * month);
+          start_date_2.setDate(start_date_2.getDate() - 11 * month);
+          start_date_1.setDate(start_date_1.getDate() - 12 * month);
+          break;
+
+        default:
+          break;
+      }
+    });
   }
 };
