@@ -260,7 +260,13 @@ class Statistics extends Component {
           var most_tc_failed_passed = [];
           var most_tc_failed_failed = [];
           Object.entries(nextProps.statistics.project_statistics.most_testcases_failed).forEach(([key, value]) => {
-            most_tc_failed_titles.push(value.title);
+            var maxTitleLength = 20;
+            if (value.title.length > maxTitleLength) {
+              most_tc_failed_titles.push(value.title.substring(0, maxTitleLength) + "...");
+            } else {
+              most_tc_failed_titles.push(value.title);
+            }
+
             if (value && value.total) {
               most_tc_failed_testcases.push(value.total);
             } else {

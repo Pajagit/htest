@@ -243,7 +243,12 @@ class GlobalStatistics extends Component {
           var most_reports_failed_passed = [];
           var most_reports_failed_failed = [];
           Object.entries(nextProps.statistics.global_statistics.most_reports_failed).forEach(([key, value]) => {
-            most_reports_failed_titles.push(value.title);
+            var maxTitleLength = 20;
+            if (value.title.length > maxTitleLength) {
+              most_reports_failed_titles.push(value.title.substring(0, maxTitleLength) + "...");
+            } else {
+              most_reports_failed_titles.push(value.title);
+            }
             if (value && value.total) {
               most_reports_failed_testcases.push(value.total);
             } else {
