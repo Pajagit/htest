@@ -128,448 +128,1018 @@ module.exports = {
     }
 
     var annual_report = [];
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ];
+    switch (days) {
+      case "3":
+        var end_date_annual = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
 
-    //curent month
-    var today = new Date();
-    var endDate = today;
-    var startDate = new Date();
-    var month = monthNames[startDate.getMonth()];
-    var minutes = startDate.getTimezoneOffset() * -1;
-    startDate = startDate.setHours(0, minutes, 0, 0);
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
+        start_date_3.setDate(start_date_3.getDate() - 1);
+        start_date_2.setDate(start_date_2.getDate() - 2);
+        start_date_1.setDate(start_date_1.getDate() - 3);
 
-    var currentMonthTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //day 1
+        var day_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2, req.params.id);
+        var day_1_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
+        var day_1_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = day_1_total;
+        obj.passed = day_1_passed;
+        obj.failed = day_1_failed;
+        obj.title = "day 1";
+        annual_report.push(obj);
 
-    //current month-1
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 1);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //day 2
+        var day_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3, req.params.id);
+        var day_2_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
+        var day_2_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
 
-    var endDate = new Date();
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = day_2_total;
+        obj.passed = day_2_passed;
+        obj.failed = day_2_failed;
+        obj.title = "day 2";
+        annual_report.push(obj);
 
-    var currentMonthOneTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //day 3
+        var day_1_total = await StatisticsService.getTotalReportsAnnual(start_date_3, end_date_annual, req.params.id);
+        var day_1_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_3,
+          end_date_annual,
+          req.params.id
+        );
+        var day_1_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_3,
+          end_date_annual,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthOneTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
+        var obj = {};
+        obj.total = day_1_total;
+        obj.passed = day_1_passed;
+        obj.failed = day_1_failed;
+        obj.title = "day 3";
+        annual_report.push(obj);
 
-    obj.month = month;
-    annual_report.push(obj);
+        break;
+      case "7":
+        var end_date_annual = new Date();
+        var start_date_7 = new Date();
+        var start_date_6 = new Date();
+        var start_date_5 = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
 
-    //current month-2
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 2);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        start_date_7.setDate(start_date_4.getDate() - 1);
+        start_date_6.setDate(start_date_4.getDate() - 2);
+        start_date_5.setDate(start_date_4.getDate() - 3);
+        start_date_4.setDate(start_date_4.getDate() - 4);
+        start_date_3.setDate(start_date_3.getDate() - 5);
+        start_date_2.setDate(start_date_2.getDate() - 6);
+        start_date_1.setDate(start_date_1.getDate() - 7);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 1);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        //day 1
+        var day_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2, req.params.id);
+        var day_1_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
+        var day_1_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        var obj = {};
+        obj.total = day_1_total;
+        obj.passed = day_1_passed;
+        obj.failed = day_1_failed;
+        obj.title = "day 1";
+        annual_report.push(obj);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        //day 2
+        var day_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3, req.params.id);
+        var day_2_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
+        var day_2_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
 
-    //current month-3
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 3);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        var obj = {};
+        obj.total = day_2_total;
+        obj.passed = day_2_passed;
+        obj.failed = day_2_failed;
+        obj.title = "day 2";
+        annual_report.push(obj);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 2);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        //day 3
+        var day_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4, req.params.id);
+        var day_3_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
+        var day_3_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        var obj = {};
+        obj.total = day_3_total;
+        obj.passed = day_3_passed;
+        obj.failed = day_3_failed;
+        obj.title = "day 3";
+        annual_report.push(obj);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        //day 4
+        var day_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5, req.params.id);
+        var day_4_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_4,
+          start_date_5,
+          req.params.id
+        );
+        var day_4_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_4,
+          start_date_5,
+          req.params.id
+        );
 
-    //current month-4
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 4);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        var obj = {};
+        obj.total = day_4_total;
+        obj.passed = day_4_passed;
+        obj.failed = day_4_failed;
+        obj.title = "day 4";
+        annual_report.push(obj);
+        //day 5
+        var day_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6, req.params.id);
+        var day_5_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_5,
+          start_date_6,
+          req.params.id
+        );
+        var day_5_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_5,
+          start_date_6,
+          req.params.id
+        );
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 3);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = day_5_total;
+        obj.passed = day_5_passed;
+        obj.failed = day_5_failed;
+        obj.title = "day 5";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //day 6
+        var day_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, start_date_7, req.params.id);
+        var day_6_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_6,
+          start_date_7,
+          req.params.id
+        );
+        var day_6_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_6,
+          start_date_7,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = day_6_total;
+        obj.passed = day_6_passed;
+        obj.failed = day_6_failed;
+        obj.title = "day 6";
+        annual_report.push(obj);
 
-    //current month-5
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 5);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //day 7
+        var day_7_total = await StatisticsService.getTotalReportsAnnual(start_date_7, end_date_annual, req.params.id);
+        var day_7_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_7,
+          end_date_annual,
+          req.params.id
+        );
+        var day_7_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_7,
+          end_date_annual,
+          req.params.id
+        );
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 4);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = day_7_total;
+        obj.passed = day_7_passed;
+        obj.failed = day_7_failed;
+        obj.title = "day 7";
+        annual_report.push(obj);
+        break;
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+      case "30":
+        var end_date_annual = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var week = 30.0 / 4.0;
+        start_date_4.setDate(start_date_4.getDate() - week);
+        start_date_3.setDate(start_date_3.getDate() - 2 * week);
+        start_date_2.setDate(start_date_2.getDate() - 3 * week);
+        start_date_1.setDate(start_date_1.getDate() - 4 * week);
 
-    //current month-6
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 6);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 1
+        var week_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2, req.params.id);
+        var week_1_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
+        var week_1_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 5);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_1_total;
+        obj.passed = week_1_passed;
+        obj.failed = week_1_failed;
+        obj.title = "week 1";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //week 2
+        var week_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3, req.params.id);
+        var week_2_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
+        var week_2_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_2_total;
+        obj.passed = week_2_passed;
+        obj.failed = week_2_failed;
+        obj.title = "week 2";
+        annual_report.push(obj);
 
-    //current month-7
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 7);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 3
+        var week_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4, req.params.id);
+        var week_3_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
+        var week_3_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 6);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_3_total;
+        obj.passed = week_3_passed;
+        obj.failed = week_3_failed;
+        obj.title = "week 3";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //week 4
+        var week_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, end_date_annual, req.params.id);
+        var week_4_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_4,
+          end_date_annual,
+          req.params.id
+        );
+        var week_4_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_4,
+          end_date_annual,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_4_total;
+        obj.passed = week_4_passed;
+        obj.failed = week_4_failed;
+        obj.title = "week 4";
+        annual_report.push(obj);
+        break;
 
-    //current month-8
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 8);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+      case "90":
+        var end_date_annual = new Date();
+        var start_date_12 = new Date();
+        var start_date_11 = new Date();
+        var start_date_10 = new Date();
+        var start_date_9 = new Date();
+        var start_date_8 = new Date();
+        var start_date_7 = new Date();
+        var start_date_6 = new Date();
+        var start_date_5 = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 7);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var week = 30.0 / 4.0;
+        start_date_12.setDate(start_date_12.getDate() - week);
+        start_date_11.setDate(start_date_11.getDate() - 2 * week);
+        start_date_10.setDate(start_date_10.getDate() - 3 * week);
+        start_date_9.setDate(start_date_9.getDate() - 4 * week);
+        start_date_8.setDate(start_date_8.getDate() - 5 * week);
+        start_date_7.setDate(start_date_7.getDate() - 6 * week);
+        start_date_6.setDate(start_date_6.getDate() - 7 * week);
+        start_date_5.setDate(start_date_5.getDate() - 8 * week);
+        start_date_4.setDate(start_date_4.getDate() - 9 * week);
+        start_date_3.setDate(start_date_3.getDate() - 10 * week);
+        start_date_2.setDate(start_date_2.getDate() - 11 * week);
+        start_date_1.setDate(start_date_1.getDate() - 12 * week);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //week 1
+        var week_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2, req.params.id);
+        var week_1_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
+        var week_1_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_1_total;
+        obj.passed = week_1_passed;
+        obj.failed = week_1_failed;
+        obj.title = "week 1";
+        annual_report.push(obj);
 
-    //current month-9
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 9);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 2
+        var week_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3, req.params.id);
+        var week_2_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
+        var week_2_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 8);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_2_total;
+        obj.passed = week_2_passed;
+        obj.failed = week_2_failed;
+        obj.title = "week 2";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //week 3
+        var week_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4, req.params.id);
+        var week_3_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
+        var week_3_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_3_total;
+        obj.passed = week_3_passed;
+        obj.failed = week_3_failed;
+        obj.title = "week 3";
+        annual_report.push(obj);
 
-    //current month-10
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 10);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 4
+        var week_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5, req.params.id);
+        var week_4_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_4,
+          start_date_5,
+          req.params.id
+        );
+        var week_4_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_4,
+          start_date_5,
+          req.params.id
+        );
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 9);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_4_total;
+        obj.passed = week_4_passed;
+        obj.failed = week_4_failed;
+        obj.title = "week 4";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //week 5
+        var week_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6, req.params.id);
+        var week_5_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_5,
+          start_date_6,
+          req.params.id
+        );
+        var week_5_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_5,
+          start_date_6,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_5_total;
+        obj.passed = week_5_passed;
+        obj.failed = week_5_failed;
+        obj.title = "week 5";
+        annual_report.push(obj);
 
-    //current month-11
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 11);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 6
+        var week_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, start_date_7, req.params.id);
+        var week_6_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_6,
+          start_date_7,
+          req.params.id
+        );
+        var week_6_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_6,
+          start_date_7,
+          req.params.id
+        );
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 10);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_6_total;
+        obj.passed = week_6_passed;
+        obj.failed = week_6_failed;
+        obj.title = "week 6";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate, req.params.id);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate, req.params.id);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate, req.params.id);
+        //week 7
+        var week_7_total = await StatisticsService.getTotalReportsAnnual(start_date_7, start_date_8, req.params.id);
+        var week_7_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_7,
+          start_date_8,
+          req.params.id
+        );
+        var week_7_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_7,
+          start_date_8,
+          req.params.id
+        );
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_7_total;
+        obj.passed = week_7_passed;
+        obj.failed = week_7_failed;
+        obj.title = "week 7";
+        annual_report.push(obj);
+
+        //week 8
+        var week_8_total = await StatisticsService.getTotalReportsAnnual(start_date_8, start_date_9, req.params.id);
+        var week_8_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_8,
+          start_date_9,
+          req.params.id
+        );
+        var week_8_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_8,
+          start_date_9,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = week_8_total;
+        obj.passed = week_8_passed;
+        obj.failed = week_8_failed;
+        obj.title = "week 8";
+        annual_report.push(obj);
+
+        //week 9
+        var week_9_total = await StatisticsService.getTotalReportsAnnual(start_date_9, start_date_10, req.params.id);
+        var week_9_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_9,
+          start_date_10,
+          req.params.id
+        );
+        var week_9_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_9,
+          start_date_10,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = week_9_total;
+        obj.passed = week_9_passed;
+        obj.failed = week_9_failed;
+        obj.title = "week 9";
+        annual_report.push(obj);
+
+        //week 10
+        var week_10_total = await StatisticsService.getTotalReportsAnnual(start_date_10, start_date_11, req.params.id);
+        var week_10_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_10,
+          start_date_11,
+          req.params.id
+        );
+        var week_10_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_10,
+          start_date_11,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = week_10_total;
+        obj.passed = week_10_passed;
+        obj.failed = week_10_failed;
+        obj.title = "week 10";
+        annual_report.push(obj);
+
+        //week 11
+        var week_11_total = await StatisticsService.getTotalReportsAnnual(start_date_11, start_date_12, req.params.id);
+        var week_11_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_11,
+          start_date_12,
+          req.params.id
+        );
+        var week_11_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_11,
+          start_date_12,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = week_11_total;
+        obj.passed = week_11_passed;
+        obj.failed = week_11_failed;
+        obj.title = "week 11";
+        annual_report.push(obj);
+
+        //week 12
+        var week_12_total = await StatisticsService.getTotalReportsAnnual(
+          start_date_12,
+          end_date_annual,
+          req.params.id
+        );
+        var week_12_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_12,
+          end_date_annual,
+          req.params.id
+        );
+        var week_12_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_12,
+          end_date_annual,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = week_12_total;
+        obj.passed = week_12_passed;
+        obj.failed = week_12_failed;
+        obj.title = "week 12";
+        annual_report.push(obj);
+
+        break;
+      case "180":
+        var end_date_annual = new Date();
+        var start_date_6 = new Date();
+        var start_date_5 = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
+
+        var month = 30.0;
+        start_date_6.setDate(start_date_6.getDate() - month);
+        start_date_5.setDate(start_date_5.getDate() - 2 * month);
+        start_date_4.setDate(start_date_4.getDate() - 3 * month);
+        start_date_3.setDate(start_date_3.getDate() - 4 * month);
+        start_date_2.setDate(start_date_2.getDate() - 5 * month);
+        start_date_1.setDate(start_date_1.getDate() - 6 * month);
+
+        //month 1
+        var month_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2, req.params.id);
+        var month_1_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
+        var month_1_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_1_total;
+        obj.passed = month_1_passed;
+        obj.failed = month_1_failed;
+        obj.title = "month 1";
+        annual_report.push(obj);
+
+        //month 2
+        var month_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3, req.params.id);
+        var month_2_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
+        var month_2_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_2_total;
+        obj.passed = month_2_passed;
+        obj.failed = month_2_failed;
+        obj.title = "month 2";
+        annual_report.push(obj);
+
+        //month 3
+        var month_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4, req.params.id);
+        var month_3_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
+        var month_3_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_3_total;
+        obj.passed = month_3_passed;
+        obj.failed = month_3_failed;
+        obj.title = "month 3";
+        annual_report.push(obj);
+
+        //month 4
+        var month_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5, req.params.id);
+        var month_4_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_4,
+          start_date_5,
+          req.params.id
+        );
+        var month_4_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_4,
+          start_date_5,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_4_total;
+        obj.passed = month_4_passed;
+        obj.failed = month_4_failed;
+        obj.title = "month 4";
+        annual_report.push(obj);
+
+        //month 5
+        var month_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6, req.params.id);
+        var month_5_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_5,
+          start_date_6,
+          req.params.id
+        );
+        var month_5_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_5,
+          start_date_6,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_5_total;
+        obj.passed = month_5_passed;
+        obj.failed = month_5_failed;
+        obj.title = "month 5";
+        annual_report.push(obj);
+
+        //month 6
+        var month_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, end_date_annual, req.params.id);
+        var month_6_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_6,
+          end_date_annual,
+          req.params.id
+        );
+        var month_6_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_6,
+          end_date_annual,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_6_total;
+        obj.passed = month_6_passed;
+        obj.failed = month_6_failed;
+        obj.title = "month 6";
+        annual_report.push(obj);
+
+        break;
+      case "360":
+      default:
+        var end_date_annual = new Date();
+        var start_date_12 = new Date();
+        var start_date_11 = new Date();
+        var start_date_10 = new Date();
+        var start_date_9 = new Date();
+        var start_date_8 = new Date();
+        var start_date_7 = new Date();
+        var start_date_6 = new Date();
+        var start_date_5 = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
+
+        var month = 30.0;
+        start_date_12.setDate(start_date_12.getDate() - month);
+        start_date_11.setDate(start_date_11.getDate() - 2 * month);
+        start_date_10.setDate(start_date_10.getDate() - 3 * month);
+        start_date_9.setDate(start_date_9.getDate() - 4 * month);
+        start_date_8.setDate(start_date_8.getDate() - 5 * month);
+        start_date_7.setDate(start_date_7.getDate() - 6 * month);
+        start_date_6.setDate(start_date_6.getDate() - 7 * month);
+        start_date_5.setDate(start_date_5.getDate() - 8 * month);
+        start_date_4.setDate(start_date_4.getDate() - 9 * month);
+        start_date_3.setDate(start_date_3.getDate() - 10 * month);
+        start_date_2.setDate(start_date_2.getDate() - 11 * month);
+        start_date_1.setDate(start_date_1.getDate() - 12 * month);
+
+        //month 1
+        var month_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2, req.params.id);
+        var month_1_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
+        var month_1_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_1,
+          start_date_2,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_1_total;
+        obj.passed = month_1_passed;
+        obj.failed = month_1_failed;
+        obj.title = "month 1";
+        annual_report.push(obj);
+
+        //month 2
+        var month_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3, req.params.id);
+        var month_2_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
+        var month_2_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_2,
+          start_date_3,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_2_total;
+        obj.passed = month_2_passed;
+        obj.failed = month_2_failed;
+        obj.title = "month 2";
+        annual_report.push(obj);
+
+        //month 3
+        var month_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4, req.params.id);
+        var month_3_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
+        var month_3_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_3,
+          start_date_4,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_3_total;
+        obj.passed = month_3_passed;
+        obj.failed = month_3_failed;
+        obj.title = "month 3";
+        annual_report.push(obj);
+
+        //month 4
+        var month_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5, req.params.id);
+        var month_4_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_4,
+          start_date_5,
+          req.params.id
+        );
+        var month_4_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_4,
+          start_date_5,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_4_total;
+        obj.passed = month_4_passed;
+        obj.failed = month_4_failed;
+        obj.title = "month 4";
+        annual_report.push(obj);
+
+        //month 5
+        var month_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6, req.params.id);
+        var month_5_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_5,
+          start_date_6,
+          req.params.id
+        );
+        var month_5_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_5,
+          start_date_6,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_5_total;
+        obj.passed = month_5_passed;
+        obj.failed = month_5_failed;
+        obj.title = "month 5";
+        annual_report.push(obj);
+
+        //month 6
+        var month_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, start_date_7, req.params.id);
+        var month_6_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_6,
+          start_date_7,
+          req.params.id
+        );
+        var month_6_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_6,
+          start_date_7,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_6_total;
+        obj.passed = month_6_passed;
+        obj.failed = month_6_failed;
+        obj.title = "month 6";
+        annual_report.push(obj);
+
+        //month 7
+        var month_7_total = await StatisticsService.getTotalReportsAnnual(start_date_7, start_date_8, req.params.id);
+        var month_7_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_7,
+          start_date_8,
+          req.params.id
+        );
+        var month_7_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_7,
+          start_date_8,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_7_total;
+        obj.passed = month_7_passed;
+        obj.failed = month_7_failed;
+        obj.title = "month 7";
+        annual_report.push(obj);
+
+        //month 8
+        var month_8_total = await StatisticsService.getTotalReportsAnnual(start_date_8, start_date_9, req.params.id);
+        var month_8_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_8,
+          start_date_9,
+          req.params.id
+        );
+        var month_8_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_8,
+          start_date_9,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_8_total;
+        obj.passed = month_8_passed;
+        obj.failed = month_8_failed;
+        obj.title = "month 8";
+        annual_report.push(obj);
+
+        //month 9
+        var month_9_total = await StatisticsService.getTotalReportsAnnual(start_date_9, start_date_10, req.params.id);
+        var month_9_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_9,
+          start_date_10,
+          req.params.id
+        );
+        var month_9_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_9,
+          start_date_10,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_9_total;
+        obj.passed = month_9_passed;
+        obj.failed = month_9_failed;
+        obj.title = "month 9";
+        annual_report.push(obj);
+
+        //month 10
+        var month_10_total = await StatisticsService.getTotalReportsAnnual(start_date_10, start_date_11, req.params.id);
+        var month_10_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_10,
+          start_date_11,
+          req.params.id
+        );
+        var month_10_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_10,
+          start_date_11,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_10_total;
+        obj.passed = month_10_passed;
+        obj.failed = month_10_failed;
+        obj.title = "month 10";
+        annual_report.push(obj);
+
+        //month 11
+        var month_11_total = await StatisticsService.getTotalReportsAnnual(start_date_11, start_date_12, req.params.id);
+        var month_11_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_11,
+          start_date_12,
+          req.params.id
+        );
+        var month_11_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_11,
+          start_date_12,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_11_total;
+        obj.passed = month_11_passed;
+        obj.failed = month_11_failed;
+        obj.title = "month 11";
+        annual_report.push(obj);
+
+        //month 12
+        var month_12_total = await StatisticsService.getTotalReportsAnnual(
+          start_date_12,
+          end_date_annual,
+          req.params.id
+        );
+        var month_12_passed = await StatisticsService.getTotalReportsPassedAnnual(
+          start_date_12,
+          end_date_annual,
+          req.params.id
+        );
+        var month_12_failed = await StatisticsService.getTotalReportsFailedAnnual(
+          start_date_12,
+          end_date_annual,
+          req.params.id
+        );
+
+        var obj = {};
+        obj.total = month_12_total;
+        obj.passed = month_12_passed;
+        obj.failed = month_12_failed;
+        obj.title = "month 12";
+        annual_report.push(obj);
+
+        break;
+    }
 
     var statistics = {};
     statistics.total_data = {};
@@ -604,7 +1174,8 @@ module.exports = {
       statistics.most_version_failed = most_version_failed.slice(0, 5);
     }
 
-    statistics.annual_report = annual_report.reverse();
+    // statistics.annual_report_old = annual_report_old.reverse();
+    statistics.annual_report = annual_report;
 
     return res.status(200).json(statistics);
   },
@@ -699,448 +1270,658 @@ module.exports = {
     var most_version_failed = await StatisticsService.getMostVersionsFailed(5, start_date, end_date);
 
     var annual_report = [];
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ];
+    switch (days) {
+      case "3":
+        var end_date_annual = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
 
-    //curent month
-    var today = new Date();
-    var endDate = today;
-    var startDate = new Date();
-    var month = monthNames[startDate.getMonth()];
-    var minutes = startDate.getTimezoneOffset() * -1;
-    startDate = startDate.setHours(0, minutes, 0, 0);
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
+        start_date_3.setDate(start_date_3.getDate() - 1);
+        start_date_2.setDate(start_date_2.getDate() - 2);
+        start_date_1.setDate(start_date_1.getDate() - 3);
 
-    var currentMonthTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //day 1
+        var day_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2);
+        var day_1_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_1, start_date_2);
+        var day_1_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_1, start_date_2);
 
-    var obj = {};
-    obj.total = currentMonthTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = day_1_total;
+        obj.passed = day_1_passed;
+        obj.failed = day_1_failed;
+        obj.title = "day 1";
+        annual_report.push(obj);
 
-    //current month-1
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 1);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //day 2
+        var day_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3);
+        var day_2_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_2, start_date_3);
+        var day_2_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_2, start_date_3);
 
-    var endDate = new Date();
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = day_2_total;
+        obj.passed = day_2_passed;
+        obj.failed = day_2_failed;
+        obj.title = "day 2";
+        annual_report.push(obj);
 
-    var currentMonthOneTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //day 3
+        var day_1_total = await StatisticsService.getTotalReportsAnnual(start_date_3, end_date_annual);
+        var day_1_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_3, end_date_annual);
+        var day_1_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_3, end_date_annual);
 
-    var obj = {};
-    obj.total = currentMonthOneTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
+        var obj = {};
+        obj.total = day_1_total;
+        obj.passed = day_1_passed;
+        obj.failed = day_1_failed;
+        obj.title = "day 3";
+        annual_report.push(obj);
 
-    obj.month = month;
-    annual_report.push(obj);
+        break;
+      case "7":
+        var end_date_annual = new Date();
+        var start_date_7 = new Date();
+        var start_date_6 = new Date();
+        var start_date_5 = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
 
-    //current month-2
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 2);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        start_date_7.setDate(start_date_4.getDate() - 1);
+        start_date_6.setDate(start_date_4.getDate() - 2);
+        start_date_5.setDate(start_date_4.getDate() - 3);
+        start_date_4.setDate(start_date_4.getDate() - 4);
+        start_date_3.setDate(start_date_3.getDate() - 5);
+        start_date_2.setDate(start_date_2.getDate() - 6);
+        start_date_1.setDate(start_date_1.getDate() - 7);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 1);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        //day 1
+        var day_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2);
+        var day_1_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_1, start_date_2);
+        var day_1_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_1, start_date_2);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        var obj = {};
+        obj.total = day_1_total;
+        obj.passed = day_1_passed;
+        obj.failed = day_1_failed;
+        obj.title = "day 1";
+        annual_report.push(obj);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        //day 2
+        var day_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3);
+        var day_2_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_2, start_date_3);
+        var day_2_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_2, start_date_3);
 
-    //current month-3
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 3);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        var obj = {};
+        obj.total = day_2_total;
+        obj.passed = day_2_passed;
+        obj.failed = day_2_failed;
+        obj.title = "day 2";
+        annual_report.push(obj);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 2);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        //day 3
+        var day_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4);
+        var day_3_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_3, start_date_4);
+        var day_3_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_3, start_date_4);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        var obj = {};
+        obj.total = day_3_total;
+        obj.passed = day_3_passed;
+        obj.failed = day_3_failed;
+        obj.title = "day 3";
+        annual_report.push(obj);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        //day 4
+        var day_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5);
+        var day_4_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_4, start_date_5);
+        var day_4_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_4, start_date_5);
 
-    //current month-4
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 4);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        var obj = {};
+        obj.total = day_4_total;
+        obj.passed = day_4_passed;
+        obj.failed = day_4_failed;
+        obj.title = "day 4";
+        annual_report.push(obj);
+        //day 5
+        var day_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6);
+        var day_5_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_5, start_date_6);
+        var day_5_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_5, start_date_6);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 3);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = day_5_total;
+        obj.passed = day_5_passed;
+        obj.failed = day_5_failed;
+        obj.title = "day 5";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //day 6
+        var day_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, start_date_7);
+        var day_6_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_6, start_date_7);
+        var day_6_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_6, start_date_7);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = day_6_total;
+        obj.passed = day_6_passed;
+        obj.failed = day_6_failed;
+        obj.title = "day 6";
+        annual_report.push(obj);
 
-    //current month-5
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 5);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //day 7
+        var day_7_total = await StatisticsService.getTotalReportsAnnual(start_date_7, end_date_annual);
+        var day_7_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_7, end_date_annual);
+        var day_7_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_7, end_date_annual);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 4);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = day_7_total;
+        obj.passed = day_7_passed;
+        obj.failed = day_7_failed;
+        obj.title = "day 7";
+        annual_report.push(obj);
+        break;
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+      case "30":
+        var end_date_annual = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var week = 30.0 / 4.0;
+        start_date_4.setDate(start_date_4.getDate() - week);
+        start_date_3.setDate(start_date_3.getDate() - 2 * week);
+        start_date_2.setDate(start_date_2.getDate() - 3 * week);
+        start_date_1.setDate(start_date_1.getDate() - 4 * week);
 
-    //current month-6
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 6);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 1
+        var week_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2);
+        var week_1_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_1, start_date_2);
+        var week_1_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_1, start_date_2);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 5);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_1_total;
+        obj.passed = week_1_passed;
+        obj.failed = week_1_failed;
+        obj.title = "week 1";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //week 2
+        var week_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3);
+        var week_2_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_2, start_date_3);
+        var week_2_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_2, start_date_3);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_2_total;
+        obj.passed = week_2_passed;
+        obj.failed = week_2_failed;
+        obj.title = "week 2";
+        annual_report.push(obj);
 
-    //current month-7
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 7);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 3
+        var week_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4);
+        var week_3_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_3, start_date_4);
+        var week_3_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_3, start_date_4);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 6);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_3_total;
+        obj.passed = week_3_passed;
+        obj.failed = week_3_failed;
+        obj.title = "week 3";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //week 4
+        var week_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, end_date_annual);
+        var week_4_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_4, end_date_annual);
+        var week_4_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_4, end_date_annual);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_4_total;
+        obj.passed = week_4_passed;
+        obj.failed = week_4_failed;
+        obj.title = "week 4";
+        annual_report.push(obj);
+        break;
 
-    //current month-8
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 8);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+      case "90":
+        var end_date_annual = new Date();
+        var start_date_12 = new Date();
+        var start_date_11 = new Date();
+        var start_date_10 = new Date();
+        var start_date_9 = new Date();
+        var start_date_8 = new Date();
+        var start_date_7 = new Date();
+        var start_date_6 = new Date();
+        var start_date_5 = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 7);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var week = 30.0 / 4.0;
+        start_date_12.setDate(start_date_12.getDate() - week);
+        start_date_11.setDate(start_date_11.getDate() - 2 * week);
+        start_date_10.setDate(start_date_10.getDate() - 3 * week);
+        start_date_9.setDate(start_date_9.getDate() - 4 * week);
+        start_date_8.setDate(start_date_8.getDate() - 5 * week);
+        start_date_7.setDate(start_date_7.getDate() - 6 * week);
+        start_date_6.setDate(start_date_6.getDate() - 7 * week);
+        start_date_5.setDate(start_date_5.getDate() - 8 * week);
+        start_date_4.setDate(start_date_4.getDate() - 9 * week);
+        start_date_3.setDate(start_date_3.getDate() - 10 * week);
+        start_date_2.setDate(start_date_2.getDate() - 11 * week);
+        start_date_1.setDate(start_date_1.getDate() - 12 * week);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //week 1
+        var week_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2);
+        var week_1_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_1, start_date_2);
+        var week_1_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_1, start_date_2);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_1_total;
+        obj.passed = week_1_passed;
+        obj.failed = week_1_failed;
+        obj.title = "week 1";
+        annual_report.push(obj);
 
-    //current month-9
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 9);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 2
+        var week_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3);
+        var week_2_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_2, start_date_3);
+        var week_2_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_2, start_date_3);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 8);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_2_total;
+        obj.passed = week_2_passed;
+        obj.failed = week_2_failed;
+        obj.title = "week 2";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //week 3
+        var week_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4);
+        var week_3_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_3, start_date_4);
+        var week_3_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_3, start_date_4);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_3_total;
+        obj.passed = week_3_passed;
+        obj.failed = week_3_failed;
+        obj.title = "week 3";
+        annual_report.push(obj);
 
-    //current month-10
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 10);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 4
+        var week_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5);
+        var week_4_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_4, start_date_5);
+        var week_4_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_4, start_date_5);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 9);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_4_total;
+        obj.passed = week_4_passed;
+        obj.failed = week_4_failed;
+        obj.title = "week 4";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //week 5
+        var week_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6);
+        var week_5_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_5, start_date_6);
+        var week_5_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_5, start_date_6);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_5_total;
+        obj.passed = week_5_passed;
+        obj.failed = week_5_failed;
+        obj.title = "week 5";
+        annual_report.push(obj);
 
-    //current month-11
-    var startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 11);
-    startDate = new Date(startDate);
-    var month = monthNames[startDate.getMonth()];
-    startDate = startDate.setHours(0, 0, 0, 0);
-    startDate = new Date(startDate);
-    var minutes = startDate.getTimezoneOffset();
-    startDate = startDate.getTime();
-    startDate = startDate - minutes * 60 * 1000;
-    startDate = new Date(startDate);
-    startDate = startDate.setDate(1);
-    startDate = new Date(startDate);
+        //week 6
+        var week_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, start_date_7);
+        var week_6_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_6, start_date_7);
+        var week_6_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_6, start_date_7);
 
-    var endDate = new Date();
-    endDate.setMonth(endDate.getMonth() - 10);
-    endDate = new Date(endDate);
-    var minutes = endDate.getTimezoneOffset();
-    endDate = endDate.setDate(0);
-    endDate = new Date(endDate);
-    endDate = endDate.setHours(23, 23, 59, 999);
-    endDate = new Date(endDate);
-    endDate = endDate.getTime();
-    endDate = endDate - minutes * 60 * 1000;
-    endDate = new Date(endDate);
+        var obj = {};
+        obj.total = week_6_total;
+        obj.passed = week_6_passed;
+        obj.failed = week_6_failed;
+        obj.title = "week 6";
+        annual_report.push(obj);
 
-    var currentMonthTwoTotal = await StatisticsService.getTotalReportsAnnual(startDate, endDate);
-    var currentMonthPassed = await StatisticsService.getTotalReportsPassedAnnual(startDate, endDate);
-    var currentMonthFailed = await StatisticsService.getTotalReportsFailedAnnual(startDate, endDate);
+        //week 7
+        var week_7_total = await StatisticsService.getTotalReportsAnnual(start_date_7, start_date_8);
+        var week_7_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_7, start_date_8);
+        var week_7_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_7, start_date_8);
 
-    var obj = {};
-    obj.total = currentMonthTwoTotal;
-    obj.passed = currentMonthPassed;
-    obj.failed = currentMonthFailed;
-    obj.month = month;
-    annual_report.push(obj);
+        var obj = {};
+        obj.total = week_7_total;
+        obj.passed = week_7_passed;
+        obj.failed = week_7_failed;
+        obj.title = "week 7";
+        annual_report.push(obj);
+
+        //week 8
+        var week_8_total = await StatisticsService.getTotalReportsAnnual(start_date_8, start_date_9);
+        var week_8_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_8, start_date_9);
+        var week_8_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_8, start_date_9);
+
+        var obj = {};
+        obj.total = week_8_total;
+        obj.passed = week_8_passed;
+        obj.failed = week_8_failed;
+        obj.title = "week 8";
+        annual_report.push(obj);
+
+        //week 9
+        var week_9_total = await StatisticsService.getTotalReportsAnnual(start_date_9, start_date_10);
+        var week_9_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_9, start_date_10);
+        var week_9_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_9, start_date_10);
+
+        var obj = {};
+        obj.total = week_9_total;
+        obj.passed = week_9_passed;
+        obj.failed = week_9_failed;
+        obj.title = "week 9";
+        annual_report.push(obj);
+
+        //week 10
+        var week_10_total = await StatisticsService.getTotalReportsAnnual(start_date_10, start_date_11);
+        var week_10_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_10, start_date_11);
+        var week_10_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_10, start_date_11);
+
+        var obj = {};
+        obj.total = week_10_total;
+        obj.passed = week_10_passed;
+        obj.failed = week_10_failed;
+        obj.title = "week 10";
+        annual_report.push(obj);
+
+        //week 11
+        var week_11_total = await StatisticsService.getTotalReportsAnnual(start_date_11, start_date_12);
+        var week_11_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_11, start_date_12);
+        var week_11_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_11, start_date_12);
+
+        var obj = {};
+        obj.total = week_11_total;
+        obj.passed = week_11_passed;
+        obj.failed = week_11_failed;
+        obj.title = "week 11";
+        annual_report.push(obj);
+
+        //week 12
+        var week_12_total = await StatisticsService.getTotalReportsAnnual(start_date_12, end_date_annual);
+        var week_12_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_12, end_date_annual);
+        var week_12_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_12, end_date_annual);
+
+        var obj = {};
+        obj.total = week_12_total;
+        obj.passed = week_12_passed;
+        obj.failed = week_12_failed;
+        obj.title = "week 12";
+        annual_report.push(obj);
+
+        break;
+      case "180":
+        var end_date_annual = new Date();
+        var start_date_6 = new Date();
+        var start_date_5 = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
+
+        var month = 30.0;
+        start_date_6.setDate(start_date_6.getDate() - month);
+        start_date_5.setDate(start_date_5.getDate() - 2 * month);
+        start_date_4.setDate(start_date_4.getDate() - 3 * month);
+        start_date_3.setDate(start_date_3.getDate() - 4 * month);
+        start_date_2.setDate(start_date_2.getDate() - 5 * month);
+        start_date_1.setDate(start_date_1.getDate() - 6 * month);
+
+        //month 1
+        var month_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2);
+        var month_1_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_1, start_date_2);
+        var month_1_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_1, start_date_2);
+
+        var obj = {};
+        obj.total = month_1_total;
+        obj.passed = month_1_passed;
+        obj.failed = month_1_failed;
+        obj.title = "month 1";
+        annual_report.push(obj);
+
+        //month 2
+        var month_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3);
+        var month_2_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_2, start_date_3);
+        var month_2_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_2, start_date_3);
+
+        var obj = {};
+        obj.total = month_2_total;
+        obj.passed = month_2_passed;
+        obj.failed = month_2_failed;
+        obj.title = "month 2";
+        annual_report.push(obj);
+
+        //month 3
+        var month_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4);
+        var month_3_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_3, start_date_4);
+        var month_3_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_3, start_date_4);
+
+        var obj = {};
+        obj.total = month_3_total;
+        obj.passed = month_3_passed;
+        obj.failed = month_3_failed;
+        obj.title = "month 3";
+        annual_report.push(obj);
+
+        //month 4
+        var month_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5);
+        var month_4_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_4, start_date_5);
+        var month_4_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_4, start_date_5);
+
+        var obj = {};
+        obj.total = month_4_total;
+        obj.passed = month_4_passed;
+        obj.failed = month_4_failed;
+        obj.title = "month 4";
+        annual_report.push(obj);
+
+        //month 5
+        var month_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6);
+        var month_5_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_5, start_date_6);
+        var month_5_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_5, start_date_6);
+
+        var obj = {};
+        obj.total = month_5_total;
+        obj.passed = month_5_passed;
+        obj.failed = month_5_failed;
+        obj.title = "month 5";
+        annual_report.push(obj);
+
+        //month 6
+        var month_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, end_date_annual);
+        var month_6_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_6, end_date_annual);
+        var month_6_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_6, end_date_annual);
+
+        var obj = {};
+        obj.total = month_6_total;
+        obj.passed = month_6_passed;
+        obj.failed = month_6_failed;
+        obj.title = "month 6";
+        annual_report.push(obj);
+
+        break;
+      case "360":
+      default:
+        var end_date_annual = new Date();
+        var start_date_12 = new Date();
+        var start_date_11 = new Date();
+        var start_date_10 = new Date();
+        var start_date_9 = new Date();
+        var start_date_8 = new Date();
+        var start_date_7 = new Date();
+        var start_date_6 = new Date();
+        var start_date_5 = new Date();
+        var start_date_4 = new Date();
+        var start_date_3 = new Date();
+        var start_date_2 = new Date();
+        var start_date_1 = new Date();
+
+        var month = 30.0;
+        start_date_12.setDate(start_date_12.getDate() - month);
+        start_date_11.setDate(start_date_11.getDate() - 2 * month);
+        start_date_10.setDate(start_date_10.getDate() - 3 * month);
+        start_date_9.setDate(start_date_9.getDate() - 4 * month);
+        start_date_8.setDate(start_date_8.getDate() - 5 * month);
+        start_date_7.setDate(start_date_7.getDate() - 6 * month);
+        start_date_6.setDate(start_date_6.getDate() - 7 * month);
+        start_date_5.setDate(start_date_5.getDate() - 8 * month);
+        start_date_4.setDate(start_date_4.getDate() - 9 * month);
+        start_date_3.setDate(start_date_3.getDate() - 10 * month);
+        start_date_2.setDate(start_date_2.getDate() - 11 * month);
+        start_date_1.setDate(start_date_1.getDate() - 12 * month);
+
+        //month 1
+        var month_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2);
+        var month_1_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_1, start_date_2);
+        var month_1_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_1, start_date_2);
+
+        var obj = {};
+        obj.total = month_1_total;
+        obj.passed = month_1_passed;
+        obj.failed = month_1_failed;
+        obj.title = "month 1";
+        annual_report.push(obj);
+
+        //month 2
+        var month_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3);
+        var month_2_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_2, start_date_3);
+        var month_2_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_2, start_date_3);
+
+        var obj = {};
+        obj.total = month_2_total;
+        obj.passed = month_2_passed;
+        obj.failed = month_2_failed;
+        obj.title = "month 2";
+        annual_report.push(obj);
+
+        //month 3
+        var month_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4);
+        var month_3_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_3, start_date_4);
+        var month_3_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_3, start_date_4);
+
+        var obj = {};
+        obj.total = month_3_total;
+        obj.passed = month_3_passed;
+        obj.failed = month_3_failed;
+        obj.title = "month 3";
+        annual_report.push(obj);
+
+        //month 4
+        var month_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5);
+        var month_4_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_4, start_date_5);
+        var month_4_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_4, start_date_5);
+
+        var obj = {};
+        obj.total = month_4_total;
+        obj.passed = month_4_passed;
+        obj.failed = month_4_failed;
+        obj.title = "month 4";
+        annual_report.push(obj);
+
+        //month 5
+        var month_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6);
+        var month_5_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_5, start_date_6);
+        var month_5_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_5, start_date_6);
+
+        var obj = {};
+        obj.total = month_5_total;
+        obj.passed = month_5_passed;
+        obj.failed = month_5_failed;
+        obj.title = "month 5";
+        annual_report.push(obj);
+
+        //month 6
+        var month_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, start_date_7);
+        var month_6_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_6, start_date_7);
+        var month_6_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_6, start_date_7);
+
+        var obj = {};
+        obj.total = month_6_total;
+        obj.passed = month_6_passed;
+        obj.failed = month_6_failed;
+        obj.title = "month 6";
+        annual_report.push(obj);
+
+        //month 7
+        var month_7_total = await StatisticsService.getTotalReportsAnnual(start_date_7, start_date_8);
+        var month_7_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_7, start_date_8);
+        var month_7_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_7, start_date_8);
+
+        var obj = {};
+        obj.total = month_7_total;
+        obj.passed = month_7_passed;
+        obj.failed = month_7_failed;
+        obj.title = "month 7";
+        annual_report.push(obj);
+
+        //month 8
+        var month_8_total = await StatisticsService.getTotalReportsAnnual(start_date_8, start_date_9);
+        var month_8_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_8, start_date_9);
+        var month_8_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_8, start_date_9);
+
+        var obj = {};
+        obj.total = month_8_total;
+        obj.passed = month_8_passed;
+        obj.failed = month_8_failed;
+        obj.title = "month 8";
+        annual_report.push(obj);
+
+        //month 9
+        var month_9_total = await StatisticsService.getTotalReportsAnnual(start_date_9, start_date_10);
+        var month_9_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_9, start_date_10);
+        var month_9_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_9, start_date_10);
+
+        var obj = {};
+        obj.total = month_9_total;
+        obj.passed = month_9_passed;
+        obj.failed = month_9_failed;
+        obj.title = "month 9";
+        annual_report.push(obj);
+
+        //month 10
+        var month_10_total = await StatisticsService.getTotalReportsAnnual(start_date_10, start_date_11);
+        var month_10_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_10, start_date_11);
+        var month_10_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_10, start_date_11);
+
+        var obj = {};
+        obj.total = month_10_total;
+        obj.passed = month_10_passed;
+        obj.failed = month_10_failed;
+        obj.title = "month 10";
+        annual_report.push(obj);
+
+        //month 11
+        var month_11_total = await StatisticsService.getTotalReportsAnnual(start_date_11, start_date_12);
+        var month_11_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_11, start_date_12);
+        var month_11_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_11, start_date_12);
+
+        var obj = {};
+        obj.total = month_11_total;
+        obj.passed = month_11_passed;
+        obj.failed = month_11_failed;
+        obj.title = "month 11";
+        annual_report.push(obj);
+
+        //month 12
+        var month_12_total = await StatisticsService.getTotalReportsAnnual(start_date_12, end_date_annual);
+        var month_12_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_12, end_date_annual);
+        var month_12_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_12, end_date_annual);
+
+        var obj = {};
+        obj.total = month_12_total;
+        obj.passed = month_12_passed;
+        obj.failed = month_12_failed;
+        obj.title = "month 12";
+        annual_report.push(obj);
+
+        break;
+    }
 
     var statistics = {};
     statistics.total_data = {};
@@ -1175,7 +1956,7 @@ module.exports = {
 
     statistics.project_most_testcases = project_most_testcases.slice(0, 5);
 
-    statistics.annual_report = annual_report.reverse();
+    statistics.annual_report = annual_report;
 
     return res.status(200).json(statistics);
   }
