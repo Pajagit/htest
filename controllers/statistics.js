@@ -2230,6 +2230,8 @@ module.exports = {
             end_date = new Date(end_date);
             counter = counter + 1;
           }
+          annual_report.reverse();
+
           break;
         case "current_month":
           var end_date = new Date();
@@ -2345,6 +2347,7 @@ module.exports = {
             obj.title = monthNames[month_current];
             annual_report.push(obj);
           }
+          annual_report.reverse();
 
           break;
       }
