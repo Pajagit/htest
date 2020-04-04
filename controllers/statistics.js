@@ -1254,6 +1254,124 @@ module.exports = {
             end_date = new Date(end_date);
             counter = counter + 1;
           }
+          annual_report.reverse();
+          break;
+        case "current_month":
+          var end_date = new Date();
+          var start_date = new Date();
+
+          var day = start_date.getDay();
+          var diff = start_date.getDate() - day + (day == 0 ? -6 : 1);
+          start_date = new Date(start_date.setDate(diff));
+          start_date.setHours(0, 0, 0, 0);
+          var minutes = start_date.getTimezoneOffset();
+          start_date = start_date.getTime();
+          start_date = start_date - minutes * 60 * 1000;
+          start_date = new Date(start_date);
+
+          var first_day_of_month = new Date();
+          first_day_of_month = new Date(first_day_of_month.getFullYear(), first_day_of_month.getMonth(), 1);
+          var minutes = first_day_of_month.getTimezoneOffset();
+          first_day_of_month = first_day_of_month.getTime();
+          first_day_of_month = first_day_of_month - minutes * 60 * 1000;
+          first_day_of_month = new Date(first_day_of_month);
+
+          var total = await StatisticsService.getTotalReportsAnnual(start_date, end_date, req.params.id);
+          var passed = await StatisticsService.getTotalReportsPassedAnnual(start_date, end_date, req.params.id);
+          var failed = await StatisticsService.getTotalReportsFailedAnnual(start_date, end_date, req.params.id);
+
+          var obj = {};
+          obj.total = total;
+          obj.passed = passed;
+          obj.failed = failed;
+          annual_report.push(obj);
+
+          while (start_date > first_day_of_month) {
+            end_date = new Date(start_date);
+            start_date = new Date(start_date.setDate(start_date.getDate() - 7));
+            start_date.setHours(0, 0, 0, 0);
+            start_date = new Date(start_date);
+            var minutes = start_date.getTimezoneOffset();
+            start_date = start_date.getTime();
+            start_date = start_date - minutes * 60 * 1000;
+            start_date = new Date(start_date);
+
+            if (start_date < first_day_of_month) {
+              start_date = first_day_of_month;
+            }
+
+            var total = await StatisticsService.getTotalReportsAnnual(start_date, end_date, req.params.id);
+            var passed = await StatisticsService.getTotalReportsPassedAnnual(start_date, end_date, req.params.id);
+            var failed = await StatisticsService.getTotalReportsFailedAnnual(start_date, end_date, req.params.id);
+
+            var obj = {};
+            obj.total = total;
+            obj.passed = passed;
+            obj.failed = failed;
+            annual_report.push(obj);
+          }
+
+          annual_report.reverse();
+          for (var week = 0; week < annual_report.length; week++) {
+            annual_report[week].title = "week " + (week + 1);
+          }
+
+          break;
+        case "current_year":
+          var end_date = new Date();
+          var start_date = new Date();
+          start_date = new Date(start_date.getFullYear(), start_date.getMonth(), 1);
+          var minutes = start_date.getTimezoneOffset();
+          start_date = start_date.getTime();
+          start_date = start_date - minutes * 60 * 1000;
+          start_date = new Date(start_date);
+
+          var total = await StatisticsService.getTotalReportsAnnual(start_date, end_date, req.params.id);
+          var passed = await StatisticsService.getTotalReportsPassedAnnual(start_date, end_date, req.params.id);
+          var failed = await StatisticsService.getTotalReportsFailedAnnual(start_date, end_date, req.params.id);
+
+          var obj = {};
+          obj.total = total;
+          obj.passed = passed;
+          obj.failed = failed;
+
+          var month_current = end_date.getMonth();
+          obj.title = monthNames[month_current];
+          annual_report.push(obj);
+
+          var first_date_of_year = new Date(new Date().getFullYear(), 0, 1);
+          var minutes = first_date_of_year.getTimezoneOffset();
+          first_date_of_year = first_date_of_year.getTime();
+          first_date_of_year = first_date_of_year - minutes * 60 * 1000;
+          first_date_of_year = new Date(first_date_of_year);
+
+          while (start_date > first_date_of_year) {
+            end_date = new Date(start_date);
+            start_date = new Date(start_date.setMonth(start_date.getMonth() - 1));
+            start_date.setHours(0, 0, 0, 0);
+
+            start_date = new Date(start_date);
+
+            var minutes = start_date.getTimezoneOffset();
+            start_date = start_date.getTime();
+            start_date = start_date - minutes * 60 * 1000;
+            start_date = new Date(start_date);
+
+            var total = await StatisticsService.getTotalReportsAnnual(start_date, end_date, req.params.id);
+            var passed = await StatisticsService.getTotalReportsPassedAnnual(start_date, end_date, req.params.id);
+            var failed = await StatisticsService.getTotalReportsFailedAnnual(start_date, end_date, req.params.id);
+
+            var obj = {};
+            obj.total = total;
+            obj.passed = passed;
+            obj.failed = failed;
+
+            var month_current = month_current - 1;
+            obj.title = monthNames[month_current];
+            annual_report.push(obj);
+          }
+          annual_report.reverse();
+
           break;
       }
     }
@@ -2112,6 +2230,125 @@ module.exports = {
             end_date = new Date(end_date);
             counter = counter + 1;
           }
+          annual_report.reverse();
+
+          break;
+        case "current_month":
+          var end_date = new Date();
+          var start_date = new Date();
+
+          var day = start_date.getDay();
+          var diff = start_date.getDate() - day + (day == 0 ? -6 : 1);
+          start_date = new Date(start_date.setDate(diff));
+          start_date.setHours(0, 0, 0, 0);
+          var minutes = start_date.getTimezoneOffset();
+          start_date = start_date.getTime();
+          start_date = start_date - minutes * 60 * 1000;
+          start_date = new Date(start_date);
+
+          var first_day_of_month = new Date();
+          first_day_of_month = new Date(first_day_of_month.getFullYear(), first_day_of_month.getMonth(), 1);
+          var minutes = first_day_of_month.getTimezoneOffset();
+          first_day_of_month = first_day_of_month.getTime();
+          first_day_of_month = first_day_of_month - minutes * 60 * 1000;
+          first_day_of_month = new Date(first_day_of_month);
+
+          var total = await StatisticsService.getTotalReportsAnnual(start_date, end_date);
+          var passed = await StatisticsService.getTotalReportsPassedAnnual(start_date, end_date);
+          var failed = await StatisticsService.getTotalReportsFailedAnnual(start_date, end_date);
+
+          var obj = {};
+          obj.total = total;
+          obj.passed = passed;
+          obj.failed = failed;
+          annual_report.push(obj);
+
+          while (start_date > first_day_of_month) {
+            end_date = new Date(start_date);
+            start_date = new Date(start_date.setDate(start_date.getDate() - 7));
+            start_date.setHours(0, 0, 0, 0);
+            start_date = new Date(start_date);
+            var minutes = start_date.getTimezoneOffset();
+            start_date = start_date.getTime();
+            start_date = start_date - minutes * 60 * 1000;
+            start_date = new Date(start_date);
+
+            if (start_date < first_day_of_month) {
+              start_date = first_day_of_month;
+            }
+
+            var total = await StatisticsService.getTotalReportsAnnual(start_date, end_date);
+            var passed = await StatisticsService.getTotalReportsPassedAnnual(start_date, end_date);
+            var failed = await StatisticsService.getTotalReportsFailedAnnual(start_date, end_date);
+
+            var obj = {};
+            obj.total = total;
+            obj.passed = passed;
+            obj.failed = failed;
+            annual_report.push(obj);
+          }
+
+          annual_report.reverse();
+          for (var week = 0; week < annual_report.length; week++) {
+            annual_report[week].title = "week " + (week + 1);
+          }
+
+          break;
+        case "current_year":
+          var end_date = new Date();
+          var start_date = new Date();
+          start_date = new Date(start_date.getFullYear(), start_date.getMonth(), 1);
+          var minutes = start_date.getTimezoneOffset();
+          start_date = start_date.getTime();
+          start_date = start_date - minutes * 60 * 1000;
+          start_date = new Date(start_date);
+
+          var total = await StatisticsService.getTotalReportsAnnual(start_date, end_date);
+          var passed = await StatisticsService.getTotalReportsPassedAnnual(start_date, end_date);
+          var failed = await StatisticsService.getTotalReportsFailedAnnual(start_date, end_date);
+
+          var obj = {};
+          obj.total = total;
+          obj.passed = passed;
+          obj.failed = failed;
+
+          var month_current = end_date.getMonth();
+          obj.title = monthNames[month_current];
+          annual_report.push(obj);
+
+          var first_date_of_year = new Date(new Date().getFullYear(), 0, 1);
+          var minutes = first_date_of_year.getTimezoneOffset();
+          first_date_of_year = first_date_of_year.getTime();
+          first_date_of_year = first_date_of_year - minutes * 60 * 1000;
+          first_date_of_year = new Date(first_date_of_year);
+
+          while (start_date > first_date_of_year) {
+            end_date = new Date(start_date);
+            start_date = new Date(start_date.setMonth(start_date.getMonth() - 1));
+            start_date.setHours(0, 0, 0, 0);
+
+            start_date = new Date(start_date);
+
+            var minutes = start_date.getTimezoneOffset();
+            start_date = start_date.getTime();
+            start_date = start_date - minutes * 60 * 1000;
+            start_date = new Date(start_date);
+
+            var total = await StatisticsService.getTotalReportsAnnual(start_date, end_date);
+            var passed = await StatisticsService.getTotalReportsPassedAnnual(start_date, end_date);
+            var failed = await StatisticsService.getTotalReportsFailedAnnual(start_date, end_date);
+
+            var obj = {};
+            obj.total = total;
+            obj.passed = passed;
+            obj.failed = failed;
+
+            var month_current = month_current - 1;
+            obj.title = monthNames[month_current];
+            annual_report.push(obj);
+          }
+          annual_report.reverse();
+
           break;
       }
     }
