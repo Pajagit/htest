@@ -3,11 +3,13 @@ import axios from "axios";
 import { GET_PROJECT_STATISTICS, STATISTICS_LOADING, GET_GLOBAL_STATISTICS } from "./types";
 
 // Get Project Statistics
-export const getProjectStatistics = (projectId, days) => dispatch => {
+export const getProjectStatistics = (projectId, params) => dispatch => {
   dispatch(statisticsLoading());
   var url = `/api/projects/project/${projectId}/statistics`;
-  if (days) {
-    url = `/api/projects/project/${projectId}/statistics?days=${days}`;
+  if (params && typeof params === "number") {
+    url = `/api/projects/project/${projectId}/statistics?days=${params}`;
+  } else if (params && typeof params === "string") {
+    url = `/api/projects/project/${projectId}/statistics?option=${params}`;
   }
   axios
     .get(url)
@@ -26,11 +28,13 @@ export const getProjectStatistics = (projectId, days) => dispatch => {
 };
 
 // Get Project Statistics
-export const getGlobalStatistics = days => dispatch => {
+export const getGlobalStatistics = params => dispatch => {
   dispatch(statisticsLoading());
   var url = "/api/statistics";
-  if (days) {
-    url = `/api/statistics?days=${days}`;
+  if (params && typeof params === "number") {
+    url = `/api/statistics?days=${params}`;
+  } else if (params && typeof params === "string") {
+    url = `/api/statistics?option=${params}`;
   }
   axios
     .get(url)

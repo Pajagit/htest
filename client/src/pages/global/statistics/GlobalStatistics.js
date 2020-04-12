@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import GlobalPanel from "../../../components/global-panel/GlobalPanel";
 import { superAdminPermissions } from "../../../permissions/Permissions";
 import { getGlobalStatistics } from "../../../actions/statisticActions";
+import capitalizeFirstLetter from "../../../utility/capitalizeFirstLetter";
 
 import Dropdown from "../../../components/common/Dropdown";
 import Header from "../../../components/common/Header";
@@ -195,8 +196,8 @@ class GlobalStatistics extends Component {
           var total_passed = [];
           var total_failed = [];
           Object.entries(nextProps.statistics.global_statistics.annual_report).forEach(([key, value]) => {
-            if (value && value.month) {
-              total_months.push(value.month);
+            if (value && value.title) {
+              total_months.push(capitalizeFirstLetter(value.title));
             }
             if (value && value.total) {
               total_testcases.push(value.total);
@@ -244,6 +245,7 @@ class GlobalStatistics extends Component {
           var most_reports_failed_failed = [];
           Object.entries(nextProps.statistics.global_statistics.most_reports_failed).forEach(([key, value]) => {
             var maxTitleLength = 20;
+
             if (value.title.length > maxTitleLength) {
               most_reports_failed_titles.push(value.title.substring(0, maxTitleLength) + "...");
             } else {
@@ -345,30 +347,40 @@ class GlobalStatistics extends Component {
       if (this.state.days === 0) {
         this.props.getGlobalStatistics();
       } else {
-        var days;
+        var params;
         switch (this.state.days) {
           case 1:
-            days = 3;
+            params = 3;
             break;
           case 2:
-            days = 7;
+            params = 7;
             break;
           case 3:
-            days = 30;
+            params = 30;
             break;
           case 4:
-            days = 90;
+            params = 90;
             break;
           case 5:
-            days = 180;
+            params = 180;
             break;
           case 6:
-            days = 360;
+            params = 360;
+            break;
+          case 7:
+            params = "current_week";
+            break;
+          case 8:
+            params = "current_month";
+            break;
+          case 9:
+            params = "current_year";
             break;
           default:
-            days = 0;
+            params = 0;
         }
-        this.props.getGlobalStatistics(days);
+        console.log(this.state.days);
+        this.props.getGlobalStatistics(params);
       }
     });
   }
@@ -595,7 +607,10 @@ class GlobalStatistics extends Component {
                         { id: 3, title: "Month" },
                         { id: 4, title: "3 Months" },
                         { id: 5, title: "6 Months" },
-                        { id: 6, title: "Year" }
+                        { id: 6, title: "Year" },
+                        { id: 7, title: "Current Week" },
+                        { id: 8, title: "Current Month" },
+                        { id: 9, title: "Current Year" }
                       ]}
                       value={this.state.days}
                       onChange={e => this.onChange(e)}
