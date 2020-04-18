@@ -1375,6 +1375,275 @@ module.exports = {
           break;
       }
     }
+    if (!option && !days) {
+      var end_date_annual = new Date();
+      var start_date_12 = new Date();
+      var start_date_11 = new Date();
+      var start_date_10 = new Date();
+      var start_date_9 = new Date();
+      var start_date_8 = new Date();
+      var start_date_7 = new Date();
+      var start_date_6 = new Date();
+      var start_date_5 = new Date();
+      var start_date_4 = new Date();
+      var start_date_3 = new Date();
+      var start_date_2 = new Date();
+      var start_date_1 = new Date();
+
+      var month = 30.0;
+      start_date_12.setDate(start_date_12.getDate() - month);
+      start_date_11.setDate(start_date_11.getDate() - 2 * month);
+      start_date_10.setDate(start_date_10.getDate() - 3 * month);
+      start_date_9.setDate(start_date_9.getDate() - 4 * month);
+      start_date_8.setDate(start_date_8.getDate() - 5 * month);
+      start_date_7.setDate(start_date_7.getDate() - 6 * month);
+      start_date_6.setDate(start_date_6.getDate() - 7 * month);
+      start_date_5.setDate(start_date_5.getDate() - 8 * month);
+      start_date_4.setDate(start_date_4.getDate() - 9 * month);
+      start_date_3.setDate(start_date_3.getDate() - 10 * month);
+      start_date_2.setDate(start_date_2.getDate() - 11 * month);
+      start_date_1.setDate(start_date_1.getDate() - 12 * month);
+
+      //month 1
+      var month_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2, req.params.id);
+      var month_1_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_1,
+        start_date_2,
+        req.params.id
+      );
+      var month_1_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_1,
+        start_date_2,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_1_total;
+      obj.passed = month_1_passed;
+      obj.failed = month_1_failed;
+      obj.title = "month 1";
+      annual_report.push(obj);
+
+      //month 2
+      var month_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3, req.params.id);
+      var month_2_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_2,
+        start_date_3,
+        req.params.id
+      );
+      var month_2_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_2,
+        start_date_3,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_2_total;
+      obj.passed = month_2_passed;
+      obj.failed = month_2_failed;
+      obj.title = "month 2";
+      annual_report.push(obj);
+
+      //month 3
+      var month_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4, req.params.id);
+      var month_3_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_3,
+        start_date_4,
+        req.params.id
+      );
+      var month_3_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_3,
+        start_date_4,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_3_total;
+      obj.passed = month_3_passed;
+      obj.failed = month_3_failed;
+      obj.title = "month 3";
+      annual_report.push(obj);
+
+      //month 4
+      var month_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5, req.params.id);
+      var month_4_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_4,
+        start_date_5,
+        req.params.id
+      );
+      var month_4_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_4,
+        start_date_5,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_4_total;
+      obj.passed = month_4_passed;
+      obj.failed = month_4_failed;
+      obj.title = "month 4";
+      annual_report.push(obj);
+
+      //month 5
+      var month_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6, req.params.id);
+      var month_5_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_5,
+        start_date_6,
+        req.params.id
+      );
+      var month_5_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_5,
+        start_date_6,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_5_total;
+      obj.passed = month_5_passed;
+      obj.failed = month_5_failed;
+      obj.title = "month 5";
+      annual_report.push(obj);
+
+      //month 6
+      var month_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, start_date_7, req.params.id);
+      var month_6_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_6,
+        start_date_7,
+        req.params.id
+      );
+      var month_6_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_6,
+        start_date_7,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_6_total;
+      obj.passed = month_6_passed;
+      obj.failed = month_6_failed;
+      obj.title = "month 6";
+      annual_report.push(obj);
+
+      //month 7
+      var month_7_total = await StatisticsService.getTotalReportsAnnual(start_date_7, start_date_8, req.params.id);
+      var month_7_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_7,
+        start_date_8,
+        req.params.id
+      );
+      var month_7_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_7,
+        start_date_8,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_7_total;
+      obj.passed = month_7_passed;
+      obj.failed = month_7_failed;
+      obj.title = "month 7";
+      annual_report.push(obj);
+
+      //month 8
+      var month_8_total = await StatisticsService.getTotalReportsAnnual(start_date_8, start_date_9, req.params.id);
+      var month_8_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_8,
+        start_date_9,
+        req.params.id
+      );
+      var month_8_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_8,
+        start_date_9,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_8_total;
+      obj.passed = month_8_passed;
+      obj.failed = month_8_failed;
+      obj.title = "month 8";
+      annual_report.push(obj);
+
+      //month 9
+      var month_9_total = await StatisticsService.getTotalReportsAnnual(start_date_9, start_date_10, req.params.id);
+      var month_9_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_9,
+        start_date_10,
+        req.params.id
+      );
+      var month_9_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_9,
+        start_date_10,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_9_total;
+      obj.passed = month_9_passed;
+      obj.failed = month_9_failed;
+      obj.title = "month 9";
+      annual_report.push(obj);
+
+      //month 10
+      var month_10_total = await StatisticsService.getTotalReportsAnnual(start_date_10, start_date_11, req.params.id);
+      var month_10_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_10,
+        start_date_11,
+        req.params.id
+      );
+      var month_10_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_10,
+        start_date_11,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_10_total;
+      obj.passed = month_10_passed;
+      obj.failed = month_10_failed;
+      obj.title = "month 10";
+      annual_report.push(obj);
+
+      //month 11
+      var month_11_total = await StatisticsService.getTotalReportsAnnual(start_date_11, start_date_12, req.params.id);
+      var month_11_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_11,
+        start_date_12,
+        req.params.id
+      );
+      var month_11_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_11,
+        start_date_12,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_11_total;
+      obj.passed = month_11_passed;
+      obj.failed = month_11_failed;
+      obj.title = "month 11";
+      annual_report.push(obj);
+
+      //month 12
+      var month_12_total = await StatisticsService.getTotalReportsAnnual(start_date_12, end_date_annual, req.params.id);
+      var month_12_passed = await StatisticsService.getTotalReportsPassedAnnual(
+        start_date_12,
+        end_date_annual,
+        req.params.id
+      );
+      var month_12_failed = await StatisticsService.getTotalReportsFailedAnnual(
+        start_date_12,
+        end_date_annual,
+        req.params.id
+      );
+
+      var obj = {};
+      obj.total = month_12_total;
+      obj.passed = month_12_passed;
+      obj.failed = month_12_failed;
+      obj.title = "month 12";
+      annual_report.push(obj);
+    }
 
     var statistics = {};
     statistics.total_data = {};
@@ -2351,6 +2620,180 @@ module.exports = {
 
           break;
       }
+    }
+
+    if(!option && !days){
+      var end_date_annual = new Date();
+      var start_date_12 = new Date();
+      var start_date_11 = new Date();
+      var start_date_10 = new Date();
+      var start_date_9 = new Date();
+      var start_date_8 = new Date();
+      var start_date_7 = new Date();
+      var start_date_6 = new Date();
+      var start_date_5 = new Date();
+      var start_date_4 = new Date();
+      var start_date_3 = new Date();
+      var start_date_2 = new Date();
+      var start_date_1 = new Date();
+
+      var month = 30.0;
+      start_date_12.setDate(start_date_12.getDate() - month);
+      start_date_11.setDate(start_date_11.getDate() - 2 * month);
+      start_date_10.setDate(start_date_10.getDate() - 3 * month);
+      start_date_9.setDate(start_date_9.getDate() - 4 * month);
+      start_date_8.setDate(start_date_8.getDate() - 5 * month);
+      start_date_7.setDate(start_date_7.getDate() - 6 * month);
+      start_date_6.setDate(start_date_6.getDate() - 7 * month);
+      start_date_5.setDate(start_date_5.getDate() - 8 * month);
+      start_date_4.setDate(start_date_4.getDate() - 9 * month);
+      start_date_3.setDate(start_date_3.getDate() - 10 * month);
+      start_date_2.setDate(start_date_2.getDate() - 11 * month);
+      start_date_1.setDate(start_date_1.getDate() - 12 * month);
+
+      //month 1
+      var month_1_total = await StatisticsService.getTotalReportsAnnual(start_date_1, start_date_2);
+      var month_1_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_1, start_date_2);
+      var month_1_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_1, start_date_2);
+
+      var obj = {};
+      obj.total = month_1_total;
+      obj.passed = month_1_passed;
+      obj.failed = month_1_failed;
+      obj.title = "month 1";
+      annual_report.push(obj);
+
+      //month 2
+      var month_2_total = await StatisticsService.getTotalReportsAnnual(start_date_2, start_date_3);
+      var month_2_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_2, start_date_3);
+      var month_2_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_2, start_date_3);
+
+      var obj = {};
+      obj.total = month_2_total;
+      obj.passed = month_2_passed;
+      obj.failed = month_2_failed;
+      obj.title = "month 2";
+      annual_report.push(obj);
+
+      //month 3
+      var month_3_total = await StatisticsService.getTotalReportsAnnual(start_date_3, start_date_4);
+      var month_3_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_3, start_date_4);
+      var month_3_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_3, start_date_4);
+
+      var obj = {};
+      obj.total = month_3_total;
+      obj.passed = month_3_passed;
+      obj.failed = month_3_failed;
+      obj.title = "month 3";
+      annual_report.push(obj);
+
+      //month 4
+      var month_4_total = await StatisticsService.getTotalReportsAnnual(start_date_4, start_date_5);
+      var month_4_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_4, start_date_5);
+      var month_4_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_4, start_date_5);
+
+      var obj = {};
+      obj.total = month_4_total;
+      obj.passed = month_4_passed;
+      obj.failed = month_4_failed;
+      obj.title = "month 4";
+      annual_report.push(obj);
+
+      //month 5
+      var month_5_total = await StatisticsService.getTotalReportsAnnual(start_date_5, start_date_6);
+      var month_5_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_5, start_date_6);
+      var month_5_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_5, start_date_6);
+
+      var obj = {};
+      obj.total = month_5_total;
+      obj.passed = month_5_passed;
+      obj.failed = month_5_failed;
+      obj.title = "month 5";
+      annual_report.push(obj);
+
+      //month 6
+      var month_6_total = await StatisticsService.getTotalReportsAnnual(start_date_6, start_date_7);
+      var month_6_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_6, start_date_7);
+      var month_6_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_6, start_date_7);
+
+      var obj = {};
+      obj.total = month_6_total;
+      obj.passed = month_6_passed;
+      obj.failed = month_6_failed;
+      obj.title = "month 6";
+      annual_report.push(obj);
+
+      //month 7
+      var month_7_total = await StatisticsService.getTotalReportsAnnual(start_date_7, start_date_8);
+      var month_7_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_7, start_date_8);
+      var month_7_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_7, start_date_8);
+
+      var obj = {};
+      obj.total = month_7_total;
+      obj.passed = month_7_passed;
+      obj.failed = month_7_failed;
+      obj.title = "month 7";
+      annual_report.push(obj);
+
+      //month 8
+      var month_8_total = await StatisticsService.getTotalReportsAnnual(start_date_8, start_date_9);
+      var month_8_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_8, start_date_9);
+      var month_8_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_8, start_date_9);
+
+      var obj = {};
+      obj.total = month_8_total;
+      obj.passed = month_8_passed;
+      obj.failed = month_8_failed;
+      obj.title = "month 8";
+      annual_report.push(obj);
+
+      //month 9
+      var month_9_total = await StatisticsService.getTotalReportsAnnual(start_date_9, start_date_10);
+      var month_9_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_9, start_date_10);
+      var month_9_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_9, start_date_10);
+
+      var obj = {};
+      obj.total = month_9_total;
+      obj.passed = month_9_passed;
+      obj.failed = month_9_failed;
+      obj.title = "month 9";
+      annual_report.push(obj);
+
+      //month 10
+      var month_10_total = await StatisticsService.getTotalReportsAnnual(start_date_10, start_date_11);
+      var month_10_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_10, start_date_11);
+      var month_10_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_10, start_date_11);
+
+      var obj = {};
+      obj.total = month_10_total;
+      obj.passed = month_10_passed;
+      obj.failed = month_10_failed;
+      obj.title = "month 10";
+      annual_report.push(obj);
+
+      //month 11
+      var month_11_total = await StatisticsService.getTotalReportsAnnual(start_date_11, start_date_12);
+      var month_11_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_11, start_date_12);
+      var month_11_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_11, start_date_12);
+
+      var obj = {};
+      obj.total = month_11_total;
+      obj.passed = month_11_passed;
+      obj.failed = month_11_failed;
+      obj.title = "month 11";
+      annual_report.push(obj);
+
+      //month 12
+      var month_12_total = await StatisticsService.getTotalReportsAnnual(start_date_12, end_date_annual);
+      var month_12_passed = await StatisticsService.getTotalReportsPassedAnnual(start_date_12, end_date_annual);
+      var month_12_failed = await StatisticsService.getTotalReportsFailedAnnual(start_date_12, end_date_annual);
+
+      var obj = {};
+      obj.total = month_12_total;
+      obj.passed = month_12_passed;
+      obj.failed = month_12_failed;
+      obj.title = "month 12";
+      annual_report.push(obj);
     }
 
     var statistics = {};
