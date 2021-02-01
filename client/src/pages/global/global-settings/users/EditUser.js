@@ -47,7 +47,7 @@ class EditUser extends Component {
       selectedRole: [],
       isSuperAdmin: false,
       showAddProject: false,
-      errors: {}
+      errors: {},
     };
     this.selectProjectOption = this.selectProjectOption.bind(this);
     this.selectedRoleOption = this.selectedRoleOption.bind(this);
@@ -100,7 +100,7 @@ class EditUser extends Component {
       var avaliableProjects = nextProps.projects.projects.projects;
 
       if (nextProps.users.user && nextProps.users.user.projects) {
-        user.projects.forEach(project => {
+        user.projects.forEach((project) => {
           if (checkIfElemInObjInArray(nextProps.projects.projects.projects, project.id)) {
             avaliableProjects = removeObjFromArray(avaliableProjects, project);
           }
@@ -141,7 +141,7 @@ class EditUser extends Component {
       updateData.role_id = this.state.selectedRole.id;
     }
     if (isEmpty(errors)) {
-      this.props.addProject(updateData, res => {
+      this.props.addProject(updateData, (res) => {
         if (res.status === 200) {
           successToast("Project added successfully");
           socket.emit("refreshUserToken", updateData.user_id);
@@ -159,7 +159,7 @@ class EditUser extends Component {
     var updateData = {};
     updateData.user_id = parseInt(this.props.match.params.userId);
     updateData.project_id = e;
-    this.props.removeProject(updateData, res => {
+    this.props.removeProject(updateData, (res) => {
       if (res.status === 200) {
         socket.emit("refreshUserToken", updateData.user_id);
         successToast("Project removed successfully");
@@ -172,7 +172,7 @@ class EditUser extends Component {
   confirmActivation = ([user_id, active]) => {
     var userData = {};
     userData.active = !active;
-    this.props.userActivation(user_id, userData, res => {
+    this.props.userActivation(user_id, userData, (res) => {
       if (res.status === 200) {
         if (userData.active && res.data.active) {
           successToast("User activated successfully");
@@ -202,7 +202,7 @@ class EditUser extends Component {
       msg = "User will be able to log in and use application";
       confirm = "Activate";
     }
-    Confirm(title, msg, reject, confirm, e => this.confirmActivation([user_id, active, e]));
+    Confirm(title, msg, reject, confirm, (e) => this.confirmActivation([user_id, active, e]));
   };
 
   checkValidation() {
@@ -225,11 +225,11 @@ class EditUser extends Component {
     userData.email = this.state.email;
     userData.first_name = this.state.first_name;
     userData.last_name = this.state.last_name;
-    userData.superadmin = !this.state.isSuperAdmin;
+    userData.superadmin = this.state.isSuperAdmin;
 
     const { errors, isValid } = UserValidation(userData);
     if (isValid) {
-      this.props.editUser(userId, userData, res => {
+      this.props.editUser(userId, userData, (res) => {
         if (res.status === 200) {
           successToast("User edited successfully");
           this.props.history.push(`/UserSettings`);
@@ -243,7 +243,7 @@ class EditUser extends Component {
     }
   }
 
-  submitFormOnEnterKey = e => {
+  submitFormOnEnterKey = (e) => {
     if (e.keyCode === 13) {
       this.submitForm(e);
     }
@@ -258,7 +258,7 @@ class EditUser extends Component {
     updateData.project_id = project_id;
     updateData.role_id = parseInt(e.target.value);
     updateData.user_id = parseInt(this.props.match.params.userId);
-    this.props.addProject(updateData, res => {
+    this.props.addProject(updateData, (res) => {
       if (res.status === 200) {
         successToast("Project role updated successfully");
         socket.emit("refreshUserToken", updateData.user_id);
@@ -268,7 +268,7 @@ class EditUser extends Component {
     });
   }
 
-  confirmSuperadminActivation = active => {
+  confirmSuperadminActivation = (active) => {
     var userData = {};
     var userId = this.props.match.params.userId;
     userData.email = this.state.email;
@@ -278,7 +278,7 @@ class EditUser extends Component {
 
     const { errors, isValid } = UserValidation(userData);
     if (isValid) {
-      this.props.editUser(userId, userData, res => {
+      this.props.editUser(userId, userData, (res) => {
         if (res.status === 200) {
           successToast("User edited successfully");
           socket.emit("refreshUserToken", userId);
@@ -292,7 +292,7 @@ class EditUser extends Component {
       this.setState({ errors });
     }
   };
-  confirmSuperadminModal = superadmin => {
+  confirmSuperadminModal = (superadmin) => {
     var title;
     var msg;
     var reject = "No";
@@ -306,7 +306,7 @@ class EditUser extends Component {
       msg = "User will only be able to see dedicated projects";
       confirm = "Remove";
     }
-    Confirm(title, msg, reject, confirm, e => this.confirmSuperadminActivation(superadmin));
+    Confirm(title, msg, reject, confirm, (e) => this.confirmSuperadminActivation(superadmin));
   };
 
   render() {
@@ -328,7 +328,7 @@ class EditUser extends Component {
             className={`btn btn-primary ${this.state.submitBtnDisabledClass} mr-2`}
             label="Edit User"
             type="text"
-            onClick={e => this.submitForm(e)}
+            onClick={(e) => this.submitForm(e)}
           />
           <UnderlineAnchor link={`/UserSettings`} value={"Cancel"} />
         </div>
@@ -363,10 +363,7 @@ class EditUser extends Component {
               <div className="header--title">Projects </div>
               <div className="header--buttons">
                 <div className="header--buttons--primary">({superAdminStatus})</div>
-                <div
-                  className="header--buttons--secondary"
-                  onClick={e => this.confirmSuperadminModal(this.state.isSuperAdmin)}
-                >
+                <div className="header--buttons--secondary" onClick={(e) => this.confirmSuperadminModal(this.state.isSuperAdmin)}>
                   {lockBtn}
                 </div>
               </div>
@@ -381,10 +378,7 @@ class EditUser extends Component {
               <div className="header--title">Projects </div>
               <div className="header--buttons">
                 <div className="header--buttons--primary">({superAdminStatus})</div>
-                <div
-                  className="header--buttons--secondary"
-                  onClick={e => this.confirmSuperadminModal(this.state.isSuperAdmin)}
-                >
+                <div className="header--buttons--secondary" onClick={(e) => this.confirmSuperadminModal(this.state.isSuperAdmin)}>
                   {lockBtn}
                 </div>
               </div>
@@ -394,7 +388,7 @@ class EditUser extends Component {
                 key={index}
                 placeholder="Pick Users' Project Role"
                 value={project.id}
-                onChange={e => this.onChangeRole(e, project.id)}
+                onChange={(e) => this.onChangeRole(e, project.id)}
                 validationMsg={this.state.errors.position}
                 name={"role"}
                 label={project.title}
@@ -416,7 +410,7 @@ class EditUser extends Component {
                 <div className="bundle-add-new--header-title">Add New Project</div>
                 <div
                   className="bundle-add-new--header-buttons"
-                  onClick={e => this.setState({ showAddProject: false, selectedRole: [], selectedProject: [] })}
+                  onClick={(e) => this.setState({ showAddProject: false, selectedRole: [], selectedProject: [] })}
                 >
                   <i className="fas fa-trash-alt"></i>
                 </div>
@@ -446,20 +440,14 @@ class EditUser extends Component {
                   className={`btn btn-primary ${this.state.submitBtnDisabledClass}`}
                   label="Add Project"
                   type="text"
-                  onClick={e => this.submitProject(e)}
+                  onClick={(e) => this.submitProject(e)}
                 />
               </div>
             </div>
           </div>
         );
       } else {
-        addProject = (
-          <FullBtn
-            placeholder="Add New Project"
-            disabled={this.state.isSuperAdmin}
-            onClick={e => this.showAddProject(e)}
-          />
-        );
+        addProject = <FullBtn placeholder="Add New Project" disabled={this.state.isSuperAdmin} onClick={(e) => this.showAddProject(e)} />;
       }
       var userBtn;
       var activeStatus;
@@ -484,7 +472,7 @@ class EditUser extends Component {
             <div className="header--title">User Information </div>
             <div className="header--buttons">
               <div className="header--buttons--primary">({activeStatus})</div>
-              <div className="header--buttons--secondary" onClick={e => this.confirmModal([user.id, user.active, e])}>
+              <div className="header--buttons--secondary" onClick={(e) => this.confirmModal([user.id, user.active, e])}>
                 {userBtn}
               </div>
             </div>
@@ -495,7 +483,7 @@ class EditUser extends Component {
             label="Email*"
             validationMsg={[this.state.errors.email, this.props.errors.error]}
             value={this.state.email}
-            onChange={e => this.onChange(e)}
+            onChange={(e) => this.onChange(e)}
             name={"email"}
             onKeyDown={this.submitFormOnEnterKey}
             className={disabledEdit}
@@ -506,7 +494,7 @@ class EditUser extends Component {
             label="First Name"
             validationMsg={this.state.errors.first_name}
             value={this.state.first_name}
-            onChange={e => this.onChange(e)}
+            onChange={(e) => this.onChange(e)}
             name={"first_name"}
             onKeyDown={this.submitFormOnEnterKey}
             className={disabledEdit}
@@ -517,7 +505,7 @@ class EditUser extends Component {
             label="Last Name"
             validationMsg={this.state.errors.last_name}
             value={this.state.last_name}
-            onChange={e => this.onChange(e)}
+            onChange={(e) => this.onChange(e)}
             name={"last_name"}
             onKeyDown={this.submitFormOnEnterKey}
             className={disabledEdit}
@@ -551,18 +539,24 @@ class EditUser extends Component {
 
 EditUser.propTypes = {
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
   roles: state.roles,
   projects: state.projects,
-  users: state.users
+  users: state.users,
 });
 
-export default connect(
-  mapStateToProps,
-  { editUser, getUser, userActivation, addProject, removeProject, getProjects, getRoles, clearErrors }
-)(withRouter(EditUser));
+export default connect(mapStateToProps, {
+  editUser,
+  getUser,
+  userActivation,
+  addProject,
+  removeProject,
+  getProjects,
+  getRoles,
+  clearErrors,
+})(withRouter(EditUser));
