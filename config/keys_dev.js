@@ -1,9 +1,9 @@
 module.exports = {
-  postgresURI: "postgres://postgres:postgres@localhost:5432/htest",
+  postgresURI: "postgres://postgres:postgres@localhost:5432/itestmycase",
   baseURL: "http://localhost:3000/",
   secretOrKey: "interviewSecret",
   secretOrKeyRefresh: "refreshKey",
   tokenDuration: 3600, // 1 hour
   refreshTokenDuration: 172800, // 2 days
-  webSocket: "http://localhost:4000/"
+  webSocket: "http://localhost:4000/",
 };

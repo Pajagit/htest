@@ -6,15 +6,15 @@ import { GET_ERRORS, SET_CURRENT_USER } from "./types";
 import store from "../store";
 
 // Login - Get User Token
-export const loginUser = userData => dispatch => {
+export const loginUser = (userData) => (dispatch) => {
   axios
     .post("/api/users/login", userData)
-    .then(res => {
+    .then((res) => {
       // Save to localStorage
       const { token, refreshToken } = res.data;
       // Set token to ls
-      localStorage.setItem("jwtHtestToken", token);
-      localStorage.setItem("jwtHtestRefreshToken", refreshToken);
+      localStorage.setItem("jwtITMCToken", token);
+      localStorage.setItem("jwtITMCRefreshToken", refreshToken);
       // Set token to Auth header
 
       setAuthToken(token);
@@ -23,27 +23,27 @@ export const loginUser = userData => dispatch => {
       // Set current user
       dispatch(setCurrentUser(decoded));
     })
-    .catch(err =>
+    .catch((err) =>
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
+        payload: err.response.data,
       })
     );
 };
 
 // Set logged in user
-export const setCurrentUser = decoded => {
+export const setCurrentUser = (decoded) => {
   return {
     type: SET_CURRENT_USER,
-    payload: decoded
+    payload: decoded,
   };
 };
 
 // Log user out
-export const logoutUser = () => dispatch => {
+export const logoutUser = () => (dispatch) => {
   // Remove token from localStorage
-  localStorage.removeItem("jwtHtestToken");
-  localStorage.removeItem("jwtHtestRefreshToken");
+  localStorage.removeItem("jwtITMCToken");
+  localStorage.removeItem("jwtITMCRefreshToken");
 
   // Remove auth header for future requests
   setAuthToken(false);
@@ -52,26 +52,26 @@ export const logoutUser = () => dispatch => {
 };
 
 // Intercepting all requests and cheking if token is expired. If it is it will be refreshed
-axios.interceptors.request.use(async request => {
+axios.interceptors.request.use(async (request) => {
   if (request.url !== "/api/users/login" && request.url !== "/api/token") {
-    var token = localStorage.getItem("jwtHtestToken");
+    var token = localStorage.getItem("jwtITMCToken");
     const currentTime = Date.now() / 1000;
     const decoded = jwt_decode(token);
 
-    var cryptedRefreshToken = localStorage.getItem("jwtHtestRefreshToken");
+    var cryptedRefreshToken = localStorage.getItem("jwtITMCRefreshToken");
 
     let refreshTokenObj = {
-      refreshToken: cryptedRefreshToken
+      refreshToken: cryptedRefreshToken,
     };
     if (decoded.exp - currentTime < 1) {
       await axios
         .post("/api/token", refreshTokenObj)
-        .then(res => {
+        .then((res) => {
           // Save to localStorage
           const { token, refreshToken } = res.data;
           // Set token to ls
-          localStorage.setItem("jwtHtestToken", token);
-          localStorage.setItem("jwtHtestRefreshToken", refreshToken);
+          localStorage.setItem("jwtITMCToken", token);
+          localStorage.setItem("jwtITMCRefreshToken", refreshToken);
           // Set token to Auth header
           setAuthToken(token);
           // Decode token to get user data
@@ -80,7 +80,7 @@ axios.interceptors.request.use(async request => {
           store.dispatch(setCurrentUser(decoded));
           request.headers.Authorization = "Bearer " + token;
         })
-        .catch(err => {
+        .catch((err) => {
           store.dispatch(logoutUser());
         });
     }
